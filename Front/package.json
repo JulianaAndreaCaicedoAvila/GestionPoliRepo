@@ -1,0 +1,28 @@
+{
+	"name": "ansv-pnsv",
+	"private": true,
+	"version": "1.0.0",
+	"scripts": {
+		"build": "vite build --emptyOutDir",
+		"dev": "vite",
+		"prebuild": "nvm install 16.4.2 & nvm use 16.4.2",
+		"predev": "nvm install 16.4.2 & nvm use 16.4.2",
+		"preinstall": "nvm install 16.4.2 & nvm use 16.4.2",
+		"preview": "vite preview",
+		"deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File \"D:\\web\\ansv\\pnsv\\app\\Front\\deploy.ps1\""
+	},
+	"dependencies": {
+		"@azure/msal-browser": "^2.37.0",
+		"axios": "^1.4.0",
+		"devextreme": "^22.2.6",
+		"devextreme-vue": "^22.2.6",
+		"pinia": "^2.0.36",
+		"sass": "^1.62.1",
+		"vue": "^3.3.2",
+		"vue-router": "^4.2.0"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^4.2.3",
+		"vite": "^4.3.7"
+	}
+}

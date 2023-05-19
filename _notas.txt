@@ -1,0 +1,167 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305170255:
+cd .\Data\;
+dotnet ef migrations add Clasificadores --startup-project ../API/
+dotnet ef migrations script --help
+dotnet ef migrations script | out-file ./script.sql
+https://thecodeblogger.com/2021/07/20/how-to-apply-ef-core-migrations-via-sql-scripts/
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305110752:
+cd Data
+dotnet add package Oracle.EntityFrameworkCore
+dotnet add package Oracle.EntityFrameworkCore --version 7.21.9
+
+dotnet tool install --global dotnet-ef
+dotnet tool update --global dotnet-ef
+
+cd .\Data\;
+dotnet ef migrations list --startup-project ../API/
+dotnet ef database update 0 --startup-project ../API/
+dotnet ef migrations add Inicial --startup-project ../API/
+dotnet ef database update --startup-project ../API/
+dotnet ef database update 20230511175400_Inicial --startup-project ../API/
+
+20161012160749_AddedOrderToCourse
+dotnet ef migrations remove --startup-project ../API/
+dotnet ef migrations remove
+
+https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/managing?tabs=dotnet-core-cli
+
+dotnet remove package Microsoft.EntityFrameworkCore.Design
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202209091251:
+git remote -v
+
+git remote set-url origin git@github.com:NemediDev/pnsv.git
+git config user.name "Diego Vargas" && git config user.email "dvargas@nemedi.com"
+
+# Create a NEW remote branch based in local
+git push --set-upstream origin indicadores
+
+# You can force update your master branch as follows:
+git checkout upstreambranch
+git branch master upstreambranch -f
+git checkout master
+git push origin master -f
+
+
+git remote set-url origin git@ssh.dev.azure.com:v3/ANSV-TICs/PNSV/PNSV
+git config user.name "Diego Alfonso Vargas Villegas" && git config user.email "diego.vargas@esap.edu.co"
+
+git fetch origin
+git branch -a
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202206080205:
+https://jasonwatmore.com/post/2022/01/19/net-6-create-and-validate-jwt-tokens-use-custom-jwt-middleware
+https://docs.microsoft.com/en-us/azure/active-directory-b2c/configure-authentication-sample-spa-app
+https://jasonwatmore.com/post/2022/01/07/net-6-user-registration-and-login-tutorial-with-example-api
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205301903:
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-6.0&tabs=visual-studio-code
+
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+cd .\Data\;dotnet ef database update 0 --startup-project ../API/;
+dotnet ef migrations remove --startup-project ../API/;cd ..\;
+cd .\Data\;dotnet ef database update 20220530015118_Clasificador --startup-project ../API/;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205292052:
+cd .\Data\;dotnet ef migrations add Vistas --startup-project ../API/;cd ../;
+cd .\Data\;dotnet ef database update --startup-project ../API/;cd ../;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205271331:
+dotnet ef migrations add Identity --startup-project ../API/
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205270328:
+https://jasonwatmore.com/post/2022/05/26/vue-3-pinia-jwt-authentication-tutorial-example
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205261530:
+cd ..\Data\;
+cd ..\Front\;npm run dev;
+cd ..\API\;dotnet clean;dotnet build;dotnet run;
+dotnet add package DevExtreme.AspNet.Data
+dotnet add package Microsoft.AspNetCore.Mvc
+dotnet add package DevExtreme.AspNet.Mvc
+dotnet add package Microsoft.AspNetCore.Mvc.Abstractions
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202202071141:
+https://github.com/TrackableEntities/EntityFrameworkCore.Scaffolding.Handlebars
+https://github.com/TrackableEntities/EntityFrameworkCore.Scaffolding.Handlebars#usage
+dotnet add package EntityFrameworkCore.Scaffolding.Handlebars
+dotnet ef dbcontext scaffold "Data Source=.\SQL2016; Initial Catalog=OIM_MIG; Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -o Models -c NorthwindSlimContext -f --context-dir Context
+dotnet ef dbcontext scaffold "Server=.\SQL2016;Database=OIM_MIG;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -n ESAP.Sirecec.Data --context-namespace ESAP.Sirecec.Data -c DataContext --context-dir Context --no-pluralize  -t Clasificador -t ClasificadorTipo -t Indicador -t IndicadorAvance -t IndicadorGrupo -t IndicadorMeta -o Core -f
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202202071044:
+
+Migrations Overview
+https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli
+cd ..\Data\
+cd .\Data\;dotnet ef migrations add Clasificador --startup-project ../API/;cd ../;
+cd .\Data\;dotnet ef database update --startup-project ../API/;cd ../;
+dotnet ef migrations list --startup-project ../API/
+dotnet ef migrations remove --startup-project ../API/
+dotnet ef migrations remove 20220530015652_Vistas --startup-project ../API/
+dotnet ef database update 20220530015118_Clasificador --startup-project ../API/
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+# TO COMPLETELY REMOVE ALL MIGRATIONS AND START ALL OVER AGAIN, DO THE FOLLOWING:
+https://stackoverflow.com/a/40832305
+cd .\Data\;dotnet ef database update 0 --startup-project ../API/;dotnet ef migrations remove --startup-project ../API/;cd ..\;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202202071033:
+
+USING A SEPARATE MIGRATIONS PROJECT
+https://docs.microsoft.com/en-us/ef/core/cli/dotnet#target-project-and-startup-project
+https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/projects?tabs=dotnet-core-cli
+
+
+ERROR: Your target project 'ESAP.Sirecec.Api' doesn't match your migrations assembly 'ESAP.Sirecec.Data'. Either change your target project or change your migrations assembly.
+Change your migrations assembly by using DbContextOptionsBuilder. E.g. options.UseSqlServer(connection, b => b.MigrationsAssembly("ESAP.Sirecec.Api")).
+By default, the migrations assembly is the assembly containing the DbContext. 
+Change your target project to the migrations project by using the Package Manager Console's Default project drop-down list, or by executing "dotnet ef" from the directory containing the migrations project.  
+https://stackoverflow.com/a/38725569
+https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/projects?tabs=dotnet-core-cli
+
+1 - Change target assembly.
+cd Project.Data/
+dotnet ef --startup-project ../Project.Api/ migrations add Initial
+
+// code doesn't use .MigrationsAssembly...just rely on the default
+options.UseSqlServer(connection)
+
+2 - Change the migrations assembly.
+
+cd Project.Api/
+dotnet ef migrations add Initial
+
+// change the default migrations assembly
+options.UseSqlServer(connection, b => b.MigrationsAssembly("Project.Api"))
+

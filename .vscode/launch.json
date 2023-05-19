@@ -1,0 +1,122 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Api",
+			"type": "coreclr",
+			"request": "launch",
+			"console": "integratedTerminal",
+			"preLaunchTask": "app-clean-build",
+			"externalConsole": false,
+			"program": "${workspaceFolder}/Api/bin/Debug/net6.0/ESAP.Sirecec.API.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/Api",
+			"stopAtEntry": false,
+			// "launchBrowser": {
+			// 	"enabled": true
+			// },
+			// "serverReadyAction": {
+			// 	"action": "debugWithChrome",
+			// 	"webRoot": "${workspaceFolder}/Front",
+			// 	// "pattern": "\\bLocal:   http://127.0.0.1:([0-9]+)/",
+			// 	"pattern": "\\bNow listening on:\\s+http://\\S+:([0-9]+)",
+			// 	"uriFormat": "http://localhost:%s"
+			// },
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			},
+			"sourceFileMap": {
+				"/Views": "${workspaceFolder}/Views"
+			}
+		},
+		{
+			// Use IntelliSense to find out which attributes exist for C# debugging
+			// Use hover for the description of the existing attributes
+			// For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+			"name": "Api Browser",
+			"type": "coreclr",
+			"request": "launch",
+			"console": "integratedTerminal",
+			"preLaunchTask": "app-clean-build",
+			"externalConsole": false,
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/Api/bin/Debug/net6.0/ESAP.Sirecec.API.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/Api",
+			"stopAtEntry": false,
+			// Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+			"serverReadyAction": {
+				"action": "debugWithChrome",
+				"webRoot": "${workspaceFolder}",
+				"pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+				"uriFormat": "%s/swagger"
+			},
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			},
+			"sourceFileMap": {
+				"/Views": "${workspaceFolder}/Views"
+			}
+		},
+		{
+			// Use IntelliSense to find out which attributes exist for C# debugging
+			// Use hover for the description of the existing attributes
+			// For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+			"name": "ApiAttach",
+			"type": "coreclr",
+			"request": "attach"
+		},
+		{
+			"type": "chrome",
+			"request": "attach",
+			"name": "Attach to Chrome",
+			"port": 9222,
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Chrome",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"type": "chrome",
+			"request": "attach",
+			"name": "Attach Chrome in p:3000",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceFolder}",
+			"preLaunchTask": "run-front"
+		},
+		{
+			"type": "chrome",
+			"request": "la",
+			"name": "Launch Chrome in p:3000",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceFolder}",
+			"preLaunchTask": "run-front"
+		},
+		{
+			// Use IntelliSense to find out which attributes exist for C# debugging
+			// Use hover for the description of the existing attributes
+			// For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+			"name": "Front",
+			"type": "chrome",
+			"request": "launch",
+			"preLaunchTask": "run-front",
+			"cwd": "${workspaceFolder}/Front",
+			"serverReadyAction": {
+				"action": "debugWithChrome",
+				"webRoot": "${workspaceFolder}/Front",
+				"pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+				"uriFormat": "%s:3000"
+			},
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+			// "sourceFileMap": {
+			// 	"/Views": "${workspaceFolder}/Views"
+			// }
+		}
+	]
+}

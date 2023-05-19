@@ -1,0 +1,45 @@
+{
+	"debug": false,
+	"msalConfig": {
+		"enabled": true,
+		"auth": {
+			"clientId": "b7933851-8311-4051-a819-af52b557c52e",
+			"authority": "https://login.microsoftonline.com/33fa6907-21c6-4126-aa66-bcbed95361bb"
+		},
+		"cache": {
+			"cacheLocation": "localStorage"
+		}
+	},
+	"seguimiento": {
+		"anno_inicial": 2021,
+		"anno_final": 2031
+	},
+	"tipo_clasificador": [
+		{ "id": 1, "name": "departamento" },
+		{ "id": 2, "name": "municipio" },
+		{ "id": 3, "name": "entidad" },
+		{ "id": 4, "name": "dependencia" },
+		{ "id": 5, "name": "plan_accion" },
+		{ "id": 6, "name": "area_intervencion" },
+		{ "id": 7, "name": "objetivo_general" },
+		{ "id": 8, "name": "objetivo_especifico" },
+		{ "id": 11, "name": "tipo_indicador" },
+		{ "id": 12, "name": "unidad_medida" },
+		{ "id": 13, "name": "periodicidad" },
+		{ "id": 14, "name": "tipo_acumulacion" },
+		{ "id": 15, "name": "sector" }
+	],
+	"tipo_acumulacion": [
+		{ "id": 1376, "name": "mantenimiento" },
+		{ "id": 1377, "name": "flujo" },
+		{ "id": 1378, "name": "acumulado" },
+		{ "id": 1379, "name": "capacidad" },
+		{ "id": 1380, "name": "reduccion" },
+		{ "id": 1381, "name": "reduccion_anual" }
+	],
+	"tipo_indicador": [
+		{ "id": 1343, "name": "general" },
+		{ "id": 1344, "name": "producto" },
+		{ "id": 1345, "name": "resultado_intermedio" }
+	]
+}

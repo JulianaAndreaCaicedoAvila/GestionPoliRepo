@@ -1,0 +1,114 @@
+// Otras
+$max-width: 1760px;
+$radius: 0.25rem;
+// $font-family: "Istok Web", Calibri, sans-serif;
+// $font-family: "SegoeUI", "Helvetica Neue", Helvetica, Verdana, sans-serif;
+// $font-family: SegoeUI, "Helvetica Neue", Helvetica, Verdana, sans -serif;
+// $font-family: SegoeUI, "Helvetica Neue", Helvetica, Verdana, sans -serif;
+// $font-family: Poppins, Arial, sans-serif;
+// $font-family: "Montserrat Regular", Arial, sans-serif;
+$font-family: "Montserrat", Arial, sans-serif;
+// $font-family: Montserrat, Arial, sans-serif;
+// $font-family: Futura, Arial, sans-serif;
+// $font-family: Akzidenz, Arial, sans-serif;
+// $font-family: SegoeUI, "Helvetica Neue", Helvetica, Verdana, sans -serif;
+$border: 1px solid rgba(0, 0, 0, 0.125);
+$shadow: 0 2px 4px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.14);
+$font-size: 14px;
+$letter-spacing: -0.4px;
+$font-weight: 500;
+
+// Cambiar
+// $base-url: "/";
+$base-url: "/udistrital/siciud-v2/";
+
+// Color
+$text: #333;
+$main-color: #3366cc;
+// $main-color: #345a87;
+$main-color-oposite: #ffffff;
+$main-color-50: lighten($main-color, 50%);
+$main-color-100: lighten($main-color, 45%);
+$main-color-200: lighten($main-color, 40%);
+$main-color-300: lighten($main-color, 35%);
+$main-color-400: lighten($main-color, 25%);
+$main-color-450: lighten($main-color, 5%);
+$main-color-500: darken($main-color, 5%);
+$main-color-600: darken($main-color, 10%);
+$main-color-700: darken($main-color, 20%);
+$main-color-800: darken($main-color, 25%);
+
+$color-gray-10: lighten(#000, 90%);
+$color-gray-20: lighten(#000, 80%);
+$color-gray-30: lighten(#000, 70%);
+$color-gray-40: lighten(#000, 60%);
+$color-gray-50: lighten(#000, 50%);
+$color-gray-60: lighten(#000, 40%);
+$color-gray-70: lighten(#000, 30%);
+$color-gray-80: lighten(#000, 20%);
+$color-gray-90: lighten(#000, 10%);
+
+.color-main {
+	color: $main-color !important;
+}
+.color-main-500 {
+	color: $main-color-500;
+}
+.color-main-600 {
+	color: $main-color-600;
+}
+.color-main-700 {
+	color: $main-color-700;
+}
+.color-main-800 {
+	color: $main-color-800;
+}
+
+.bg-trans {
+	background-color: transparent !important;
+}
+.bg-main {
+	background-color: $main-color;
+}
+.bg-main-500 {
+	background-color: $main-color-500 !important;
+}
+.bg-main-600 {
+	background-color: $main-color-600 !important;
+}
+.bg-main-700 {
+	background-color: $main-color-700;
+}
+.bg-main-800 {
+	background-color: $main-color-800;
+}
+
+// Transitions
+$time: 1s;
+.fade-enter-active,
+.fade-leave-active {
+	transition-duration: 0.5s;
+	transition-property: opacity;
+	transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+	opacity: 0;
+}
+.w-30 {
+	width: 30%;
+}
+.w-35 {
+	width: 35%;
+}
+.w-40 {
+	width: 40%;
+}
+.w-45 {
+	width: 45%;
+}
+
+.text-color-white {
+	color: #ffffff !important;
+}

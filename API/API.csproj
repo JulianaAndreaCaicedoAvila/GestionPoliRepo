@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>ESAP.Sirecec.API</RootNamespace>
     <AssemblyName>ESAP.Sirecec.API</AssemblyName>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.6.1" />

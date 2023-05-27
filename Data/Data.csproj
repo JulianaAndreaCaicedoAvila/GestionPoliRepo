@@ -7,6 +7,7 @@
     <AssemblyName>ESAP.Sirecec.Data</AssemblyName>
     <DefaultItemExcludes Condition="'$(Configuration)' == 'Debug' ">
       $(DefaultItemExcludes);Migrations\**\*.Designer.cs</DefaultItemExcludes>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevExtreme.AspNet.Data" Version="2.9.2" />
@@ -19,6 +20,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">

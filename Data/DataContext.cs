@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data
 {
@@ -13,6 +13,12 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Clasificador> Clasificador { get; set; } = null!;
 		public virtual DbSet<Core.ClasificadorTipo> ClasificadorTipo { get; set; } = null!;
 		public virtual DbSet<Core.Clasificadores> Clasificadores { get; set; } = null!;
+		// protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		// {
+		// 	var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB1;";
+		// 	optionsBuilder.UseOracle(conn);
+		// }
+
 		public DataContext() : base() { }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
@@ -50,6 +56,15 @@ namespace ESAP.Sirecec.Data
 			return new DataContext();
 		}
 	}
+
+	// public static readonly ILoggerFactory ConsoleLoggerFactory
+	// 		  = LoggerFactory.Create(builder =>
+	// 		  {
+	// 			  builder
+	// 			  .AddFilter((category, level) =>
+	// 					category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Debug)
+	// 			  .AddConsole();
+	// 		  });
 
 	// 201912252313:
 	// https://docs.microsoft.com/en-us/ef/ef6/fundamentals/configuring/code-based

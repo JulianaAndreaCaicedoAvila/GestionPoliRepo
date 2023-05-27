@@ -104,6 +104,63 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("ClasificadorTipo");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificadores", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Hijos")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("PadreId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PadreNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("PadreTipoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PadreTipoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("TipoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TipoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Clasificadores", (string)null);
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.AuthRole", b =>
                 {
                     b.Property<int>("Id")

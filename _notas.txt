@@ -1,5 +1,21 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
+202305271451:
+dotnet ef migrations add Inicial
+dotnet ef migrations add Rating
+dotnet ef database update
+dotnet ef database update 0
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305262046:
+Oracle.EntityFrameworkCore
+dotnet ef database update --startup-project ../API/ --verbose;
+dotnet ef database update 0 --startup-project ../API/;
+https://www.codementor.io/@mehobega/asp-net-core-mvc-with-net-5-0-oracle-identity-using-n-tier-architecture-part-01-1pgcjukg3e
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
 202305170255:
 cd .\Data\;
 dotnet ef migrations add Clasificadores --startup-project ../API/
@@ -11,8 +27,14 @@ https://thecodeblogger.com/2021/07/20/how-to-apply-ef-core-migrations-via-sql-sc
 
 202305110752:
 cd Data
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet remove package Oracle.ManagedDataAccess.EntityFramework
+dotnet add package Microsoft.EntityFrameworkCore.Proxies
 dotnet add package Oracle.EntityFrameworkCore
 dotnet add package Oracle.EntityFrameworkCore --version 7.21.9
+dotnet add package Oracle.ManagedDataAccess.Core
+dotnet add package Oracle.ManagedDataAccess.Core --version 3.21.41
+dotnet remove package Oracle.ManagedDataAccess.Core
 
 dotnet tool install --global dotnet-ef
 dotnet tool update --global dotnet-ef
@@ -49,7 +71,6 @@ git checkout upstreambranch
 git branch master upstreambranch -f
 git checkout master
 git push origin master -f
-
 
 git remote set-url origin git@ssh.dev.azure.com:v3/ANSV-TICs/PNSV/PNSV
 git config user.name "Diego Alfonso Vargas Villegas" && git config user.email "diego.vargas@esap.edu.co"

@@ -1,4 +1,4 @@
-CREATE VIEW SIRECEC_V4."Clasificadores"
+CREATE VIEW "Clasificadores"
 AS
 SELECT
 	P."TipoId" AS "PadreTipoID",

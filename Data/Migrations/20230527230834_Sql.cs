@@ -6,18 +6,20 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ESAP.Sirecec.Data.Migrations
 {
 	/// <inheritdoc />
-	public partial class Clasificadores : Migration
+	public partial class Sql : Migration
 	{
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)
 		{
-			migrationBuilder.Sql(File.ReadAllText("Migrations/20230527230834_Clasificadores.sql"));
+			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Clasificadores.sql"));
+			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Usuarios.sql"));
 		}
 
 		/// <inheritdoc />
 		protected override void Down(MigrationBuilder migrationBuilder)
 		{
 			migrationBuilder.Sql(@"DROP VIEW ""Clasificadores"";");
+			migrationBuilder.Sql(@"DROP VIEW ""Usuarios"";");
 		}
 	}
 }

@@ -1,3 +1,17 @@
+
+dotnet new classlib -o Data
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package Oracle.EntityFrameworkCore
+dotnet add package Microsoft.AspNetCore.Mvc
+dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+dotnet add package Microsoft.AspNetCore.Mvc.Abstractions
+dotnet add package Microsoft.AspNetCore.Identity
+dotnet add package System.Configuration.ConfigurationManager
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.1
+dotnet add package Microsoft.Extensions.Options.ConfigurationExtensions
+
+dotnet remove package System.Configuration.ConfigurationManager
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202305271451:

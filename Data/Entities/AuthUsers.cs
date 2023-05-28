@@ -5,6 +5,9 @@ namespace ESAP.Sirecec.Data.Identity
 {
 	public class Users
 	{
+
+		[Key]
+		public int Id { get; set; }
 		public int RoleId { get; set; }
 		public string? RoleName { get; set; }
 		public int? CompanyId { get; set; }
@@ -12,9 +15,6 @@ namespace ESAP.Sirecec.Data.Identity
 		public string? CompanyAcronym { get; set; }
 		public int? DependenceId { get; set; }
 		public string? DependenceName { get; set; }
-
-		[Key]
-		public int Id { get; set; }
 		public string? Name { get; set; }
 		public string? FirstName { get; set; }
 		public string? LastName { get; set; }

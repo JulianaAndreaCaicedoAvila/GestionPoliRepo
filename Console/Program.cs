@@ -14,7 +14,7 @@ namespace OracleEFCore6
 
 			protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 			{
-				var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB1;";
+				var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB;";
 				optionsBuilder.UseOracle(conn);
 			}
 		}
@@ -57,7 +57,7 @@ namespace OracleEFCore6
 					//Console.WriteLine(item.Url + " has rating " + item.Rating );
 				}
 			}
-			System.Console.ReadLine();
+			// System.Console.ReadLine();
 		}
 	}
 }

@@ -4,8 +4,8 @@ $errorActionPreference = 'Stop'
 $date = Get-Date -f "yyyyMMddHHmm"
 $working = $PSScriptRoot
 $jsonPath = "$working\public\data\config.json"
-$targetBase = "\\orion\e$\web\support\ansv"
-$target = "$targetBase\pnsv"
+$targetBase = "\\orion\e$\web\support\esap"
+$target = "$targetBase\sirecec-v4"
 $targetBk = "$targetBase\_bk\pnsv-$date"
 Write-Host "Fecha: $date"
 Write-Host "Base: $targetBase"
@@ -35,9 +35,10 @@ if (Test-Path $targetBase) {
 
 		# Lanza
 		Start-Process $target
-		Start-Process "chrome.exe" "https://support.nemedi.com/ansv/pnsv"
+		Start-Process "chrome.exe" "https://support.nemedi.com/esap/sirecec-v4"
 
-	} Catch {
+	}
+ Catch {
 
 		$ErrorMessage = $_.Exception.Message
 		Write-Host "ERROR: $ErrorMessage" -ForegroundColor Red

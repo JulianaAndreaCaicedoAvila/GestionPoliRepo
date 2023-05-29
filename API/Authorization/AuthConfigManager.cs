@@ -1,22 +1,25 @@
-namespace Pnsv.Api.Authorization;
+namespace ESAP.Sirecec.Data.API.Authorization;
 
-using System.IdentityModel.Tokens.Jwt;
+// using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-public static class AuthConfigManager {
+public static class AuthConfigManager
+{
 
 	private static bool _hashNonceBeforeValidateToken = true;
 	private const string MicrosoftGraphApplicationId = "00000003-0000-0000-c000-000000000000";
 	private const string MicrosoftIssuer = "https://sts.windows.net";
 	private static IConfigurationManager<OpenIdConnectConfiguration> configManager;
-	private static IConfigurationManager<OpenIdConnectConfiguration> GetConfigurationManager(string metadataAddress) {
+	private static IConfigurationManager<OpenIdConnectConfiguration> GetConfigurationManager(string metadataAddress)
+	{
 		if (configManager == null)
 			return new ConfigurationManager<OpenIdConnectConfiguration>(metadataAddress, new OpenIdConnectConfigurationRetriever(), new HttpDocumentRetriever());
 		return configManager;
 	}
-	public static OpenIdConnectConfiguration GetOpenIdConnectConfig(string metadataAddress) {
+	public static OpenIdConnectConfiguration GetOpenIdConnectConfig(string metadataAddress)
+	{
 		var configManager = GetConfigurationManager(metadataAddress);
 		var metaData = configManager.GetConfigurationAsync(default).Result;
 		return metaData;

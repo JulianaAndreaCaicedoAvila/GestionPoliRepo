@@ -21,7 +21,8 @@ const count = ref(0);
 				<div class="row pb-4 pt-4">
 					<div class="col text-center">
 						<p class="text-color-white font-weight-semibold">
-							PNSV v2.0.20230115 - © COPYRIGHT {{ new Date().getFullYear() }} AGENCIA NACIONAL DE SEGURIDAD VIAL (ANSV) - TODOS LOS DERECHOS RESERVADOS
+							ESAP SIRECEC v4.0.20230530 - © COPYRIGHT {{ new Date().getFullYear() }} ESCUELA SUPERIOR DE ADMINISTRACIÓN PÚBLICA (ESAP) - TODOS LOS DERECHOS
+							RESERVADOS
 						</p>
 					</div>
 				</div>

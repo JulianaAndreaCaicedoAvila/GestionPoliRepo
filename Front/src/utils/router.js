@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/stores";
 import { createWebHistory, createRouter } from "vue-router";
 const DEFAULT_ROUTE = "inicio";
-const DEFAULT_TITLE = "PNSV v2.0";
+const DEFAULT_TITLE = "ESAP SIRECEC v4.0";
 const BASE_URL = import.meta.env.BASE_URL;
 export const router = createRouter({
 	linkActiveClass: "active",

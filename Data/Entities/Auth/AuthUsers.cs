@@ -29,6 +29,9 @@ namespace ESAP.Sirecec.Data.Identity
 		public virtual DateTime? LockoutEnd { get; set; }
 		public virtual bool LockoutEnabled { get; set; }
 		public virtual int AccessFailedCount { get; set; }
+		public virtual string? ConcurrencyStamp { get; set; }
+		public virtual string? NormalizedEmail { get; set; }
+		public virtual string? NormalizedUserName { get; set; }
 		public bool IsActive { get; set; }
 	}
 }

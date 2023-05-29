@@ -1,9 +1,10 @@
-namespace Pnsv.Api.Services;
-
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Identity;
 using Microsoft.Graph;
+
+
+namespace ESAP.Sirecec.Data.API.Services;
 
 public interface IAzureAdService
 {

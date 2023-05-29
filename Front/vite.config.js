@@ -13,7 +13,7 @@ export default defineConfig({
 		}),
 	],
 	base: "/",
-	// base: "/ansv/pnsv/",
+	// base: "/esap/sirecec4/",
 	server: {
 		port: 3000,
 	},

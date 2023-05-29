@@ -1,16 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using ESAP.Sirecec.API.Authorization;
 using ESAP.Sirecec.Data;
+using ESAP.Sirecec.Data.API.Authorization;
+using ESAP.Sirecec.Data.API.Services;
 using ESAP.Sirecec.Data.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Pnsv.Api.Authorization;
-using Pnsv.Api.Services;
 
 // 202206080343: Authenticating tokens from multiple sources (e.g Cognito and Azure) 
 // https://stackoverflow.com/a/66115586
@@ -23,13 +26,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 202202071938: Migration to ASP.NET Core in .NET 6 -> https://gist.github.com/davidfowl/0e0372c3c1d895c3ce195ba983b1e03d
 // 202201282046: Add services to the container -> https://stackoverflow.com/a/69722959
-// Migrate from ASP.NET Core 5.0 to 6.0 -> https://t.ly/oQGm
+// Migrate from ASP.NET Core 5.0 to 6.0 -> https://t.ly/oQGmj
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment environment = builder.Environment;
 var services = builder.Services;
-
-// 202202071917: In Data
-services.ConfigureDataServices(configuration);
 
 // 202206030515: Access appsettings.json values in controller classes https://stackoverflow.com/a/38359523
 services.AddSingleton<IConfiguration>(configuration);
@@ -105,6 +105,28 @@ services.AddHttpContextAccessor()
 // });
 ;
 
+// 202202071917: Traído de Data
+services.ConfigureDataServices(configuration);
+// services.AddDbContext<DataContext>(o =>
+// 	{
+// 		var conn = configuration.GetConnectionString("ConnStr");
+// 		// var conn = configuration["ConnectionStrings:ConnStr"];
+// 		// var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB;";
+// 		var cmdTo = configuration.GetValue<int>("Oracle:CommandTimeout");
+// 		var sqlComp = configuration.GetValue<string>("Oracle:SQLCompatibility");
+// 		o.ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
+// 		o.UseOracle(conn, o =>
+// 		{
+// 			o.CommandTimeout(cmdTo);
+// 			o.UseOracleSQLCompatibility(sqlComp ?? "12");
+// 			o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+// 		});
+// 		// var conn = "User Id=sirecec;Password=sirecec;Data Source=localhost:1521/ORCLPDB1;";
+// 		// var conn = "SERVER=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCLPDB1)));uid=sirecec;pwd=sirecec;";
+// 		// var conn = Configuration["ConnectionStrings:ConnStrOrc"];
+// 		// options.UseOracle(conn, b => b.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+// 		// options.UseOracleSQLCompatibility(orcSqlComp)
+// 	});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
@@ -114,7 +136,7 @@ services.AddEndpointsApiExplorer();
 // 202202072217: Config
 services.AddSwaggerGen(c =>
 {
-	c.SwaggerDoc("v1", new OpenApiInfo { Title = "PNSV API v1.0", Version = "v1" });
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "ESAP SIRECEC API v1.0", Version = "v1" });
 	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 	{
 		Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 

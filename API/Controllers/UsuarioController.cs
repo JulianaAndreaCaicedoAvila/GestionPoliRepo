@@ -3,16 +3,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DevExtreme.AspNet.Data;
+using ESAP.Sirecec.Data.API.Services;
+using ESAP.Sirecec.Data.API.Utils;
 using ESAP.Sirecec.Data.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Pnsv.Api.Services;
-using Data = ESAP.Sirecec.Data;
 
-namespace Pnsv.Api.Controllers
+namespace ESAP.Sirecec.Data.API.Controllers
 {
 
 	// public record AuthenticateRequest(string? Email, string? Password);
@@ -54,13 +54,6 @@ namespace Pnsv.Api.Controllers
 			_context = context;
 			_userManager = userManager;
 			_roleManager = roleManager;
-		}
-
-		private static string? FirstLetterToUpper(string? str)
-		{
-			if (str == null) return null;
-			if (str.Length > 1) return char.ToUpper(str[0]) + str.Substring(1);
-			return str.ToUpper();
 		}
 
 		private async Task<ActionResult> GetUserResult(Data.Identity.AuthUser user)
@@ -156,8 +149,8 @@ namespace Pnsv.Api.Controllers
 					// var adUser = await _ad.GetByEmailAsync(uReq.Email.ToLower());
 					if (parts.Length > 1)
 					{
-						uReq.FirstName = FirstLetterToUpper(parts[0]);
-						uReq.LastName = FirstLetterToUpper(parts[1]);
+						uReq.FirstName = parts[0].FirstLetterToUpper();
+						uReq.LastName = parts[1].FirstLetterToUpper();
 					}
 					else
 					{
@@ -203,14 +196,5 @@ namespace Pnsv.Api.Controllers
 		{
 			return Content("OK!", "text/plain;charset=utf-8");
 		}
-
-		// [HttpPost]
-		// public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem) {
-		// 	_context.TodoItems.Add(todoItem);
-		// 	await _context.SaveChangesAsync();
-
-		// 	//return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-		// 	return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
-		// }
 	}
 }

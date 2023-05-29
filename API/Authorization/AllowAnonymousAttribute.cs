@@ -1,5 +1,5 @@
 
-namespace Pnsv.Api.Authorization;
+namespace ESAP.Sirecec.Data.API.Authorization;
 [AttributeUsage(AttributeTargets.Method)]
 public class AllowAnonymousAttribute : Attribute { }
 

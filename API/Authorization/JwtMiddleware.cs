@@ -1,13 +1,16 @@
-namespace Pnsv.Api.Authorization;
-
-public class JwtMiddleware {
+using ESAP.Sirecec.API.Authorization;
+namespace ESAP.Sirecec.Data.API.Authorization;
+public class JwtMiddleware
+{
 	private readonly RequestDelegate _next;
 
-	public JwtMiddleware(RequestDelegate next) {
+	public JwtMiddleware(RequestDelegate next)
+	{
 		_next = next;
 	}
 
-	public async Task Invoke(HttpContext context, IJwtUtils jwtUtils) {
+	public async Task Invoke(HttpContext context, IJwtUtils jwtUtils)
+	{
 		// , IUserService userService
 		var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 		// var userId = jwtUtils.ValidateToken(token);

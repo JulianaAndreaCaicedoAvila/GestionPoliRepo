@@ -15,9 +15,9 @@ namespace ESAP.Sirecec.Data
 			// services.AddDbContext<DataContext>(o => o.UseOracle(configuration.GetConnectionString("ConnStr")));
 			services.AddDbContext<DataContext>(o =>
 				{
-					// var conn = configuration.GetConnectionString("ConnStr");
+					var conn = configuration.GetConnectionString("ConnStr");
 					// var conn = configuration["ConnectionStrings:ConnStr"];
-					var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB;";
+					// var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB;";
 					var cmdTo = configuration.GetValue<int>("Oracle:CommandTimeout");
 					var sqlComp = configuration.GetValue<string>("Oracle:SQLCompatibility");
 					o.ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning));

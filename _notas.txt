@@ -9,6 +9,14 @@ dotnet add package Microsoft.AspNetCore.Identity
 dotnet add package System.Configuration.ConfigurationManager
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.1
 dotnet add package Microsoft.Extensions.Options.ConfigurationExtensions
+dotnet add package DevExtreme.AspNet.Data;
+dotnet add package Microsoft.Extensions.Configuration
+dotnet add package Microsoft.Extensions.Configuration.Json
+
+API:
+dotnet add package System.IdentityModel.Tokens.Jwt
+
+
 
 dotnet remove package System.Configuration.ConfigurationManager
 
@@ -68,29 +76,6 @@ https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/managing?t
 
 dotnet remove package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.Design
-
----------------------------------------------------------------------------------------------------------------------------------------------
-
-202209091251:
-git remote -v
-
-git remote set-url origin git@github.com:NemediDev/pnsv.git
-git config user.name "Diego Vargas" && git config user.email "dvargas@nemedi.com"
-
-# Create a NEW remote branch based in local
-git push --set-upstream origin indicadores
-
-# You can force update your master branch as follows:
-git checkout upstreambranch
-git branch master upstreambranch -f
-git checkout master
-git push origin master -f
-
-git remote set-url origin git@ssh.dev.azure.com:v3/ANSV-TICs/PNSV/PNSV
-git config user.name "Diego Alfonso Vargas Villegas" && git config user.email "diego.vargas@esap.edu.co"
-
-git fetch origin
-git branch -a
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

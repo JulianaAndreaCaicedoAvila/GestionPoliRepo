@@ -1,16 +1,16 @@
 using System.Text;
 using DevExtreme.AspNet.Data;
 using ESAP.Sirecec.Data;
+using ESAP.Sirecec.Data.API.Authorization;
+using ESAP.Sirecec.Data.API.Utils;
 using ESAP.Sirecec.Data.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
-using Pnsv.Api.Authorization;
-using Pnsv.Api.Utils;
 
-namespace Pnsv.Api.Controllers
+namespace ESAP.Sirecec.Data.API.Controllers
 {
 	[Authorize]
 	[ApiController]
@@ -27,14 +27,14 @@ namespace Pnsv.Api.Controllers
 			_context = httpContextAccessor;
 		}
 
-		// [HttpGet("{tipoId?}")]
-		// [Authorization.AllowAnonymous]
-		// public List<Clasificadores> Get(int? tipoId)
-		// {
-		// 	var items = _db.Clasificadores.ToList();
-		// 	if (tipoId != null) items = items.Where(o => o.TipoId == tipoId).ToList();
-		// 	return items;
-		// }
+		[HttpGet("{tipoId?}")]
+		[Authorization.AllowAnonymous]
+		public List<Clasificadores> Get(int? tipoId)
+		{
+			var items = _db.Clasificadores.ToList();
+			if (tipoId != null) items = items.Where(o => o.TipoId == tipoId).ToList();
+			return items;
+		}
 
 		[HttpGet("tipos")]
 		public List<ClasificadorTipo> Tipos()
@@ -113,26 +113,17 @@ namespace Pnsv.Api.Controllers
 			return Ok(loadResult);
 		}
 
-		// [HttpPost("dx/{tipoId}")]
-		// public ActionResult Users(int? tipoId)
-		// {
-		// 	StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-		// 	var str = reader.ReadToEndAsync().Result;
-		// 	var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
-		// 	opts.PrimaryKey = new[] { "Id" };
-		// 	var items = _db.Clasificadores.ToList();
-		// 	if (tipoId != null && tipoId != 0) items = items.Where(o => o.TipoId == tipoId).ToList();
-		// 	var loadResult = DataSourceLoader.Load(items, opts);
-		// 	return Ok(loadResult);
-		// }
-
-		// [HttpPost]
-		// public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem) {
-		// 	_context.TodoItems.Add(todoItem);
-		// 	await _context.SaveChangesAsync();
-
-		// 	//return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-		// 	return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
-		// }
+		[HttpPost("dx/{tipoId}")]
+		public ActionResult Users(int? tipoId)
+		{
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "Id" };
+			var items = _db.Clasificadores.ToList();
+			if (tipoId != null && tipoId != 0) items = items.Where(o => o.TipoId == tipoId).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
+		}
 	}
 }

@@ -1,22 +1,26 @@
-namespace Pnsv.Api.Services;
+namespace ESAP.Sirecec.Data.API.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
 
-public interface IEmailService {
+public interface IEmailService
+{
 	void Send(string to, string subject, string html, string? from = null);
 }
 
-public class EmailService : IEmailService {
+public class EmailService : IEmailService
+{
 
 	private readonly IConfiguration _configuration;
 
-	public EmailService(IConfiguration configuration) {
+	public EmailService(IConfiguration configuration)
+	{
 		_configuration = configuration;
 	}
 
-	public void Send(string to, string subject, string body, string from = null) {
+	public void Send(string to, string subject, string body, string from = null)
+	{
 		// Create message
 		var email = new MimeMessage();
 		email.From.Add(MailboxAddress.Parse(from ?? _configuration["Email:From"]));

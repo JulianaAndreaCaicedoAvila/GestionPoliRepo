@@ -16,8 +16,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Pnsv.Api.Utils
+namespace ESAP.Sirecec.Data.API.Utils
 {
+
 	public class JsonDynamicWrapper
 	{
 		public dynamic D { get; set; }
@@ -25,6 +26,14 @@ namespace Pnsv.Api.Utils
 
 	public static class Extensions
 	{
+
+
+		public static string FirstLetterToUpper(this string str)
+		{
+			if (str == null) return null;
+			if (str.Length > 1) return char.ToUpper(str[0]) + str.Substring(1);
+			return str.ToUpper();
+		}
 
 		// 202301190214 https://stackoverflow.com/a/9523388
 		public static IEnumerable<TKey> Distinct<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)

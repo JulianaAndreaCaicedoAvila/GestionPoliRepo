@@ -1,4 +1,3 @@
-namespace Pnsv.Api.Authorization;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -11,6 +10,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
+namespace ESAP.Sirecec.Data.API.Authorization;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class Authorize : Attribute, IAuthorizationFilter
 {

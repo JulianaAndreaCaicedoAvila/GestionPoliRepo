@@ -1,8 +1,8 @@
 using System.Text;
 using DevExtreme.AspNet.Data;
 using ESAP.Sirecec.Data;
-using ESAP.Sirecec.Data.API.Authorization;
-using ESAP.Sirecec.Data.API.Utils;
+using ESAP.Sirecec.Data.Api.Authorization;
+using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
 
-namespace ESAP.Sirecec.Data.API.Controllers
+namespace ESAP.Sirecec.Data.Api.Controllers
 {
 	[Authorize]
 	[ApiController]

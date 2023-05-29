@@ -1,4 +1,4 @@
-namespace ESAP.Sirecec.Data.API.Services;
+namespace ESAP.Sirecec.Data.Api.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;

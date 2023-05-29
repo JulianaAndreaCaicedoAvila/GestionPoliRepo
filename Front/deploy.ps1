@@ -29,7 +29,7 @@ if (Test-Path $targetBase) {
 		Move-Item -Path "$working\dist" -Destination $target
 
 		# Compila Dotnet
-		cd ..\API\
+		cd ..\Api\
 		dotnet clean
 		dotnet publish -c Release -o "$target\api"
 

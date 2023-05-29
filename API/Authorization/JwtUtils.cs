@@ -1,4 +1,4 @@
-namespace ESAP.Sirecec.API.Authorization;
+namespace ESAP.Sirecec.Api.Authorization;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

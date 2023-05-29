@@ -3,8 +3,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>ESAP.Sirecec.API</RootNamespace>
-    <AssemblyName>ESAP.Sirecec.API</AssemblyName>
+    <RootNamespace>ESAP.Sirecec.Api</RootNamespace>
+    <AssemblyName>ESAP.Sirecec.Api</AssemblyName>
     <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
   <ItemGroup>

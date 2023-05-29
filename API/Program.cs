@@ -1,9 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using ESAP.Sirecec.API.Authorization;
+using ESAP.Sirecec.Api.Authorization;
 using ESAP.Sirecec.Data;
-using ESAP.Sirecec.Data.API.Authorization;
-using ESAP.Sirecec.Data.API.Services;
+using ESAP.Sirecec.Data.Api.Authorization;
+using ESAP.Sirecec.Data.Api.Services;
 using ESAP.Sirecec.Data.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;

@@ -8,7 +8,7 @@
 			"console": "integratedTerminal",
 			"preLaunchTask": "app-clean-build",
 			"externalConsole": false,
-			"program": "${workspaceFolder}/Api/bin/Debug/net6.0/ESAP.Sirecec.API.dll",
+			"program": "${workspaceFolder}/Api/bin/Debug/net6.0/ESAP.Sirecec.Api.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}/Api",
 			"stopAtEntry": false,
@@ -40,7 +40,7 @@
 			"preLaunchTask": "app-clean-build",
 			"externalConsole": false,
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/Api/bin/Debug/net6.0/ESAP.Sirecec.API.dll",
+			"program": "${workspaceFolder}/Api/bin/Debug/net6.0/ESAP.Sirecec.Api.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}/Api",
 			"stopAtEntry": false,

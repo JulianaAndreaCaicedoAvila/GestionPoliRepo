@@ -3,8 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DevExtreme.AspNet.Data;
-using ESAP.Sirecec.Data.API.Services;
-using ESAP.Sirecec.Data.API.Utils;
+using ESAP.Sirecec.Data.Api.Services;
+using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace ESAP.Sirecec.Data.API.Controllers
+namespace ESAP.Sirecec.Data.Api.Controllers
 {
 
 	// public record AuthenticateRequest(string? Email, string? Password);

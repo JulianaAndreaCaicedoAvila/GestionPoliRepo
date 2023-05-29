@@ -1,3 +1,10 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305291440:
+https://xunit.net/docs/getting-started/netcore/cmdline
+dotnet new xunit
+
+---------------------------------------------------------------------------------------------------------------------------------------------
 
 dotnet new classlib -o Data
 dotnet add package Microsoft.EntityFrameworkCore.Tools
@@ -13,7 +20,7 @@ dotnet add package DevExtreme.AspNet.Data;
 dotnet add package Microsoft.Extensions.Configuration
 dotnet add package Microsoft.Extensions.Configuration.Json
 
-API:
+Api:
 dotnet add package System.IdentityModel.Tokens.Jwt
 
 
@@ -32,15 +39,15 @@ dotnet ef database update 0
 
 202305262046:
 Oracle.EntityFrameworkCore
-dotnet ef database update --startup-project ../API/ --verbose;
-dotnet ef database update 0 --startup-project ../API/;
+dotnet ef database update --startup-project ../Api/ --verbose;
+dotnet ef database update 0 --startup-project ../Api/;
 https://www.codementor.io/@mehobega/asp-net-core-mvc-with-net-5-0-oracle-identity-using-n-tier-architecture-part-01-1pgcjukg3e
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202305170255:
 cd .\Data\;
-dotnet ef migrations add Clasificadores --startup-project ../API/
+dotnet ef migrations add Clasificadores --startup-project ../Api/
 dotnet ef migrations script --help
 dotnet ef migrations script | out-file ./script.sql
 https://thecodeblogger.com/2021/07/20/how-to-apply-ef-core-migrations-via-sql-scripts/
@@ -62,14 +69,14 @@ dotnet tool install --global dotnet-ef
 dotnet tool update --global dotnet-ef
 
 cd .\Data\;
-dotnet ef migrations list --startup-project ../API/
-dotnet ef database update 0 --startup-project ../API/
-dotnet ef migrations add Inicial --startup-project ../API/
-dotnet ef database update --startup-project ../API/
-dotnet ef database update 20230511175400_Inicial --startup-project ../API/
+dotnet ef migrations list --startup-project ../Api/
+dotnet ef database update 0 --startup-project ../Api/
+dotnet ef migrations add Inicial --startup-project ../Api/
+dotnet ef database update --startup-project ../Api/
+dotnet ef database update 20230511175400_Inicial --startup-project ../Api/
 
 20161012160749_AddedOrderToCourse
-dotnet ef migrations remove --startup-project ../API/
+dotnet ef migrations remove --startup-project ../Api/
 dotnet ef migrations remove
 
 https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/managing?tabs=dotnet-core-cli
@@ -94,20 +101,20 @@ dotnet add package Microsoft.EntityFrameworkCore.InMemory
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
-cd .\Data\;dotnet ef database update 0 --startup-project ../API/;
-dotnet ef migrations remove --startup-project ../API/;cd ..\;
-cd .\Data\;dotnet ef database update 20220530015118_Clasificador --startup-project ../API/;
+cd .\Data\;dotnet ef database update 0 --startup-project ../Api/;
+dotnet ef migrations remove --startup-project ../Api/;cd ..\;
+cd .\Data\;dotnet ef database update 20220530015118_Clasificador --startup-project ../Api/;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202205292052:
-cd .\Data\;dotnet ef migrations add Vistas --startup-project ../API/;cd ../;
-cd .\Data\;dotnet ef database update --startup-project ../API/;cd ../;
+cd .\Data\;dotnet ef migrations add Vistas --startup-project ../Api/;cd ../;
+cd .\Data\;dotnet ef database update --startup-project ../Api/;cd ../;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202205271331:
-dotnet ef migrations add Identity --startup-project ../API/
+dotnet ef migrations add Identity --startup-project ../Api/
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -119,7 +126,7 @@ https://jasonwatmore.com/post/2022/05/26/vue-3-pinia-jwt-authentication-tutorial
 202205261530:
 cd ..\Data\;
 cd ..\Front\;npm run dev;
-cd ..\API\;dotnet clean;dotnet build;dotnet run;
+cd ..\Api\;dotnet clean;dotnet build;dotnet run;
 dotnet add package DevExtreme.AspNet.Data
 dotnet add package Microsoft.AspNetCore.Mvc
 dotnet add package DevExtreme.AspNet.Mvc
@@ -141,18 +148,18 @@ dotnet ef dbcontext scaffold "Server=.\SQL2016;Database=OIM_MIG;Trusted_Connecti
 Migrations Overview
 https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli
 cd ..\Data\
-cd .\Data\;dotnet ef migrations add Clasificador --startup-project ../API/;cd ../;
-cd .\Data\;dotnet ef database update --startup-project ../API/;cd ../;
-dotnet ef migrations list --startup-project ../API/
-dotnet ef migrations remove --startup-project ../API/
-dotnet ef migrations remove 20220530015652_Vistas --startup-project ../API/
-dotnet ef database update 20220530015118_Clasificador --startup-project ../API/
+cd .\Data\;dotnet ef migrations add Clasificador --startup-project ../Api/;cd ../;
+cd .\Data\;dotnet ef database update --startup-project ../Api/;cd ../;
+dotnet ef migrations list --startup-project ../Api/
+dotnet ef migrations remove --startup-project ../Api/
+dotnet ef migrations remove 20220530015652_Vistas --startup-project ../Api/
+dotnet ef database update 20220530015118_Clasificador --startup-project ../Api/
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 # TO COMPLETELY REMOVE ALL MIGRATIONS AND START ALL OVER AGAIN, DO THE FOLLOWING:
 https://stackoverflow.com/a/40832305
-cd .\Data\;dotnet ef database update 0 --startup-project ../API/;dotnet ef migrations remove --startup-project ../API/;cd ..\;
+cd .\Data\;dotnet ef database update 0 --startup-project ../Api/;dotnet ef migrations remove --startup-project ../Api/;cd ..\;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

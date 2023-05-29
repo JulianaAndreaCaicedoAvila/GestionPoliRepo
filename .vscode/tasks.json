@@ -10,7 +10,7 @@
 		{
 			"label": "app-clean-build",
 			"command": "cmd.exe",
-			"args": ["/c", "cd ${workspaceFolder}/API & dotnet clean & dotnet build"],
+			"args": ["/c", "cd ${workspaceFolder}/Api & dotnet clean & dotnet build"],
 			"problemMatcher": "$msCompile",
 			"presentation": {
 				"revealProblems": "onProblem",
@@ -41,14 +41,14 @@
 			"label": "run-back",
 			"type": "shell",
 			"command": "cmd.exe",
-			"args": ["/c", "cd ${workspaceFolder}/API & dotnet run"],
+			"args": ["/c", "cd ${workspaceFolder}/Api & dotnet run"],
 			"problemMatcher": []
 		},
 		{
 			"label": "app-clean",
 			"command": "dotnet",
 			"type": "process",
-			"args": ["clean", "${workspaceFolder}/API/API.csproj"],
+			"args": ["clean", "${workspaceFolder}/Api/Api.csproj"],
 			"problemMatcher": [],
 			"presentation": {
 				"revealProblems": "onProblem",
@@ -60,7 +60,7 @@
 			"type": "process",
 			"label": "app-build",
 			"command": "dotnet",
-			"args": ["build", "${workspaceFolder}/API/API.csproj"],
+			"args": ["build", "${workspaceFolder}/Api/Api.csproj"],
 			"problemMatcher": [],
 			"presentation": {
 				"revealProblems": "onProblem",

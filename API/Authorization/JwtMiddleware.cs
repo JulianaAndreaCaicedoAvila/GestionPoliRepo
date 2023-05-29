@@ -1,5 +1,5 @@
-using ESAP.Sirecec.API.Authorization;
-namespace ESAP.Sirecec.Data.API.Authorization;
+using ESAP.Sirecec.Api.Authorization;
+namespace ESAP.Sirecec.Data.Api.Authorization;
 public class JwtMiddleware
 {
 	private readonly RequestDelegate _next;

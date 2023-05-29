@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ESAP.Sirecec.Data.API.Authorization;
+namespace ESAP.Sirecec.Data.Api.Authorization;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class Authorize : Attribute, IAuthorizationFilter
 {

@@ -60,7 +60,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		{
 			var roleName = (await _userManager.GetRolesAsync(user)).First();
 			// var role = await _roleManager.FindByNameAsync(roleName);
-			var usuario = _context.Users.First(o => o.Email.Trim().ToLower() == user.Email.Trim().ToLower());
+			var usuario = _context.Usuarios.First(o => o.Email.Trim().ToLower() == user.Email.Trim().ToLower());
 			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 			var claims = new List<Claim> {
@@ -90,7 +90,8 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		public async Task<ActionResult> Auth(AuthenticateRequest request)
 		{
 			var user = await _userManager.FindByEmailAsync(request.Email);
-			if (user is null || !await _userManager.CheckPasswordAsync(user, request.Password)) return Forbid();
+			if (user is null || !await _userManager.CheckPasswordAsync(user, request.Password))
+				return Forbid();
 			return await GetUserResult(user);
 		}
 
@@ -185,7 +186,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		{
 			var opts = Data.Utils.GetFromRequest(Request);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _context.Users.ToList();
+			var items = _context.Usuarios.ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

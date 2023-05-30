@@ -1,5 +1,3 @@
-CREATE VIEW "Usuarios"
-AS
 SELECT
 	UR."RoleId",
 	R."Name" AS "RoleName",
@@ -9,7 +7,7 @@ SELECT
 	U."DependenceId",
 	D."Nombre" AS "DependenceName",
 	U."Id",
-	U."FirstName" + ' ' + U."LastName" AS "Name",
+  U."FirstName" || ' ' || U."LastName" AS "Name",
 	U."FirstName",
 	U."LastName",
 	U."Email",

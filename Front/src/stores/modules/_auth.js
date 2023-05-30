@@ -1,10 +1,11 @@
+import { toRaw } from "vue";
 import api from "@/utils/api";
 import { router } from "@/utils";
 import { defineStore } from "pinia";
 import { PublicClientApplication } from "@azure/msal-browser";
 
-const tokenVariableName = "pnsv_user_token",
-	userVariableName = "pnsv_user_info",
+const tokenVariableName = "user_token",
+	userVariableName = "user_info",
 	// window._apiUrl = win,
 	// window._apiUrl = `${import.meta.env.VITE_URL_APP_API}`,
 	decryptToken = (token) => {
@@ -50,6 +51,7 @@ export const useAuthStore = defineStore("auth", {
 	// 202206171442: https://pinia.vuejs.org/core-concepts/getters.html
 	getters: {
 		esAdmin(state) {
+			console.log("state.user =>", toRaw(state.user));
 			return state.user != null ? state.user.roleId == 1 : false;
 		},
 		isTokenExpired(state) {

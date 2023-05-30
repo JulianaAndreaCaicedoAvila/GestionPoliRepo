@@ -7,23 +7,20 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	// [Keyless]
-	public partial class Clasificadores : BaseEntity
+	public partial class Modulo : BaseEntity
 	{
 		[Key]
 		public int Id { get; set; }
-		public int? PadreTipoId { get; set; }
-		public string? PadreTipoNombre { get; set; }
-		public int PadreId { get; set; }
-		public string? PadreNombre { get; set; }
-		public int TipoId { get; set; }
-		public string? TipoNombre { get; set; }
 		public string? Nombre { get; set; }
 		public string? Descripcion { get; set; }
+		public string? Justificacion { get; set; }
+		public string? Metodologia { get; set; }
+		public string? ActividadAprendizaje { get; set; }
+		public string? ActividadEvaluacion { get; set; }
+		public string? Objetivos { get; set; }
 		public int? Orden { get; set; }
-		public int? Hijos { get; set; }
-		public bool Activo { get; set; }
 		public int? CreadoPor { get; set; }
 		public int? EditadoPor { get; set; }
+		public bool? Activo { get; set; }
 	}
 }

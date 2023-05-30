@@ -27,10 +27,14 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Clasificador>? Clasificador { get; set; } = null!;
 		public virtual DbSet<Core.ClasificadorTipo> ClasificadorTipo { get; set; } = null!;
 		public virtual DbSet<Core.Clasificadores> Clasificadores { get; set; } = null!;
+		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
+
+			//202305292059: Seed
+			Seed.Init(builder);
 
 			// Setting maximum identifier length to 30 characters; By default, it's set to 128.
 			// https://docs.oracle.com/en/database/oracle/oracle-data-access-components/19.3/odpnt/EFCoreIdentifier.html
@@ -44,15 +48,28 @@ namespace ESAP.Sirecec.Data
 			builder.Entity<IdentityUserLogin<int>>().ToTable("AuthUserLogins");
 			builder.Entity<IdentityRoleClaim<int>>().ToTable("AuthRoleClaims");
 			builder.Entity<IdentityUserToken<int>>().ToTable("AuthUserTokens");
+			builder.Entity<Core.Modulo>(entity =>
+			{
+				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			});
 			builder.Entity<Core.Clasificador>(entity =>
 			{
+				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
-				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((0))");
-				// entity.ToTable("CLAS");
 			});
 			builder.Entity<Core.ClasificadorTipo>(entity =>
 			{
-				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((0))");
+				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 				// https://learn.microsoft.com/en-us/ef/core/modeling/relationships
 				entity.HasMany(e => e.Clasificadores)
 					 .WithOne(e => e.ClasificadorTipo)

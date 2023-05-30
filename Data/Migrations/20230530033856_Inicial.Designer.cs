@@ -12,7 +12,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230527230159_Inicial")]
+    [Migration("20230530033856_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -38,22 +38,28 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime?>("CreadoEl")
-                        .HasColumnType("TIMESTAMP(7)");
+                    b.Property<DateTime>("CreadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int?>("CreadoPor")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((0))");
+                        .HasDefaultValueSql("((1))");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime?>("EditadoEl")
-                        .HasColumnType("TIMESTAMP(7)");
+                    b.Property<DateTime>("EditadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int?>("EditadoPor")
-                        .HasColumnType("NUMBER(10)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -83,21 +89,27 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("CreadoEl")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int?>("CreadoPor")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((0))");
+                        .HasDefaultValueSql("((1))");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int?>("EditadoPor")
-                        .HasColumnType("NUMBER(10)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -105,6 +117,125 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ClasificadorTipo");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificadores", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Hijos")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("PadreId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PadreNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("PadreTipoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PadreTipoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("TipoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TipoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Clasificadores", (string)null);
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActividadAprendizaje")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("ActividadEvaluacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool?>("Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(1)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<DateTime>("CreadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int?>("CreadoPor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("EditadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int?>("EditadoPor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<string>("Justificacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Metodologia")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Objetivos")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Modulo");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.AuthRole", b =>
@@ -135,6 +266,15 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasFilter("\"NormalizedName\" IS NOT NULL");
 
                     b.ToTable("AuthRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConcurrencyStamp = "1a3e2b54-8452-42a6-a0c9-48ef82372dc7",
+                            Name = "Super Administrador",
+                            NormalizedName = "SUPER_ADMINISTRADOR"
+                        });
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.AuthUser", b =>
@@ -220,6 +360,152 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasFilter("\"NormalizedUserName\" IS NOT NULL");
 
                     b.ToTable("AuthUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "3e3c4f47-4ae3-48b9-a9f6-c683fcb61ae9",
+                            Email = "dvargas@nemedi.com",
+                            EmailConfirmed = true,
+                            FirstName = "Diego",
+                            IsActive = true,
+                            LastName = "Vargas",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DVARGAS@NEMEDI.COM",
+                            NormalizedUserName = "DVARGAS@NEMEDI.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGuOgKJiYjqTVY3Z1pEBdRb2ATQiyjPaCP7V7hkpKIGaiZbk6vYlt0GL+XIU7pCYOw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "e9d4e07c-20e1-47cd-b27d-fcdc592bace4",
+                            TwoFactorEnabled = false,
+                            UserName = "dvargas@nemedi.com"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "53c9b6a5-bc7a-4d52-88dc-1ae5d860dac7",
+                            Email = "diego.vargasv@esap.edu.co",
+                            EmailConfirmed = true,
+                            FirstName = "Diego",
+                            IsActive = true,
+                            LastName = "Vargas",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DIEGO.VARGASV@ESAP.EDU.CO",
+                            NormalizedUserName = "DIEGO.VARGASV@ESAP.EDU.CO",
+                            PasswordHash = "AQAAAAEAACcQAAAAECaBWXthotrD2zzURw6eKmOERbyuzxatGSSt2EwrQWrA9eOQgiVkx0NOSQasFE0C4w==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "15715c55-a8e3-4d8c-b72a-ecba33442a84",
+                            TwoFactorEnabled = false,
+                            UserName = "diego.vargasv@esap.edu.co"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "746a3283-2dde-4681-99ce-e5413cb0a99f",
+                            Email = "camilo.rincon@esap.edu.co",
+                            EmailConfirmed = true,
+                            FirstName = "Camilo",
+                            IsActive = true,
+                            LastName = "Rincón",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CAMILO.RINCON@ESAP.EDU.CO",
+                            NormalizedUserName = "CAMILO.RINCON@ESAP.EDU.CO",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOk7AcOR3lbjk23m2PrlQ1G+P2kwR/aewqPJTSOL+n3j0sdTDF+k7yWUNdDfqv5r2Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "3a7f8fe5-de8a-4567-8336-523360e33de7",
+                            TwoFactorEnabled = false,
+                            UserName = "camilo.rincon@esap.edu.co"
+                        });
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Identity.Users", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("CompanyAcronym")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("DependenceId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DependenceName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("LockoutEnd")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -304,6 +590,23 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AuthUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>

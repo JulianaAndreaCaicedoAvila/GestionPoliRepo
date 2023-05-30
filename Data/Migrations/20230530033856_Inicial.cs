@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ESAP.Sirecec.Data.Migrations
 {
     /// <inheritdoc />
@@ -65,14 +67,39 @@ namespace ESAP.Sirecec.Data.Migrations
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((0))"),
-                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true)
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ClasificadorTipo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Modulo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Justificacion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Metodologia = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    ActividadAprendizaje = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    ActividadEvaluacion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Objetivos = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modulo", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,11 +219,11 @@ namespace ESAP.Sirecec.Data.Migrations
                     Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Orden = table.Column<int>(type: "NUMBER(10)", nullable: true),
-                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((0))"),
-                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true),
-                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))")
+                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {
@@ -207,6 +234,31 @@ namespace ESAP.Sirecec.Data.Migrations
                         principalTable: "ClasificadorTipo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AuthRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { 1, "1a3e2b54-8452-42a6-a0c9-48ef82372dc7", "Super Administrador", "SUPER_ADMINISTRADOR" });
+
+            migrationBuilder.InsertData(
+                table: "AuthUsers",
+                columns: new[] { "Id", "AccessFailedCount", "CompanyId", "ConcurrencyStamp", "DependenceId", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { 1, 0, null, "3e3c4f47-4ae3-48b9-a9f6-c683fcb61ae9", null, "dvargas@nemedi.com", true, "Diego", true, "Vargas", false, null, "DVARGAS@NEMEDI.COM", "DVARGAS@NEMEDI.COM", "AQAAAAEAACcQAAAAEGuOgKJiYjqTVY3Z1pEBdRb2ATQiyjPaCP7V7hkpKIGaiZbk6vYlt0GL+XIU7pCYOw==", null, false, "e9d4e07c-20e1-47cd-b27d-fcdc592bace4", false, "dvargas@nemedi.com" },
+                    { 2, 0, null, "53c9b6a5-bc7a-4d52-88dc-1ae5d860dac7", null, "diego.vargasv@esap.edu.co", true, "Diego", true, "Vargas", false, null, "DIEGO.VARGASV@ESAP.EDU.CO", "DIEGO.VARGASV@ESAP.EDU.CO", "AQAAAAEAACcQAAAAECaBWXthotrD2zzURw6eKmOERbyuzxatGSSt2EwrQWrA9eOQgiVkx0NOSQasFE0C4w==", null, false, "15715c55-a8e3-4d8c-b72a-ecba33442a84", false, "diego.vargasv@esap.edu.co" },
+                    { 3, 0, null, "746a3283-2dde-4681-99ce-e5413cb0a99f", null, "camilo.rincon@esap.edu.co", true, "Camilo", true, "Rincón", false, null, "CAMILO.RINCON@ESAP.EDU.CO", "CAMILO.RINCON@ESAP.EDU.CO", "AQAAAAEAACcQAAAAEOk7AcOR3lbjk23m2PrlQ1G+P2kwR/aewqPJTSOL+n3j0sdTDF+k7yWUNdDfqv5r2Q==", null, false, "3a7f8fe5-de8a-4567-8336-523360e33de7", false, "camilo.rincon@esap.edu.co" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AuthUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 2 },
+                    { 1, 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -274,6 +326,9 @@ namespace ESAP.Sirecec.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Clasificador");
+
+            migrationBuilder.DropTable(
+                name: "Modulo");
 
             migrationBuilder.DropTable(
                 name: "AuthRoles");

@@ -49,5 +49,26 @@ namespace ESAP.Sirecec.Data
 		// public DateTime? EditadoEl { get; set; } = null;
 
 		// public int? EditadoPor { get; set; } = null;
+
+		public DateTime CreadoEl
+		{
+			get
+			{
+				return this.creadoEl ?? DateTime.Now;
+			}
+
+			set { this.creadoEl = value; }
+		}
+		private DateTime? creadoEl = null;
+		public DateTime EditadoEl
+		{
+			get
+			{
+				return this.editadoEl ?? DateTime.Now;
+			}
+
+			set { this.editadoEl = value; }
+		}
+		private DateTime? editadoEl = null;
 	}
 }

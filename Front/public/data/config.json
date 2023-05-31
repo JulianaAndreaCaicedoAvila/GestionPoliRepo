@@ -3,8 +3,8 @@
 	"msalConfig": {
 		"enabled": true,
 		"auth": {
-			"clientId": "b7933851-8311-4051-a819-af52b557c52e",
-			"authority": "https://login.microsoftonline.com/33fa6907-21c6-4126-aa66-bcbed95361bb"
+			"clientId": "4765445b-32c6-49b0-83e6-1d93765276ca",
+			"authority1": "https://login.microsoftonline.com/33fa6907-21c6-4126-aa66-bcbed95361bb"
 		},
 		"cache": {
 			"cacheLocation": "localStorage"

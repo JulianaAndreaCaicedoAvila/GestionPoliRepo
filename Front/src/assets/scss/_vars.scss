@@ -1,5 +1,5 @@
 // Otras
-$max-width: 1760px;
+$max-width: 1440px;
 $radius: 0.25rem;
 // $font-family: "Istok Web", Calibri, sans-serif;
 // $font-family: "SegoeUI", "Helvetica Neue", Helvetica, Verdana, sans-serif;
@@ -7,7 +7,8 @@ $radius: 0.25rem;
 // $font-family: SegoeUI, "Helvetica Neue", Helvetica, Verdana, sans -serif;
 // $font-family: Poppins, Arial, sans-serif;
 // $font-family: "Montserrat Regular", Arial, sans-serif;
-$font-family: "Montserrat", Arial, sans-serif;
+// $font-family: "Montserrat", Arial, sans-serif;
+$font-family: Nunito, Arial, sans-serif;
 // $font-family: Montserrat, Arial, sans-serif;
 // $font-family: Futura, Arial, sans-serif;
 // $font-family: Akzidenz, Arial, sans-serif;
@@ -17,6 +18,7 @@ $shadow: 0 2px 4px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.14);
 $font-size: 14px;
 $letter-spacing: -0.4px;
 $font-weight: 500;
+$color-accent: #ffcd07;
 
 // Cambiar
 // $base-url: "/";
@@ -24,8 +26,9 @@ $base-url: "/udistrital/siciud-v2/";
 
 // Color
 $text: #333;
-$main-color: #3366cc;
+$main-color: #3164ca;
 // $main-color: #345a87;
+// $main-color: #003287;
 $main-color-oposite: #ffffff;
 $main-color-50: lighten($main-color, 50%);
 $main-color-100: lighten($main-color, 45%);

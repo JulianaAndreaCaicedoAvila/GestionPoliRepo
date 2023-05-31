@@ -14,75 +14,113 @@ onMounted(() => {
 });
 </script>
 <template>
-	<div class="card mb-4">
-		<div class="card-header main">
-			<i class="fa-solid fa-car-side"></i>
-			¿Qué es el Plan Nacional de Seguridad Vial?
+	<div class="row">
+		<div class="col">
+			<div class="card mb-4">
+				<!-- <div class="card-header main">
+			<i class="fa-solid fa-users-rectangle"></i>
+			Sistema de Registro y Control de Eventos de Capacitación de la ESAP
+		</div> -->
+				<img class="card-img-top" src="/assets/img/banner-01.jpg" alt="Card Image" />
+				<div class="card-body pt-3 pb-0">
+					<div class="row">
+						<div class="col content">
+							<div class="row">
+								<div class="col-lg-12">
+									<h2 class="font-weight-normal text-7 mb-0 color-main text-center">
+										<!-- <i class="fa-solid fa-users-rectangle me-2"></i> -->
+										Sistema de Registro y Control de Eventos de Capacitación de la ESAP
+									</h2>
+									<p class="p-0 text-center">
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec urna eros, lacinia eu ullamcorper a, egestas porta nulla. Donec nec est nibh,
+										rhoncus lobortis magna Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec urna eros, lacinia eu ullamcorper a, egestas porta
+										nulla. Donec nec est nibh.
+									</p>
+									<!-- <p class="text-center p-0 pb-4 m-0">
+										<img class="img-fluid center-block d-block mx-auto" src="/assets/img/page/pnsv-estrategia.jpg" alt="Device" />
+									</p> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="card-body pt-3 pb-4">
-			<div class="row">
-				<div class="col content">
+	</div>
+	<div class="row">
+		<div class="col-lg-6 col-md-12">
+			<div class="card mb-4">
+				<div class="card-header main text-center">
+					<i class="fa-solid fa-users-line"></i>
+					Alto gobierno
+				</div>
+				<img class="card-img" src="/assets/img/banner-04.jpg" alt="Card Image" />
+				<div class="card-body pt-3 pb-0">
 					<div class="row">
-						<div class="col-lg-12">
-							<h2 class="font-weight-normal text-7 mb-2 color-main">
-								<strong class="font-weight-semibold">¿Qué es </strong> el Plan Nacional de Seguridad Vial?
-							</h2>
-							<p class="p-0">
-								PNSV es el instrumento de planeación del Gobierno nacional a través del cual se determinan los objetivos, acciones y calendarios necesarios para
-								reducir las víctimas de siniestros viales en el país. Asigna a la Agencia Nacional de Seguridad Vial (ANSV) la responsabilidad de elaborar,
-								planificar, coordinar y hacer seguimiento del Plan Nacional de Seguridad Vial.
-							</p>
-							<p class="text-center p-0 pb-4 m-0">
+						<div class="col content">
+							<div class="row">
+								<div class="col-lg-12">
+									<!-- <h2 class="font-weight-normal text-7 mb-2 color-main">
+										<i class="fa-solid fa-users-rectangle me-2"></i>
+										Sistema de Registro y Control de Eventos de Capacitación de la ESAP
+									</h2> -->
+									<p class="p-0 mb-3">
+										La <strong>Escuela de Alto Gobierno de la ESAP</strong> ofrece de manera presencial y virtual su amplia oferta académica a través de cursos,
+										diplomados, seminarios, conferencias y capacitaciones. Los programas están dirigidos a los altos directivos del estado colombiano en nivel
+										territorial y nacional, y a los miembros de corporaciones públicas de elección popular.
+									</p>
+									<!-- <p class="text-center p-0 pb-4 m-0">
 								<img class="img-fluid center-block d-block mx-auto" src="/assets/img/page/pnsv-estrategia.jpg" alt="Device" />
-							</p>
+							</p> -->
+								</div>
+							</div>
 						</div>
 					</div>
+				</div>
+				<div class="card-footer text-center">
+					<p class="p-0 m-0 mt-1 mb-1 text-center">
+						<a href="#" title="Ver la oferta académica para 'Alto gobierno'..."
+							><strong>VER OFERTA ACADÉMICA <i class="fa-solid fa-circle-arrow-right ms-1"></i></strong
+						></a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-12">
+			<div class="card mb-4">
+				<div class="card-header main text-center">
+					<i class="fa-solid fa-people-group"></i>
+					Capacitación
+				</div>
+				<img class="card-img-top" src="/assets/img/banner-03.jpg" alt="Card Image" />
+				<div class="card-body pt-3 pb-0">
 					<div class="row">
-						<div :class="'col-lg-12 d-flex ' + getClass()">
-							<p class="p-0 m-0">
-								El <span class="font-weight-semibold">PNSV 2022-2031</span> fue aprobado mediante el
-								<span class="font-weight-semibold"
-									><a :href="bUrl + 'docs/20220729-decreto-1430.pdf'" target="_blank" title="Observar decreto..."
-										>Decreto 1430 del 29 de julio de 2022 <i class="ms-1 fa-solid fa-arrow-up-right-from-square"></i></a></span
-								>.
-							</p>
-							<p class="text-center p-0 m-0" v-if="showInfo">
-								<router-link :to="{ name: 'que-es' }" class="font-weight-semibold" title="Más información del PNSV..."
-									>MÁS INFORMACIÓN <i class="fa-solid fa-circle-chevron-right ms-1"></i
-								></router-link>
-							</p>
+						<div class="col content">
+							<div class="row">
+								<div class="col-lg-12">
+									<!-- <h2 class="font-weight-normal text-7 mb-2 color-main">
+										<i class="fa-solid fa-users-rectangle me-2"></i>
+										Sistema de Registro y Control de Eventos de Capacitación de la ESAP
+									</h2> -->
+									<p class="p-0">
+										EL <strong>Departamento de Capacitación de la ESAP</strong> pone a disposición de las entidades públicas y la ciudadaní­a en general su
+										oferta de capacitación en educación informal que responde a los lineamientos del Plan Nacional de Desarrollo, Plan Nacional de Formación y
+										Capacitación y los Planes Institucionales de la ESAP.
+									</p>
+									<!-- <p class="text-center p-0 pb-4 m-0">
+								<img class="img-fluid center-block d-block mx-auto" src="/assets/img/page/pnsv-estrategia.jpg" alt="Device" />
+							</p> -->
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="row" v-if="!showInfo">
-						<div class="col-lg-12 bt pt-3 mt-4">
-							<p>
-								El Plan es el resultado de un amplio proceso participativo que inició en 2020. Se realizaron dos consultas públicas, talleres territoriales con
-								representantes de víctimas de siniestros viales, de actores viales, del sector privado, institucionales y de la academia. Adicionalmente, se
-								adelantó proceso de concertación con <span class="font-weight-semibold">24 entidades</span> del orden nacional.
-							</p>
-							<p>
-								El Plan contempla metas específicas para reducir la mortalidad de los actores viales más vulnerables en la vía. A
-								<span class="font-weight-semibold">2031</span> se espera lograr la reducción de fallecidos por actor vial de la siguiente forma:
-							</p>
-						</div>
-					</div>
-					<div class="row pb-2" v-if="!showInfo">
-						<div class="col-lg-4 text-center">
-							<i class="fa-solid fa-motorcycle fa-6x color-main"></i>
-							<h4 class="m-0 p-0 mt-2">Motocicletas</h4>
-							<h2 class="m-0 color-main font-weight-semibold">-47<small class="ms-1">%</small></h2>
-						</div>
-						<div class="col-lg-4 text-center">
-							<i class="fa-solid fa-person-walking fa-6x color-main"></i>
-							<h4 class="m-0 p-0 mt-2">Peatones</h4>
-							<h2 class="m-0 color-main font-weight-semibold">-45<small class="ms-1">%</small></h2>
-						</div>
-						<div class="col-lg-4 text-center">
-							<i class="fa-solid fa-bicycle fa-6x color-main"></i>
-							<h4 class="m-0 p-0 mt-2">Bicicletas</h4>
-							<h2 class="m-0 color-main font-weight-semibold">-37<small class="ms-1">%</small></h2>
-						</div>
-					</div>
+				</div>
+				<div class="card-footer text-center">
+					<p class="p-0 m-0 mt-1 mb-1 text-center">
+						<a href="#" title="Ver la oferta académica para 'Capacitación'..."
+							><strong>VER OFERTA ACADÉMICA <i class="fa-solid fa-circle-arrow-right ms-1"></i></strong
+						></a>
+					</p>
 				</div>
 			</div>
 		</div>

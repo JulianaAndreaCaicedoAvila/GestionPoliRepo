@@ -220,17 +220,17 @@ $().ready(function () {});
 					<div class="card-footer main">
 						<div class="d-flex justify-content-between">
 							<span v-if="$conf.msalConfig.enabled">
-								<button type="button" class="btn btn-gray" @click.prevent="signin" title="Ingreso usuarios ANSV...">INGRESO USUARIOS ANSV</button>
+								<button type="button" class="btn btn-gray" @click.prevent="signin" title="Ingreso usuarios ESAP...">USUARIOS ESAP</button>
 							</span>
-							<span v-else> &nbsp;</span>
+							<span v-else>&nbsp;</span>
 							<button type="button" class="btn btn-main" @click.prevent="login" title="Ingresar">INGRESAR</button>
+						</div>
+						<div class="bt mt-3 pt-2 text-center font-weight-semibold text-size-md d-flex align-items-center justify-content-between">
+							<a href="#" @click.prevent="recoverDo" class="text-" title="Recuperar contraseña...">Recuperar contraseña</a>
+							<a href="#" @click.prevent="recoverDo" class="text-" title="Registrarse...">Registrarse</a>
 						</div>
 					</div>
 				</div>
-			</div>
-
-			<div class="text-center font-weight-semibold text-size-md pt-3">
-				<a href="#" @click.prevent="recoverDo" class="text-" title="Recuperar contraseña...">Recuperar contraseña</a>
 			</div>
 		</div>
 

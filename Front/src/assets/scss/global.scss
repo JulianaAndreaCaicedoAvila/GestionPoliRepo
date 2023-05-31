@@ -4,12 +4,27 @@
 body,
 html,
 #app {
-	min-height: 100vh;
 	font-family: $font-family;
 	font-size: $font-size;
-	font-weight: $font-weight;
+	font-weight: 500 !important;
 	letter-spacing: $letter-spacing;
-	background: url(/assets/img/symbol-bg.png) no-repeat center center #f7f7f7;
+	min-height: 100vh;
+}
+
+div#app {
+	background-color: #f3f3f3;
+	&::before {
+		background: url(/assets/img/logo-esap.svg) no-repeat center center;
+		background-size: 900px;
+		filter: grayscale(100%);
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		opacity: 0.05;
+		content: "";
+	}
 }
 
 p {
@@ -70,11 +85,14 @@ h2 {
 }
 
 .footer-copyright {
-	a {
-		color: white !important;
-	}
 	p {
-		letter-spacing: -0.2px;
+		$font-family: Nunito, Arial, sans-serif !important;
+		font-weight: 700 !important;
+		font-size: 13px !important;
+		line-height: 20px !important;
+		letter-spacing: normal !important;
+		letter-spacing: -0.5px !important;
+		opacity: 0.85 !important;
 	}
 }
 
@@ -214,14 +232,16 @@ div.form-control {
 			i {
 				font-size: 1.4rem;
 				margin-right: 0.5rem;
+				color: $color-accent;
 			}
-			font-weight: 400;
-			letter-spacing: -1.8px;
-			font-size: 1.6rem;
+			font-weight: 600;
+			letter-spacing: -1px;
+			font-size: 1.7rem;
 			padding: 1rem 2rem;
 			border: none;
 			background-color: $main-color;
 			color: #fff;
+			border-bottom: 4px solid $color-accent;
 		}
 	}
 
@@ -314,8 +334,8 @@ input {
 		letter-spacing: -0.6px;
 		background-color: $main-color !important;
 		color: #ffffff !important;
-		font-weight: 500;
-		font-size: 1rem;
+		font-weight: 600;
+		font-size: 14px;
 		.dx-datagrid-text-content {
 			padding-right: 0.5rem;
 		}
@@ -373,10 +393,10 @@ span.cmds {
 
 .dx-row {
 	&.dx-data-row {
-		font-weight: 500;
-		font-size: 1rem;
+		font-weight: 600;
+		font-size: 14px;
 		font-style: normal;
-		letter-spacing: -0.8px;
+		letter-spacing: -0.6px;
 		&.dx-state-hover {
 			td {
 				background-color: $main-color-200 !important;
@@ -799,4 +819,84 @@ html {
 		font-size: 1.3rem;
 		margin-left: 0.3rem;
 	}
+}
+
+.header-row {
+	&.bt {
+		border-top: 1px solid #ccc;
+	}
+}
+
+$height: 45px;
+#header .header-nav-main {
+	// display: flex !important;
+	// height: $height !important;
+	// min-height: $height !important;
+	// line-height: $height !important;
+}
+#header .header-nav {
+	height: $height !important;
+	min-height: $height !important;
+	line-height: $height !important;
+}
+.nav-pills {
+	// height: $height !important;
+	// min-height: $height !important;
+	// line-height: $height !important;
+	.dropdown {
+		// height: $height !important;
+		// min-height: $height !important;
+		// line-height: $height !important;
+		a {
+			font-weight: 700 !important;
+			font-size: 14px !important;
+			line-height: $height !important;
+			height: $height !important;
+			min-height: $height !important;
+		}
+		.dropdown-item {
+			// font-size: 1.1rem !important;
+		}
+	}
+}
+
+.dropdown-menu {
+	// line-height: $size !important;
+	// font-size: $size !important;
+	box-shadow: $shadow !important;
+	li {
+		// padding: 0 !important;
+		// line-height: $size !important;
+		// font-size: $size !important;
+		.dropdown-item {
+			$size: 40px;
+			font-weight: 600 !important;
+			height: $size !important;
+			min-height: $size !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			padding-left: 15px !important;
+			line-height: $size !important;
+			font-size: 1.1rem !important;
+		}
+	}
+}
+
+#logo-esap {
+	opacity: 0.75;
+}
+.bt-accent {
+	border-top: 4px solid $color-accent;
+	// box-shadow: $shadow;
+}
+.bb-accent {
+	border-bottom: 4px solid $color-accent;
+	// box-shadow: $shadow;
+}
+.color-accent {
+	color: $color-accent;
+}
+
+.dx-column-indicators {
+	color: $color-accent;
 }

@@ -593,14 +593,34 @@ Number.prototype.sizeFormat = function () {
 
 // 201810221852: Obtiene la fecha en formato dd/mm/yyyy
 // https://stackoverflow.com/a/12409344
-Date.prototype.getFormatted = function (theDate) {
-	var theDate = this;
-	var dd = theDate.getDate();
-	var mm = theDate.getMonth() + 1; //January is 0!
-	var yyyy = theDate.getFullYear();
+Date.prototype.getFormatted = function (date) {
+	var date = this;
+	var dd = date.getDate();
+	var mm = date.getMonth() + 1; //January is 0!
+	var yyyy = date.getFullYear();
 	if (dd < 10) dd = "0" + dd;
 	if (mm < 10) mm = "0" + mm;
 	return dd + "/" + mm + "/" + yyyy;
+};
+
+// Funciones
+Date.prototype.getHourAmPm = function (date) {
+	var date = this;
+	let suffix = "am";
+	let hours = date.getHours();
+	let minutes = date.getMinutes();
+	if (hours > 12) {
+		suffix = "pm";
+		hours = hours - 12;
+	}
+	minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;
+	return hours + ":" + minutes + suffix;
+};
+
+// 202305302059
+Date.prototype.getDateTimeAmPm = function (date) {
+	var date = this;
+	return date.getFormatted() + " " + date.getHourAmPm();
 };
 
 // 201612141726: Obtiene un Timestamp formato YYYYMMDDHHMMSS

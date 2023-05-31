@@ -6,6 +6,13 @@ dotnet new xunit
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
+Request Id: af63c9b5-35ce-4834-8b08-9afb0f617901
+Correlation Id: 1b1a50b8-7bba-473f-81ae-8dae09df3dfa
+Timestamp: 2023-05-31T02:30:01Z
+Message: AADSTS50011: The redirect URI 'http://localhost:3000/login' specified in the request does not match the redirect URIs configured for the application '4765445b-32c6-49b0-83e6-1d93765276ca'. Make sure the redirect URI sent in the request matches one added to your application in the Azure portal. Navigate to https://aka.ms/redirectUriMismatchError to learn more about how to fix this.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
 dotnet new classlib -o Data
 dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet add package Oracle.EntityFrameworkCore

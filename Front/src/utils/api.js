@@ -25,10 +25,12 @@ export default (args = {}) => {
 					},
 				],
 			});
+			/*
 			dialog.show().then((dialogResult) => {
 				console.log(dialogResult.buttonText);
 				// window.vm.loaderHide();
 			});
+			*/
 		}
 	};
 

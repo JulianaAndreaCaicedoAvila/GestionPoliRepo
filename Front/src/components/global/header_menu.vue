@@ -41,16 +41,16 @@ onMounted(() => {
 });
 </script>
 <template>
-	<div class="header-column justify-content-end">
+	<div class="header-column bt">
 		<div class="header-row">
-			<div class="header-nav header-nav-line header-nav-top-line header-nav-top-line-with-border order-2 order-lg-1">
-				<div class="header-nav-main header-nav-main-square header-nav-main-effect-2 header-nav-main-sub-effect-1">
-					<nav class="collapse">
-						<ul class="nav nav-pills" id="mainNav">
+			<div class="header-nav header-nav-line header-nav-top-line header-nav-top-line-with-border order-2 order-lg-1 justify-content-start w-100">
+				<div class="header-nav-main header-nav-main-square header-nav-main-effect-2 header-nav-main-sub-effect-1 w-100">
+					<nav class="collapse w-100">
+						<ul class="nav nav-pills flex-column flex-lg-row w-100" id="mainNav">
 							<li class="dropdown">
 								<router-link class="dropdown-item dropdown-toggle" :to="{ name: 'inicio' }"><i class="fa-solid fa-home"></i>&nbsp;&nbsp;INICIO</router-link>
 							</li>
-							<li class="dropdown">
+							<!-- <li class="dropdown">
 								<a class="dropdown-item dropdown-toggle" href="#">
 									<i class="fa-solid fa-car-side me-2"></i>EL PNSV<i class="ms-2 fa-solid fa-angle-down"></i>
 									<i class="fas fa-chevron-down"></i>
@@ -61,7 +61,7 @@ onMounted(() => {
 									<li><router-link :to="{ name: 'integralidad' }" class="dropdown-item">Integralidad</router-link></li>
 									<li><router-link :to="{ name: 'seguimiento' }" class="dropdown-item">Seguimiento</router-link></li>
 								</ul>
-							</li>
+							</li> -->
 							<li class="dropdown" v-if="auth.user && auth.esAdmin">
 								<a class="dropdown-item dropdown-toggle" href="#"> <i class="fa fa-gear me-2"></i>ADMINISTRACIÓN<i class="ms-2 fa-solid fa-angle-down"></i></a>
 								<ul class="dropdown-menu">
@@ -89,10 +89,26 @@ onMounted(() => {
 									<li><router-link :to="{ name: 'reporte-actividad' }" class="dropdown-item">Acciones y actividades</router-link></li>
 								</ul>
 							</li>
-							<li class="dropdown" v-if="!auth.user">
+							<li class="dropdown ms-lg-auto no-line-effect" v-if="!auth.user">
 								<router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'login' }">
 									<i class="fa-solid fa-user-lock me-2"></i>INGRESAR</router-link
 								>
+							</li>
+							<li class="dropdown dropdown-reverse ms-lg-auto no-line-effect" v-if="auth.user">
+								<a class="dropdown-item dropdown-toggle" href="#">
+									<i class="fa-solid fa-user me-2"></i> {{ auth.user.name }} <i class="ms-2 fa-solid fa-angle-down"></i>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<router-link :to="{ name: 'reporte-indicador' }" class="dropdown-item">Mi información</router-link>
+									</li>
+									<li>
+										<router-link :to="{ name: 'reporte-indicador' }" class="dropdown-item">Mis eventos</router-link>
+									</li>
+									<li>
+										<a href="#" @click.prevent="logout" class="dropdown-item"><i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar Sesión</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</nav>
@@ -100,14 +116,6 @@ onMounted(() => {
 				<button class="btn header-btn-collapse-nav" data-bs-toggle="collapse" data-bs-target=".header-nav-main nav">
 					<i class="fas fa-bars"></i>
 				</button>
-			</div>
-			<div class="header-nav-features header-nav-features-no-border header-nav-features-lg-show-border order-1 order-lg-2" v-if="auth.user">
-				<div class="header-nav-feature header-nav-features-search">
-					<h5 class="m-0 p-0 d-block">{{ auth.user.name }}</h5>
-					<a href="#" @click="logout" class="header-nav-features-toggle text-decoration-none font-weight-semibold d-block"
-						><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;CERRAR SESIÓN</a
-					>
-				</div>
 			</div>
 		</div>
 	</div>

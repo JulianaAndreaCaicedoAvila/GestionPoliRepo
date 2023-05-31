@@ -4,8 +4,8 @@ $errorActionPreference = 'Stop'
 $date = Get-Date -f "yyyyMMddHHmm"
 $working = $PSScriptRoot
 $jsonPath = "$working\public\data\config.json"
-$targetBase = "\\orion\e$\web\support\esap"
-$target = "$targetBase\sirecec-v4"
+$targetBase = "D:\Web\esap\sirecec\v4\app\_Deploy"
+$target = "$targetBase\sirecec4"
 $targetBk = "$targetBase\_bk\pnsv-$date"
 Write-Host "Fecha: $date"
 Write-Host "Base: $targetBase"
@@ -35,7 +35,7 @@ if (Test-Path $targetBase) {
 
 		# Lanza
 		Start-Process $target
-		Start-Process "chrome.exe" "https://support.nemedi.com/esap/sirecec-v4"
+		Start-Process "chrome.exe" "https://support.nemedi.com/esap/sirecec4"
 
 	}
  Catch {

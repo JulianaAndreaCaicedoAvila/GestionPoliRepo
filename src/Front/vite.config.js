@@ -12,7 +12,8 @@ export default defineConfig({
 			reactivityTransform: false,
 		}),
 	],
-	base: "/",
+	// base: "/",
+	base: "/sirecec4/",
 	// base: "/esap/sirecec4/",
 	server: {
 		port: 3000,

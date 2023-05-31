@@ -1,0 +1,83 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run-app",
+			"dependsOrder": "parallel",
+			"dependsOn": ["run-api", "run-front"],
+			"problemMatcher": []
+		},
+		{
+			"label": "app-clean-build",
+			"command": "cmd.exe",
+			"args": ["/c", "cd ${workspaceFolder}/Api & dotnet clean & dotnet build"],
+			"problemMatcher": "$msCompile",
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"close": true
+			}
+		},
+		{
+			"label": "run-front",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": ["/c", "cd ${workspaceFolder}/Front & npm run dev"],
+			"problemMatcher": []
+		},
+
+		{
+			"label": "run-api",
+			"dependsOrder": "sequence",
+			"dependsOn": ["app-clean", "run-back"],
+			"problemMatcher": [],
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"close": true
+			}
+		},
+		{
+			"label": "run-back",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": ["/c", "cd ${workspaceFolder}/Api & dotnet run"],
+			"problemMatcher": []
+		},
+		{
+			"label": "app-clean",
+			"command": "dotnet",
+			"type": "process",
+			"args": ["clean", "${workspaceFolder}/Api/Api.csproj"],
+			"problemMatcher": [],
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"close": true
+			}
+		},
+		{
+			"type": "process",
+			"label": "app-build",
+			"command": "dotnet",
+			"args": ["build", "${workspaceFolder}/Api/Api.csproj"],
+			"problemMatcher": [],
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"close": false
+			}
+		},
+		{
+			"label": "Clean and build",
+			"dependsOrder": "sequence",
+			"dependsOn": ["app-clean", "app-build"],
+			"problemMatcher": [],
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"close": true
+			}
+		}
+	]
+}

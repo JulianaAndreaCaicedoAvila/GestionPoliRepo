@@ -1,0 +1,16 @@
+{
+	"exclude": ["node_modules", "dist", "*_bk"],
+	"include": ["./src/**/*", "public/assets/js/data.js", "public/assets/js/global-ori.js", "public/assets/js/data.js"],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"target": "es6",
+		// "module": "es2015",
+		// "module": "commonjs",
+		"module": "es6",
+		"moduleResolution": "node",
+		"paths": {
+			"@/*": ["./src/*"],
+			"components/*": ["src/components/*", "src/modules/*", "src/router/*", "src/store/*"]
+		}
+	}
+}

@@ -1,0 +1,214 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305291440:
+https://xunit.net/docs/getting-started/netcore/cmdline
+dotnet new xunit
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Request Id: af63c9b5-35ce-4834-8b08-9afb0f617901
+Correlation Id: 1b1a50b8-7bba-473f-81ae-8dae09df3dfa
+Timestamp: 2023-05-31T02:30:01Z
+Message: AADSTS50011: The redirect URI 'http://localhost:3000/login' specified in the request does not match the redirect URIs configured for the application '4765445b-32c6-49b0-83e6-1d93765276ca'. Make sure the redirect URI sent in the request matches one added to your application in the Azure portal. Navigate to https://aka.ms/redirectUriMismatchError to learn more about how to fix this.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+dotnet new classlib -o Data
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package Oracle.EntityFrameworkCore
+dotnet add package Microsoft.AspNetCore.Mvc
+dotnet add package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+dotnet add package Microsoft.AspNetCore.Mvc.Abstractions
+dotnet add package Microsoft.AspNetCore.Identity
+dotnet add package System.Configuration.ConfigurationManager
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.1
+dotnet add package Microsoft.Extensions.Options.ConfigurationExtensions
+dotnet add package DevExtreme.AspNet.Data;
+dotnet add package Microsoft.Extensions.Configuration
+dotnet add package Microsoft.Extensions.Configuration.Json
+
+Api:
+dotnet add package System.IdentityModel.Tokens.Jwt
+dotnet remove package System.Configuration.ConfigurationManager
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+protected override void Up(MigrationBuilder migrationBuilder)
+{
+	migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Clasificadores.sql"));
+	migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Usuarios.sql"));
+}
+
+/// <inheritdoc />
+protected override void Down(MigrationBuilder migrationBuilder)
+{
+	migrationBuilder.Sql(@"DROP VIEW ""Clasificadores"";");
+	migrationBuilder.Sql(@"DROP VIEW ""Usuarios"";");
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305271451:
+dotnet ef migrations add Inicial
+dotnet ef migrations add Sql
+dotnet ef migrations remove 20230530021033_Seed
+dotnet ef database update
+dotnet ef database update 0
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305262046:
+Oracle.EntityFrameworkCore
+dotnet ef database update --startup-project ../Api/ --verbose;
+dotnet ef database update 0 --startup-project ../Api/;
+https://www.codementor.io/@mehobega/asp-net-core-mvc-with-net-5-0-oracle-identity-using-n-tier-architecture-part-01-1pgcjukg3e
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305170255:
+cd .\Data\;
+dotnet ef migrations add Clasificadores --startup-project ../Api/
+dotnet ef migrations script --help
+dotnet ef migrations script | out-file ./script.sql
+https://thecodeblogger.com/2021/07/20/how-to-apply-ef-core-migrations-via-sql-scripts/
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305110752:
+cd Data
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet remove package Oracle.ManagedDataAccess.EntityFramework
+dotnet add package Microsoft.EntityFrameworkCore.Proxies
+dotnet add package Oracle.EntityFrameworkCore
+dotnet add package Oracle.EntityFrameworkCore --version 7.21.9
+dotnet add package Oracle.ManagedDataAccess.Core
+dotnet add package Oracle.ManagedDataAccess.Core --version 3.21.41
+dotnet remove package Oracle.ManagedDataAccess.Core
+
+dotnet tool install --global dotnet-ef
+dotnet tool update --global dotnet-ef
+
+cd .\Data\;
+dotnet ef migrations list --startup-project ../Api/
+dotnet ef database update 0 --startup-project ../Api/
+dotnet ef migrations add Inicial --startup-project ../Api/
+dotnet ef database update --startup-project ../Api/
+dotnet ef database update 20230511175400_Inicial --startup-project ../Api/
+
+20161012160749_AddedOrderToCourse
+dotnet ef migrations remove --startup-project ../Api/
+dotnet ef migrations remove
+
+https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/managing?tabs=dotnet-core-cli
+
+dotnet remove package Microsoft.EntityFrameworkCore.Design
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202206080205:
+https://jasonwatmore.com/post/2022/01/19/net-6-create-and-validate-jwt-tokens-use-custom-jwt-middleware
+https://docs.microsoft.com/en-us/azure/active-directory-b2c/configure-authentication-sample-spa-app
+https://jasonwatmore.com/post/2022/01/07/net-6-user-registration-and-login-tutorial-with-example-api
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205301903:
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-6.0&tabs=visual-studio-code
+
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+cd .\Data\;dotnet ef database update 0 --startup-project ../Api/;
+dotnet ef migrations remove --startup-project ../Api/;cd ..\;
+cd .\Data\;dotnet ef database update 20220530015118_Clasificador --startup-project ../Api/;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205292052:
+cd .\Data\;dotnet ef migrations add Vistas --startup-project ../Api/;cd ../;
+cd .\Data\;dotnet ef database update --startup-project ../Api/;cd ../;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205271331:
+dotnet ef migrations add Identity --startup-project ../Api/
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205270328:
+https://jasonwatmore.com/post/2022/05/26/vue-3-pinia-jwt-authentication-tutorial-example
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202205261530:
+cd ..\Data\;
+cd ..\Front\;npm run dev;
+cd ..\Api\;dotnet clean;dotnet build;dotnet run;
+dotnet add package DevExtreme.AspNet.Data
+dotnet add package Microsoft.AspNetCore.Mvc
+dotnet add package DevExtreme.AspNet.Mvc
+dotnet add package Microsoft.AspNetCore.Mvc.Abstractions
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202202071141:
+https://github.com/TrackableEntities/EntityFrameworkCore.Scaffolding.Handlebars
+https://github.com/TrackableEntities/EntityFrameworkCore.Scaffolding.Handlebars#usage
+dotnet add package EntityFrameworkCore.Scaffolding.Handlebars
+dotnet ef dbcontext scaffold "Data Source=.\SQL2016; Initial Catalog=OIM_MIG; Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -o Models -c NorthwindSlimContext -f --context-dir Context
+dotnet ef dbcontext scaffold "Server=.\SQL2016;Database=OIM_MIG;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -n ESAP.Sirecec.Data --context-namespace ESAP.Sirecec.Data -c DataContext --context-dir Context --no-pluralize  -t Clasificador -t ClasificadorTipo -t Indicador -t IndicadorAvance -t IndicadorGrupo -t IndicadorMeta -o Core -f
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202202071044:
+
+Migrations Overview
+https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli
+cd ..\Data\
+cd .\Data\;dotnet ef migrations add Clasificador --startup-project ../Api/;cd ../;
+cd .\Data\;dotnet ef database update --startup-project ../Api/;cd ../;
+dotnet ef migrations list --startup-project ../Api/
+dotnet ef migrations remove --startup-project ../Api/
+dotnet ef migrations remove 20220530015652_Vistas --startup-project ../Api/
+dotnet ef database update 20220530015118_Clasificador --startup-project ../Api/
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+# TO COMPLETELY REMOVE ALL MIGRATIONS AND START ALL OVER AGAIN, DO THE FOLLOWING:
+https://stackoverflow.com/a/40832305
+cd .\Data\;dotnet ef database update 0 --startup-project ../Api/;dotnet ef migrations remove --startup-project ../Api/;cd ..\;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202202071033:
+
+USING A SEPARATE MIGRATIONS PROJECT
+https://docs.microsoft.com/en-us/ef/core/cli/dotnet#target-project-and-startup-project
+https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/projects?tabs=dotnet-core-cli
+
+
+ERROR: Your target project 'ESAP.Sirecec.Api' doesn't match your migrations assembly 'ESAP.Sirecec.Data'. Either change your target project or change your migrations assembly.
+Change your migrations assembly by using DbContextOptionsBuilder. E.g. options.UseSqlServer(connection, b => b.MigrationsAssembly("ESAP.Sirecec.Api")).
+By default, the migrations assembly is the assembly containing the DbContext. 
+Change your target project to the migrations project by using the Package Manager Console's Default project drop-down list, or by executing "dotnet ef" from the directory containing the migrations project.  
+https://stackoverflow.com/a/38725569
+https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/projects?tabs=dotnet-core-cli
+
+1 - Change target assembly.
+cd Project.Data/
+dotnet ef --startup-project ../Project.Api/ migrations add Initial
+
+// code doesn't use .MigrationsAssembly...just rely on the default
+options.UseSqlServer(connection)
+
+2 - Change the migrations assembly.
+
+cd Project.Api/
+dotnet ef migrations add Initial
+
+// change the default migrations assembly
+options.UseSqlServer(connection, b => b.MigrationsAssembly("Project.Api"))
+

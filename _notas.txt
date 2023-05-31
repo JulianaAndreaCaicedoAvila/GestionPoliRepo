@@ -1,3 +1,20 @@
+202305311549:
+
+GIT Server:
+cd /c/git
+git init sirecec4-web.git --bare
+git clone ssh://diego.vargasv@172.16.202.17/c:/git/sirecec4-web.git deploy
+
+cd c:/inetpub/wwwroot
+git clone --branch test ssh://diego.vargasv@172.16.202.17/c:/git/sirecec4-web.git sirecec4
+
+git checkout -b test
+git push --set-upstream origin test
+
+diego.vargasv@esap.edu.co
+eS4P%1974
+qhK64R%vXn
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202305291440:

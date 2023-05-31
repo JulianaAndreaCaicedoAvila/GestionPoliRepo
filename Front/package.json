@@ -9,7 +9,7 @@
 		"predev": "nvm install 16.4.2 & nvm use 16.4.2",
 		"preinstall": "nvm install 16.4.2 & nvm use 16.4.2",
 		"preview": "vite preview",
-		"deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File \"D:\\Web\\esap\\sirecec\\v4\\app\\Front\\deploy.ps1\""
+		"deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File ./deploy.ps1"
 	},
 	"dependencies": {
 		"@azure/msal-browser": "^2.37.0",

@@ -30,6 +30,7 @@ export default defineConfig({
 		// outDir: "D:\\Web\\ansv\\pnsv\\app\\_front",
 		// outDir: "\\\\172.24.0.23\\c$\\inetpub\\sites\\pnsv",
 		// outDir: "\\\\orion\\e$\\web\\support\\ansv\\pnsv",
+		emptyOutDir: false,
 		rollupOptions: {
 			treeshake: false,
 		},

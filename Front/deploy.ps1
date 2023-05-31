@@ -4,9 +4,9 @@ $errorActionPreference = 'Stop'
 $date = Get-Date -f "yyyyMMddHHmm"
 $working = $PSScriptRoot
 $jsonPath = "$working\public\data\config.json"
-$targetBase = "D:\Web\esap\sirecec\v4\app\_Deploy"
-$target = "$targetBase\sirecec4"
-$targetBk = "$targetBase\_bk\pnsv-$date"
+$targetBase = "D:\Web\esap\sirecec\v4\app"
+$target = "$targetBase\deploy"
+$targetBk = "D:\Web\esap\sirecec\v4\_bk\sirecec-4-$date"
 Write-Host "Fecha: $date"
 Write-Host "Base: $targetBase"
 Write-Host "Actual: $working"

@@ -30,6 +30,7 @@ div#app {
 p {
 	font-weight: 500;
 	font-size: $font-size;
+	line-height: $font-size * 1.7;
 	letter-spacing: $letter-spacing * 2.5;
 }
 
@@ -169,6 +170,14 @@ input {
 	font-weight: 600;
 	font-size: 1.1rem;
 	letter-spacing: -1.02px;
+	i {
+		font-size: 1.1rem !important;
+	}
+	&.disabled {
+		opacity: 0.5 !important;
+		background-color: #ccc;
+	}
+
 	&.btn-main,
 	&.btn-trans,
 	&.btn-gray {
@@ -247,10 +256,10 @@ div.form-control {
 
 	.card-footer {
 		&.main {
-			i {
-				font-size: 1.4rem;
-				margin-right: 0.5rem;
-			}
+			// i {
+			// 	font-size: 1.4rem;
+			// 	margin-right: 0.5rem;
+			// }
 			// font-weight: 400 !important;
 			letter-spacing: -1.4px;
 			font-size: 1.6rem;
@@ -326,7 +335,10 @@ input {
 
 .swal2-content {
 	font-size: 1.3rem !important;
-	letter-spacing: -1px !important;
+	line-height: 1.5rem !important;
+	letter-spacing: -0.6px !important;
+	margin-left: 2rem !important;
+	margin-right: 2rem !important;
 }
 
 .dx-header-row {
@@ -369,9 +381,20 @@ span.cmds {
 	}
 }
 
-.text-size-md {
-	letter-spacing: -1px !important;
-	font-size: 1.1rem !important;
+.text-size-md,
+.form-label {
+	$size: 16px;
+	margin-bottom: 0 !important;
+	letter-spacing: -0.8px !important;
+	font-size: $size !important;
+	line-height: $size !important;
+	i {
+		font-size: $size !important;
+	}
+}
+
+.font-weight-semibold {
+	font-weight: 600 !important;
 }
 
 .select2 {
@@ -899,4 +922,8 @@ $height: 45px;
 
 .dx-column-indicators {
 	color: $color-accent;
+}
+
+.form-label {
+	margin-bottom: 0 !important;
 }

@@ -38,7 +38,7 @@ public class Seed
 	{
 		// Seed
 		builder.Entity<AuthRole>().HasData(new AuthRole { Id = 1, Name = "Super Administrador", NormalizedName = "SUPER_ADMINISTRADOR" });
-		AddUser(1, "Diego", "Vargas", "dvargas@nemedi.com", builder);
+		// AddUser(1, "Diego", "Vargas", "dvargas@nemedi.com", builder);
 		AddUser(2, "Diego", "Vargas", "diego.vargasv@esap.edu.co", builder);
 		AddUser(3, "Camilo", "Rincón", "camilo.rincon@esap.edu.co", builder);
 	}

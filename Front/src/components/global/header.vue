@@ -9,7 +9,7 @@ let setTime = () => {
 };
 onMounted(() => {
 	var _int = setInterval(function () {
-		console.clear();
+		// console.clear();
 		setTime();
 	}, 60000);
 	setTime();

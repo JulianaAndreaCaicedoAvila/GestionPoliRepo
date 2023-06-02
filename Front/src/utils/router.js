@@ -10,7 +10,9 @@ export const router = createRouter({
 	routes: [
 		{ path: "/", redirect: { name: DEFAULT_ROUTE, requiresAuth: true } },
 		{ name: "n/a", path: "/:catchAll(.*)", redirect: { name: DEFAULT_ROUTE, requiresAuth: false } },
-		{ name: "login", path: "/login", meta: { title: "Ingresar", requiresAuth: false }, component: () => import("@/pages/auth/login.vue") },
+		{ name: "ingreso", path: "/ingreso", meta: { title: "Ingresar", requiresAuth: false }, component: () => import("@/pages/auth/login.vue") },
+		{ name: "activar", path: "/activar", meta: { title: "Activar cuenta", requiresAuth: false }, component: () => import("@/pages/auth/login.vue") },
+		{ name: "recuperar", path: "/recuperar", meta: { title: "Recuperar clave", requiresAuth: false }, component: () => import("@/pages/auth/login.vue") },
 		{ name: "inicio", path: "/inicio", meta: { title: "Inicio", requiresAuth: false }, component: () => import("@/pages/inicio.vue") },
 		{ name: "inicio-plano", path: "/inicio-plano", meta: { title: "Inicio Plano", requiresAuth: false }, component: () => import("@/pages/inicio-plano.vue") },
 		{ name: "que-es", path: "/que-es", meta: { title: "Que Es", requiresAuth: true }, component: () => import("@/pages/pnsv/que_es.vue") },

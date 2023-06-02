@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations.Schema;
+using ESAP.Sirecec.Data.Model;
 using Microsoft.AspNetCore.Identity;
 
 namespace ESAP.Sirecec.Data.Identity

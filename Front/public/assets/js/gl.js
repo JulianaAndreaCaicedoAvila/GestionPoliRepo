@@ -1415,6 +1415,8 @@ jQuery.fn.isValid = function () {
 							messages: msgs,
 						});
 					// el.rules("add", { onAny: el.attr("onAny") + "-" + ts });
+					// 202306020201: Password policy
+				} else if (el.hasAttr("pwdChk")) {
 				} else if (el.hasAttr("dependsOn")) {
 					var pEl = window.jQuery("#" + el.attr("dependson") + "-" + ts);
 					el.rules("add", {
@@ -1695,6 +1697,7 @@ function dtDrawCB(settings) {
 
 // Formats
 function FormatInit() {
+	console.log("FormatINIT!");
 	$("input.text-uppercase").blur(function () {
 		if ($(this).val.length > 0) $(this).val($(this).val().trim().toUpperCase().replace(/\s\s+/g, " "));
 	});
@@ -1704,7 +1707,7 @@ function FormatInit() {
 	});
 
 	$("input.text-capitalize").blur(function () {
-		if ($(this).val.length > 0) $(this).val($(this).val().trim().capitalizeAll().replace(/\s\s+/g, " "));
+		if ($(this).val.length > 0) $(this).val($(this).val().trim().replace(/\s\s+/g, " ").capitalizeAll());
 	});
 }
 
@@ -1990,6 +1993,9 @@ function setHelp(cssClass = "blue-tooltip", delay = 2000) {
 
 // Carga
 $().ready(function () {
+	// Iniciales
+	FormatInit();
+
 	// 201702221039: Alerts init
 	if (typeof window.swal !== "undefined") {
 		console.log(_sep + "swal init");
@@ -2099,7 +2105,8 @@ $().ready(function () {
 				(opts.showCancelButton = false), (opts.showConfirmButton = true);
 				opts.confirmButtonText = "ENTENDIDO";
 				opts.html = typeof message === "string" ? message : "";
-				opts.title = title.hasOwnProperty("message") ? title["message"] : title;
+				// opts.title = title.hasOwnProperty("message") ? title["message"] : title;
+				opts.title = title;
 				opts.onClose = function () {
 					window.msg._close();
 					Call(cb);
@@ -2142,109 +2149,6 @@ $().ready(function () {
 			},
 		};
 	}
-
-	// 201806281930: Config
-	/*
-	$.ajax({
-		data: "",
-		url: window._baseUrl + "sv/cf",
-		success: function (obj) {
-			window._conf = obj;
-			window._debug = window._conf.Environment === "Development";
-
-			// Console
-			// 201702220839: Se mete en la carga
-			// 201505290946: desabilita los mensajes informativos si debug esta en false
-			if (!(window.console && window.console.log) || !window._debug){
-				console.clear();
-				window.console = {
-					log:function(){},
-					debug:function(){},
-					info:function(){},
-					warn:function(){},
-					error:function(){},
-					clear:function(){}
-				};
-			}
-
-			console.log(_sep + "window._conf: " + JSON.stringify(window._conf));
-
-			// 201806281922: Actual user
-			$.ajax({
-				data: "",
-				url: window._baseUrl + "sv/us",
-				success: function (obj) {
-					window._usr = obj;
-					console.log(_sep + "Current user (window._usr):\n" + JSON.stringify(window._usr));
-					console.log(window._usr);
-				}
-			});
-
-		}
-	});
-	*/
-	/*
-	// 201807102103: ajax error
-	window.jQuery.ajaxError = function (jqXhr, textStatus, errorThrown, cb) {
-		var tit = "",
-			err = "";
-		console.log(_sep + "ERROR:\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown + "\njqXhr.status: " + jqXhr.status + "\n" + _sep);
-		if (jqXhr.status === 500) {
-			tit = errorThrown;
-			var html = $("<div>" + jqXhr.responseText + "</div>");
-			var tErr = html.find("title");
-			if (tErr.length > 0) err += "<span class='font-weight-semibold'>" + tErr.html().decodeHtml() + "</span>";
-			if (window._cnf.Environment === "Development") {
-				var res = "";
-				var lines = html.html().split("\n");
-				$.each(lines, function (idx, line) {
-					var l = line.toLowerCase();
-					if (l.contains(".cs") && l.contains(" in ")) {
-						res = line.replaceAll(" in ", "<br>").trim();
-						return false;
-					}
-				});
-				if (res.length > 0) err += "<br><span class='font-weight-semibold font-size-sm'>" + res + "</span>";
-				var code = html.find("code pre:first").html().replaceAll("\t", " ").replaceAll("  ", " ");
-				if (code.length > 0) err += "<small><pre>" + code + "</pre></small>";
-				var code = html.find("ol.highlight:first");
-				if (code.length > 0) {
-					var line = code.attr("start");
-					code = code.find("span:first");
-					if (code.length > 0) {
-						err += "<span class='font-weight-semibold text-size-mini'>" + line + ". </span>";
-						err += "<span class='font-weight-semibold text-size-mini text-danger'>" + code.html() + "</span>";
-					}
-				}
-			}
-		} else {
-			tit = "Error";
-			err += "<span class='font-weight-semibold '>" + errorThrown + "</span>";
-			//if (window._conf.Environment === "Development"){
-			//				err += "<textarea class='text-size-mini'>"+ jqXhr.responseText +"</textarea>";
-			if (jqXhr.responseText.trim().length > 0) {
-				err += '<div class="form-group"><div class="col-md-12"><textarea rows="8" class="form-control pt-10 pb-10 text-size-mini">';
-				err += jqXhr.responseText + "</textarea></div></div>";
-			}
-			//}
-		}
-		window.msg.error(tit, err, function () {
-			$().unlockAll();
-			Call(cb);
-		});
-	};
-
-	// Ajax setup
-	window.jQuery.ajaxSetup({
-		type: "POST",
-		contentType: "application/json; charset=utf-8",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		error: function (jqXhr, textStatus, errorThrown) {
-			window.jQuery.ajaxError(jqXhr, textStatus, errorThrown);
-		},
-	});
 
 	// Validator defaults
 	if (typeof window.jQuery.validator !== "undefined") {
@@ -2385,7 +2289,6 @@ $().ready(function () {
 				var tolerance = parseInt(params[1]);
 				var base = parseFloat(window.jQuery("#" + params[0]).val());
 				var val = value.length > 0 ? parseInt(value) : 0;
-
 				//			if (!isNaN(base)) {
 				//				console.log("param:"+ param +"id: "+ "#"+params[0] +", base: "+base+", val: "+val);
 				//			}
@@ -2674,7 +2577,141 @@ $().ready(function () {
 			},
 			"Requerido"
 		);
+
+		// 202306020207: Valida una contraseña
+		// https://stackoverflow.com/a/40923568
+		window.jQuery.validator.addMethod(
+			"pwdChk",
+			function (value, element, param) {
+				// var target = window.jQuery("#" + param).val();
+				console.log("pwdChk");
+				console.log("value =>", value);
+				console.log("element =>", element);
+				console.log("param =>", param);
+				if (value.search(/[a-z]/i) < 0) {
+					errors.push("Your password must contain at least one letter.");
+				}
+				if (value.search(/[0-9]/) < 0) {
+					errors.push("Your password must contain at least one digit.");
+				}
+				if (value.search(/[a-z]/) < 0) {
+					errors.push("Your password must contain at least one lowercase letter.");
+				}
+				if (value.search(/[A-Z]/) < 0) {
+					errors.push("Your password must contain at least one uppercase letter.");
+				}
+				if (errors.length > 0) {
+					alert(errors.join("\n"));
+					return false;
+				}
+				return true;
+			},
+			"Requerido"
+		);
 	}
+
+	// 201806281930: Config
+	/*
+	$.ajax({
+		data: "",
+		url: window._baseUrl + "sv/cf",
+		success: function (obj) {
+			window._conf = obj;
+			window._debug = window._conf.Environment === "Development";
+
+			// Console
+			// 201702220839: Se mete en la carga
+			// 201505290946: desabilita los mensajes informativos si debug esta en false
+			if (!(window.console && window.console.log) || !window._debug){
+				console.clear();
+				window.console = {
+					log:function(){},
+					debug:function(){},
+					info:function(){},
+					warn:function(){},
+					error:function(){},
+					clear:function(){}
+				};
+			}
+
+			console.log(_sep + "window._conf: " + JSON.stringify(window._conf));
+
+			// 201806281922: Actual user
+			$.ajax({
+				data: "",
+				url: window._baseUrl + "sv/us",
+				success: function (obj) {
+					window._usr = obj;
+					console.log(_sep + "Current user (window._usr):\n" + JSON.stringify(window._usr));
+					console.log(window._usr);
+				}
+			});
+
+		}
+	});
+	*/
+	/*
+	// 201807102103: ajax error
+	window.jQuery.ajaxError = function (jqXhr, textStatus, errorThrown, cb) {
+		var tit = "",
+			err = "";
+		console.log(_sep + "ERROR:\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown + "\njqXhr.status: " + jqXhr.status + "\n" + _sep);
+		if (jqXhr.status === 500) {
+			tit = errorThrown;
+			var html = $("<div>" + jqXhr.responseText + "</div>");
+			var tErr = html.find("title");
+			if (tErr.length > 0) err += "<span class='font-weight-semibold'>" + tErr.html().decodeHtml() + "</span>";
+			if (window._cnf.Environment === "Development") {
+				var res = "";
+				var lines = html.html().split("\n");
+				$.each(lines, function (idx, line) {
+					var l = line.toLowerCase();
+					if (l.contains(".cs") && l.contains(" in ")) {
+						res = line.replaceAll(" in ", "<br>").trim();
+						return false;
+					}
+				});
+				if (res.length > 0) err += "<br><span class='font-weight-semibold font-size-sm'>" + res + "</span>";
+				var code = html.find("code pre:first").html().replaceAll("\t", " ").replaceAll("  ", " ");
+				if (code.length > 0) err += "<small><pre>" + code + "</pre></small>";
+				var code = html.find("ol.highlight:first");
+				if (code.length > 0) {
+					var line = code.attr("start");
+					code = code.find("span:first");
+					if (code.length > 0) {
+						err += "<span class='font-weight-semibold text-size-mini'>" + line + ". </span>";
+						err += "<span class='font-weight-semibold text-size-mini text-danger'>" + code.html() + "</span>";
+					}
+				}
+			}
+		} else {
+			tit = "Error";
+			err += "<span class='font-weight-semibold '>" + errorThrown + "</span>";
+			//if (window._conf.Environment === "Development"){
+			//				err += "<textarea class='text-size-mini'>"+ jqXhr.responseText +"</textarea>";
+			if (jqXhr.responseText.trim().length > 0) {
+				err += '<div class="form-group"><div class="col-md-12"><textarea rows="8" class="form-control pt-10 pb-10 text-size-mini">';
+				err += jqXhr.responseText + "</textarea></div></div>";
+			}
+			//}
+		}
+		window.msg.error(tit, err, function () {
+			$().unlockAll();
+			Call(cb);
+		});
+	};
+
+	// Ajax setup
+	window.jQuery.ajaxSetup({
+		type: "POST",
+		contentType: "application/json; charset=utf-8",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		error: function (jqXhr, textStatus, errorThrown) {
+			window.jQuery.ajaxError(jqXhr, textStatus, errorThrown);
+		},
+	});
 
 	// 201703270234: Hide Popovers
 	// http://stackoverflow.com/a/20468809
@@ -2796,9 +2833,6 @@ $().ready(function () {
 	// Autocomplete fix
 	// window.frm = window.jQuery("form:first");
 	// window.frm.attr("autocomplete","off");
-
-	// Iniciales
-	FormatInit();
 
 	// 201809190357:  Droppdown fix
 	// https://stackoverflow.com/a/32527231

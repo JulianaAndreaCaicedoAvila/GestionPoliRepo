@@ -90,7 +90,7 @@ onMounted(() => {
 								</ul>
 							</li>
 							<li class="dropdown ms-lg-auto no-line-effect" v-if="!auth.user">
-								<router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'login' }">
+								<router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'ingreso' }">
 									<i class="fa-solid fa-user-lock me-2"></i>INGRESAR</router-link
 								>
 							</li>

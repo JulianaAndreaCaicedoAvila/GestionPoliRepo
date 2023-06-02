@@ -34,7 +34,7 @@ namespace ESAP.Sirecec.Data
 			base.OnModelCreating(builder);
 
 			//202305292059: Seed
-			// Seed.Init(builder);
+			Seed.Init(builder);
 
 			// Setting maximum identifier length to 30 characters; By default, it's set to 128.
 			// https://docs.oracle.com/en/database/oracle/oracle-data-access-components/19.3/odpnt/EFCoreIdentifier.html

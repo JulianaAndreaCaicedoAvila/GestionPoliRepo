@@ -8,6 +8,7 @@ using ESAP.Sirecec.Data.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -48,6 +49,8 @@ services.AddScoped<IEmailService, EmailService>();
 // 202208170543: Azure
 services.AddScoped<IAzureAdService, AzureAdService>();
 
+
+
 // 202202071919: Identity
 // 202208170634: https://stackoverflow.com/a/39826998
 services.AddIdentityCore<AuthUser>(options =>
@@ -57,7 +60,10 @@ services.AddIdentityCore<AuthUser>(options =>
 	options.Password.RequireNonAlphanumeric = false;
 	options.Password.RequireUppercase = false;
 	options.Password.RequireLowercase = false;
-}).AddRoles<AuthRole>().AddEntityFrameworkStores<DataContext>();
+}).AddRoles<AuthRole>().AddEntityFrameworkStores<DataContext>()
+.AddTokenProvider<DataProtectorTokenProvider<AuthUser>>(TokenOptions.DefaultProvider);
+// Default Token Lifespan is 24 hours (1 day)
+services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromHours(1));
 
 // 202206030752: Security -> https://stackoverflow.com/a/66115586
 // 202301181918: https://stackoverflow.com/a/52135130

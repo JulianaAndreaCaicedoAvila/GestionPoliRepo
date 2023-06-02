@@ -1,3 +1,5 @@
+CREATE VIEW "Usuarios"
+AS
 SELECT
 	UR."RoleId",
 	R."Name" AS "RoleName",

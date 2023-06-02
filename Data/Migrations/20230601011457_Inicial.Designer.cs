@@ -12,7 +12,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230530033856_Inicial")]
+    [Migration("20230601011457_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -271,7 +271,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "1a3e2b54-8452-42a6-a0c9-48ef82372dc7",
+                            ConcurrencyStamp = "b52f81e1-fad7-416c-990d-b947ea7ca7f7",
                             Name = "Super Administrador",
                             NormalizedName = "SUPER_ADMINISTRADOR"
                         });
@@ -366,7 +366,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3e3c4f47-4ae3-48b9-a9f6-c683fcb61ae9",
+                            ConcurrencyStamp = "6295bbaa-3b00-44ee-92eb-119bca2f20b6",
                             Email = "dvargas@nemedi.com",
                             EmailConfirmed = true,
                             FirstName = "Diego",
@@ -375,9 +375,9 @@ namespace ESAP.Sirecec.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DVARGAS@NEMEDI.COM",
                             NormalizedUserName = "DVARGAS@NEMEDI.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGuOgKJiYjqTVY3Z1pEBdRb2ATQiyjPaCP7V7hkpKIGaiZbk6vYlt0GL+XIU7pCYOw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECBc6bOjHlyVzFWhvGrl/v0ZGTsaHgEItvgfPfy76Ehx3I/vIPmeOq9A0VJc6gekhg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e9d4e07c-20e1-47cd-b27d-fcdc592bace4",
+                            SecurityStamp = "e0c51237-acd9-4340-9912-5639eee23e1b",
                             TwoFactorEnabled = false,
                             UserName = "dvargas@nemedi.com"
                         },
@@ -385,7 +385,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "53c9b6a5-bc7a-4d52-88dc-1ae5d860dac7",
+                            ConcurrencyStamp = "9d9dbeed-660a-4cc6-9ede-d94185c9c9d8",
                             Email = "diego.vargasv@esap.edu.co",
                             EmailConfirmed = true,
                             FirstName = "Diego",
@@ -394,9 +394,9 @@ namespace ESAP.Sirecec.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DIEGO.VARGASV@ESAP.EDU.CO",
                             NormalizedUserName = "DIEGO.VARGASV@ESAP.EDU.CO",
-                            PasswordHash = "AQAAAAEAACcQAAAAECaBWXthotrD2zzURw6eKmOERbyuzxatGSSt2EwrQWrA9eOQgiVkx0NOSQasFE0C4w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHOOXOaa53THh82kSB6bD2AKYBIrxr8s0nbxhYjqVfFpYH8dC1Qkqwg12SdxDSlikg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "15715c55-a8e3-4d8c-b72a-ecba33442a84",
+                            SecurityStamp = "76443c3f-3dc4-4ef3-b043-3e128a6f17d5",
                             TwoFactorEnabled = false,
                             UserName = "diego.vargasv@esap.edu.co"
                         },
@@ -404,7 +404,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "746a3283-2dde-4681-99ce-e5413cb0a99f",
+                            ConcurrencyStamp = "712e6391-01c7-4039-83b6-66bcdab8a464",
                             Email = "camilo.rincon@esap.edu.co",
                             EmailConfirmed = true,
                             FirstName = "Camilo",
@@ -413,9 +413,9 @@ namespace ESAP.Sirecec.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "CAMILO.RINCON@ESAP.EDU.CO",
                             NormalizedUserName = "CAMILO.RINCON@ESAP.EDU.CO",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOk7AcOR3lbjk23m2PrlQ1G+P2kwR/aewqPJTSOL+n3j0sdTDF+k7yWUNdDfqv5r2Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPdSBkMMsYxn77sjPpbqhYklZ7vFT5giTu7MN7/H7g4obMqQWCaPnrC5djZbXvtrfQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3a7f8fe5-de8a-4567-8336-523360e33de7",
+                            SecurityStamp = "2875eef7-9bd6-411b-b124-d9bfec24f74c",
                             TwoFactorEnabled = false,
                             UserName = "camilo.rincon@esap.edu.co"
                         });

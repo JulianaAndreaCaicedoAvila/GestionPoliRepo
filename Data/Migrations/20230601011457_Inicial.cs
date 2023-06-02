@@ -239,16 +239,16 @@ namespace ESAP.Sirecec.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AuthRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "1a3e2b54-8452-42a6-a0c9-48ef82372dc7", "Super Administrador", "SUPER_ADMINISTRADOR" });
+                values: new object[] { 1, "b52f81e1-fad7-416c-990d-b947ea7ca7f7", "Super Administrador", "SUPER_ADMINISTRADOR" });
 
             migrationBuilder.InsertData(
                 table: "AuthUsers",
                 columns: new[] { "Id", "AccessFailedCount", "CompanyId", "ConcurrencyStamp", "DependenceId", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, null, "3e3c4f47-4ae3-48b9-a9f6-c683fcb61ae9", null, "dvargas@nemedi.com", true, "Diego", true, "Vargas", false, null, "DVARGAS@NEMEDI.COM", "DVARGAS@NEMEDI.COM", "AQAAAAEAACcQAAAAEGuOgKJiYjqTVY3Z1pEBdRb2ATQiyjPaCP7V7hkpKIGaiZbk6vYlt0GL+XIU7pCYOw==", null, false, "e9d4e07c-20e1-47cd-b27d-fcdc592bace4", false, "dvargas@nemedi.com" },
-                    { 2, 0, null, "53c9b6a5-bc7a-4d52-88dc-1ae5d860dac7", null, "diego.vargasv@esap.edu.co", true, "Diego", true, "Vargas", false, null, "DIEGO.VARGASV@ESAP.EDU.CO", "DIEGO.VARGASV@ESAP.EDU.CO", "AQAAAAEAACcQAAAAECaBWXthotrD2zzURw6eKmOERbyuzxatGSSt2EwrQWrA9eOQgiVkx0NOSQasFE0C4w==", null, false, "15715c55-a8e3-4d8c-b72a-ecba33442a84", false, "diego.vargasv@esap.edu.co" },
-                    { 3, 0, null, "746a3283-2dde-4681-99ce-e5413cb0a99f", null, "camilo.rincon@esap.edu.co", true, "Camilo", true, "Rincón", false, null, "CAMILO.RINCON@ESAP.EDU.CO", "CAMILO.RINCON@ESAP.EDU.CO", "AQAAAAEAACcQAAAAEOk7AcOR3lbjk23m2PrlQ1G+P2kwR/aewqPJTSOL+n3j0sdTDF+k7yWUNdDfqv5r2Q==", null, false, "3a7f8fe5-de8a-4567-8336-523360e33de7", false, "camilo.rincon@esap.edu.co" }
+                    { 1, 0, null, "6295bbaa-3b00-44ee-92eb-119bca2f20b6", null, "dvargas@nemedi.com", true, "Diego", true, "Vargas", false, null, "DVARGAS@NEMEDI.COM", "DVARGAS@NEMEDI.COM", "AQAAAAEAACcQAAAAECBc6bOjHlyVzFWhvGrl/v0ZGTsaHgEItvgfPfy76Ehx3I/vIPmeOq9A0VJc6gekhg==", null, false, "e0c51237-acd9-4340-9912-5639eee23e1b", false, "dvargas@nemedi.com" },
+                    { 2, 0, null, "9d9dbeed-660a-4cc6-9ede-d94185c9c9d8", null, "diego.vargasv@esap.edu.co", true, "Diego", true, "Vargas", false, null, "DIEGO.VARGASV@ESAP.EDU.CO", "DIEGO.VARGASV@ESAP.EDU.CO", "AQAAAAEAACcQAAAAEHOOXOaa53THh82kSB6bD2AKYBIrxr8s0nbxhYjqVfFpYH8dC1Qkqwg12SdxDSlikg==", null, false, "76443c3f-3dc4-4ef3-b043-3e128a6f17d5", false, "diego.vargasv@esap.edu.co" },
+                    { 3, 0, null, "712e6391-01c7-4039-83b6-66bcdab8a464", null, "camilo.rincon@esap.edu.co", true, "Camilo", true, "Rincón", false, null, "CAMILO.RINCON@ESAP.EDU.CO", "CAMILO.RINCON@ESAP.EDU.CO", "AQAAAAEAACcQAAAAEPdSBkMMsYxn77sjPpbqhYklZ7vFT5giTu7MN7/H7g4obMqQWCaPnrC5djZbXvtrfQ==", null, false, "2875eef7-9bd6-411b-b124-d9bfec24f74c", false, "camilo.rincon@esap.edu.co" }
                 });
 
             migrationBuilder.InsertData(

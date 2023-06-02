@@ -12,6 +12,7 @@ namespace ESAP.Sirecec.Data.Migrations
 		{
 			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Clasificadores.sql"));
 			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Usuarios.sql"));
+			// migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Datos.sql"));
 		}
 
 		/// <inheritdoc />

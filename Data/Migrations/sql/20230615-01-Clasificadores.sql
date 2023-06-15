@@ -1,4 +1,4 @@
-CREATE VIEW "Clasificadores"
+﻿CREATE VIEW "Clasificadores"
 AS
 SELECT
 	P."TipoId" AS "PadreTipoID",

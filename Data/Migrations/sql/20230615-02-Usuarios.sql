@@ -1,4 +1,4 @@
-CREATE VIEW "Usuarios"
+﻿CREATE VIEW "Usuarios"
 AS
 SELECT
 	UR."RoleId",

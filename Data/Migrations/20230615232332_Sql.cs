@@ -10,9 +10,9 @@ namespace ESAP.Sirecec.Data.Migrations
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)
 		{
-			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Clasificadores.sql"));
-			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Usuarios.sql"));
-			// migrationBuilder.Sql(File.ReadAllText("Migrations/sql/Datos.sql"));
+			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/20230615-01-Clasificadores.sql"));
+			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/20230615-02-Usuarios.sql"));
+			migrationBuilder.Sql(File.ReadAllText("Migrations/sql/20230615-03-Datos.sql"));
 		}
 
 		/// <inheritdoc />

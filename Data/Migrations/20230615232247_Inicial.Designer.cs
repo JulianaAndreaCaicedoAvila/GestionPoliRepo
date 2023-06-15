@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230615230731_Sql")]
-    partial class Sql
+    [Migration("20230615232247_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -266,15 +266,6 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasFilter("\"NormalizedName\" IS NOT NULL");
 
                     b.ToTable("AuthRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ConcurrencyStamp = "1146571b-5df4-4f6a-a727-d67b86f1fffc",
-                            Name = "Super Administrador",
-                            NormalizedName = "SUPER_ADMINISTRADOR"
-                        });
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.AuthUser", b =>
@@ -360,46 +351,6 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasFilter("\"NormalizedUserName\" IS NOT NULL");
 
                     b.ToTable("AuthUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 2,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "c1985c5a-01f7-4372-bd98-355c4dfc11be",
-                            Email = "diego.vargasv@esap.edu.co",
-                            EmailConfirmed = true,
-                            FirstName = "Diego",
-                            IsActive = true,
-                            LastName = "Vargas",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "DIEGO.VARGASV@ESAP.EDU.CO",
-                            NormalizedUserName = "DIEGO.VARGASV@ESAP.EDU.CO",
-                            PasswordHash = "AQAAAAEAACcQAAAAEN+j15NeUe4VIUHtcd68ZlHW2bPLVQde9jOpknw99MTqkQrk1s51G/Uw/UqhqC5aDQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "0ffb6b08-6785-4c1d-af66-775fb0864b89",
-                            TwoFactorEnabled = false,
-                            UserName = "diego.vargasv@esap.edu.co"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "f8b51d4c-ce21-4077-b2d7-b2de8159e124",
-                            Email = "camilo.rincon@esap.edu.co",
-                            EmailConfirmed = true,
-                            FirstName = "Camilo",
-                            IsActive = true,
-                            LastName = "Rincón",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "CAMILO.RINCON@ESAP.EDU.CO",
-                            NormalizedUserName = "CAMILO.RINCON@ESAP.EDU.CO",
-                            PasswordHash = "AQAAAAEAACcQAAAAECHznNcjr3wSpsYJOec7gA/0OhMWFS7a4eAljWeH3xTi1FmkzSFlmQNRjEvyikDvYA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "c93189a6-cb62-460f-ac63-0537c70e63aa",
-                            TwoFactorEnabled = false,
-                            UserName = "camilo.rincon@esap.edu.co"
-                        });
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.Users", b =>
@@ -571,18 +522,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AuthUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>

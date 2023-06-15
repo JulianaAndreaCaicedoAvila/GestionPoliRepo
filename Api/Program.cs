@@ -3,6 +3,7 @@ using System.Text;
 using ESAP.Sirecec.Api.Authorization;
 using ESAP.Sirecec.Data;
 using ESAP.Sirecec.Data.Api.Authorization;
+using ESAP.Sirecec.Data.Api.Middleware;
 using ESAP.Sirecec.Data.Api.Services;
 using ESAP.Sirecec.Data.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -187,7 +188,9 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors(appName);
-// app.UseMiddleware<ErrorHandlerMiddleware>();
+
+// 202306031506: Global error handler
+app.UseMiddleware<ErrorHandler>();
 // app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();
 app.Run();

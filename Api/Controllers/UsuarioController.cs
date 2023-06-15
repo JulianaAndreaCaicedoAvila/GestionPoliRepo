@@ -71,7 +71,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 		[AllowAnonymous]
 		[HttpPost("autenticar")]
-		public async Task<ActionResult> Auth(AuthenticateRequest request)
+		public async Task<ActionResult> Authenticate(AuthenticateRequest request)
 		{
 			var user = await _userManager.FindByEmailAsync(request.Email);
 			if (user is null || !user.EmailConfirmed || !await _userManager.CheckPasswordAsync(user, request.Password))

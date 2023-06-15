@@ -26,38 +26,14 @@ let props = app.appContext.config.globalProperties,
 	password1 = ref(""),
 	email_recover = ref(null),
 	authStore = useAuthStore();
-
 // 202206101530: Inicializa el store
 authStore.init();
-
 watch(lastName, (n, o) => {
 	lastName.value = lastName.value.replace(/\s\s+/g, " ").capitalizeAll();
 });
-
 watch(firstName, (n, o) => {
 	firstName.value = firstName.value.replace(/\s\s+/g, " ").capitalizeAll();
 });
-
-// watch(email, (n, o) => {
-// 	console.log("old =>", o);
-// 	console.log("new =>", n);
-// 	email.value = email.value.trim().replace(/\s\s+/g, " ").toLowerCase();
-// });
-
-let chkPwd = (e) => {
-	console.clear();
-	console.log("e =>", e);
-	if (password.value.length > 6 && password.value == password1.value) {
-		pwdBtnClass.value = "btn btn-main";
-	} else {
-		pwdBtnClass.value = "btn btn-main disabled";
-	}
-	if (e.key !== ".") {
-		// guard against non-period presses
-		return;
-	}
-};
-
 let recoverDo = (what) => {
 	email.value = null;
 	password.value = null;
@@ -91,12 +67,18 @@ let login = async () => {
 		loginZone.find(".card").lock("Verificando credenciales,<br/>un momento por favor");
 		let res = await authStore.do(["autenticar", email.value, password.value]).catch((error) => {
 			console.error("error =>", error);
+			let title = "Error de autenticación";
+			let text = "Verifique credenciales e inténtelo nuevamente";
+			if (error.response.status == 500) {
+				title = "Error: " + error.message;
+				text = error.response.data.message;
+			}
 			loginZone.find(".card").unlock();
-			msg.error("Error de autenticación", "Verifique credenciales e inténtelo nuevamente", function (params) {
+			msg.error(title, text, function (params) {
 				$("#txt-email").focus();
 			});
 		});
-		if (res !== null) {
+		if (typeof res != "undefined") {
 			console.log("res =>", res);
 			loginZone.find(".card").lock(`Hola ${res.firstName}, ingresando!<br/>Un momento por favor`);
 			setTimeout(function () {
@@ -133,7 +115,7 @@ let signin = async () => {
 						$("#txt-email").focus();
 					});
 				});
-				if (res !== null) {
+				if (typeof res != "undefined") {
 					console.log("res =>", res);
 					loginZone.find(".card").lock(`Hola ${res.firstName}, ingresando!<br/>Un momento por favor`);
 					setTimeout(function () {
@@ -205,11 +187,11 @@ let recover = async () => {
 					$("#txt-email").focus();
 				});
 			});
-		if (res !== null) {
+		if (typeof res != "undefined") {
 			console.log("res =>", res);
 			msg.success(
 				null,
-				`Si la dirección <strong>${email.value}</strong> esta registrada en el sistema deberá recibir un correo electrónico de recuperación en los próximos minutos.`,
+				`Si la dirección <strong>${email.value}</strong> se encuentra registrada en el sistema deberá recibir un correo electrónico de recuperación en los próximos minutos.`,
 				function () {
 					recoverZone.find(".card").unlock();
 					recoverBack();
@@ -276,7 +258,7 @@ let confirm = async () => {
 					$("#txt-email").focus();
 				});
 			});
-		if (res !== null) {
+		if (typeof res != "undefined") {
 			console.log("res =>", res);
 			msg.success(
 				null,
@@ -313,7 +295,7 @@ let reset = async (endPoint) => {
 								endPoint == "activar" ? `activación de<br>la cuenta` : `recuperación de<br>la contraseña`
 						  } ha caducado o ya fue utilizado.`
 						: err.description;
-				msg.error(`Error al ${endPoint == "activar" ? `activar la cuenta` : `recuperar la contraseña`}`, text, function (params) {
+				msg.error(`Error al ${endPoint == "activar" ? `activar la cuenta` : `asignar la contraseña`}`, text, function (params) {
 					router.push("ingreso");
 				});
 			});

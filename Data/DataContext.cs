@@ -18,8 +18,11 @@ namespace ESAP.Sirecec.Data
 			// Read appsettings.json
 			// 202305291346: https://stackoverflow.com/a/71954443
 			// 202305291353: https://stackoverflow.com/a/43619386
-			var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").Build();
-			var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB1;";
+			// 202306151750: https://www.connectionstrings.com/store-and-read-connection-string-in-appsettings-json
+			var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true).Build();
+			// var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB1;";
+			// var conn = "User Id=DV_SIRECEC;Password=DVS1r3c3c4;Data Source=172.16.1.7:1523/SIRECEC4;";
+			var conn = configuration.GetConnectionString("ConnStr");
 			optionsBuilder.UseOracle(conn);
 		}
 		public DataContext() : base() { }

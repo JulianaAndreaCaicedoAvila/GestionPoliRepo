@@ -18,9 +18,5 @@ namespace ESAP.Sirecec.Data.Core
 		public string? ActividadAprendizaje { get; set; }
 		public string? ActividadEvaluacion { get; set; }
 		public string? Objetivos { get; set; }
-		public int? Orden { get; set; }
-		public int? CreadoPor { get; set; }
-		public int? EditadoPor { get; set; }
-		public bool? Activo { get; set; }
 	}
 }

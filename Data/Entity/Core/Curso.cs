@@ -15,8 +15,5 @@ namespace ESAP.Sirecec.Data.Core
 		public int NucleoId { get; set; }
 		public string? Nombre { get; set; }
 		public DateTime FechaInicio { get; set; }
-		public int? CreadoPor { get; set; }
-		public int? EditadoPor { get; set; }
-		public bool? Activo { get; set; }
 	}
 }

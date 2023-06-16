@@ -32,6 +32,9 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.ClasificadorTipo> ClasificadorTipo { get; set; } = null!;
 		public virtual DbSet<Core.Clasificadores> Clasificadores { get; set; } = null!;
 		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
+		public virtual DbSet<Core.Banco>? Banco { get; set; } = null!;
+		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Programa { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -82,6 +85,30 @@ namespace ESAP.Sirecec.Data
 				// entity.ToTable("CLAS_TIPO");
 			});
 			builder.Entity<Core.Clasificadores>(entity => { entity.ToView("Clasificadores"); });
+			builder.Entity<Core.Banco>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Nucleo>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Programa>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
 
 		}
 		// public static readonly ILoggerFactory ConsoleLoggerFactory

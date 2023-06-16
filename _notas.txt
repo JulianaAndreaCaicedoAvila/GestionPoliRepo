@@ -1,6 +1,27 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202306161422:
+dotnet ef database update
+dotnet ef database update 0
+dotnet ef migrations add Inicial
+dotnet ef migrations add Sql
+dotnet ef migrations add BancoNucleoPrograma
+dotnet ef migrations remove 20220530015652_Vistas
+dotnet ef database update 20230615232332_Sql
+dotnet ef database update
+
+Actualizar herramientas EF
+dotnet tool update --global dotnet-ef
+
+SQL => STRUCTURE QUERY LANGUAGE => Oracle, SQL Server, Postgres, MySQL, Sqlite
+DDL => DATA DEFINITION LANGUAGE (SQL)
+Code First => Clase a SQL a database
+BD First
+
+---------------------------------------------------------------------------------------------------------------------------------------------
 
 202306012035:
-Los scripts SQL deben ser guardados en ANSI!!
+Los scripts SQL deben ser guardados en UTF-8+BOM!!
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -68,15 +89,6 @@ protected override void Down(MigrationBuilder migrationBuilder)
 	migrationBuilder.Sql(@"DROP VIEW ""Clasificadores"";");
 	migrationBuilder.Sql(@"DROP VIEW ""Usuarios"";");
 }
-
----------------------------------------------------------------------------------------------------------------------------------------------
-
-202305271451:
-dotnet ef migrations add Inicial
-dotnet ef migrations add Sql
-dotnet ef migrations remove 20230530021033_Seed
-dotnet ef database update
-dotnet ef database update 0
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

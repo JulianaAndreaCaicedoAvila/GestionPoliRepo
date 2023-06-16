@@ -15,10 +15,6 @@ namespace ESAP.Sirecec.Data.Core
 		public int PadreId { get; set; }
 		public string? Nombre { get; set; }
 		public string? Descripcion { get; set; }
-		public int? Orden { get; set; }
-		public int? CreadoPor { get; set; }
-		public int? EditadoPor { get; set; }
-		public bool? Activo { get; set; }
 		public virtual ClasificadorTipo? ClasificadorTipo { get; set; }
 	}
 }

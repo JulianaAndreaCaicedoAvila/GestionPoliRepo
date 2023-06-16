@@ -6,6 +6,11 @@
     <RootNamespace>ESAP.Sirecec.Data</RootNamespace>
     <AssemblyName>ESAP.Sirecec.Data</AssemblyName>
   </PropertyGroup>
+  <!-- https://github.com/dotnet/sdk/issues/16975#issuecomment-1142163586 -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

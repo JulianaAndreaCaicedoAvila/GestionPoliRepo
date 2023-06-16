@@ -1,14 +1,13 @@
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using DevExtreme.AspNet.Data;
+using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Services;
 using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Identity;
 using ESAP.Sirecec.Data.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -17,8 +16,7 @@ using Newtonsoft.Json;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
 {
-
-	[Authorize]
+	[@Authorize]
 	[ApiController]
 	[Route("usuario")]
 	public class UsuarioController : ControllerBase
@@ -40,7 +38,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			_roleManager = roleManager;
 		}
 
-		private async Task<ActionResult> GetUserResult(Data.Identity.AuthUser user)
+		private async Task<ActionResult> GetUserResult(AuthUser user)
 		{
 			var roleName = (await _userManager.GetRolesAsync(user)).First();
 			// var role = await _roleManager.FindByNameAsync(roleName);
@@ -68,6 +66,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				token = jwt
 			});
 		}
+
 
 		[AllowAnonymous]
 		[HttpPost("autenticar")]
@@ -109,8 +108,8 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 			return Ok();
 		}
-
 		[AllowAnonymous]
+
 		[HttpPost("resetear")]
 		public async Task<ActionResult> Reset(UserRequest request)
 		{
@@ -150,7 +149,6 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 		// code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
 		//         var result = await _userManager.ConfirmEmailAsync(user, code);
-
 		[AllowAnonymous]
 		[HttpPost("registrar")]
 		public async Task<ActionResult> Register(UserRequest user)
@@ -184,7 +182,6 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 			return BadRequest(new { result, user });
 		}
-
 		[AllowAnonymous]
 		[HttpPost("ed")]
 		public async Task<ActionResult?> Procesar()

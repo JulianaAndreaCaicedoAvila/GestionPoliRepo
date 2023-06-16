@@ -3,7 +3,8 @@
 	"private": true,
 	"version": "1.0.0",
 	"scripts": {
-		"build": "vite build --emptyOutDir",
+		"build": "vite build",
+		"build1": "vite build --emptyOutDir",
 		"dev": "vite",
 		"prebuild": "nvm install 16.4.2 & nvm use 16.4.2",
 		"predev": "nvm install 16.4.2 & nvm use 16.4.2",

@@ -28,7 +28,7 @@ if (Test-Path $targetBase) {
 		}
 
 		# 202305311259: Limpia directorio final excepto '.git'
-		Get-ChildItem -Path "$targetFinal" -Recurse | Select -ExpandProperty FullName | Where {$_ -NotLike "$targetFinal\.git*"} | Sort Length -Descending | Remove-Item -Force
+		Get-ChildItem -Path "$targetFinal" -Recurse | Select -ExpandProperty FullName | Where { $_ -NotLike "$targetFinal\.git*" } | Sort Length -Descending | Remove-Item -Force
 
 		# Compila Vue, mueve contenidos y elimina dist
 		npm run build
@@ -36,6 +36,9 @@ if (Test-Path $targetBase) {
 		Remove-Item -LiteralPath "$working\dist" -Force -Recurse
 
 		# Compila Dotnet
+		# https://stackoverflow.com/a/56473932
+		$Env:ASPNETCORE_CAPTURESTARTUPERRORS = "true"
+		$Env:ASPNETCORE_DETAILEDERRORS = "true"
 		cd ..\Api\
 		dotnet clean
 		dotnet publish -c Release -o "$target\api"
@@ -43,14 +46,18 @@ if (Test-Path $targetBase) {
 		# Mueve el compilado al directorio final manteniendo '.git'
 		Get-ChildItem -Path "$target" -Recurse | Move-Item -Destination "$targetFinal"
 
-		# Abre el directorio
-		Start-Process $targetFinal
-
 		# Hace el commit
 		Set-Location $targetFinal
+		# git status
+		git add .
+		git commit -am "Actualización $date"
+		git push
 		git status
+
+		# Abre el directorio
+		Start-Process $targetFinal
 		
-		# # Start-Process "chrome.exe" "https://support.nemedi.com/esap/sirecec4"
+		# Start-Process "chrome.exe" "http://esabogprusrcap2.esap.edu.int/sirecec4/inicio"
 	}
  Catch {
 

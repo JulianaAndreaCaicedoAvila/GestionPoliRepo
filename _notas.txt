@@ -8,8 +8,12 @@ dotnet ef migrations add Sql
 dotnet ef migrations add BancoNucleoPrograma
 dotnet ef migrations remove 20230616214233_BancoNucleoPrograma
 dotnet ef database update 20230615232332_Sql
+
 -- Eliminar la ultima migración
 dotnet ef migrations remove
+
+-- Lista migraciones YA aplicadas a la BD
+dotnet ef migrations list
 
 Actualizar herramientas EF
 dotnet tool update --global dotnet-ef

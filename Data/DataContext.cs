@@ -35,6 +35,15 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Banco>? Banco { get; set; } = null!;
 		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Programa { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Producto { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Indicadores { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Dependencia { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Capacitacion { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Tema { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? ConsultaDoc { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Participantes { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? CursosDocentes { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? CursosEstudiantes { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -109,7 +118,78 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
-
+			builder.Entity<Core.Producto>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Indicadores>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Dependencia>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Capacitacion>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Tema>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.ConsultaDoc>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Participantes>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.CursosDocentes>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.CursosEstudiantes>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
 		}
 		// public static readonly ILoggerFactory ConsoleLoggerFactory
 		//   = LoggerFactory.Create(builder =>

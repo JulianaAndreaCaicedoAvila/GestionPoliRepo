@@ -36,14 +36,14 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Programa { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Producto { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Indicadores { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Indicador { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Dependencia { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Capacitacion { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Tema { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? ConsultaDoc { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Participantes { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? CursosDocentes { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? CursosEstudiantes { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Participante { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? CursoDocente { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? CursoEstudiante { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -126,7 +126,7 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
-			builder.Entity<Core.Indicadores>(entity =>
+			builder.Entity<Core.Indicador>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
@@ -166,7 +166,7 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
-			builder.Entity<Core.Participantes>(entity =>
+			builder.Entity<Core.Participante>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
@@ -174,7 +174,7 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
-			builder.Entity<Core.CursosDocentes>(entity =>
+			builder.Entity<Core.CursoDocente>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
@@ -182,7 +182,7 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
-			builder.Entity<Core.CursosEstudiantes>(entity =>
+			builder.Entity<Core.CursoEstudiante>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");

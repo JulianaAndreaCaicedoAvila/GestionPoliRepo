@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class Participantes : BaseEntity
+	public partial class Participante : BaseEntity
 	{
 		[Key]
 		public int Id { get; set; }
@@ -26,7 +26,9 @@ namespace ESAP.Sirecec.Data.Core
 		public string? Municipio { get; set; }
 		public string? Entidad { get; set; }
 		public string? Cargo { get; set; }
-		public string? Participante { get; set; }
+
+		// 202306261540: Nombre cambiado por tipo envolvente
+		public string? ParticipanteOtro { get; set; }
 		public string? ServidorPublico { get; set; }
 		public string? Vulnerabilidad { get; set; }
 		public string? Discapacidad { get; set; }

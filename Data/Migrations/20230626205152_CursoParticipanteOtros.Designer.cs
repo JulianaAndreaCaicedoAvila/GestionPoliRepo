@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230624192948_Participantes")]
-    partial class Participantes
+    [Migration("20230626205152_CursoParticipanteOtros")]
+    partial class CursoParticipanteOtros
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -329,7 +329,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("ConsultaDoc");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursosDocentes", b =>
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoDocente", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -362,7 +362,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<string>("NombreCursos")
+                    b.Property<string>("NombreCurso")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int?>("Orden")
@@ -370,10 +370,10 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CursosDocentes");
+                    b.ToTable("CursoDocente");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursosEstudiantes", b =>
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoEstudiante", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -429,7 +429,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CursosEstudiantes");
+                    b.ToTable("CursoEstudiante");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Dependencia", b =>
@@ -476,7 +476,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("Dependencia");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicadores", b =>
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -515,7 +515,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int>("ObjetivosId")
+                    b.Property<int?>("ObjetivoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("Orden")
@@ -523,7 +523,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Indicadores");
+                    b.ToTable("Indicador");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>
@@ -650,7 +650,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("Nucleo");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Participantes", b =>
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Participante", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -731,7 +731,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<string>("Participante")
+                    b.Property<string>("ParticipanteOtro")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Profesion")
@@ -751,7 +751,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Participantes");
+                    b.ToTable("Participante");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Producto", b =>

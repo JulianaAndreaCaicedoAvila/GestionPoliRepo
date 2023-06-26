@@ -6,8 +6,9 @@ dotnet ef database update 0
 dotnet ef migrations add Inicial
 dotnet ef migrations add Sql
 dotnet ef migrations add BancoNucleoPrograma
+dotnet ef migrations add CursoParticipanteOtros
 dotnet ef migrations remove 20230616214233_BancoNucleoPrograma
-dotnet ef database update 20230615232332_Sql
+dotnet ef database update 20230616214630_BancoNucleoPrograma
 
 -- Eliminar la ultima migración
 dotnet ef migrations remove

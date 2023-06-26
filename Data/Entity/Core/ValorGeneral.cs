@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class ValoresGenerales : BaseEntity
+	public partial class ValorGeneral : BaseEntity
 	{
 
 		[Key]

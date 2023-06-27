@@ -37,7 +37,7 @@ INTO "ClasificadorTipo" ("Id","Nombre") VALUES (24,'Cargo actual')
 INTO "ClasificadorTipo" ("Id","Nombre") VALUES (25,'Tipo Participante')
 INTO "ClasificadorTipo" ("Id","Nombre") VALUES (26,'Tipo Servidor Publico')
 INTO "ClasificadorTipo" ("Id","Nombre") VALUES (27,'Grupo Etnico')
-INTO "ClasificadorTipo" ("Id","Nombre") VALUES (27,'Tipo de Valor General')
+INTO "ClasificadorTipo" ("Id","Nombre") VALUES (28,'Tipo de Valor General')
 -- ? Pa aca en valor general este contiene todos los demas creamos la clase?
 INTO "Clasificador"("Id", "TipoId", "PadreId", "Nombre", "Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 1, 0, N'Amazonas', N'91', 0, 1, 1, 1, SYSDATE, SYSDATE)
 INTO "Clasificador"("Id", "TipoId", "PadreId", "Nombre", "Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (2, 1, 0, N'Antioquia', N'05', 0, 1, 1, 1, SYSDATE, SYSDATE)

@@ -1,7 +1,7 @@
 ﻿CREATE VIEW "Clasificadores"
 AS
 SELECT
-	P."TipoId" AS "PadreTipoID",
+	P."TipoId" AS "PadreTipoId",
 	PT."Nombre" AS "PadreTipoNombre",
 	C."PadreId",
 	P."Nombre" AS "PadreNombre",

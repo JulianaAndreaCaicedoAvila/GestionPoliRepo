@@ -65,39 +65,16 @@ namespace ESAP.Sirecec.Data.Migrations
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true),
                     CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
-                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))")
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ClasificadorTipo", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Modulo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Justificacion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Metodologia = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    ActividadAprendizaje = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    ActividadEvaluacion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Objetivos = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
-                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
-                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
-                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Modulo", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,12 +193,12 @@ namespace ESAP.Sirecec.Data.Migrations
                     PadreId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
                     CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
                     EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
-                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
-                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -299,9 +276,6 @@ namespace ESAP.Sirecec.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Clasificador");
-
-            migrationBuilder.DropTable(
-                name: "Modulo");
 
             migrationBuilder.DropTable(
                 name: "AuthRoles");

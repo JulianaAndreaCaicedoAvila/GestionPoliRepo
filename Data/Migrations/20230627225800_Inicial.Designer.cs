@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230615232332_Sql")]
-    partial class Sql
+    [Migration("20230627225800_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,7 +88,10 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreadoEl")
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -101,7 +104,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime?>("EditadoEl")
+                    b.Property<DateTime>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -114,6 +117,9 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
                     b.HasKey("Id");
 
                     b.ToTable("ClasificadorTipo");
@@ -124,7 +130,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<bool>("Activo")
+                    b.Property<bool?>("Activo")
                         .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("CreadoEl")
@@ -174,68 +180,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("Clasificadores", (string)null);
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ActividadAprendizaje")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<string>("ActividadEvaluacion")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<DateTime>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<DateTime>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<string>("Justificacion")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<string>("Metodologia")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<string>("Objetivos")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<int?>("Orden")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Modulo");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.AuthRole", b =>

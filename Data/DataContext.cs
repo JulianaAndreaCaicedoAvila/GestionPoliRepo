@@ -29,8 +29,9 @@ namespace ESAP.Sirecec.Data
 		public DataContext() : base() { }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 		public virtual DbSet<Core.Clasificador>? Clasificador { get; set; } = null!;
-		public virtual DbSet<Core.ClasificadorTipo> ClasificadorTipo { get; set; } = null!;
-		public virtual DbSet<Core.Clasificadores> Clasificadores { get; set; } = null!;
+		public virtual DbSet<Core.ClasificadorTipo>? ClasificadorTipo { get; set; } = null!;
+		public virtual DbSet<Core.Clasificadores>? Clasificadores { get; set; } = null!;
+		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
 		public virtual DbSet<Core.Banco>? Banco { get; set; } = null!;
 		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
@@ -44,7 +45,6 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Programa>? Participante { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? CursoDocente { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? CursoEstudiante { get; set; } = null!;
-		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
@@ -64,14 +64,7 @@ namespace ESAP.Sirecec.Data
 			builder.Entity<IdentityUserLogin<int>>().ToTable("AuthUserLogins");
 			builder.Entity<IdentityRoleClaim<int>>().ToTable("AuthRoleClaims");
 			builder.Entity<IdentityUserToken<int>>().ToTable("AuthUserTokens");
-			builder.Entity<Core.Modulo>(entity =>
-			{
-				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
-				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
-				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
-				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
-				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
-			});
+
 			builder.Entity<Core.Clasificador>(entity =>
 			{
 				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -94,6 +87,16 @@ namespace ESAP.Sirecec.Data
 				// entity.ToTable("CLAS_TIPO");
 			});
 			builder.Entity<Core.Clasificadores>(entity => { entity.ToView("Clasificadores"); });
+
+
+			builder.Entity<Core.Modulo>(entity =>
+			{
+				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			});
 			builder.Entity<Core.Banco>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -135,14 +138,6 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
 			builder.Entity<Core.Dependencia>(entity =>
-				{
-					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
-					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
-					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
-					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
-					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
-				});
-			builder.Entity<Core.Capacitacion>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");

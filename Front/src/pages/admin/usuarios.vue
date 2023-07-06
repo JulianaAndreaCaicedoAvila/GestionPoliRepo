@@ -414,7 +414,6 @@ onMounted(async () => {
 					</div>
 				</div>
 			</DxValidationGroup>
-
 			<div class="card-footer">
 				<div class="d-flex justify-content-between align-items-center">
 					<a class="btn btn-gray" @click.prevent="addCancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>

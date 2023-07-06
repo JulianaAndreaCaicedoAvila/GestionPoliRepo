@@ -217,6 +217,7 @@ let displayMode = "full",
 		return this.displayMode === "compact";
 	};
 onMounted(async () => {
+	console.clear();
 	console.log(_sep);
 	console.log("onMounted!");
 	// console.log("tipos =>", tipos.value);
@@ -527,10 +528,10 @@ onMounted(async () => {
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
 									<a v-if="data.data.activo" title="Desactivar..." class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
-										<i class="fa-regular fa-square-minus fa-lg"></i>
+										<i class="fa-solid fa-square-minus fa-lg"></i>
 									</a>
 									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
-										<i class="fa-regular fa-square-check fa-lg"></i>
+										<i class="fa-solid fa-square-check fa-lg"></i>
 									</a>
 								</span>
 							</template>

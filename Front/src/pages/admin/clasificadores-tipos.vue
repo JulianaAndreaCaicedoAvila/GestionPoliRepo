@@ -259,10 +259,10 @@ onMounted(() => {
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
 									<a v-if="data.data.activo" title="Desactivar..." class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
-										<i class="fa-regular fa-square-minus fa-lg"></i>
+										<i class="fa-duotone fa-check-to-slot"></i>
 									</a>
 									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
-										<i class="fa-regular fa-square-check fa-lg"></i>
+										<i class="fa-duotone fa-check-to-slot"></i>
 									</a>
 								</span>
 							</template>

@@ -3,6 +3,7 @@ using System;
 using ESAP.Sirecec.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230707154434_20230707Actualizacion")]
+    partial class _20230707Actualizacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,56 +229,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToView("Clasificadores", (string)null);
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Curso", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool?>("Activo")
-                        .HasColumnType("NUMBER(1)");
-
-                    b.Property<DateTime>("CreadoEl")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<int?>("CreadoPor")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<DateTime>("EditadoEl")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<int?>("EditadoPor")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<DateTime>("FechaInicio")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<int?>("GraficaEncuestaGeneralId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int?>("GraficaEncuestaId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<int>("NucleoId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int?>("Orden")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GraficaEncuestaGeneralId");
-
-                    b.HasIndex("GraficaEncuestaId");
-
-                    b.ToTable("Curso");
-                });
-
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Dependencia", b =>
                 {
                     b.Property<int>("Id")
@@ -318,128 +271,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Dependencia");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.GraficaEncuesta", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<int>("BancoId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int?>("ClasificadorTipoId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<DateTime>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<string>("Docentes")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<DateTime>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<DateTime>("FechaFinal")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<DateTime>("FechaInicio")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<int?>("Orden")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClasificadorTipoId");
-
-                    b.ToTable("GraficaEncuesta");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.GraficaEncuestaGeneral", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<int>("BancoId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int?>("ClasificadorTipoId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<DateTime>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<string>("Docentes")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<DateTime>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<DateTime>("FechaFinal")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<DateTime>("FechaInicio")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<int?>("Orden")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClasificadorTipoId");
-
-                    b.ToTable("GraficaEncuestaGeneral");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
@@ -1174,35 +1005,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("ClasificadorTipo");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Curso", b =>
-                {
-                    b.HasOne("ESAP.Sirecec.Data.Core.GraficaEncuestaGeneral", null)
-                        .WithMany("Cursos")
-                        .HasForeignKey("GraficaEncuestaGeneralId");
-
-                    b.HasOne("ESAP.Sirecec.Data.Core.GraficaEncuesta", null)
-                        .WithMany("Cursos")
-                        .HasForeignKey("GraficaEncuestaId");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.GraficaEncuesta", b =>
-                {
-                    b.HasOne("ESAP.Sirecec.Data.Core.ClasificadorTipo", "ClasificadorTipo")
-                        .WithMany()
-                        .HasForeignKey("ClasificadorTipoId");
-
-                    b.Navigation("ClasificadorTipo");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.GraficaEncuestaGeneral", b =>
-                {
-                    b.HasOne("ESAP.Sirecec.Data.Core.ClasificadorTipo", "ClasificadorTipo")
-                        .WithMany()
-                        .HasForeignKey("ClasificadorTipoId");
-
-                    b.Navigation("ClasificadorTipo");
-                });
-
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Banco", "Banco")
@@ -1293,16 +1095,6 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.ClasificadorTipo", b =>
                 {
                     b.Navigation("Clasificadores");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.GraficaEncuesta", b =>
-                {
-                    b.Navigation("Cursos");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.GraficaEncuestaGeneral", b =>
-                {
-                    b.Navigation("Cursos");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>

@@ -18,5 +18,6 @@ namespace ESAP.Sirecec.Data.Core
 		public string? ActividadAprendizaje { get; set; }
 		public string? ActividadEvaluacion { get; set; }
 		public string? Objetivos { get; set; }
+		public virtual List<Tema>? Temas { get; set; }
 	}
 }

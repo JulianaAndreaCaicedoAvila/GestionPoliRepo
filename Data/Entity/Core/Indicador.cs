@@ -15,6 +15,7 @@ namespace ESAP.Sirecec.Data.Core
 		public int? ObjetivoId { get; set; }
 		public string? Nombre { get; set; }
 		public string? Descripcion { get; set; }
+		public virtual Clasificador? Objetivo { get; set; }
 
 		// public virtual List<Nucleo>? Nucleos { get; set; }
 	}

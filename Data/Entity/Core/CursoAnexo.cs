@@ -7,14 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class Nucleo : BaseEntity
+	public partial class CursoAnexo : BaseEntity
 	{
 		[Key]
 		public int Id { get; set; }
-		public int BancoId { get; set; }
-		public string? Nombre { get; set; }
-		public DateTime FechaInicio { get; set; }
-		public virtual BancoPrograma? Banco { get; set; }
-		public virtual List<Programa>? Programas { get; set; }
+		public int CursoId { get; set; }
+		public int TipoId { get; set; } // Imagen o documento
+		public int AnexoId { get; set; }
 	}
 }

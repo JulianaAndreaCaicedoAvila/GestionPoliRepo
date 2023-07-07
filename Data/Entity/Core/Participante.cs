@@ -11,29 +11,29 @@ namespace ESAP.Sirecec.Data.Core
 	{
 		[Key]
 		public int Id { get; set; }
-		public string? TipoDocumento { get; set; }
-		public string? NumeroDocumento { get; set; }
+		public int? TipoDocumentoId { get; set; }
+		public int? MunicipioId { get; set; }
+		public int? NivelEscolarId { get; set; }
+		public int? EstadoCivilId { get; set; }
+		public int? EntidadId { get; set; }
+		public int? GeneroId { get; set; }
+		public int? VulnerabilidadId { get; set; }
+		public int? DiscapacidadId { get; set; }
+		public int? CaracterísticaEsapId { get; set; }
+		public int? CargoId { get; set; }
+		public int? GrupoEtnicoId { get; set; }
+		public int? TipoServidorPublicoId { get; set; }
+		public int? TipoParticipanteId { get; set; }
+		public string? DocumentoNumero { get; set; }
 		public string? Nombres { get; set; }
 		public string? Apellidos { get; set; }
-		public DateTime FechaNacimiento { get; set; }
-		public string? NivelEscolar { get; set; }
-		public string? EstadoCivil { get; set; }
+		public DateTime? FechaNacimiento { get; set; }
 		public string? Profesion { get; set; }
-		public string? Contacto { get; set; }
+		public string? Telefono { get; set; }
+		public string? Celular { get; set; }
 		public string? Correo { get; set; }
 		public string? Direccion { get; set; }
-		public string? Departamento { get; set; }
-		public string? Municipio { get; set; }
-		public string? Entidad { get; set; }
-		public string? Cargo { get; set; }
-
-		// 202306261540: Nombre cambiado por tipo envolvente
-		public string? ParticipanteOtro { get; set; }
-		public string? ServidorPublico { get; set; }
-		public string? Vulnerabilidad { get; set; }
-		public string? Discapacidad { get; set; }
-		public string? GrupoEtnico { get; set; }
-		public string? RolESAP { get; set; }
+		public bool? Contratista { get; set; }
 
 	}
 }

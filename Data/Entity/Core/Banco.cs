@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class Banco : BaseEntity
+	public partial class BancoPrograma : BaseEntity
 	{
 
 		[Key]

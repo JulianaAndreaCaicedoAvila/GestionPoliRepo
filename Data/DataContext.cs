@@ -33,23 +33,25 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Clasificadores>? Clasificadores { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
-		public virtual DbSet<Core.BancoPrograma>? Banco { get; set; } = null!;
+		public virtual DbSet<Core.BancoPrograma>? BancoPrograma { get; set; } = null!;
 		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Programa { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Producto { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Indicador { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Capacitacion { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Tema { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Participante { get; set; } = null!;
+		public virtual DbSet<Core.Producto>? Producto { get; set; } = null!;
+		public virtual DbSet<Core.Indicador>? Indicador { get; set; } = null!;
+		public virtual DbSet<Core.Tema>? Tema { get; set; } = null!;
+		public virtual DbSet<Core.Participante>? Participante { get; set; } = null!;
 		// public virtual DbSet<Core.Programa>? GraficaEncuesta { get; set; } = null!;
 		// public virtual DbSet<Core.Programa>? GraficaEncuestaGeneral { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? CursoAnexo { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? CursoEncuesta { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? CursoFecha { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? CursoTema { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Encuesta { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? EncuestaPregunta { get; set; } = null!;
-		public virtual DbSet<Core.Programa>? Pregunta { get; set; } = null!;
+		public virtual DbSet<Core.Curso>? Curso { get; set; } = null!;
+		public virtual DbSet<Core.Documento>? Documento { get; set; } = null!;
+		public virtual DbSet<Core.CursoAnexo>? CursoAnexo { get; set; } = null!;
+		public virtual DbSet<Core.CursoEncuesta>? CursoEncuesta { get; set; } = null!;
+		public virtual DbSet<Core.CursoFecha>? CursoFecha { get; set; } = null!;
+		public virtual DbSet<Core.CursoTema>? CursoTema { get; set; } = null!;
+		public virtual DbSet<Core.Encuesta>? Encuesta { get; set; } = null!;
+		public virtual DbSet<Core.EncuestaPregunta>? EncuestaPregunta { get; set; } = null!;
+		public virtual DbSet<Core.Pregunta>? Pregunta { get; set; } = null!;
+		public virtual DbSet<Core.ValorGeneral>? ValorGeneral { get; set; } = null!;
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
@@ -206,7 +208,23 @@ namespace ESAP.Sirecec.Data
 				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 			  });
+			builder.Entity<Core.Curso>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
 			builder.Entity<Core.Encuesta>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Documento>(entity =>
 			  {
 				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
@@ -223,6 +241,14 @@ namespace ESAP.Sirecec.Data
 				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 			  });
 			builder.Entity<Core.Pregunta>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.ValorGeneral>(entity =>
 			  {
 				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");

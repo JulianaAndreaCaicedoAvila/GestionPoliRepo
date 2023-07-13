@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ESAP.Sirecec.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CursoEntidades : Migration
+    public partial class EntitiesUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Banco",
+                name: "BancoPrograma",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
@@ -28,7 +28,7 @@ namespace ESAP.Sirecec.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Banco", x => x.Id);
+                    table.PrimaryKey("PK_BancoPrograma", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,16 +77,40 @@ namespace ESAP.Sirecec.Data.Migrations
                     CertificadoCiudad = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     CertificadoVerCiudad = table.Column<bool>(type: "NUMBER(1)", nullable: true),
                     CertificadoFechaExpedicion = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true),
-                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
+                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
                     Orden = table.Column<int>(type: "NUMBER(10)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Curso", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Documento",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    TipoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    ClasificacionId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    GrupoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Archivo = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
+                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Documento", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,6 +275,27 @@ namespace ESAP.Sirecec.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ValorGeneral",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Codigo = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    Tipo = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true, defaultValueSql: "((1))"),
+                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true, defaultValueSql: "((1))"),
+                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ValorGeneral", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Nucleo",
                 columns: table => new
                 {
@@ -270,9 +315,9 @@ namespace ESAP.Sirecec.Data.Migrations
                 {
                     table.PrimaryKey("PK_Nucleo", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Nucleo_Banco_BancoId",
+                        name: "FK_Nucleo_BancoPrograma_Banco~",
                         column: x => x.BancoId,
-                        principalTable: "Banco",
+                        principalTable: "BancoPrograma",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -574,6 +619,9 @@ namespace ESAP.Sirecec.Data.Migrations
                 name: "CursoTema");
 
             migrationBuilder.DropTable(
+                name: "Documento");
+
+            migrationBuilder.DropTable(
                 name: "EncuestaPregunta");
 
             migrationBuilder.DropTable(
@@ -587,6 +635,9 @@ namespace ESAP.Sirecec.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Programa");
+
+            migrationBuilder.DropTable(
+                name: "ValorGeneral");
 
             migrationBuilder.DropTable(
                 name: "Tema");
@@ -607,7 +658,7 @@ namespace ESAP.Sirecec.Data.Migrations
                 name: "Modulo");
 
             migrationBuilder.DropTable(
-                name: "Banco");
+                name: "BancoPrograma");
         }
     }
 }

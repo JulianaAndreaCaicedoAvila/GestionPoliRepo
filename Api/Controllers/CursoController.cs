@@ -14,17 +14,20 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 {
 	[@Authorize]
 	[ApiController]
-	[Route("curso")]
+	[Route("[controller]")]
+	[ResponseCache(CacheProfileName = "3m")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
 	public class CursoController : ControllerBase
 	{
 		private readonly DataContext _db;
+		private readonly ILogger _logger;
 		private readonly IHttpContextAccessor _context;
 
-		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor)
+		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor, ILogger<CursoController> logger)
 		{
 			_db = context;
+			_logger = logger;
 			_context = httpContextAccessor;
 		}
 

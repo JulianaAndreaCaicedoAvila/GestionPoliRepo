@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -26,6 +27,9 @@ var appName = "PnsvApp";
 // 202206030151: Create a web API with ASP.NET Core https://t.ly/kMJm
 var builder = WebApplication.CreateBuilder(args);
 
+// 202307131141: Logs
+builder.Logging.ClearProviders();
+
 // 202202071938: Migration to ASP.NET Core in .NET 6 -> https://gist.github.com/davidfowl/0e0372c3c1d895c3ce195ba983b1e03d
 // 202201282046: Add services to the container -> https://stackoverflow.com/a/69722959
 // Migrate from ASP.NET Core 5.0 to 6.0 -> https://t.ly/oQGmj
@@ -40,7 +44,19 @@ services.AddSingleton<IConfiguration>(configuration);
 services.AddCors(o => o.AddPolicy(appName, builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
 // Add services to the container.
-services.AddControllers();
+// 202307131122: Response caching in ASP.NET Core
+// https://learn.microsoft.com/en-us/aspnet/core/performance/caching/overview?view=aspnetcore-6.0
+// https://learn.microsoft.com/en-us/aspnet/core/performance/caching/response?view=aspnetcore-6.0#cache-profiles
+services.AddResponseCaching();
+services.AddControllers(option =>
+{
+	option.CacheProfiles.Add("3m",
+		 new CacheProfile()
+		 {
+			 Duration = 180,
+			 Location = ResponseCacheLocation.Any,
+		 });
+});
 
 // configure DI for application services
 services.AddScoped<IJwtUtils, JwtUtils>();
@@ -193,4 +209,5 @@ app.UseCors(appName);
 app.UseMiddleware<ErrorHandler>();
 // app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();
+app.UseResponseCaching();
 app.Run();

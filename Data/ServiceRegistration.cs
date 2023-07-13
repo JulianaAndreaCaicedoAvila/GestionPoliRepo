@@ -35,6 +35,13 @@ namespace ESAP.Sirecec.Data
 				});
 			// services.AddDbContext<DataContext>(o => o.UseOracle());
 			// services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+			// using (var scope = services.CreateScope())
+			// {
+			// 	var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+			// 	dbInitializer.Initialize();
+			// }
+
 			return services;
 		}
 	}

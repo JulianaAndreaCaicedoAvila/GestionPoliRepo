@@ -68,7 +68,7 @@ onMounted(() => {
 									<li><router-link :to="{ name: 'admin-usuarios' }" class="dropdown-item">Usuarios</router-link></li>
 									<li><router-link :to="{ name: 'admin-clasificador' }" class="dropdown-item">Clasificadores</router-link></li>
 									<li><router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Tipos de Clasificadores</router-link></li>
-									<li class="dropdown-submenu">
+									<!-- <li class="dropdown-submenu">
 										<a class="dropdown-item" href="#">Estructura del Plan<i class="fas fa-chevron-down"></i></a>
 										<ul class="dropdown-menu">
 											<li><router-link :to="{ name: 'admin-area' }" class="dropdown-item">Áreas de acción</router-link></li>
@@ -77,7 +77,7 @@ onMounted(() => {
 											<li><router-link :to="{ name: 'admin-accion' }" class="dropdown-item">Acciones y actividades</router-link></li>
 											<li><router-link :to="{ name: 'admin-indicador' }" class="dropdown-item">Indicadores</router-link></li>
 										</ul>
-									</li>
+									</li> -->
 								</ul>
 							</li>
 							<li class="dropdown" v-if="auth.user && !auth.esAdmin">
@@ -90,7 +90,7 @@ onMounted(() => {
 								</ul>
 							</li>
 							<li class="dropdown ms-lg-auto no-line-effect" v-if="!auth.user">
-								<router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'login' }">
+								<router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'ingreso' }">
 									<i class="fa-solid fa-user-lock me-2"></i>INGRESAR</router-link
 								>
 							</li>

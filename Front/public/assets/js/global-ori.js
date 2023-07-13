@@ -1575,6 +1575,7 @@ function dtDrawCB(settings) {
 
 // Formats
 function FormatInit() {
+	console.log("FormatInit!!");
 	$("input.text-uppercase").blur(function () {
 		if ($(this).val.length > 0) $(this).val($(this).val().trim().toUpperCase().replace(/\s\s+/g, " "));
 	});

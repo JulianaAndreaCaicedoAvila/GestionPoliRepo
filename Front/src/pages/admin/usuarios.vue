@@ -3,10 +3,8 @@ import api from "@/utils/api";
 import DxStore from "@/utils/dx";
 import { ref, toRaw, onMounted } from "vue";
 import { useClasificadorStore } from "@/stores";
-import { generateData } from "@/assets/js/generate";
-import DataSource from "devextreme/data/data_source";
-import DxValidator, { DxRequiredRule, DxCustomRule, DxEmailRule, DxCompareRule, DxAsyncRule, DxStringLengthRule } from "devextreme-vue/validator";
-import { DxButton, DxCheckBox, DxSelectBox, DxTextBox, DxSwitch, DxNumberBox, DxPopup, DxTooltip, DxValidationGroup } from "devextreme-vue";
+import { DxSelectBox, DxTextBox, DxValidationGroup } from "devextreme-vue";
+import DxValidator, { DxRequiredRule, DxCustomRule, DxEmailRule, DxCompareRule, DxStringLengthRule } from "devextreme-vue/validator";
 import {
 	DxColumn,
 	DxColumnChooser,
@@ -48,7 +46,6 @@ let ansvCompanyId = 1164,
 		{ id: 2, name: "Analista" },
 		{ id: 3, name: "Gerente" },
 	],
-	dataSource = generateData(100000),
 	dxStore = DxStore({
 		key: ["id"],
 		userData: "",
@@ -59,7 +56,7 @@ let ansvCompanyId = 1164,
 			// root.loaderShow("Cargando Dependencias", "#panel-produccion .card-body");
 			console.log("onLoading...");
 		},
-		onLoaded: function (results, baseEntity) {
+		onLoaded: function (results) {
 			// console.clear();
 			console.log("results", results);
 			// root.totaCount = results.totalCount;
@@ -69,34 +66,12 @@ let ansvCompanyId = 1164,
 			$("#data").unlock();
 		},
 	}),
-	displayModes = [
-		{ text: "Display Mode 'full'", value: "full" },
-		{ text: "Display Mode 'compact'", value: "compact" },
-	],
-	displayMode = "full",
-	showPageSizeSelector = true,
-	showInfo = true,
-	showNavButtons = true,
-	customizeColumns = (columns) => {
+	customizeColumns = () => {
 		// console.log("customizeColumns!");
 		// columns[0].width = 70;
 	},
 	passwordComparison = () => {
 		return item.value.password;
-	},
-	asyncValidation = (params) => {
-		console.log("params =>", params);
-		// return sendRequest(params.value);
-		return true;
-	},
-	companyChanged = (e) => {
-		// // console.clear();
-		let el = $(e.element);
-		let id = el.attr("id");
-		console.log("id =>", id);
-		console.log("e=>", e);
-		console.log("item =>", item.value.nombre);
-		console.log("");
 	},
 	ansvEmailRule = (e) => {
 		if (item.value.companyId !== ansvCompanyId) return true;
@@ -152,7 +127,7 @@ let ansvCompanyId = 1164,
 		// console.clear();
 		let result = valGroup.value.instance.validate();
 		if (result.isValid) {
-			panelData.lock(`${item.id == 0 ? "Creando" : "Actualizando"} usuario`, async function (params) {
+			panelData.lock(`${item.id == 0 ? "Creando" : "Actualizando"} usuario`, async function () {
 				console.log("item =>", item.value);
 				let dto = toRaw(item.value);
 				if (!dto.hasOwnProperty("password")) dto["password"] = null;
@@ -203,7 +178,7 @@ let ansvCompanyId = 1164,
 			// especificos.value = [];
 		}
 	},
-	active = (data, state) => {
+	active = (data) => {
 		// console.clear();
 		console.log("data =>", data);
 		msg.confirm({
@@ -211,18 +186,6 @@ let ansvCompanyId = 1164,
 			textCancel: "CANCELAR",
 			textOk: data.isActive ? "DESACTIVAR" : "ACTIVAR",
 			text: `¿Realmente desea ${data.isActive ? "desactivar" : "activar"} al usuario ${data.name}?`,
-			onConfirm: () => {},
-			onCancel: () => {},
-		});
-	},
-	remove = (data, state) => {
-		// console.clear();
-		console.log("data =>", data);
-		msg.confirm({
-			// title: "otro",
-			textCancel: "CANCELAR",
-			textOk: "ELIMINAR",
-			text: `¿Realmente desea eliminar al usuario ${data.name}?`,
 			onConfirm: () => {},
 			onCancel: () => {},
 		});
@@ -256,7 +219,7 @@ let ansvCompanyId = 1164,
 		});
 	};
 onMounted(async () => {
-	// console.clear();
+	console.clear();
 	console.log(_sep);
 	let res = await store.porTipoNombre("entidad");
 	// res = res.filter((o) => o.hijos > 0);
@@ -451,7 +414,6 @@ onMounted(async () => {
 					</div>
 				</div>
 			</DxValidationGroup>
-
 			<div class="card-footer">
 				<div class="d-flex justify-content-between align-items-center">
 					<a class="btn btn-gray" @click.prevent="addCancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>

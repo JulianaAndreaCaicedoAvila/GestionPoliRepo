@@ -1,3 +1,54 @@
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202306161422:
+dotnet ef database update
+dotnet ef database update 0
+dotnet ef migrations add Inicial
+dotnet ef migrations add Sql
+dotnet ef migrations add CursoEntidades
+
+dotnet ef migrations remove 20230616214233_BancoNucleoPrograma
+dotnet ef database update 20230616214630_BancoNucleoPrograma
+
+-- Eliminar la ultima migración... EL ARCHIVO!!
+dotnet ef migrations remove
+
+-- Lista migraciones YA aplicadas a la BD
+dotnet ef migrations list
+
+Actualizar herramientas EF
+dotnet tool update --global dotnet-ef
+
+SQL => STRUCTURE QUERY LANGUAGE => Oracle, SQL Server, Postgres, MySQL, Sqlite
+DDL => DATA DEFINITION LANGUAGE (SQL)
+Code First => Clase a SQL a database
+BD First
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202306012035:
+Los scripts SQL deben ser guardados en UTF-8+BOM!!
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202305311549:
+
+GIT Server:
+cd /c/git
+git init sirecec4-web.git --bare
+git clone ssh://diego.vargasv@172.16.202.17/c:/git/sirecec4-web.git deploy
+
+cd c:/inetpub/wwwroot
+git clone --branch test ssh://diego.vargasv@172.16.202.17/c:/git/sirecec4-web.git sirecec4
+
+git checkout -b test
+git push --set-upstream origin test
+
+diego.vargasv@esap.edu.co
+eS4P%1974
+qhK64R%vXn
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202305291440:
@@ -45,15 +96,6 @@ protected override void Down(MigrationBuilder migrationBuilder)
 	migrationBuilder.Sql(@"DROP VIEW ""Clasificadores"";");
 	migrationBuilder.Sql(@"DROP VIEW ""Usuarios"";");
 }
-
----------------------------------------------------------------------------------------------------------------------------------------------
-
-202305271451:
-dotnet ef migrations add Inicial
-dotnet ef migrations add Sql
-dotnet ef migrations remove 20230530021033_Seed
-dotnet ef database update
-dotnet ef database update 0
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

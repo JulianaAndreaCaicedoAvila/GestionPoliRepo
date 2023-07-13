@@ -70,5 +70,12 @@ namespace ESAP.Sirecec.Data
 			set { this.editadoEl = value; }
 		}
 		private DateTime? editadoEl = null;
+
+		public bool? Activo { get; set; }
+
+		public int? CreadoPor { get; set; }
+		public int? EditadoPor { get; set; }
+
+		public int? Orden { get; set; }
 	}
 }

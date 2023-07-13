@@ -39,8 +39,9 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		[HttpGet("tipos")]
 		public List<ClasificadorTipo> Tipos()
 		{
-			var items = _db.ClasificadorTipo.OrderBy(o => o.Nombre).ToList();
-			return items;
+			var items = _db.ClasificadorTipo;
+			var subItems = items.OrderBy(o => o.Nombre).ToList();
+			return subItems;
 		}
 
 		[HttpPost("ed")]

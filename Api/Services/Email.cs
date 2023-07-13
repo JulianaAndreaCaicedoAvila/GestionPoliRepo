@@ -6,7 +6,7 @@ using MimeKit.Text;
 
 public interface IEmailService
 {
-	void Send(string to, string subject, string html, string? from = null);
+	void Send(string to, string subject, string html);
 }
 
 public class EmailService : IEmailService
@@ -19,11 +19,12 @@ public class EmailService : IEmailService
 		_configuration = configuration;
 	}
 
-	public void Send(string to, string subject, string body, string from = null)
+	public void Send(string to, string subject, string body)
 	{
 		// Create message
 		var email = new MimeMessage();
-		email.From.Add(MailboxAddress.Parse(from ?? _configuration["Email:From"]));
+		var fromAddress = new MailboxAddress(_configuration["Email:From"], _configuration["Email:SmtpUser"]);
+		email.From.Add(fromAddress);
 		email.To.Add(MailboxAddress.Parse(to));
 		email.Subject = subject;
 		email.Body = new TextPart(TextFormat.Html) { Text = body };

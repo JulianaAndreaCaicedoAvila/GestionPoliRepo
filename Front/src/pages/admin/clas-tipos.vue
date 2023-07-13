@@ -68,14 +68,14 @@ let grid = null,
 							panelData.unlock();
 							grid.refresh();
 						});
-					})
-					.error((r) => {
-						console.log("r =>", r);
-						addCancel(function () {
-							panelData.unlock();
-							grid.refresh();
-						});
 					});
+				// .error((r) => {
+				// 	console.log("r =>", r);
+				// 	addCancel(function () {
+				// 		panelData.unlock();
+				// 		grid.refresh();
+				// 	});
+				// });
 
 				// 	},
 				// 	true
@@ -95,7 +95,7 @@ let grid = null,
 				panelGrid.lock(`${data.activo ? "Desactivando" : "Activando"}, un momento por favor`, async function (params) {
 					data.activo = data.activo ? false : true;
 					await api()
-						.post(`clasificador/ed`, data)
+						.post(`clasificador/edt`, data)
 						.then((r) => {
 							console.log("r =>", r);
 							store.clean();
@@ -246,17 +246,22 @@ onMounted(() => {
 							<DxColumn data-field="id" caption="Id" data-type="number" alignment="center" :width="90" />
 							<DxColumn data-field="nombre" caption="Nombre" :width="250" :sort-index="0" sort-order="asc" />
 							<DxColumn data-field="descripcion" caption="Descripción" />
+							<DxColumn :width="90" caption="Activo" alignment="center" cell-template="tpl1" />
+							<template #tpl1="{ data }">
+								<span v-if="data.data.activo == true">SI</span>
+								<span v-else>NO</span>
+							</template>
 							<DxColumn :width="100" alignment="center" cell-template="tpl" name="cmds" :fixed="true" fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">
 									<a title="Modificar..." class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
-									<a v-if="data.data.activo" title="Desactivar..." class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
-										<i class="fa-regular fa-square-minus fa-lg"></i>
+									<a v-if="data.data.activo == true" title="Desactivar..." class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
+										<i class="fa-regular fa-square fa-xl"></i>
 									</a>
 									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
-										<i class="fa-regular fa-square-check fa-lg"></i>
+										<i class="fa-regular fa-square-check fa-xl"></i>
 									</a>
 								</span>
 							</template>

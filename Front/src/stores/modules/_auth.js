@@ -88,7 +88,7 @@ export const useAuthStore = defineStore("auth", {
 		// 	} else window.clearInterval(window._int);
 		// },
 		// 202208182242: Login integrado Local, Azure
-		async login(args) {
+		async do(args) {
 			console.clear();
 			console.log(_sep);
 			console.log("login", args);
@@ -99,15 +99,20 @@ export const useAuthStore = defineStore("auth", {
 			console.log("email =>", email);
 			let password = args[2];
 			console.log("password =>", password);
-			let data = ep == "email" ? email : { email, password };
+			let data = args[1];
+			if (ep == "autenticar") data = { email, password };
+			else if (ep == "email") data = email;
 			console.log("data =>", data);
 			return await api({ hideErrors: true })
 				.post(endPoint, data)
 				.then((r) => {
-					this.token = r.data.token;
-					let usr = makeUser(r, ep == "email" ? "azure" : "local");
-					this.user = usr;
-					return usr;
+					if (ep == "autenticar") {
+						this.token = r.data.token;
+						let usr = makeUser(r, ep == "email" ? "azure" : "local");
+						this.user = usr;
+						return usr;
+					}
+					return r.data;
 				});
 		},
 		async loginAzureAd(email) {

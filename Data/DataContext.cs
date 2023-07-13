@@ -18,23 +18,46 @@ namespace ESAP.Sirecec.Data
 			// Read appsettings.json
 			// 202305291346: https://stackoverflow.com/a/71954443
 			// 202305291353: https://stackoverflow.com/a/43619386
-			var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").Build();
-			var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB1;";
+			// 202306151750: https://www.connectionstrings.com/store-and-read-connection-string-in-appsettings-json
+			var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true).Build();
+			// var conn = "User Id=sirecec_v4;Password=sirecec_v4;Data Source=localhost:1521/ORCLPDB1;";
+			// var conn = "User Id=DV_SIRECEC;Password=DVS1r3c3c4;Data Source=172.16.1.7:1523/SIRECEC4;";
+			var conn = configuration.GetConnectionString("ConnStr");
 			optionsBuilder.UseOracle(conn);
 		}
+
 		public DataContext() : base() { }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 		public virtual DbSet<Core.Clasificador>? Clasificador { get; set; } = null!;
-		public virtual DbSet<Core.ClasificadorTipo> ClasificadorTipo { get; set; } = null!;
-		public virtual DbSet<Core.Clasificadores> Clasificadores { get; set; } = null!;
-		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
+		public virtual DbSet<Core.ClasificadorTipo>? ClasificadorTipo { get; set; } = null!;
+		public virtual DbSet<Core.Clasificadores>? Clasificadores { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
+		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
+		public virtual DbSet<Core.BancoPrograma>? BancoPrograma { get; set; } = null!;
+		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
+		public virtual DbSet<Core.Programa>? Programa { get; set; } = null!;
+		public virtual DbSet<Core.Producto>? Producto { get; set; } = null!;
+		public virtual DbSet<Core.Indicador>? Indicador { get; set; } = null!;
+		public virtual DbSet<Core.Tema>? Tema { get; set; } = null!;
+		public virtual DbSet<Core.Participante>? Participante { get; set; } = null!;
+		// public virtual DbSet<Core.Programa>? GraficaEncuesta { get; set; } = null!;
+		// public virtual DbSet<Core.Programa>? GraficaEncuestaGeneral { get; set; } = null!;
+		public virtual DbSet<Core.Curso>? Curso { get; set; } = null!;
+		public virtual DbSet<Core.Documento>? Documento { get; set; } = null!;
+		public virtual DbSet<Core.CursoAnexo>? CursoAnexo { get; set; } = null!;
+		public virtual DbSet<Core.CursoEncuesta>? CursoEncuesta { get; set; } = null!;
+		public virtual DbSet<Core.CursoFecha>? CursoFecha { get; set; } = null!;
+		public virtual DbSet<Core.CursoTema>? CursoTema { get; set; } = null!;
+		public virtual DbSet<Core.Encuesta>? Encuesta { get; set; } = null!;
+		public virtual DbSet<Core.EncuestaPregunta>? EncuestaPregunta { get; set; } = null!;
+		public virtual DbSet<Core.Pregunta>? Pregunta { get; set; } = null!;
+		public virtual DbSet<Core.ValorGeneral>? ValorGeneral { get; set; } = null!;
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
 
 			//202305292059: Seed
-			Seed.Init(builder);
+			// Seed.Init(builder);
 
 			// Setting maximum identifier length to 30 characters; By default, it's set to 128.
 			// https://docs.oracle.com/en/database/oracle/oracle-data-access-components/19.3/odpnt/EFCoreIdentifier.html
@@ -48,14 +71,7 @@ namespace ESAP.Sirecec.Data
 			builder.Entity<IdentityUserLogin<int>>().ToTable("AuthUserLogins");
 			builder.Entity<IdentityRoleClaim<int>>().ToTable("AuthRoleClaims");
 			builder.Entity<IdentityUserToken<int>>().ToTable("AuthUserTokens");
-			builder.Entity<Core.Modulo>(entity =>
-			{
-				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
-				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
-				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
-				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
-				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
-			});
+
 			builder.Entity<Core.Clasificador>(entity =>
 			{
 				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -72,13 +88,174 @@ namespace ESAP.Sirecec.Data
 				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 				// https://learn.microsoft.com/en-us/ef/core/modeling/relationships
 				entity.HasMany(e => e.Clasificadores)
-					 .WithOne(e => e.ClasificadorTipo)
-					 .HasForeignKey(e => e.TipoId)
-					 .HasPrincipalKey(e => e.Id);
+				.WithOne(e => e.ClasificadorTipo)
+				.HasForeignKey(e => e.TipoId)
+				.HasPrincipalKey(e => e.Id);
 				// entity.ToTable("CLAS_TIPO");
 			});
 			builder.Entity<Core.Clasificadores>(entity => { entity.ToView("Clasificadores"); });
 
+
+			builder.Entity<Core.Modulo>(entity =>
+			{
+				entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			});
+			builder.Entity<Core.BancoPrograma>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Nucleo>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Programa>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Producto>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Indicador>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Tema>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Participante>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			// builder.Entity<Core.GraficaEncuesta>(entity =>
+			//   {
+			// 	  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+			// 	  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+			// 	  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+			// 	  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+			// 	  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			//   });
+			// builder.Entity<Core.GraficaEncuestaGeneral>(entity =>
+			//   {
+			// 	  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+			// 	  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+			// 	  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+			// 	  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+			// 	  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			//   });
+			builder.Entity<Core.CursoAnexo>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.CursoEncuesta>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.CursoFecha>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.CursoTema>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Curso>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Encuesta>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Documento>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.EncuestaPregunta>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.Pregunta>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
+			builder.Entity<Core.ValorGeneral>(entity =>
+			  {
+				  entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+				  entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				  entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+			  });
 		}
 		// public static readonly ILoggerFactory ConsoleLoggerFactory
 		//   = LoggerFactory.Create(builder =>

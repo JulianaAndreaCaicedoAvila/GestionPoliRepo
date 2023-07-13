@@ -39,18 +39,18 @@ export const useClasificadorStore = defineStore({
 						console.log("r =>", r);
 						return r.data;
 					});
-				return this.items;
-			} else return this.items;
+				return this.tipos;
+			} else return this.tipos;
 		},
 		async load() {
-			if (this.acciones.length <= 0) {
-				this.acciones = await api()
-					.get("accion")
-					.then((r) => {
-						console.log("r =>", r);
-						return r.data;
-					});
-			}
+			// if (this.acciones.length <= 0) {
+			// 	this.acciones = await api()
+			// 		.get("accion")
+			// 		.then((r) => {
+			// 			console.log("r =>", r);
+			// 			return r.data;
+			// 		});
+			// }
 			if (this.items.length <= 0) {
 				this.items = await api()
 					.get("clasificador")

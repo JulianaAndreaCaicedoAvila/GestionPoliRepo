@@ -14,7 +14,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 {
 	[@Authorize]
 	[ApiController]
-	[Route("curso")]
+	[Route("cursoAnexo")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
 	public class CursoAnexoController : ControllerBase

@@ -1,9 +1,15 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
 
+202307271845:
+SELECT * FROM "Clasificador";
+SELECT * FROM "ClasificadorTipo" WHERE "Nombre" LIKE '%gén%';
+SELECT * FROM "Clasificador" ORDER BY "Id" DESC;
+SELECT * FROM "Clasificador" ORDER BY "Id" DESC;
 
+---------------------------------------------------------------------------------------------------------------------------------------------
 
 https://stackoverflow.com/a/57070108
 dotnet tool install --global dotnet-ef
-
 
 202307182316:
 Prueba de PUSH

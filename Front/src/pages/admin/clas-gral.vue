@@ -59,7 +59,7 @@ let tipos = ref([]),
 			// root.totaCount = results.totalCount;
 			// root.loaderHide();
 			console.log("onLoaded!");
-			panelGrid.unlock();
+			if (panelGrid != null) panelGrid.unlock();
 		},
 	}),
 	edit = (data) => {

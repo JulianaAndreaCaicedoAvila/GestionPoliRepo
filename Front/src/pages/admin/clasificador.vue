@@ -1,14 +1,21 @@
 <script setup>
 import api from "@/utils/api";
 import DxStore from "@/utils/dx";
-import { ref, onMounted, toRaw } from "vue";
+import { ref, onMounted, toRaw, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import DxValidator, { DxRequiredRule } from "devextreme-vue/validator";
 import { DxTextBox, DxNumberBox, DxTextArea, DxValidationGroup } from "devextreme-vue";
 import { DxColumn, DxScrolling, DxDataGrid, DxLoadPanel, DxPager, DxPaging } from "devextreme-vue/data-grid";
 import { useClasificadorStore } from "@/stores";
 const store = useClasificadorStore();
-let tipoId = 6; // Tipo Area de acción
-let grid = null,
+const route = useRoute();
+const router = useRouter();
+let titAccion = ref("Crear"),
+	tipos = null,
+	clasificacion = ref("departamento"),
+	tipoId = route.params.id,
+	path = `clasificador/dx/${tipoId}`,
+	grid = null,
 	valGroup = ref(null),
 	base = {
 		id: 0,
@@ -21,26 +28,30 @@ let grid = null,
 	panelData = null,
 	panelGrid = null,
 	item = ref(Clone(base)),
-	dxStore = DxStore({
-		id: tipoId,
-		userData: "",
-		endPoint: "clasificador/dx/" + tipoId,
-		onLoading: function (loadOptions) {
-			console.log("loadOptions =>", loadOptions);
-			// root.loaderShow("Cargando Dependencias", "#panel-produccion .card-body");
-			console.log("onLoading...");
-		},
-		onLoaded: function (results, baseEntity) {
-			// console.clear();
-			console.log("results", results);
-			// root.totaCount = results.totalCount;
-			// root.loaderHide();
-			console.log("onLoaded!");
-		},
-	}),
+	dxStore = ref(null),
 	onInitialized = (o) => {
+		// console.log("onInitialized =>", o);
 		grid = o.component;
-		console.log("grid =>", grid);
+		// console.log("grid =>", grid);
+		// let ds = grid.getDataSource();
+		// console.log("ds =>", ds);
+	},
+	onReady = (o) => {
+		// console.log("onReady =>", o);
+		// grid = o.component;
+		// console.log("grid =>", grid);
+		// let ds = grid.getDataSource();
+		// console.log("ds =>", ds);
+		if (panelGrid != null) panelGrid.unlock();
+	},
+	editorPreparing = (o) => {
+		// console.clear();
+		// console.log("editorPeparing =>", o);
+		// grid = o.component;
+		// console.log("grid =>", grid);
+		// let ds = grid.getDataSource();
+		// console.log("ds =>", ds);
+		// if (panelGrid != null) panelGrid.unlock();
 	},
 	save = () => {
 		let res = valGroup.value.instance.validate();
@@ -115,8 +126,10 @@ let grid = null,
 		console.log("data =>", data);
 		panelGrid.fadeOut(function () {
 			if (typeof data !== "undefined") {
+				titAccion.value = "Editar";
 				item.value = Clone(data);
 			} else {
+				titAccion.value = "Crear";
 				item.value = Clone(base);
 			}
 			panelData.fadeIn(function () {});
@@ -137,7 +150,7 @@ let grid = null,
 		});
 	},
 	displayMode = "full",
-	pageSizes = [5, 10, 30, 50, "all"],
+	pageSizes = [15, 30, 50, "all"],
 	showPageSizeSelector = true,
 	showInfo = true,
 	showNavButtons = true,
@@ -147,11 +160,63 @@ let grid = null,
 	},
 	isCompactMode = () => {
 		return this.displayMode === "compact";
+	},
+	getData = () => {
+		dxStore.value = DxStore({
+			id: tipoId,
+			userData: "",
+			endPoint: `clasificador/dx/${tipoId}`,
+			onLoading: function (loadOptions) {
+				panelGrid.lock("Cargando");
+				console.log("loadOptions =>", loadOptions);
+				// root.loaderShow("Cargando Dependencias", "#panel-produccion .card-body");
+				console.log("onLoading...");
+			},
+			onLoaded: function (results, baseEntity) {
+				// console.clear();
+				console.log("results", results);
+				// root.totaCount = results.totalCount;
+				// root.loaderHide();
+				console.log("onLoaded!");
+				let cl = tipos.filter((o) => o.id == tipoId)[0];
+				clasificacion.value = cl.nombre;
+				if (panelGrid != null) panelGrid.unlock();
+			},
+		});
 	};
-onMounted(() => {
-	console.log("MAIN ONMOUNTED");
+
+watch(
+	() => route.params.id,
+	(newId, oldId) => {
+		console.clear();
+		console.log("newId, oldId =>", newId, oldId);
+		tipoId = route.params.id;
+		console.log("tipoId =>", tipoId);
+		console.log("route.params.id =>", route.params.id);
+		path = `clasificador/dx/${tipoId}`;
+		console.log("path =>", path);
+		// dxStore.endPoint = path;
+		// let ds = grid.getDataSource();
+		// console.log("ds =>", ds);
+		// dxStore.load();
+		// grid.refresh();
+		getData();
+		console.log("dxStore =>", dxStore);
+	}
+);
+
+onMounted(async () => {
+	console.clear();
+	console.log("Clasificador mounted");
 	panelData = $("#data");
 	panelGrid = $("#grid");
+	console.clear();
+	console.log(_sep);
+	panelGrid.lock("Cargando");
+	tipoId = route.params.id;
+	tipos = await store.tipos();
+	console.log("tipos =>", tipos);
+	getData();
 });
 </script>
 <template>
@@ -160,7 +225,7 @@ onMounted(() => {
 			<div class="card-header main d-flex justify-content-between">
 				<span>
 					<i class="fa-solid fa-gears"></i>
-					Administración &raquo; Áreas de Invervención &raquo; <span title="tit-action">Nueva área</span>
+					Administración &raquo; {{ clasificacion }} &raquo; <span title="tit-action">{{ titAccion }}</span>
 				</span>
 				<!-- <span>
 						<button type="button" class="btn btn-trans" @click.prevent="addStart"><i class="fa-solid fa-square-plus"></i>NUEVO USUARIO</button>
@@ -231,7 +296,7 @@ onMounted(() => {
 			<div class="card-header main d-flex justify-content-between">
 				<span>
 					<i class="fa-solid fa-gears"></i>
-					Administración &raquo; Estructura del Plan &raquo; Áreas de Invervención
+					Administración &raquo; {{ clasificacion }}
 				</span>
 				<span>
 					<button type="button" class="btn btn-trans" @click.prevent="addStart()" title="Nuevo..."><i class="fa-solid fa-square-plus"></i>NUEVO</button>
@@ -250,11 +315,13 @@ onMounted(() => {
 							:show-borders="false"
 							:word-wrap-enabled="false"
 							id="gridContainer"
+							@content-ready="onReady"
 							@initialized="onInitialized"
+							@editor-preparing="editorPreparing"
 						>
 							<DxLoadPanel :enabled="false" />
 							<DxScrolling row-rendering-mode="virtual" />
-							<DxPaging :page-size="10" />
+							<DxPaging :page-size="15" />
 							<DxPager
 								:allowed-page-sizes="pageSizes"
 								:display-mode="displayMode"
@@ -264,10 +331,10 @@ onMounted(() => {
 								:visible="true"
 							/>
 							<DxColumn data-field="id" caption="Id" data-type="number" alignment="center" :width="60" :allow-sorting="false" />
-							<DxColumn data-field="orden" caption="Orden" data-type="number" alignment="center" :width="100" :sort-index="0" sort-order="asc" />
-							<DxColumn data-field="nombre" caption="Área de acción" />
+							<DxColumn data-field="nombre" caption="Nombre" sort-order="asc" />
 							<DxColumn data-field="descripcion" caption="Descripción" />
 							<DxColumn :width="90" caption="Activo" alignment="center" cell-template="tpl1" />
+							<DxColumn data-field="orden" caption="Orden" data-type="number" alignment="center" :width="100" :sort-index="0" />
 							<template #tpl1="{ data }">
 								<span v-if="data.data.activo">SI</span>
 								<span v-else>NO</span>

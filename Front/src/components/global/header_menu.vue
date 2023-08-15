@@ -66,18 +66,29 @@ onMounted(() => {
 								<a class="dropdown-item dropdown-toggle" href="#"> <i class="fa fa-gear me-2"></i>ADMINISTRACIÓN<i class="ms-2 fa-solid fa-angle-down"></i></a>
 								<ul class="dropdown-menu">
 									<li><router-link :to="{ name: 'admin-usuarios' }" class="dropdown-item">Usuarios</router-link></li>
-									<li><router-link :to="{ name: 'admin-clasificador' }" class="dropdown-item">Clasificadores</router-link></li>
-									<li><router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Tipos de Clasificadores</router-link></li>
-									<!-- <li class="dropdown-submenu">
-										<a class="dropdown-item" href="#">Estructura del Plan<i class="fas fa-chevron-down"></i></a>
+									<li class="dropdown-submenu">
+										<a class="dropdown-item" href="#">Ubicaciones<i class="fas fa-chevron-down"></i></a>
 										<ul class="dropdown-menu">
-											<li><router-link :to="{ name: 'admin-area' }" class="dropdown-item">Áreas de acción</router-link></li>
-											<li><router-link :to="{ name: 'admin-objetivo-general' }" class="dropdown-item">Objetivos generales</router-link></li>
-											<li><router-link :to="{ name: 'admin-objetivo-especifico' }" class="dropdown-item">Objetivos específicos</router-link></li>
-											<li><router-link :to="{ name: 'admin-accion' }" class="dropdown-item">Acciones y actividades</router-link></li>
-											<li><router-link :to="{ name: 'admin-indicador' }" class="dropdown-item">Indicadores</router-link></li>
+											<li><router-link :to="{ path: '/admin/clasificador/34' }" class="dropdown-item">Territorial</router-link></li>
+											<li><router-link :to="{ path: '/admin/clasificador/1' }" class="dropdown-item">Departamento</router-link></li>
+											<li><router-link :to="{ path: '/admin/clasificador/2' }" class="dropdown-item">Municipio</router-link></li>
 										</ul>
-									</li> -->
+									</li>
+									<li class="dropdown-submenu">
+										<a class="dropdown-item" href="#">Cursos<i class="fas fa-chevron-down"></i></a>
+										<ul class="dropdown-menu">
+											<li><router-link :to="{ path: '/admin/clasificador/10' }" class="dropdown-item">Productos</router-link></li>
+											<li><router-link :to="{ path: '/admin/clasificador/11' }" class="dropdown-item">Indicadores</router-link></li>
+											<li><router-link :to="{ path: '/admin/clasificador/14' }" class="dropdown-item">Tipos de curso</router-link></li>
+										</ul>
+									</li>
+									<li class="dropdown-submenu">
+										<a class="dropdown-item" href="#">Generales<i class="fas fa-chevron-down"></i></a>
+										<ul class="dropdown-menu">
+											<li><router-link :to="{ name: 'admin-clasificador' }" class="dropdown-item">Clasificadores</router-link></li>
+											<li><router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Tipos de Clasificadores</router-link></li>
+										</ul>
+									</li>
 								</ul>
 							</li>
 							<li class="dropdown" v-if="auth.user && !auth.esAdmin">

@@ -18,6 +18,14 @@ export const router = createRouter({
 		{ name: "que-es", path: "/que-es", meta: { title: "Que Es", requiresAuth: true }, component: () => import("@/pages/pnsv/que_es.vue") },
 		{ name: "estructura", path: "/estructura", meta: { title: "Estructura", requiresAuth: true }, component: () => import("@/pages/pnsv/estructura.vue") },
 		{
+			name: "clasificador",
+			path: "/admin/clasificador/:id",
+			meta: { title: "Clasificador", requiresAuth: true },
+			component: () => import("@/pages/admin/clasificador.vue"),
+			props: true,
+		},
+
+		{
 			name: "integralidad",
 			path: "/integralidad",
 			meta: { title: "Integralidad", requiresAuth: true },

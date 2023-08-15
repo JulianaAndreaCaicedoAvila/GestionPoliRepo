@@ -32,6 +32,7 @@ export const useClasificadorStore = defineStore({
 			this.acciones = [];
 		},
 		async tipos() {
+			console.log("store.tipos!");
 			if (this.tipos.length <= 0) {
 				this.tipos = await api()
 					.get("clasificador/tipos")

@@ -7,9 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class Productos : Producto
+	public partial class Productos : BaseEntity
 	{
-
+		[Key]
+		public int Id { get; set; }
+		public int DependenciaId { get; set; }
 		public string? DependenciaNombre { get; set; }
+		public string? Nombre { get; set; }
+		public string? Descripcion { get; set; }
 	}
 }

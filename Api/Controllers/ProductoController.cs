@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
 {
-	[@Authorize]
+	[Authorize]
 	[ApiController]
 	[Route("producto")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -29,9 +29,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("ed")] // /api/curso/ed => CREATE - UPDATE
-		public ActionResult Edit(Producto item)
+		public ActionResult Edit()
 		{
 			var u = User;
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			Producto item = JsonConvert.DeserializeObject<Producto>(str);
 
 			// Registro nuevo: CREATE
 			if (item.Id == 0)

@@ -1461,7 +1461,6 @@ onMounted(async () => {
 								:allowed-page-sizes="[15, 50, 'Todos']"
 								info-text="{2} Indicadores (página {0} de {1})"
 							/>
-
 							<DxColumn data-field="areaId" caption="Area Id" :visible="false" />
 							<DxColumn data-field="areaNombre" caption="Area" :visible="true" :group-index="0" />
 							<DxColumn data-field="objetivoGeneralId" caption="Objetivo General Id" :visible="false" />

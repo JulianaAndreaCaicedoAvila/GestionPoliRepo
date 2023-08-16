@@ -86,6 +86,7 @@ onMounted(() => {
 										<a class="dropdown-item" href="#">Generales<i class="fas fa-chevron-down"></i></a>
 										<ul class="dropdown-menu">
 											<li><router-link :to="{ path: '/admin/clasificador/7' }" class="dropdown-item">Dependencias</router-link></li>
+											<li><router-link :to="{ path: '/admin/clasificador/20' }" class="dropdown-item">Objetivos</router-link></li>
 											<li><router-link :to="{ name: 'admin-clasificador' }" class="dropdown-item">Clasificadores</router-link></li>
 											<li><router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Tipos de Clasificadores</router-link></li>
 										</ul>

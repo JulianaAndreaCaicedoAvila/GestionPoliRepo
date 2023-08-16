@@ -31,6 +31,8 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Clasificador>? Clasificador { get; set; } = null!;
 		public virtual DbSet<Core.ClasificadorTipo>? ClasificadorTipo { get; set; } = null!;
 		public virtual DbSet<Core.Clasificadores>? Clasificadores { get; set; } = null!;
+
+		public virtual DbSet<Core.Productos>? Productos { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
 		public virtual DbSet<Core.BancoPrograma>? BancoPrograma { get; set; } = null!;
@@ -93,7 +95,10 @@ namespace ESAP.Sirecec.Data
 				.HasPrincipalKey(e => e.Id);
 				// entity.ToTable("CLAS_TIPO");
 			});
+
 			builder.Entity<Core.Clasificadores>(entity => { entity.ToView("Clasificadores"); });
+
+			builder.Entity<Core.Productos>(entity => { entity.ToView("Productos"); });
 
 
 			builder.Entity<Core.Modulo>(entity =>

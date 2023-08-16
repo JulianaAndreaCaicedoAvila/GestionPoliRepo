@@ -5,6 +5,6 @@
 		}
 	],
 	"settings": {
-		"dotnet.defaultSolution": "app.sln"
+		"dotnet.defaultSolution": "ESAP-Sirecec-v4.sln"
 	}
 }

@@ -24,12 +24,11 @@ export const router = createRouter({
 			component: () => import("@/pages/admin/clasificador.vue"),
 			props: true,
 		},
-
 		{
-			name: "integralidad",
-			path: "/integralidad",
-			meta: { title: "Integralidad", requiresAuth: true },
-			component: () => import("@/pages/pnsv/integralidad.vue"),
+			name: "producto",
+			path: "/admin/producto",
+			meta: { title: "Productos", requiresAuth: true },
+			component: () => import("@/pages/admin/producto.vue"),
 		},
 		{
 			name: "seguimiento",

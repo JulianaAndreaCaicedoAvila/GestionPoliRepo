@@ -77,7 +77,7 @@ onMounted(() => {
 									<li class="dropdown-submenu">
 										<a class="dropdown-item" href="#">Cursos<i class="fas fa-chevron-down"></i></a>
 										<ul class="dropdown-menu">
-											<li><router-link :to="{ path: '/admin/clasificador/10' }" class="dropdown-item">Productos</router-link></li>
+											<li><router-link :to="{ path: '/admin/producto' }" class="dropdown-item">Productos</router-link></li>
 											<li><router-link :to="{ path: '/admin/clasificador/11' }" class="dropdown-item">Indicadores</router-link></li>
 											<li><router-link :to="{ path: '/admin/clasificador/14' }" class="dropdown-item">Tipos de curso</router-link></li>
 										</ul>
@@ -85,6 +85,7 @@ onMounted(() => {
 									<li class="dropdown-submenu">
 										<a class="dropdown-item" href="#">Generales<i class="fas fa-chevron-down"></i></a>
 										<ul class="dropdown-menu">
+											<li><router-link :to="{ path: '/admin/clasificador/7' }" class="dropdown-item">Dependencias</router-link></li>
 											<li><router-link :to="{ name: 'admin-clasificador' }" class="dropdown-item">Clasificadores</router-link></li>
 											<li><router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Tipos de Clasificadores</router-link></li>
 										</ul>

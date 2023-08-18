@@ -36,7 +36,7 @@ import {
 const route = useRoute(),
   store = useClasificadorStore(),
   auth = useAuthStore();
-let titulo = "Administración &raquo; Cursos &raquo; Productos",
+let titulo = "Administración &raquo; Cursos &raquo; Temas",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
@@ -63,7 +63,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       companyId: auth.user.companyId,
       dependenceId: auth.user.dependenceId,
     }),
-    endPoint: "producto/dx",
+    endPoint: "tema/dx",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -117,9 +117,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
       text: `¿Realmente desea ${
         data.activo ? "desactivar" : "activar"
-      } el producto "<span class="font-weight-semibold">${
-        data.nombre
-      }</span>"?`,
+      } el tema "<span class="font-weight-semibold">${data.nombre}</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -127,7 +125,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
           async function () {
             data.activo = data.activo ? false : true;
             await api()
-              .post(`producto/ed`, data)
+              .post(`tema/ed`, data)
               .then((r) => {
                 console.log("r =>", r);
                 store.clean();
@@ -151,11 +149,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
     panelGrid = $("#grid");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar producto");
+      $("#tit-action").text("Editar tema");
       panelGrid.lock("Cargando");
       item.value = Clone(data);
     } else {
-      $("#tit-action").text("Nuevo producto");
+      $("#tit-action").text("Nuevo tema");
       item.value = Clone(item_copy);
     }
     panelGrid.fadeOut("normal", async function () {
@@ -198,12 +196,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} producto`,
+        `${item.id == 0 ? "Creando" : "Actualizando"} tema`,
         async function () {
           let dto = item.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
-            .post("producto/ed", dto)
+            .post("tema/ed", dto)
             .then((r) => {
               console.log("r =>", r);
               cancel(function () {
@@ -254,7 +252,7 @@ onMounted(async () => {
         <span>
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" /> &raquo;
-          <span id="tit-action">Nuevo producto</span>
+          <span id="tit-action">Nuevo tema</span>
         </span>
       </div>
 
@@ -303,23 +301,6 @@ onMounted(async () => {
                   <DxStringLengthRule :min="3" />
                 </DxValidator>
               </DxTextBox>
-            </div>
-            <div class="col-md-12 mb-2">
-              <label class="tit">Descripción</label>
-              <DxTextArea
-                :height="110"
-                :max-length="400"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                id="descripcion"
-                v-model="item.descripcion"
-                class="form-control"
-                placeholder="Descripción"
-              >
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxTextArea>
             </div>
           </div>
         </div>
@@ -395,7 +376,7 @@ onMounted(async () => {
                 :show-page-size-selector="false"
                 :show-navigation-buttons="true"
                 :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} productos (página {0} de {1})"
+                info-text="{2} temas (página {0} de {1})"
               />
               <DxColumn
                 :width="150"
@@ -419,16 +400,7 @@ onMounted(async () => {
                 :allow-sorting="true"
                 alignment="center"
               />
-              <DxColumn
-                data-field="nombre"
-                caption="Producto"
-                :visible="true"
-              />
-              <DxColumn
-                data-field="descripcion"
-                caption="Descripción"
-                :visible="true"
-              />
+              <DxColumn data-field="nombre" caption="Tema" :visible="true" />
               <DxColumn
                 :width="100"
                 data-field="activo"

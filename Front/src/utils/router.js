@@ -31,6 +31,36 @@ export const router = createRouter({
 			component: () => import("@/pages/admin/producto.vue"),
 		},
 		{
+			name: "banco-programas",
+			path: "/admin/banco-programas",
+			meta: { title: "Banco Programas", requiresAuth: true },
+			component: () => import("@/pages/admin/banco-programas.vue"),
+		},
+		{
+			name: "nucleos",
+			path: "/admin/nucleos",
+			meta: { title: "Nucleos", requiresAuth: true },
+			component: () => import("@/pages/admin/nucleos.vue"),
+		},
+		{
+			name: "programa-capacitacion",
+			path: "/admin/programa-capacitacion",
+			meta: { title: "Programas de capacitacion", requiresAuth: true },
+			component: () => import("@/pages/admin/programa-capacitacion.vue"),
+		},
+		{
+			name: "temas",
+			path: "/admin/temas",
+			meta: { title: "temas", requiresAuth: true },
+			component: () => import("@/pages/admin/temas.vue"),
+		},
+		{
+			name: "modulos",
+			path: "/admin/modulos",
+			meta: { title: "modulos", requiresAuth: true },
+			component: () => import("@/pages/admin/modulos.vue"),
+		},
+		{
 			name: "seguimiento",
 			path: "/seguimiento",
 			meta: { title: "Seguimiento", requiresAuth: true },

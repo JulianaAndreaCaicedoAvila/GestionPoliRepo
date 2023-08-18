@@ -36,7 +36,7 @@ import {
 const route = useRoute(),
   store = useClasificadorStore(),
   auth = useAuthStore();
-let titulo = "Administración &raquo; Cursos &raquo; Productos",
+let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
@@ -63,7 +63,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       companyId: auth.user.companyId,
       dependenceId: auth.user.dependenceId,
     }),
-    endPoint: "producto/dx",
+    endPoint: "banco/dx",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -117,7 +117,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
       text: `¿Realmente desea ${
         data.activo ? "desactivar" : "activar"
-      } el producto "<span class="font-weight-semibold">${
+      } el programa "<span class="font-weight-semibold">${
         data.nombre
       }</span>"?`,
       onConfirm: () => {
@@ -127,7 +127,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
           async function () {
             data.activo = data.activo ? false : true;
             await api()
-              .post(`producto/ed`, data)
+              .post(`banco/ed`, data)
               .then((r) => {
                 console.log("r =>", r);
                 store.clean();
@@ -151,11 +151,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
     panelGrid = $("#grid");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar producto");
+      $("#tit-action").text("Editar programa");
       panelGrid.lock("Cargando");
       item.value = Clone(data);
     } else {
-      $("#tit-action").text("Nuevo producto");
+      $("#tit-action").text("Nuevo programa");
       item.value = Clone(item_copy);
     }
     panelGrid.fadeOut("normal", async function () {
@@ -198,12 +198,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} producto`,
+        `${item.id == 0 ? "Creando" : "Actualizando"} programa`,
         async function () {
           let dto = item.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
-            .post("producto/ed", dto)
+            .post("banco/ed", dto)
             .then((r) => {
               console.log("r =>", r);
               cancel(function () {
@@ -254,72 +254,28 @@ onMounted(async () => {
         <span>
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" /> &raquo;
-          <span id="tit-action">Nuevo producto</span>
+          <span id="tit-action">Nuevo programa</span>
         </span>
       </div>
 
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-3 mb-1">
-              <label class="tit">Dependencia</label>
-              <DxSelectBox
-                id="dependenciaId"
-                ref="dependenciaIdTxtRef"
-                :data-source="dependencias"
-                :grouped="false"
-                :min-search-length="3"
-                :search-enabled="true"
-                v-model="item.dependenciaId"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                @value-changed="itemSelected"
-                placeholder="Dependencia"
-                value-expr="id"
-                display-expr="nombre"
-                item-template="item"
-              >
-                <template #item="{ data }">
-                  {{ data.nombre }}
-                </template>
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxSelectBox>
-            </div>
-            <div class="col-md-9 mb-2">
-              <label class="tit">Nombre</label>
+            <div class="col-md-12 mb-2">
+              <label class="tit">Nombre del programa</label>
               <DxTextBox
                 id="nombre"
                 value-change-event="keyup"
                 :show-clear-button="true"
                 v-model="item.nombre"
                 class="form-control"
-                placeholder="Nombre"
+                placeholder="Nombre del programa"
               >
                 <DxValidator>
                   <DxRequiredRule />
                   <DxStringLengthRule :min="3" />
                 </DxValidator>
               </DxTextBox>
-            </div>
-            <div class="col-md-12 mb-2">
-              <label class="tit">Descripción</label>
-              <DxTextArea
-                :height="110"
-                :max-length="400"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                id="descripcion"
-                v-model="item.descripcion"
-                class="form-control"
-                placeholder="Descripción"
-              >
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxTextArea>
             </div>
           </div>
         </div>
@@ -395,25 +351,12 @@ onMounted(async () => {
                 :show-page-size-selector="false"
                 :show-navigation-buttons="true"
                 :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} productos (página {0} de {1})"
+                info-text="{2} programas (página {0} de {1})"
               />
-              <DxColumn
-                :width="150"
-                data-field="dependenciaId"
-                caption="Dependencia"
-                :visible="true"
-                :allow-filtering="true"
-              >
-                <DxLookup
-                  :data-source="dependencias"
-                  value-expr="id"
-                  display-expr="nombre"
-                />
-              </DxColumn>
               <DxColumn
                 data-field="id"
                 caption="Id"
-                :visible="false"
+                :visible="true"
                 :width="80"
                 :allow-filtering="false"
                 :allow-sorting="true"
@@ -421,12 +364,7 @@ onMounted(async () => {
               />
               <DxColumn
                 data-field="nombre"
-                caption="Producto"
-                :visible="true"
-              />
-              <DxColumn
-                data-field="descripcion"
-                caption="Descripción"
+                caption="Nombre programa"
                 :visible="true"
               />
               <DxColumn

@@ -36,7 +36,7 @@ import {
 const route = useRoute(),
   store = useClasificadorStore(),
   auth = useAuthStore();
-let titulo = "Administración &raquo; Cursos &raquo; Productos",
+let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
@@ -47,6 +47,10 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
     dependenciaId: null,
     nombre: null,
     descripcion: null,
+    aprendisaje: null,
+    evaluacion: null,
+    justificacion: null,
+    metodologia: null,
     activo: true,
     creadoEl: null,
     creadoPor: null,
@@ -63,7 +67,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       companyId: auth.user.companyId,
       dependenceId: auth.user.dependenceId,
     }),
-    endPoint: "producto/dx",
+    endPoint: "cursoModulo/dx",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -117,9 +121,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
       text: `¿Realmente desea ${
         data.activo ? "desactivar" : "activar"
-      } el producto "<span class="font-weight-semibold">${
-        data.nombre
-      }</span>"?`,
+      } el módulo "<span class="font-weight-semibold">${data.nombre}</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -127,7 +129,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
           async function () {
             data.activo = data.activo ? false : true;
             await api()
-              .post(`producto/ed`, data)
+              .post(`cursoModulo/ed`, data)
               .then((r) => {
                 console.log("r =>", r);
                 store.clean();
@@ -151,11 +153,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
     panelGrid = $("#grid");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar producto");
+      $("#tit-action").text("Editar módulo");
       panelGrid.lock("Cargando");
       item.value = Clone(data);
     } else {
-      $("#tit-action").text("Nuevo producto");
+      $("#tit-action").text("Nuevo módulo");
       item.value = Clone(item_copy);
     }
     panelGrid.fadeOut("normal", async function () {
@@ -198,12 +200,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} producto`,
+        `${item.id == 0 ? "Creando" : "Actualizando"} módulo`,
         async function () {
           let dto = item.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
-            .post("producto/ed", dto)
+            .post("cursoModulo/ed", dto)
             .then((r) => {
               console.log("r =>", r);
               cancel(function () {
@@ -246,6 +248,7 @@ onMounted(async () => {
   console.log("route.name =>", route.name);
   dependencias.value = await store.porTipoNombre("dependencia");
 });
+//----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 <template>
   <div class="container content">
@@ -254,41 +257,14 @@ onMounted(async () => {
         <span>
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" /> &raquo;
-          <span id="tit-action">Nuevo producto</span>
+          <span id="tit-action">Nuevo modulo</span>
         </span>
       </div>
 
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-3 mb-1">
-              <label class="tit">Dependencia</label>
-              <DxSelectBox
-                id="dependenciaId"
-                ref="dependenciaIdTxtRef"
-                :data-source="dependencias"
-                :grouped="false"
-                :min-search-length="3"
-                :search-enabled="true"
-                v-model="item.dependenciaId"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                @value-changed="itemSelected"
-                placeholder="Dependencia"
-                value-expr="id"
-                display-expr="nombre"
-                item-template="item"
-              >
-                <template #item="{ data }">
-                  {{ data.nombre }}
-                </template>
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxSelectBox>
-            </div>
-            <div class="col-md-9 mb-2">
+            <div class="col-md-6 mb-2">
               <label class="tit">Nombre</label>
               <DxTextBox
                 id="nombre"
@@ -303,6 +279,87 @@ onMounted(async () => {
                   <DxStringLengthRule :min="3" />
                 </DxValidator>
               </DxTextBox>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="tit">Actividad de Aprendizaje</label>
+              <DxTextBox
+                id="aprendisaje"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.aprendisaje"
+                class="form-control"
+                placeholder="Actividad Aprendisaje"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                  <DxStringLengthRule :min="3" />
+                </DxValidator>
+              </DxTextBox>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="tit">Actividad de Evaluacion</label>
+              <DxTextBox
+                id="evaluacion"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.evaluacion"
+                class="form-control"
+                placeholder="Actividad de Evaluacion"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                  <DxStringLengthRule :min="3" />
+                </DxValidator>
+              </DxTextBox>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="tit">Justificacion</label>
+              <DxTextBox
+                id="justificacion"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.justificacion"
+                class="form-control"
+                placeholder="Justificacion"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                  <DxStringLengthRule :min="3" />
+                </DxValidator>
+              </DxTextBox>
+            </div>
+            <div class="col-md-12 mb-2">
+              <label class="tit">Metodologia</label>
+              <DxTextBox
+                id="metodologia"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.metodologia"
+                class="form-control"
+                placeholder="Metodologia"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                  <DxStringLengthRule :min="3" />
+                </DxValidator>
+              </DxTextBox>
+            </div>
+            <div class="col-md-12 mb-2">
+              <label class="tit">Objetivos</label>
+              <DxTextArea
+                :height="60"
+                :max-length="400"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                id="objetivos"
+                v-model="item.objetivos"
+                class="form-control"
+                placeholder="Objetivos"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                </DxValidator>
+              </DxTextArea>
             </div>
             <div class="col-md-12 mb-2">
               <label class="tit">Descripción</label>
@@ -395,21 +452,8 @@ onMounted(async () => {
                 :show-page-size-selector="false"
                 :show-navigation-buttons="true"
                 :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} productos (página {0} de {1})"
+                info-text="{2} módulo (página {0} de {1})"
               />
-              <DxColumn
-                :width="150"
-                data-field="dependenciaId"
-                caption="Dependencia"
-                :visible="true"
-                :allow-filtering="true"
-              >
-                <DxLookup
-                  :data-source="dependencias"
-                  value-expr="id"
-                  display-expr="nombre"
-                />
-              </DxColumn>
               <DxColumn
                 data-field="id"
                 caption="Id"
@@ -419,14 +463,35 @@ onMounted(async () => {
                 :allow-sorting="true"
                 alignment="center"
               />
+              <DxColumn data-field="nombre" caption="Nombre" :visible="true" />
               <DxColumn
-                data-field="nombre"
-                caption="Producto"
+                data-field="justificacion"
+                caption="Justificacion"
                 :visible="true"
               />
               <DxColumn
                 data-field="descripcion"
                 caption="Descripción"
+                :visible="true"
+              />
+              <DxColumn
+                data-field="metodologia"
+                caption="Metodologia"
+                :visible="true"
+              />
+              <DxColumn
+                data-field="objetivos"
+                caption="Objetivos"
+                :visible="true"
+              />
+              <DxColumn
+                data-field="aprendisaje"
+                caption="Aprendisaje"
+                :visible="true"
+              />
+              <DxColumn
+                data-field="evaluacion"
+                caption="Evaluacion"
                 :visible="true"
               />
               <DxColumn

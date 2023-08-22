@@ -95,7 +95,7 @@ onMounted(() => {
                     <ul class="dropdown-menu">
                       <li>
                         <router-link
-                          :to="{ path: '/admin/clasificador/34' }"
+                          :to="{ path: '/admin/clasificador/8' }"
                           class="dropdown-item"
                           >Territorial</router-link
                         >

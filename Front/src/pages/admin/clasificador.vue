@@ -39,6 +39,7 @@ let titAccion = ref("Crear"),
   },
   panelData = null,
   panelGrid = null,
+  descriptionColumnName = ref("Descripción"),
   item = ref(Clone(base)),
   dxStore = ref(null),
   onInitialized = (o) => {
@@ -200,6 +201,9 @@ let titAccion = ref("Crear"),
         console.log("onLoaded!");
         let cl = tipos.filter((o) => o.id == tipoId)[0];
         clasificacion.value = cl.nombre;
+        if (tipoId == 1 || tipoId == 2) {
+          descriptionColumnName.value = "Divipola";
+        }
         if (panelGrid != null) panelGrid.unlock();
       },
     });
@@ -292,7 +296,7 @@ onMounted(async () => {
               </DxNumberBox>
             </div>
             <div class="col-md-12 pb-2">
-              <label class="tit">Descripción</label>
+              <label class="tit">{{ descriptionColumnName }}</label>
               <!-- <input class="form-control" type="text" placeholder="Descripción" id="descripcion" name="descripcion" v-model="item.descripcion" nonrequired /> -->
               <DxTextArea
                 id="nombre"
@@ -377,7 +381,12 @@ onMounted(async () => {
                 :width="60"
                 :allow-sorting="false"
               />
-              <DxColumn data-field="nombre" caption="Nombre" sort-order="asc" />
+              <DxColumn
+                data-field="nombre"
+                caption="Nombre"
+                sort-order="asc"
+                width="60%"
+              />
               <DxColumn data-field="descripcion" caption="Descripción" />
               <DxColumn
                 :width="90"
@@ -391,6 +400,7 @@ onMounted(async () => {
                 data-type="number"
                 alignment="center"
                 :width="100"
+                :visible="false"
                 :sort-index="0"
               />
               <template #tpl1="{ data }">

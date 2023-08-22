@@ -165,6 +165,13 @@ onMounted(() => {
                       </li>
                       <li>
                         <router-link
+                          :to="{ path: '/admin/clasificador/7' }"
+                          class="dropdown-item"
+                          >Dependencia Temas</router-link
+                        >
+                      </li>
+                      <li>
+                        <router-link
                           :to="{ path: '/admin/modulos' }"
                           class="dropdown-item"
                           >Módulos</router-link

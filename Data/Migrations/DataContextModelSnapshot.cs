@@ -66,7 +66,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BancoPrograma");
+                    b.ToTable("BancoPrograma", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificador", b =>
@@ -121,7 +121,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("TipoId");
 
-                    b.ToTable("Clasificador");
+                    b.ToTable("Clasificador", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.ClasificadorTipo", b =>
@@ -166,7 +166,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClasificadorTipo");
+                    b.ToTable("ClasificadorTipo", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificadores", b =>
@@ -384,7 +384,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Curso");
+                    b.ToTable("Curso", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoAnexo", b =>
@@ -436,7 +436,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("CursoId");
 
-                    b.ToTable("CursoAnexo");
+                    b.ToTable("CursoAnexo", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoEncuesta", b =>
@@ -485,7 +485,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("CursoId");
 
-                    b.ToTable("CursoEncuesta");
+                    b.ToTable("CursoEncuesta", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoFecha", b =>
@@ -534,7 +534,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("CursoId");
 
-                    b.ToTable("CursoFecha");
+                    b.ToTable("CursoFecha", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoTema", b =>
@@ -594,7 +594,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("TemaId");
 
-                    b.ToTable("CursoTema");
+                    b.ToTable("CursoTema", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Documento", b =>
@@ -653,7 +653,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Documento");
+                    b.ToTable("Documento", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Encuesta", b =>
@@ -703,7 +703,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Encuesta");
+                    b.ToTable("Encuesta", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.EncuestaPregunta", b =>
@@ -754,7 +754,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("PreguntaId");
 
-                    b.ToTable("EncuestaPregunta");
+                    b.ToTable("EncuestaPregunta", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
@@ -806,7 +806,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("ObjetivoId");
 
-                    b.ToTable("Indicador");
+                    b.ToTable("Indicador", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>
@@ -868,7 +868,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Modulo");
+                    b.ToTable("Modulo", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
@@ -920,7 +920,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("BancoId");
 
-                    b.ToTable("Nucleo");
+                    b.ToTable("Nucleo", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Participante", b =>
@@ -1030,7 +1030,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Participante");
+                    b.ToTable("Participante", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Pregunta", b =>
@@ -1080,7 +1080,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pregunta");
+                    b.ToTable("Pregunta", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Producto", b =>
@@ -1132,7 +1132,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("DependenciaId");
 
-                    b.ToTable("Producto");
+                    b.ToTable("Producto", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Programa", b =>
@@ -1184,7 +1184,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("NucleoId");
 
-                    b.ToTable("Programa");
+                    b.ToTable("Programa", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Tema", b =>
@@ -1243,7 +1243,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("ModuloId");
 
-                    b.ToTable("Tema");
+                    b.ToTable("Tema", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.ValorGeneral", b =>
@@ -1293,7 +1293,7 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ValorGeneral");
+                    b.ToTable("ValorGeneral", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.AuthRole", b =>

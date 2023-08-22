@@ -60,11 +60,18 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[HttpGet("all")] // /api/cursoNucleo/all => Obtiene todos los items
+		public ActionResult GetAll()
+		{
+			var items = _db.Nucleo?.ToList();
+			return Ok(items);
+		}
+
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 
 		[Authorization.AllowAnonymous]
 		public ActionResult Get(int? itemId = null)
 		{
-			var item = _db.Nucleo.FirstOrDefault(o => o.Id == itemId);
+			var item = _db.Nucleo?.FirstOrDefault(o => o.Id == itemId);
 			return Ok(item);
 		}
 
@@ -75,7 +82,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _db.Nucleo.OrderBy(o => o.Nombre).ToList();
+			var items = _db.Nucleo?.OrderBy(o => o.Nombre).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

@@ -4,7 +4,7 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import { useGeneralStore, useBancoStore, useAuthStore } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,
@@ -12,7 +12,7 @@ import DxValidator, {
 import {
   DxSelectBox,
   DxTextBox,
-  DxTextArea,
+  DxDateBox,
   DxValidationGroup,
 } from "devextreme-vue";
 import {
@@ -34,19 +34,19 @@ import {
   DxSummary,
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
-  store = useClasificadorStore(),
+  store = useBancoStore(),
   auth = useAuthStore();
 let titulo = "Administración &raquo; Cursos &raquo; Núcleos",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
-  dependencias = ref([]),
+  bancos = ref([]),
   especificos = ref([]),
   item = ref({
     id: 0,
-    dependenciaId: null,
+    bancoId: null,
     nombre: null,
-    descripcion: null,
+    fechaInicio: new Date(),
     activo: true,
     creadoEl: null,
     creadoPor: null,
@@ -83,21 +83,21 @@ let titulo = "Administración &raquo; Cursos &raquo; Núcleos",
     let v = e.value;
     let id = $(e.element).attr("id");
     console.log("id =>", id);
-    if (v !== null && v !== undefined) {
-      let hijos = await store.porPadre(v);
-      if (id == "dependenciaId") {
-        objetivos.value = hijos;
-      } else if (id == "objetivoId") {
-        especificos.value = hijos;
-      } else if (id == "sectorId") {
-        entidades.value = hijos;
-      } else if (id == "entidadId") {
-        dependencias.value = hijos;
-      }
-    } else {
-      objetivos.value = [];
-      especificos.value = [];
-    }
+    // if (v !== null && v !== undefined) {
+    //   let hijos = await store.porPadre(v);
+    //   if (id == "dependenciaId") {
+    //     objetivos.value = hijos;
+    //   } else if (id == "objetivoId") {
+    //     especificos.value = hijos;
+    //   } else if (id == "sectorId") {
+    //     entidades.value = hijos;
+    //   } else if (id == "entidadId") {
+    //     bancos.value = hijos;
+    //   }
+    // } else {
+    //   objetivos.value = [];
+    //   especificos.value = [];
+    // }
   },
   customizeColumns = () => {
     // console.log("customizeColumns!");
@@ -128,7 +128,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Núcleos",
               .post(`cursoNucleo/ed`, data)
               .then((r) => {
                 console.log("r =>", r);
-                store.clean();
                 cancel(function () {
                   // panelGrid.unlock();
                   grid.refresh();
@@ -241,8 +240,8 @@ onMounted(async () => {
   console.clear();
   console.log(_sep);
   $("#grid").lock("Cargando");
+  bancos.value = await store.all();
   console.log("route.name =>", route.name);
-  dependencias.value = await store.porTipoNombre("dependencia");
 });
 </script>
 <template>
@@ -259,16 +258,16 @@ onMounted(async () => {
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-3 mb-1">
+            <div class="col-md-9 mb-1">
               <label class="tit">Banco de programas</label>
               <DxSelectBox
-                id="dependenciaId"
-                ref="dependenciaIdTxtRef"
-                :data-source="dependencias"
+                id="bancoId"
+                ref="bancoIdTxtRef"
+                :data-source="bancos"
                 :grouped="false"
                 :min-search-length="3"
                 :search-enabled="true"
-                v-model="item.dependenciaId"
+                v-model="item.bancoId"
                 :show-clear-button="true"
                 :show-data-before-search="true"
                 class="form-control"
@@ -286,7 +285,24 @@ onMounted(async () => {
                 </DxValidator>
               </DxSelectBox>
             </div>
-            <div class="col-md-9 mb-2">
+            <div class="col-md-3 mb-2">
+              <label class="tit">Fecha de inicio</label>
+              <DxDateBox
+                id="fechaInicio"
+                class="form-control"
+                v-model="item.fechaInicio"
+                display-format="dd/MM/yyyy"
+                type="date"
+              >
+                <!-- :max="new Date()" -->
+                <!-- :calendar-options="{ maxZoomLevel: 'year', minZoomLevel: 'century' }" -->
+                <!-- display-format="monthAndYear" -->
+                <DxValidator>
+                  <DxRequiredRule />
+                </DxValidator>
+              </DxDateBox>
+            </div>
+            <div class="col-md-12 mb-2">
               <label class="tit">Nombre</label>
               <DxTextBox
                 id="nombre"
@@ -379,14 +395,13 @@ onMounted(async () => {
                 info-text="{2} núcleos (página {0} de {1})"
               />
               <DxColumn
-                :width="150"
-                data-field="dependenciaId"
+                data-field="bancoId"
                 caption="Banco de programas"
                 :visible="true"
                 :allow-filtering="true"
               >
                 <DxLookup
-                  :data-source="dependencias"
+                  :data-source="bancos"
                   value-expr="id"
                   display-expr="nombre"
                 />
@@ -401,6 +416,15 @@ onMounted(async () => {
                 alignment="center"
               />
               <DxColumn data-field="nombre" caption="Núcleos" :visible="true" />
+              <DxColumn
+                :width="150"
+                data-field="fechaInicio"
+                caption="Fecha de inicio"
+                :visible="true"
+                alignment="center"
+                data-type="date"
+                format="dd/MM/yyyy"
+              />
               <DxColumn
                 :width="100"
                 data-field="activo"
@@ -445,7 +469,7 @@ onMounted(async () => {
                     @click.prevent="active(data.data, false)"
                     href="#"
                   >
-                    <i class="fa-regular fa-square-check fa-lg"></i>
+                    <i class="fa-regular fa-square-minus fa-lg"></i>
                   </a>
                   <a
                     v-else
@@ -454,7 +478,7 @@ onMounted(async () => {
                     @click.prevent="active(data.data, true)"
                     href="#"
                   >
-                    <i class="fa-regular fa-square-minus fa-lg"></i>
+                    <i class="fa-regular fa-square-check fa-lg"></i>
                   </a>
                 </span>
               </template>

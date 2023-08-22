@@ -47,8 +47,8 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     dependenciaId: null,
     nombre: null,
     descripcion: null,
-    aprendisaje: null,
-    evaluacion: null,
+    actividadAprendizaje: null,
+    actividadEvaluacion: null,
     justificacion: null,
     metodologia: null,
     activo: true,
@@ -264,7 +264,7 @@ onMounted(async () => {
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-6 mb-2">
+            <div class="col-md-12 mb-2">
               <label class="tit">Nombre</label>
               <DxTextBox
                 id="nombre"
@@ -281,74 +281,73 @@ onMounted(async () => {
               </DxTextBox>
             </div>
             <div class="col-md-6 mb-2">
-              <label class="tit">Actividad de Aprendizaje</label>
-              <DxTextBox
-                id="aprendisaje"
+              <label class="tit">Descripcion</label>
+              <DxTextArea
+                :height="80"
                 value-change-event="keyup"
                 :show-clear-button="true"
-                v-model="item.aprendisaje"
+                id="objetivos"
+                v-model="item.descripcion"
                 class="form-control"
-                placeholder="Actividad Aprendisaje"
+                placeholder="Descripcion"
               >
                 <DxValidator>
                   <DxRequiredRule />
-                  <DxStringLengthRule :min="3" />
                 </DxValidator>
-              </DxTextBox>
+              </DxTextArea>
             </div>
             <div class="col-md-6 mb-2">
-              <label class="tit">Actividad de Evaluacion</label>
-              <DxTextBox
-                id="evaluacion"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                v-model="item.evaluacion"
-                class="form-control"
-                placeholder="Actividad de Evaluacion"
-              >
-                <DxValidator>
-                  <DxRequiredRule />
-                  <DxStringLengthRule :min="3" />
-                </DxValidator>
-              </DxTextBox>
-            </div>
-            <div class="col-md-6 mb-2">
-              <label class="tit">Justificacion</label>
-              <DxTextBox
-                id="justificacion"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                v-model="item.justificacion"
-                class="form-control"
-                placeholder="Justificacion"
-              >
-                <DxValidator>
-                  <DxRequiredRule />
-                  <DxStringLengthRule :min="3" />
-                </DxValidator>
-              </DxTextBox>
-            </div>
-            <div class="col-md-12 mb-2">
               <label class="tit">Metodologia</label>
-              <DxTextBox
-                id="metodologia"
+              <DxTextArea
+                :height="80"
                 value-change-event="keyup"
                 :show-clear-button="true"
+                id="objetivos"
                 v-model="item.metodologia"
                 class="form-control"
                 placeholder="Metodologia"
               >
                 <DxValidator>
                   <DxRequiredRule />
-                  <DxStringLengthRule :min="3" />
                 </DxValidator>
-              </DxTextBox>
+              </DxTextArea>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="tit">Actividad de aprendisaje</label>
+              <DxTextArea
+                :height="110"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                id="objetivos"
+                v-model="item.actividadAprendizaje"
+                class="form-control"
+                placeholder="Actividad de aprendisaje"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                </DxValidator>
+              </DxTextArea>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="tit">Actividad de Evaluacion</label>
+              <DxTextArea
+                :height="110"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                id="objetivos"
+                v-model="item.actividadEvaluacion"
+                class="form-control"
+                placeholder="Actividad de Evaluacion"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                </DxValidator>
+              </DxTextArea>
             </div>
             <div class="col-md-12 mb-2">
               <label class="tit">Objetivos</label>
               <DxTextArea
-                :height="60"
-                :max-length="400"
+                :height="110"
                 value-change-event="keyup"
                 :show-clear-button="true"
                 id="objetivos"
@@ -362,16 +361,15 @@ onMounted(async () => {
               </DxTextArea>
             </div>
             <div class="col-md-12 mb-2">
-              <label class="tit">Descripción</label>
+              <label class="tit">Justificacion</label>
               <DxTextArea
                 :height="110"
-                :max-length="400"
                 value-change-event="keyup"
                 :show-clear-button="true"
                 id="descripcion"
-                v-model="item.descripcion"
+                v-model="item.justificacion"
                 class="form-control"
-                placeholder="Descripción"
+                placeholder="Justificacion"
               >
                 <DxValidator>
                   <DxRequiredRule />
@@ -485,12 +483,12 @@ onMounted(async () => {
                 :visible="true"
               />
               <DxColumn
-                data-field="aprendisaje"
-                caption="Aprendisaje"
+                data-field="actividadAprendizaje"
+                caption="Aprendizaje"
                 :visible="true"
               />
               <DxColumn
-                data-field="evaluacion"
+                data-field="actividadEvaluacion"
                 caption="Evaluacion"
                 :visible="true"
               />
@@ -538,7 +536,7 @@ onMounted(async () => {
                     @click.prevent="active(data.data, false)"
                     href="#"
                   >
-                    <i class="fa-regular fa-square-check fa-lg"></i>
+                    <i class="fa-regular fa-square-minus fa-lg"></i>
                   </a>
                   <a
                     v-else
@@ -547,7 +545,7 @@ onMounted(async () => {
                     @click.prevent="active(data.data, true)"
                     href="#"
                   >
-                    <i class="fa-regular fa-square-minus fa-lg"></i>
+                    <i class="fa-regular fa-square-check fa-lg"></i>
                   </a>
                 </span>
               </template>

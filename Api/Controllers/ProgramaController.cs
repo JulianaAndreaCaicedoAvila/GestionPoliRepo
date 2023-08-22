@@ -39,14 +39,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				var obj = (Programa)item.CopyTo(new Programa());
 				obj.CreadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
 				obj.CreadoEl = DateTime.Now;
-				_db.Programa.Add(obj);
+				_db.Programa?.Add(obj);
 				_db.SaveChanges();
 				return Ok(obj);
 			}
 			else
 			{
 				// Registro existente: EDIT
-				var current = _db.Programa.First(o => o.Id == item.Id);
+				var current = _db.Programa?.First(o => o.Id == item.Id);
 				if (current != null)
 				{
 					var final = (Programa)item.CopyTo(current);
@@ -58,6 +58,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 				return Ok(item);
 			}
+		}
+
+		[HttpGet("all")] // /api/programa/all => Obtiene todos los items
+		public ActionResult GetAll()
+		{
+			var items = _db.BancoPrograma?.ToList();
+			return Ok(items);
 		}
 
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 

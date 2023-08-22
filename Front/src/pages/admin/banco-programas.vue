@@ -13,6 +13,7 @@ import {
   DxSelectBox,
   DxTextBox,
   DxTextArea,
+  DxDateBox,
   DxValidationGroup,
 } from "devextreme-vue";
 import {
@@ -44,9 +45,8 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
   especificos = ref([]),
   item = ref({
     id: 0,
-    dependenciaId: null,
     nombre: null,
-    descripcion: null,
+    fechaInicio: new Date(),
     activo: true,
     creadoEl: null,
     creadoPor: null,
@@ -98,6 +98,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       objetivos.value = [];
       especificos.value = [];
     }
+  },
+  date_focus_in = (e) => {
+    // e.component.open();
+  },
+  date_focus_out = (e) => {
+    // e.component.close();
   },
   customizeColumns = () => {
     // console.log("customizeColumns!");
@@ -261,7 +267,7 @@ onMounted(async () => {
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-12 mb-2">
+            <div class="col-md-9 mb-2">
               <label class="tit">Nombre del programa</label>
               <DxTextBox
                 id="nombre"
@@ -276,6 +282,25 @@ onMounted(async () => {
                   <DxStringLengthRule :min="3" />
                 </DxValidator>
               </DxTextBox>
+            </div>
+            <div class="col-md-3 mb-2">
+              <label class="tit">Fecha de inicio</label>
+              <DxDateBox
+                id="fechaInicio"
+                @focus-in="date_focus_in"
+                @focus-out="date_focus_out"
+                class="form-control"
+                v-model="item.fechaInicio"
+                display-format="dd/MM/yyyy"
+                type="date"
+              >
+                <!-- :max="new Date()" -->
+                <!-- :calendar-options="{ maxZoomLevel: 'year', minZoomLevel: 'century' }" -->
+                <!-- display-format="monthAndYear" -->
+                <DxValidator>
+                  <DxRequiredRule />
+                </DxValidator>
+              </DxDateBox>
             </div>
           </div>
         </div>
@@ -368,6 +393,15 @@ onMounted(async () => {
                 :visible="true"
               />
               <DxColumn
+                :width="150"
+                data-field="fechaInicio"
+                caption="Fecha de inicio"
+                :visible="true"
+                alignment="center"
+                data-type="date"
+                format="dd/MM/yyyy"
+              />
+              <DxColumn
                 :width="100"
                 data-field="activo"
                 caption="Activo"
@@ -411,7 +445,7 @@ onMounted(async () => {
                     @click.prevent="active(data.data, false)"
                     href="#"
                   >
-                    <i class="fa-regular fa-square-check fa-lg"></i>
+                    <i class="fa-regular fa-square-minus fa-lg"></i>
                   </a>
                   <a
                     v-else
@@ -420,7 +454,7 @@ onMounted(async () => {
                     @click.prevent="active(data.data, true)"
                     href="#"
                   >
-                    <i class="fa-regular fa-square-minus fa-lg"></i>
+                    <i class="fa-regular fa-square-check fa-lg"></i>
                   </a>
                 </span>
               </template>

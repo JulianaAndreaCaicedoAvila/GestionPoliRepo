@@ -14,7 +14,7 @@ namespace ESAP.Sirecec.Data.Core
 		public int BancoId { get; set; }
 		public string? Nombre { get; set; }
 		public DateTime FechaInicio { get; set; }
-		public virtual BancoPrograma? Banco { get; set; }
-		public virtual List<Programa>? Programas { get; set; }
+		// public virtual BancoPrograma? Banco { get; set; }
+		// public virtual List<Programa>? Programas { get; set; }
 	}
 }

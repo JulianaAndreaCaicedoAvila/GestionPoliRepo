@@ -12,7 +12,7 @@ import DxValidator, {
 import {
   DxSelectBox,
   DxTextBox,
-  DxTextArea,
+  DxDateBox,
   DxValidationGroup,
 } from "devextreme-vue";
 import {
@@ -44,9 +44,8 @@ let titulo = "Administración &raquo; Cursos &raquo; Temas",
   especificos = ref([]),
   item = ref({
     id: 0,
-    dependenciaId: null,
     nombre: null,
-    descripcion: null,
+    fechaInicio: new Date(),
     activo: true,
     creadoEl: null,
     creadoPor: null,
@@ -242,7 +241,6 @@ onMounted(async () => {
   console.log(_sep);
   $("#grid").lock("Cargando");
   console.log("route.name =>", route.name);
-  dependencias.value = await store.porTipoNombre("dependencia");
 });
 </script>
 <template>
@@ -259,34 +257,7 @@ onMounted(async () => {
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-3 mb-1">
-              <label class="tit">Dependencia</label>
-              <DxSelectBox
-                id="dependenciaId"
-                ref="dependenciaIdTxtRef"
-                :data-source="dependencias"
-                :grouped="false"
-                :min-search-length="3"
-                :search-enabled="true"
-                v-model="item.dependenciaId"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                @value-changed="itemSelected"
-                placeholder="Dependencia"
-                value-expr="id"
-                display-expr="nombre"
-                item-template="item"
-              >
-                <template #item="{ data }">
-                  {{ data.nombre }}
-                </template>
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxSelectBox>
-            </div>
-            <div class="col-md-9 mb-2">
+            <div class="col-md-12 mb-2">
               <label class="tit">Nombre</label>
               <DxTextBox
                 id="nombre"
@@ -379,22 +350,9 @@ onMounted(async () => {
                 info-text="{2} temas (página {0} de {1})"
               />
               <DxColumn
-                :width="150"
-                data-field="dependenciaId"
-                caption="Dependencia"
-                :visible="true"
-                :allow-filtering="true"
-              >
-                <DxLookup
-                  :data-source="dependencias"
-                  value-expr="id"
-                  display-expr="nombre"
-                />
-              </DxColumn>
-              <DxColumn
                 data-field="id"
                 caption="Id"
-                :visible="false"
+                :visible="true"
                 :width="80"
                 :allow-filtering="false"
                 :allow-sorting="true"

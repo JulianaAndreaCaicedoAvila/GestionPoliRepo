@@ -23,7 +23,8 @@
 		{ "id": 6, "name": "estado_civil" },
 		{ "id": 7, "name": "dependencia" },
 		{ "id": 8, "name": "territorial" },
-		{ "id": 11, "name": "programa" }
+		{ "id": 11, "name": "programa" },
+		{ "id": 32, "name": "entidad" }
 	],
 	"tipo_acumulacion": [
 		{ "id": 1376, "name": "mantenimiento" },

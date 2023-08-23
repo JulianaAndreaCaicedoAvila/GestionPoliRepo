@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
 {
-	[Authorize]
+	[@Authorize]
 	[ApiController]
 	[Route("clasificador")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -36,7 +36,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return items;
 		}
 
-		[HttpGet("tipos")]
+		[HttpPost("tipos")]
 		public List<ClasificadorTipo> Tipos()
 		{
 			var items = _db.ClasificadorTipo;

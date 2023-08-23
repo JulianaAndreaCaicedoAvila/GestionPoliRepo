@@ -44,13 +44,15 @@ export default (args = {}) => {
 	};
 	// 202009081539: Sending the bearer token with axios
 	// https://stackoverflow.com/a/42879201
+	let preffix = "";
+	// let preffix = "Bearer ";
 	if (typeof args.token !== "undefined") {
-		axiosConfig.headers["Authorization"] = `Bearer ${args.token}`;
+		axiosConfig.headers["Authorization"] = `${preffix}${args.token}`;
 	} else {
 		let token = useAuthStore().token;
 		console.log("token =>", token);
 		if (typeof token !== "undefined" && token !== null) {
-			axiosConfig.headers["Authorization"] = `Bearer ${token}`;
+			axiosConfig.headers["Authorization"] = `${preffix}${token}`;
 		}
 	}
 	const axiosInstance = axios.create(axiosConfig);

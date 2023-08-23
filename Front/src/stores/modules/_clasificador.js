@@ -35,7 +35,7 @@ export const useClasificadorStore = defineStore({
 			console.log("store.tipos!");
 			if (this.tipos.length <= 0) {
 				this.tipos = await api()
-					.get("clasificador/tipos")
+					.post("clasificador/tipos")
 					.then((r) => {
 						console.log("r =>", r);
 						return r.data;

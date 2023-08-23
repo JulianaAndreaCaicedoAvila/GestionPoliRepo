@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
 {
-	[Authorize]
+	[@Authorize]
 	[ApiController]
 	[Route("producto")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

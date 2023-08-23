@@ -6,6 +6,7 @@ using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Middleware;
 using ESAP.Sirecec.Data.Api.Services;
 using ESAP.Sirecec.Data.Identity;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -57,6 +58,12 @@ services.AddControllers(option =>
 			 Location = ResponseCacheLocation.Any,
 		 });
 });
+
+// 202308221833: Error handling
+// https://www.infoworld.com/article/3584786/how-to-use-the-problemdetails-middleware-in-aspnet-core.html
+// https://code-maze.com/using-the-problemdetails-class-in-asp-net-core-web-api
+services.AddProblemDetails();
+
 
 // configure DI for application services
 services.AddScoped<IJwtUtils, JwtUtils>();
@@ -210,4 +217,5 @@ app.UseMiddleware<ErrorHandler>();
 // app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();
 app.UseResponseCaching();
+app.UseProblemDetails();
 app.Run();

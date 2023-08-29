@@ -49,9 +49,9 @@ services.AddCors(o => o.AddPolicy(appName, builder => builder.AllowAnyHeader().A
 // https://learn.microsoft.com/en-us/aspnet/core/performance/caching/overview?view=aspnetcore-6.0
 // https://learn.microsoft.com/en-us/aspnet/core/performance/caching/response?view=aspnetcore-6.0#cache-profiles
 services.AddResponseCaching();
-services.AddControllers(option =>
+services.AddControllers(options =>
 {
-	option.CacheProfiles.Add("3m",
+	options.CacheProfiles.Add("3m",
 		 new CacheProfile()
 		 {
 			 Duration = 180,

@@ -4,7 +4,7 @@ export const useClasificadorStore = defineStore({
 	id: "clasificador",
 	state: () => ({
 		items: [],
-		tipos: [],
+		itemsTipos: [],
 		acciones: [],
 	}),
 	getters: {
@@ -26,32 +26,24 @@ export const useClasificadorStore = defineStore({
 		},
 	},
 	actions: {
-		clean() {
+		limpiar() {
 			this.items = [];
-			this.tipos = [];
+			this.itemsTipos = [];
 			this.acciones = [];
 		},
 		async tipos() {
 			console.log("store.tipos!");
-			if (this.tipos.length <= 0) {
-				this.tipos = await api()
+			if (this.itemsTipos.length <= 0) {
+				this.itemsTipos = await api()
 					.post("clasificador/tipos")
 					.then((r) => {
 						console.log("r =>", r);
 						return r.data;
 					});
-				return this.tipos;
-			} else return this.tipos;
+				return this.itemsTipos;
+			} else return this.itemsTipos;
 		},
-		async load() {
-			// if (this.acciones.length <= 0) {
-			// 	this.acciones = await api()
-			// 		.get("accion")
-			// 		.then((r) => {
-			// 			console.log("r =>", r);
-			// 			return r.data;
-			// 		});
-			// }
+		async cargar() {
 			if (this.items.length <= 0) {
 				this.items = await api()
 					.get("clasificador")
@@ -63,12 +55,12 @@ export const useClasificadorStore = defineStore({
 			} else return this.items;
 		},
 		async porId(id = null) {
-			let items = await this.load();
+			let items = await this.cargar();
 			return items.find((o) => o.id == id);
 		},
 		async porTipoId(tipoId = null, active = true, sortByName = true) {
 			let o = [];
-			let items = await this.load();
+			let items = await this.cargar();
 			if (tipoId != null) o = items.filter((o) => o.tipoId == tipoId);
 			else o = items;
 			o = active ? o.filter((o) => o.activo == true) : o;
@@ -80,7 +72,7 @@ export const useClasificadorStore = defineStore({
 			console.log("config =>", _config);
 			console.log("");
 			let o = [];
-			let items = await this.load();
+			let items = await this.cargar();
 			let tipo = _config.tipo_clasificador.find((o) => o.name == tipoNombre);
 			if (tipo != null) o = items.filter((o) => o.tipoId == tipo.id);
 			else o = items;
@@ -90,7 +82,7 @@ export const useClasificadorStore = defineStore({
 		},
 		async porPadre(padreId = null, active = true, sortByName = true) {
 			let o = [];
-			let items = await this.load();
+			let items = await this.cargar();
 			if (padreId != null) o = items.filter((o) => o.padreId == padreId);
 			else o = items;
 			if (sortByName) o = o.sort((a, b) => (a.nombre > b.nombre ? 1 : b.nombre > a.nombre ? -1 : 0));

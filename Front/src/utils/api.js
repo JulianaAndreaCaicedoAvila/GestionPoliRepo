@@ -64,9 +64,11 @@ export default (args = {}) => {
 		},
 		function (error) {
 			// 202009090114: TODO: Add prompt on error?
-			console.error("REQUEST ERROR", error);
+			console.error(window._sep + "REQUEST ERROR", error);
 			console.log("args =>", args);
-			if (typeof args.hideErrors !== "undefined" && args.hideErrors === false) show(error, JSON.stringify(error.request.config, null, "\t"));
+			if (typeof args.hideErrors !== "undefined" && args.hideErrors === false) {
+				show(error, JSON.stringify(error.request.config, null, "\t"));
+			}
 			return Promise.reject(error);
 		}
 	);
@@ -80,24 +82,31 @@ export default (args = {}) => {
 			return response;
 		},
 		function (error) {
-			console.error("error =>", error);
-			console.info("error.response =>", error.response);
-			let msg = null;
+			// console.error("error =>", error);
+			// console.info("error.response =>", error.response);
+			// let msg = null;
 			// if (typeof error.response !== "undefined") {
 			// msg = `<span class="error-detail">${error.response.data.exception.replace("<", "").replace(">", "")}</span>`;
 			// delete error.response.data.traces;
 			// msg = JSON.stringify(error.response, null, "\t");
 			// }
-			console.info("error.response.status =>", error.response.status);
+			// console.info("error.response.status =>", error.response.status);
 			// if (error.response.status === 401) {
 			// console.log("store =>", store);
 			// store.commit("auth/login/authLogout", function () {
 			// 	window.vm.$router.push("/inicio");
 			// });
 			// } else {
-			if (typeof args.hideErrors === "undefined" || args.hideErrors === false) show(`${error}`, msg);
+			if (typeof args.hideErrors === "undefined" || args.hideErrors === false) {
+				// show(`${error}`, msg);
+				console.log(_sep + "error =>", error);
+				let ex = error.response.data.exceptionDetails[0];
+				let ms = `${error.response.data.detail}<textarea rows="5" class="d-block form-control mt-2" readonly>${ex.raw}</textarea>`;
+				window.msg.error(`${error.message}`, ms, function () {
+					return Promise.reject(error);
+				});
+			}
 			// }
-			return Promise.reject(error);
 		}
 	);
 

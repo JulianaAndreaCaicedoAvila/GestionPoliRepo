@@ -10,7 +10,10 @@ namespace ESAP.Sirecec.Data.Core
 	public partial class CursoFecha : BaseEntity
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
+
+		[ForeignKey("Curso")]
 		public int CursoId { get; set; }
 		public DateTime? FechaClase = null;
 		public int? Ponderacion { get; set; }

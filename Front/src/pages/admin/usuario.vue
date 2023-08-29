@@ -219,7 +219,7 @@ let ansvCompanyId = 1164,
 		});
 	};
 onMounted(async () => {
-	console.clear();
+	// console.clear();
 	console.log(_sep);
 	let res = await store.porTipoNombre("entidad");
 	// res = res.filter((o) => o.hijos > 0);

@@ -10,6 +10,7 @@ namespace ESAP.Sirecec.Data.Core
 	public partial class Participante : BaseEntity
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int? TipoDocumentoId { get; set; }
 		public int? MunicipioId { get; set; }

@@ -1,5 +1,4 @@
-﻿CREATE VIEW "Clasificadores"
-AS
+﻿CREATE OR REPLACE VIEW "Clasificadores" AS
 SELECT
 	P."TipoId" AS "PadreTipoId",
 	PT."Nombre" AS "PadreTipoNombre",
@@ -24,4 +23,4 @@ FROM
 	LEFT OUTER JOIN "Clasificador" P
 	ON C."PadreId" = P."Id"
 	LEFT OUTER JOIN "ClasificadorTipo" PT
-	ON PT."Id" = P."TipoId";
+	ON PT."Id" = P."TipoId"

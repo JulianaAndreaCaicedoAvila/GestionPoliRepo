@@ -24,7 +24,7 @@ namespace ESAP.Sirecec.Data
 					o.UseOracle(conn, o =>
 					{
 						o.CommandTimeout(cmdTo);
-						o.UseOracleSQLCompatibility(sqlComp ?? "12");
+						o.UseOracleSQLCompatibility(sqlComp ?? "11");
 						o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 					});
 					// var conn = "User Id=sirecec;Password=sirecec;Data Source=localhost:1521/ORCLPDB1;";

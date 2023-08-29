@@ -111,7 +111,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int>("PadreId")
+                    b.Property<int?>("PadreId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("TipoId")
@@ -133,7 +133,9 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .HasColumnType("NUMBER(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(1)")
+                        .HasDefaultValueSql("((1))");
 
                     b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
@@ -172,6 +174,7 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificadores", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<bool?>("Activo")
@@ -590,6 +593,10 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CursoId");
+
+                    b.HasIndex("TemaId");
+
                     b.ToTable("CursoTema");
                 });
 
@@ -906,6 +913,9 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<int?>("IndicadorId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -913,6 +923,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BancoId");
+
+                    b.HasIndex("IndicadorId");
 
                     b.ToTable("Nucleo");
                 });
@@ -1130,6 +1144,7 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Productos", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<bool?>("Activo")
@@ -1247,6 +1262,9 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<int?>("DependenciaId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
@@ -1257,6 +1275,9 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
+                    b.Property<int?>("ModuloId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -1266,6 +1287,10 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CursoId");
+
+                    b.HasIndex("DependenciaId");
+
+                    b.HasIndex("ModuloId");
 
                     b.ToTable("Tema");
                 });
@@ -1438,6 +1463,7 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.Users", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("AccessFailedCount")
@@ -1667,6 +1693,25 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("Curso");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoTema", b =>
+                {
+                    b.HasOne("ESAP.Sirecec.Data.Core.Curso", "Curso")
+                        .WithMany()
+                        .HasForeignKey("CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ESAP.Sirecec.Data.Core.Tema", "Tema")
+                        .WithMany()
+                        .HasForeignKey("TemaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+
+                    b.Navigation("Tema");
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.EncuestaPregunta", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Encuesta", "Encuesta")
@@ -1691,10 +1736,25 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("Objetivo");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
+                {
+                    b.HasOne("ESAP.Sirecec.Data.Core.BancoPrograma", "BancoPrograma")
+                        .WithMany("Nucleos")
+                        .HasForeignKey("BancoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ESAP.Sirecec.Data.Core.Indicador", null)
+                        .WithMany("Nucleos")
+                        .HasForeignKey("IndicadorId");
+
+                    b.Navigation("BancoPrograma");
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Programa", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Nucleo", "Nucleo")
-                        .WithMany()
+                        .WithMany("Programas")
                         .HasForeignKey("NucleoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1707,6 +1767,18 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasOne("ESAP.Sirecec.Data.Core.Curso", null)
                         .WithMany("Temas")
                         .HasForeignKey("CursoId");
+
+                    b.HasOne("ESAP.Sirecec.Data.Core.Clasificador", "Dependencia")
+                        .WithMany()
+                        .HasForeignKey("DependenciaId");
+
+                    b.HasOne("ESAP.Sirecec.Data.Core.Modulo", "Modulo")
+                        .WithMany("Temas")
+                        .HasForeignKey("ModuloId");
+
+                    b.Navigation("Dependencia");
+
+                    b.Navigation("Modulo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1760,6 +1832,11 @@ namespace ESAP.Sirecec.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.BancoPrograma", b =>
+                {
+                    b.Navigation("Nucleos");
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.ClasificadorTipo", b =>
                 {
                     b.Navigation("Clasificadores");
@@ -1779,6 +1856,21 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Encuesta", b =>
                 {
                     b.Navigation("Preguntas");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
+                {
+                    b.Navigation("Nucleos");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>
+                {
+                    b.Navigation("Temas");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
+                {
+                    b.Navigation("Programas");
                 });
 #pragma warning restore 612, 618
         }

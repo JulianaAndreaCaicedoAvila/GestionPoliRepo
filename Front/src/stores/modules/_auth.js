@@ -89,7 +89,7 @@ export const useAuthStore = defineStore("auth", {
 		// },
 		// 202208182242: Login integrado Local, Azure
 		async do(args) {
-			console.clear();
+			// console.clear();
 			console.log(_sep);
 			console.log("login", args);
 			let ep = args[0];
@@ -130,7 +130,7 @@ export const useAuthStore = defineStore("auth", {
 				});
 		},
 		async logout() {
-			console.clear();
+			// console.clear();
 			console.log("LOGOUT!");
 			// 202206101525: Si hay 'homeAccountId' es sesión AzureAD
 			// if (this.user != null && this.user.origin === "azure") {

@@ -10,6 +10,7 @@ namespace ESAP.Sirecec.Data.Core
   public partial class GraficaEncuesta : BaseEntity
   {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public int BancoId { get; set; }
     public string? Nombre { get; set; }

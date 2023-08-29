@@ -6,7 +6,7 @@ import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
 import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
 import DxValidator, { DxRequiredRule, DxStringLengthRule } from "devextreme-vue/validator";
-import { DxSelectBox, DxTextBox, DxTextArea, DxValidationGroup } from "devextreme-vue";
+import { DxSelectBox, DxTextBox, DxDateBox, DxValidationGroup } from "devextreme-vue";
 import {
 	DxColumn,
 	DxColumnChooser,
@@ -28,7 +28,7 @@ import {
 const route = useRoute(),
 	store = useClasificadorStore(),
 	auth = useAuthStore();
-let titulo = "Administración &raquo; Cursos &raquo; Productos",
+let titulo = "Administración &raquo; Cursos &raquo; Temas",
 	dependenciaIdTxtRef = ref(null),
 	valGroup = ref(null),
 	entidades = ref([]),
@@ -36,25 +36,38 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
 	especificos = ref([]),
 	item = ref({
 		id: 0,
-		dependenciaId: null,
 		nombre: null,
-		descripcion: null,
+		fechaInicio: new Date(),
 		activo: true,
+		orden: 0,
 		creadoEl: null,
 		creadoPor: null,
 		editadoEl: null,
 		editadoPor: null,
 	}),
-	date_focus_in = (e) => {
-		e.component.open();
-	},
-	date_focus_out = (e) => {
-		e.component.close();
-	},
 	item_copy = Clone(item.value),
 	panelData = null,
 	panelGrid = null,
-	dxStore = ref(null),
+	dxStore = DxStore({
+		key: ["id"],
+		userData: JSON.stringify({
+			esAdmin: auth.esAdmin,
+			companyId: auth.user.companyId,
+			dependenceId: auth.user.dependenceId,
+		}),
+		endPoint: "tema/dx",
+		onLoading: function (loadOptions) {
+			$("#grid").lock("Cargando");
+			console.log("loadOptions =>", loadOptions);
+			console.log("onLoading");
+		},
+		onLoaded: function (results) {
+			console.log("results", results);
+			console.log("onLoaded!");
+			$("#grid").unlock();
+			$("#data").unlock();
+		},
+	}),
 	itemSelected = async (e) => {
 		// console.clear();
 		console.log(_sep);
@@ -87,28 +100,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
 		grid = o.component;
 		console.log("grid =>", grid);
 	},
-	getData = () => {
-		dxStore.value = DxStore({
-			key: ["id"],
-			userData: JSON.stringify({
-				esAdmin: auth.esAdmin,
-				companyId: auth.user.companyId,
-				dependenceId: auth.user.dependenceId,
-			}),
-			endPoint: "producto/dx",
-			onLoading: function (loadOptions) {
-				$("#grid").lock("Cargando");
-				console.log("loadOptions =>", loadOptions);
-				console.log("onLoading");
-			},
-			onLoaded: function (results) {
-				console.log("results", results);
-				console.log("onLoaded!");
-				$("#grid").unlock();
-				$("#data").unlock();
-			},
-		});
-	},
 	active = (data) => {
 		// console.clear();
 		console.log("data =>", data);
@@ -116,13 +107,13 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
 			// title: "otro",
 			textCancel: "CANCELAR",
 			textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-			text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"} el producto "<span class="font-weight-semibold">${data.nombre}</span>"?`,
+			text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"} el tema "<span class="font-weight-semibold">${data.nombre}</span>"?`,
 			onConfirm: () => {
 				panelGrid = $("#grid");
 				panelGrid.lock(`${data.activo ? "Desactivando" : "Activando"}, un momento por favor`, async function () {
 					data.activo = data.activo ? false : true;
 					await api()
-						.post(`producto/ed`, data)
+						.post(`tema/ed`, data)
 						.then((r) => {
 							console.log("r =>", r);
 							store.limpiar();
@@ -145,11 +136,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
 		panelGrid = $("#grid");
 		// Editando
 		if (typeof data !== "undefined") {
-			$("#tit-action").text("Editar producto");
+			$("#tit-action").text("Editar tema");
 			panelGrid.lock("Cargando");
 			item.value = Clone(data);
 		} else {
-			$("#tit-action").text("Nuevo producto");
+			$("#tit-action").text("Nuevo tema");
 			item.value = Clone(item_copy);
 		}
 		panelGrid.fadeOut("normal", async function () {
@@ -191,11 +182,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
 				offset: -110,
 			});
 		} else {
-			panelData.lock(`${item.id == 0 ? "Creando" : "Actualizando"} producto`, async function () {
+			panelData.lock(`${item.id == 0 ? "Creando" : "Actualizando"} tema`, async function () {
 				let dto = item.value;
 				console.log("dto =>", dto);
 				await api({ hideErrors: true })
-					.post("producto/ed", dto)
+					.post("tema/ed", dto)
 					.then((r) => {
 						console.log("r =>", r);
 						cancel(function () {
@@ -235,8 +226,6 @@ onMounted(async () => {
 	console.log(_sep);
 	$("#grid").lock("Cargando");
 	console.log("route.name =>", route.name);
-	dependencias.value = await store.porTipoNombre("dependencia");
-	getData();
 });
 </script>
 <template>
@@ -246,41 +235,14 @@ onMounted(async () => {
 				<span>
 					<i class="fa-solid fa-gears"></i>
 					<span v-html="titulo" /> &raquo;
-					<span id="tit-action">Nuevo producto</span>
+					<span id="tit-action">Nuevo tema</span>
 				</span>
 			</div>
 
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-3 pb-4">
 					<div class="row">
-						<div class="col-md-3 mb-1">
-							<label class="tit">Dependencia</label>
-							<DxSelectBox
-								id="dependenciaId"
-								ref="dependenciaIdTxtRef"
-								:data-source="dependencias"
-								:grouped="false"
-								:min-search-length="3"
-								:search-enabled="true"
-								v-model="item.dependenciaId"
-								:show-clear-button="true"
-								:show-data-before-search="true"
-								class="form-control"
-								@value-changed="itemSelected"
-								placeholder="Dependencia"
-								value-expr="id"
-								display-expr="nombre"
-								item-template="item"
-							>
-								<template #item="{ data }">
-									{{ data.nombre }}
-								</template>
-								<DxValidator>
-									<DxRequiredRule />
-								</DxValidator>
-							</DxSelectBox>
-						</div>
-						<div class="col-md-9 mb-2">
+						<div class="col-md-12 mb-2">
 							<label class="tit">Nombre</label>
 							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre" class="form-control" placeholder="Nombre">
 								<DxValidator>
@@ -288,23 +250,6 @@ onMounted(async () => {
 									<DxStringLengthRule :min="3" />
 								</DxValidator>
 							</DxTextBox>
-						</div>
-						<div class="col-md-12 mb-2">
-							<label class="tit">Descripción</label>
-							<DxTextArea
-								:height="110"
-								:max-length="400"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								id="descripcion"
-								v-model="item.descripcion"
-								class="form-control"
-								placeholder="Descripción"
-							>
-								<DxValidator>
-									<DxRequiredRule />
-								</DxValidator>
-							</DxTextArea>
 						</div>
 					</div>
 				</div>
@@ -365,14 +310,10 @@ onMounted(async () => {
 								:show-page-size-selector="false"
 								:show-navigation-buttons="true"
 								:allowed-page-sizes="[15, 50, 'Todos']"
-								info-text="{2} productos (página {0} de {1})"
+								info-text="{2} temas (página {0} de {1})"
 							/>
-							<DxColumn :width="150" data-field="dependenciaId" caption="Dependencia" :visible="true" :allow-filtering="true">
-								<DxLookup :data-source="dependencias" value-expr="id" display-expr="nombre" />
-							</DxColumn>
-							<DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false" :allow-sorting="true" alignment="center" />
-							<DxColumn data-field="nombre" caption="Producto" :visible="true" />
-							<DxColumn data-field="descripcion" caption="Descripción" :visible="true" />
+							<DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false" :allow-sorting="true" alignment="center" />
+							<DxColumn data-field="nombre" caption="Tema" :visible="true" />
 							<DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true" cell-template="tpl1">
 								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
 							</DxColumn>

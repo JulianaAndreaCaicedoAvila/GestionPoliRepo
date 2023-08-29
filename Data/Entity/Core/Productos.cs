@@ -10,6 +10,7 @@ namespace ESAP.Sirecec.Data.Core
 	public partial class Productos : BaseEntity
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int DependenciaId { get; set; }
 		public string? DependenciaNombre { get; set; }

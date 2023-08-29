@@ -8,13 +8,13 @@ import { DxColumn, DxScrolling, DxDataGrid, DxLoadPanel, DxPager, DxPaging } fro
 import { useClasificadorStore } from "@/stores";
 const store = useClasificadorStore();
 
-let tipoId = 3; // Entidad
+let tipoId = 6; // Tipo Area de acción
 let grid = null,
 	valGroup = ref(null),
 	base = {
 		id: 0,
-		tipoId: null,
-		padreId: null,
+		tipoId: tipoId,
+		padreId: 0,
 		nombre: null,
 		activo: true,
 		descripcion: null,
@@ -25,7 +25,7 @@ let grid = null,
 	dxStore = DxStore({
 		id: tipoId,
 		userData: "",
-		endPoint: "clasificador/dx/" + tipoId,
+		endPoint: "clasificador/dxt",
 		onLoading: function (loadOptions) {
 			console.log("loadOptions =>", loadOptions);
 			// root.loaderShow("Cargando Dependencias", "#panel-produccion .card-body");
@@ -49,7 +49,7 @@ let grid = null,
 		console.log("res =>", res);
 		if (res.isValid) {
 			panelData.lock(`${item.id == 0 ? "Creando" : "Actualizando"}, un momento por favor`, async function (params) {
-				console.log("ITEM =>", item.value);
+				console.log("ITEN =>", item.value);
 				let dto = toRaw(item.value);
 				console.log("dto =>", dto);
 				// let dto = toRaw(item);
@@ -61,10 +61,9 @@ let grid = null,
 				// 	async function name(ob) {
 				// 		console.log("item =>", ob);
 				await api()
-					.post(`clasificador/ed`, dto)
+					.post(`clasificador/edt`, dto)
 					.then((r) => {
 						console.log("r =>", r);
-						store.clean();
 						addCancel(function () {
 							panelData.unlock();
 							grid.refresh();
@@ -99,7 +98,7 @@ let grid = null,
 						.post(`clasificador/ed`, data)
 						.then((r) => {
 							console.log("r =>", r);
-							store.clean();
+							store.limpiar();
 							addCancel(function () {
 								panelGrid.unlock();
 								grid.refresh();
@@ -161,7 +160,7 @@ onMounted(() => {
 			<div class="card-header main d-flex justify-content-between">
 				<span>
 					<i class="fa-solid fa-gears"></i>
-					Administración &raquo; Entidades &raquo; <span title="tit-action">Nueva entidad</span>
+					Administración &raquo; Áreas de Invervención &raquo; <span title="tit-action">Nueva área</span>
 				</span>
 				<!-- <span>
 						<button type="button" class="btn btn-trans" @click.prevent="addStart"><i class="fa-solid fa-square-plus"></i>NUEVO USUARIO</button>
@@ -212,7 +211,7 @@ onMounted(() => {
 			<div class="card-header main d-flex justify-content-between">
 				<span>
 					<i class="fa-solid fa-gears"></i>
-					Administración &raquo; Entidades
+					Administración &raquo; Tipos de Clasificadores
 				</span>
 				<span>
 					<button type="button" class="btn btn-trans" @click.prevent="addStart()" title="Nuevo..."><i class="fa-solid fa-square-plus"></i>NUEVO</button>
@@ -235,7 +234,7 @@ onMounted(() => {
 						>
 							<DxLoadPanel :enabled="false" />
 							<DxScrolling row-rendering-mode="virtual" />
-							<DxPaging :page-size="10" />
+							<DxPaging :page-size="15" />
 							<DxPager
 								:allowed-page-sizes="pageSizes"
 								:display-mode="displayMode"
@@ -244,14 +243,9 @@ onMounted(() => {
 								:show-page-size-selector="showPageSizeSelector"
 								:visible="true"
 							/>
-							<!-- <DxColumn data-field="id" caption="Id" data-type="number" alignment="center" :width="100" /> -->
-							<DxColumn data-field="nombre" caption="Nombre" :sort-index="0" sort-order="asc" />
-							<!-- <DxColumn data-field="descripcion" caption="Descripción" /> -->
-							<DxColumn :width="100" caption="Activo" alignment="center" cell-template="tpl1" />
-							<template #tpl1="{ data }">
-								<span v-if="data.data.activo">SI</span>
-								<span v-else>NO</span>
-							</template>
+							<DxColumn data-field="id" caption="Id" data-type="number" alignment="center" :width="90" />
+							<DxColumn data-field="nombre" caption="Nombre" :width="250" :sort-index="0" sort-order="asc" />
+							<DxColumn data-field="descripcion" caption="Descripción" />
 							<DxColumn :width="100" alignment="center" cell-template="tpl" name="cmds" :fixed="true" fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">

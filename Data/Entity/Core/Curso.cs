@@ -11,6 +11,7 @@ namespace ESAP.Sirecec.Data.Core
 	{
 
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int? NucleoId { get; set; }
 		public int? DependenciaId { get; set; }

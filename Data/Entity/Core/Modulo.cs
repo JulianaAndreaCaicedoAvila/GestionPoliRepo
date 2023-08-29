@@ -10,6 +10,7 @@ namespace ESAP.Sirecec.Data.Core
 	public partial class Modulo : BaseEntity
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public string? Nombre { get; set; }
 		public string? Descripcion { get; set; }
@@ -18,6 +19,6 @@ namespace ESAP.Sirecec.Data.Core
 		public string? ActividadAprendizaje { get; set; }
 		public string? ActividadEvaluacion { get; set; }
 		public string? Objetivos { get; set; }
-		// public virtual List<Tema>? Temas { get; set; }
+		public virtual List<Tema>? Temas { get; set; }
 	}
 }

@@ -1,7 +1,11 @@
-﻿using ESAP.Sirecec.Data.Identity;
+﻿using System.Diagnostics;
+using ESAP.Sirecec.Data.Core;
+using ESAP.Sirecec.Data.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -14,6 +18,14 @@ namespace ESAP.Sirecec.Data
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
+			// 201912252313: DbConfiguration -> https://docs.microsoft.com/en-us/ef/ef6/fundamentals/configuring/code-based
+			// 202308251339: https://learn.microsoft.com/en-us/ef/core/logging-events-diagnostics/simple-logging
+			// https://docs.microsoft.com/en-us/ef/ef6/fundamentals/logging-and-interception#setting-the-databaselogformatter
+			optionsBuilder.LogTo(message => Debug.WriteLine(message), (eventId, logLevel) => logLevel >= LogLevel.Debug
+			|| eventId == RelationalEventId.ConnectionOpened
+			|| eventId == RelationalEventId.CommandExecuted
+			|| eventId == RelationalEventId.ConnectionClosed).EnableSensitiveDataLogging(true).EnableDetailedErrors();
+
 			// Read appsettings.json
 			// 202305291346: https://stackoverflow.com/a/71954443
 			// 202305291353: https://stackoverflow.com/a/43619386
@@ -76,6 +88,10 @@ namespace ESAP.Sirecec.Data
 				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
 				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				// entity.HasKey(e => e.TipoId);
+				// entity.HasForeignKey(e => e.TipoId);
+				// .HasPrincipalKey(e => e.Id);
+				// entity.Property(e => e.Id).ValueGeneratedOnAdd();
 				// entity.ToTable("Clasificador");
 			});
 			builder.Entity<Core.ClasificadorTipo>(entity =>
@@ -84,11 +100,12 @@ namespace ESAP.Sirecec.Data
 				entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
 				entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 				entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				// https://learn.microsoft.com/en-us/ef/core/modeling/relationships
-				entity.HasMany(e => e.Clasificadores)
-				.WithOne(e => e.ClasificadorTipo)
-				.HasForeignKey(e => e.TipoId)
-				.HasPrincipalKey(e => e.Id);
+				// entity.HasMany(e => e.Clasificadores)
+				// .WithOne(e => e.ClasificadorTipo)
+				// .HasForeignKey(e => e.TipoId)
+				// .HasPrincipalKey(e => e.Id);
 				// entity.ToTable("ClasificadorTipo");
 			});
 			builder.Entity<Core.Clasificadores>(entity => { entity.ToView("Clasificadores"); });
@@ -238,25 +255,5 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
 		}
-		// public static readonly ILoggerFactory ConsoleLoggerFactory
-		//   = LoggerFactory.Create(builder =>
-		//   {
-		// 	  builder
-		// 	  .AddFilter((category, level) =>
-		// 			category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Debug)
-		// 	  .AddConsole();
-		//   });
-
-		// 201912252313:
-		// https://docs.microsoft.com/en-us/ef/ef6/fundamentals/configuring/code-based
-		// https://docs.microsoft.com/en-us/ef/ef6/fundamentals/logging-and-interception#setting-the-databaselogformatter
-		// public class DbConfig : DbConfiguration
-		// {
-		// 	public DbConfig()
-		// 	{
-		// 		DbInterception.Add(new DbLogger());
-		// 		//SetDatabaseLogFormatter((context, writeAction) => new Logger(context, writeAction));
-		// 	}
-		// }
 	}
 }

@@ -17,8 +17,9 @@ Prueba de PUSH
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202306161422:
+dotnet ef database update
 dotnet ef database update 0
-dotnet ef database update Inicial
+dotnet ef database update 20230828220312_Inicial
 dotnet ef migrations add Inicial
 dotnet ef migrations add Sql
 dotnet ef migrations add CursoEntidades

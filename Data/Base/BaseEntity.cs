@@ -8,10 +8,7 @@ using DevExtreme.AspNet.Data.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-using System.ComponentModel;
 
 namespace ESAP.Sirecec.Data
 {
@@ -43,28 +40,41 @@ namespace ESAP.Sirecec.Data
 
 	public abstract class BaseEntity
 	{
+		// public int Id { get; set; }
+
+		// public DateTime CreadoEl { get; set; } = DateTime.Now;
+
+		// public int? CreadoPor { get; set; } = null;
+
+		// public DateTime? EditadoEl { get; set; } = null;
+
+		// public int? EditadoPor { get; set; } = null;
+
+		public DateTime? CreadoEl
+		{
+			get
+			{
+				return this.creadoEl ?? DateTime.Now;
+			}
+
+			set { this.creadoEl = value; }
+		}
+		private DateTime? creadoEl = null;
+		public DateTime? EditadoEl
+		{
+			get
+			{
+				return this.editadoEl ?? DateTime.Now;
+			}
+
+			set { this.editadoEl = value; }
+		}
+		private DateTime? editadoEl = null;
 
 		public bool? Activo { get; set; }
 
-		[DefaultValue(1)]
 		public int? CreadoPor { get; set; }
-
-		[DefaultValue(typeof(DateTime), "CURRENT_TIMESTAMP")]
-		public DateTime? CreadoEl
-		{
-			get { return CreadoEl ?? DateTime.Now; }
-			set => CreadoEl = value;
-		}
-
-		[DefaultValue(1)]
 		public int? EditadoPor { get; set; }
-
-		[DefaultValue(typeof(DateTime), "CURRENT_TIMESTAMP")]
-		public DateTime? EditadoEl
-		{
-			get { return EditadoEl ?? DateTime.Now; }
-			set { EditadoEl = value; }
-		}
 
 		public int? Orden { get; set; }
 	}

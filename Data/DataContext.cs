@@ -21,10 +21,10 @@ namespace ESAP.Sirecec.Data
 			// 201912252313: DbConfiguration -> https://docs.microsoft.com/en-us/ef/ef6/fundamentals/configuring/code-based
 			// 202308251339: https://learn.microsoft.com/en-us/ef/core/logging-events-diagnostics/simple-logging
 			// https://docs.microsoft.com/en-us/ef/ef6/fundamentals/logging-and-interception#setting-the-databaselogformatter
-			optionsBuilder.LogTo(message => Debug.WriteLine(message), (eventId, logLevel) => logLevel >= LogLevel.Debug
-			|| eventId == RelationalEventId.ConnectionOpened
-			|| eventId == RelationalEventId.CommandExecuted
-			|| eventId == RelationalEventId.ConnectionClosed).EnableSensitiveDataLogging(true).EnableDetailedErrors();
+			// optionsBuilder.LogTo(message => Debug.WriteLine(message), (eventId, logLevel) => logLevel >= LogLevel.Debug
+			// || eventId == RelationalEventId.ConnectionOpened
+			// || eventId == RelationalEventId.CommandExecuted
+			// || eventId == RelationalEventId.ConnectionClosed).EnableSensitiveDataLogging(true).EnableDetailedErrors();
 
 			// Read appsettings.json
 			// 202305291346: https://stackoverflow.com/a/71954443

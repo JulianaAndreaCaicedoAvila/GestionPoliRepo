@@ -44,8 +44,8 @@ export default (args = {}) => {
 	};
 	// 202009081539: Sending the bearer token with axios
 	// https://stackoverflow.com/a/42879201
-	let preffix = "";
-	// let preffix = "Bearer ";
+	// let preffix = "";
+	let preffix = "Bearer ";
 	if (typeof args.token !== "undefined") {
 		axiosConfig.headers["Authorization"] = `${preffix}${args.token}`;
 	} else {

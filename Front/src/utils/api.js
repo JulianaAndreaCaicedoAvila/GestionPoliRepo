@@ -44,8 +44,8 @@ export default (args = {}) => {
 	};
 	// 202009081539: Sending the bearer token with axios
 	// https://stackoverflow.com/a/42879201
-	// let preffix = "";
-	let preffix = "Bearer ";
+	// 202308311633: https://vitejs.dev/guide/env-and-mode.html#env-variables
+	let preffix = import.meta.env.DEV ? "Bearer " : "";
 	if (typeof args.token !== "undefined") {
 		axiosConfig.headers["Authorization"] = `${preffix}${args.token}`;
 	} else {

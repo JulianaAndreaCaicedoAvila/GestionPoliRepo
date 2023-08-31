@@ -15,8 +15,6 @@ export const router = createRouter({
 		{ name: "recuperar", path: "/recuperar", meta: { title: "Recuperar clave", requiresAuth: false }, component: () => import("@/pages/auth/login.vue") },
 		{ name: "inicio", path: "/inicio", meta: { title: "Inicio", requiresAuth: false }, component: () => import("@/pages/inicio.vue") },
 		{ name: "inicio-plano", path: "/inicio-plano", meta: { title: "Inicio Plano", requiresAuth: false }, component: () => import("@/pages/inicio-plano.vue") },
-		{ name: "que-es", path: "/que-es", meta: { title: "Que Es", requiresAuth: true }, component: () => import("@/pages/pnsv/que_es.vue") },
-		{ name: "estructura", path: "/estructura", meta: { title: "Estructura", requiresAuth: true }, component: () => import("@/pages/pnsv/estructura.vue") },
 		{
 			name: "clasificador",
 			path: "/admin/clasificador/:id",
@@ -72,12 +70,6 @@ export const router = createRouter({
 			path: "/admin-clasificador-tipo",
 			meta: { title: "Tipos Clasificadores", requiresAuth: true },
 			component: () => import("@/pages/admin/clasificador-tipo.vue"),
-		},
-		{
-			name: "admin-indicador",
-			path: "/admin-indicador",
-			meta: { title: "Indicadores", requiresAuth: true },
-			component: () => import("@/pages/admin/indicadores.vue"),
 		},
 	],
 });

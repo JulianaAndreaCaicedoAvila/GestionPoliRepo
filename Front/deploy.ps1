@@ -24,11 +24,28 @@ if (Test-Path $targetBase) {
 			# }
 			# Crea el backup y limpia el directorio '.git'
 			Copy-Item -Path $targetFinal -Destination $targetBk -Recurse -Force
-			Remove-Item -LiteralPath "$targetBk\.git" -Force -Recurse
+			Try {
+				Remove-Item -LiteralPath "$targetBk\.git" -Force -Recurse
+			}
+			Catch {
+				$ErrorMessage = $_.Exception.Message
+				Write-Host "ERROR: $ErrorMessage" -ForegroundColor Red
+			}
 		}
 
 		# 202305311259: Limpia directorio final excepto '.git'
 		Get-ChildItem -Path "$targetFinal" -Recurse | Select -ExpandProperty FullName | Where { $_ -NotLike "$targetFinal\.git*" } | Sort Length -Descending | Remove-Item -Force
+
+		# TODO: 202308311655 -> Editar automáticamente el archivo '/Front/vite.config.js'
+		# filePath = 'C:\myPath\env.js';
+		# $content = Get-Content $filePath | ForEach-Object { 
+		# 	if( $_ -like '*window.__env.apiUrl*' ) {
+		# 		$_ -replace '^(.*window\.__env\.apiUrl).*$', ('$1 = ''' + $url + '''');
+		# 	} else {
+		# 		$_;
+		# 	}
+		# }
+		# $content | Set-Content -Path $filePath;
 
 		# Compila Vue, mueve contenidos y elimina dist
 		npm run build
@@ -56,8 +73,11 @@ if (Test-Path $targetBase) {
 
 		# Abre el directorio
 		Start-Process $targetFinal
+
+		# 202308311633: Regresa al directorio inicial
+		cd $working
 		
-		# Start-Process "chrome.exe" "http://esabogprusrcap2.esap.edu.int/sirecec4/inicio"
+		# Start-Process "chrome.exe" "http://esabogprusrcap2.esap.edu.int/sirecec4/"
 	}
  Catch {
 

@@ -172,7 +172,11 @@ let tbAsignados = null,
 	panelAvance = null,
 	dxStore = DxStore({
 		key: ["id"],
-		userData: JSON.stringify({ esAdmin: auth.esAdmin, companyId: auth.user.companyId, dependenceId: auth.user.dependenceId }),
+		userData: JSON.stringify({
+			esAdmin: auth.esAdmin,
+			companyId: auth.user.companyId,
+			dependenceId: auth.user.dependenceId,
+		}),
 		endPoint: "indicador/dx",
 		onLoading: function (loadOptions) {
 			$("#grid").lock("Cargando");
@@ -365,7 +369,7 @@ let tbAsignados = null,
 		});
 	},
 	avanceSave = async () => {
-		console.clear();
+		// console.clear();
 		let result = avanceGroup.value.instance.validate();
 		if (result.isValid) {
 			console.log("auth.user =>", auth.user);
@@ -542,16 +546,16 @@ onMounted(async () => {
 			<div class="card-header main d-flex justify-content-between">
 				<span>
 					<i class="fa-solid fa-gears"></i>
-					Administración &raquo; Indicadores &raquo; <span id="tit-action-avance">Registro de avance</span>
+					Administración &raquo; Indicadores &raquo;
+					<span id="tit-action-avance">Registro de avance</span>
 				</span>
 			</div>
 			<DxValidationGroup ref="avanceGroup">
 				<div class="card-body pt-3 pb-2">
 					<div class="row">
 						<div class="col title bb pb-2 mb-4" v-if="indicador">
-							<span class="color-main">Indicador »</span> {{ indicador.nombre }}&nbsp;<small class="color-main"
-								>&raquo; Tipo acumulación: {{ indicador.tipoAcumulacionNombre }}</small
-							>
+							<span class="color-main">Indicador »</span>
+							{{ indicador.nombre }}&nbsp;<small class="color-main">&raquo; Tipo acumulación: {{ indicador.tipoAcumulacionNombre }}</small>
 						</div>
 					</div>
 					<div class="row">
@@ -666,7 +670,8 @@ onMounted(async () => {
 			<div class="card-header main d-flex justify-content-between">
 				<span>
 					<i class="fa-solid fa-gears"></i>
-					Administración &raquo; Indicadores &raquo; <span id="tit-action">Nuevo indicador</span>
+					Administración &raquo; Indicadores &raquo;
+					<span id="tit-action">Nuevo indicador</span>
 				</span>
 			</div>
 
@@ -1064,7 +1069,10 @@ onMounted(async () => {
 											class="form-control"
 											:max="new Date()"
 											v-model="item.lineaBaseFecha"
-											:calendar-options="{ maxZoomLevel: 'year', minZoomLevel: 'century' }"
+											:calendar-options="{
+												maxZoomLevel: 'year',
+												minZoomLevel: 'century',
+											}"
 											display-format="MM/yyyy"
 											type="date"
 										>
@@ -1461,7 +1469,6 @@ onMounted(async () => {
 								:allowed-page-sizes="[15, 50, 'Todos']"
 								info-text="{2} Indicadores (página {0} de {1})"
 							/>
-
 							<DxColumn data-field="areaId" caption="Area Id" :visible="false" />
 							<DxColumn data-field="areaNombre" caption="Area" :visible="true" :group-index="0" />
 							<DxColumn data-field="objetivoGeneralId" caption="Objetivo General Id" :visible="false" />
@@ -1547,7 +1554,8 @@ onMounted(async () => {
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">
-				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span class="font-weight-semibold">item_copy:</span> {{ item_copy }}
+				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span class="font-weight-semibold">item_copy:</span>
+				{{ item_copy }}
 			</div>
 		</div>
 	</div>

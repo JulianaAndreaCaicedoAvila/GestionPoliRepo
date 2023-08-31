@@ -7,6 +7,7 @@ namespace ESAP.Sirecec.Data.Core
 	public partial class EncuestaPregunta : BaseEntity
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int? EncuestaId { get; set; }
 		public int? PreguntaId { get; set; }

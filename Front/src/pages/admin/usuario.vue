@@ -219,12 +219,15 @@ let ansvCompanyId = 1164,
 		});
 	};
 onMounted(async () => {
-	console.clear();
+	// console.clear();
 	console.log(_sep);
 	let res = await store.porTipoNombre("entidad");
 	// res = res.filter((o) => o.hijos > 0);
 	entidades.value = res;
 	console.log("entidades =>", toRaw(entidades));
+	res = await store.porTipoNombre("dependencia");
+	dependencias.value = res;
+	console.log("dependencias =>", toRaw(dependencias));
 	console.log("valGroup =>", valGroup);
 	console.log("valGroup.value =>", valGroup.value);
 	// console.log($config);

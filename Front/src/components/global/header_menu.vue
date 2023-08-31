@@ -65,30 +65,87 @@ onMounted(() => {
 							<li class="dropdown" v-if="auth.user && auth.esAdmin">
 								<a class="dropdown-item dropdown-toggle" href="#"> <i class="fa fa-gear me-2"></i>ADMINISTRACIÓN<i class="ms-2 fa-solid fa-angle-down"></i></a>
 								<ul class="dropdown-menu">
-									<li><router-link :to="{ name: 'admin-usuarios' }" class="dropdown-item">Usuarios</router-link></li>
-									<li><router-link :to="{ name: 'admin-clasificador' }" class="dropdown-item">Clasificadores</router-link></li>
-									<li><router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Tipos de Clasificadores</router-link></li>
-									<!-- <li class="dropdown-submenu">
-										<a class="dropdown-item" href="#">Estructura del Plan<i class="fas fa-chevron-down"></i></a>
+									<li>
+										<router-link :to="{ name: 'admin-usuarios' }" class="dropdown-item">Usuarios</router-link>
+									</li>
+									<li class="dropdown-submenu">
+										<a class="dropdown-item" href="#">Ubicaciones<i class="fas fa-chevron-down"></i></a>
 										<ul class="dropdown-menu">
-											<li><router-link :to="{ name: 'admin-area' }" class="dropdown-item">Áreas de acción</router-link></li>
-											<li><router-link :to="{ name: 'admin-objetivo-general' }" class="dropdown-item">Objetivos generales</router-link></li>
-											<li><router-link :to="{ name: 'admin-objetivo-especifico' }" class="dropdown-item">Objetivos específicos</router-link></li>
-											<li><router-link :to="{ name: 'admin-accion' }" class="dropdown-item">Acciones y actividades</router-link></li>
-											<li><router-link :to="{ name: 'admin-indicador' }" class="dropdown-item">Indicadores</router-link></li>
+											<li>
+												<router-link :to="{ path: '/admin/clasificador/8' }" class="dropdown-item">Territoriales</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/clasificador/1' }" class="dropdown-item">Departamentos</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/clasificador/2' }" class="dropdown-item">Municipios</router-link>
+											</li>
 										</ul>
-									</li> -->
+									</li>
+									<li class="dropdown-submenu">
+										<a class="dropdown-item" href="#">Cursos<i class="fas fa-chevron-down"></i></a>
+										<ul class="dropdown-menu">
+											<li>
+												<router-link :to="{ path: '/admin/clasificador/7' }" class="dropdown-item">Dependencias</router-link>
+											</li>
+											<!-- <li>
+												<router-link :to="{ path: '/admin/clasificador/20' }" class="dropdown-item">Objetivos</router-link>
+											</li> -->
+											<li>
+												<router-link :to="{ path: '/admin/producto' }" class="dropdown-item">Productos</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/clasificador/11' }" class="dropdown-item">Indicadores</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/banco-programas' }" class="dropdown-item">Bancos de Programas</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/nucleos' }" class="dropdown-item">Núcleos</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/programa-capacitacion' }" class="dropdown-item">Programas de Capacitación</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/temas' }" class="dropdown-item">Temas</router-link>
+											</li>
+											<!-- <li>
+												<router-link :to="{ path: '/admin/clasificador/7' }" class="dropdown-item">Dependencia Temas</router-link>
+											</li> -->
+											<li>
+												<router-link :to="{ path: '/admin/modulos' }" class="dropdown-item">Módulos</router-link>
+											</li>
+											<li>
+												<router-link :to="{ path: '/admin/clasificador/14' }" class="dropdown-item">Tipos de curso</router-link>
+											</li>
+										</ul>
+									</li>
+									<li class="dropdown-submenu">
+										<a class="dropdown-item" href="#">Catálogo<i class="fas fa-chevron-down"></i></a>
+										<ul class="dropdown-menu">
+											<li>
+												<router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Tipos de Clasificadores</router-link>
+											</li>
+											<li>
+												<router-link :to="{ name: 'admin-clasificador' }" class="dropdown-item">Clasificadores</router-link>
+											</li>
+										</ul>
+									</li>
 								</ul>
 							</li>
-							<li class="dropdown" v-if="auth.user && !auth.esAdmin">
+							<!-- <li class="dropdown" v-if="auth.user && !auth.esAdmin">
 								<a class="dropdown-item dropdown-toggle" href="#"
 									><i class="fa-solid fa-pen-to-square me-2"></i>REPORTAR<i class="ms-2 fa-solid fa-angle-down"></i
 								></a>
 								<ul class="dropdown-menu">
-									<li><router-link :to="{ name: 'reporte-indicador' }" class="dropdown-item">Indicadores</router-link></li>
-									<li><router-link :to="{ name: 'reporte-actividad' }" class="dropdown-item">Acciones y actividades</router-link></li>
+									<li>
+										<router-link :to="{ name: 'reporte-indicador' }" class="dropdown-item">Indicadores</router-link>
+									</li>
+									<li>
+										<router-link :to="{ name: 'reporte-actividad' }" class="dropdown-item">Acciones y actividades</router-link>
+									</li>
 								</ul>
-							</li>
+							</li> -->
 							<li class="dropdown ms-lg-auto no-line-effect" v-if="!auth.user">
 								<router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'ingreso' }">
 									<i class="fa-solid fa-user-lock me-2"></i>INGRESAR</router-link
@@ -96,14 +153,15 @@ onMounted(() => {
 							</li>
 							<li class="dropdown dropdown-reverse ms-lg-auto no-line-effect" v-if="auth.user">
 								<a class="dropdown-item dropdown-toggle" href="#">
-									<i class="fa-solid fa-user me-2"></i> {{ auth.user.name }} <i class="ms-2 fa-solid fa-angle-down"></i>
+									<i class="fa-solid fa-user me-2"></i> {{ auth.user.name }}
+									<i class="ms-2 fa-solid fa-angle-down"></i>
 								</a>
 								<ul class="dropdown-menu">
 									<li>
-										<router-link :to="{ name: 'reporte-indicador' }" class="dropdown-item">Mi información</router-link>
+										<router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Mi información</router-link>
 									</li>
 									<li>
-										<router-link :to="{ name: 'reporte-indicador' }" class="dropdown-item">Mis eventos</router-link>
+										<router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Mis eventos</router-link>
 									</li>
 									<li>
 										<a href="#" @click.prevent="logout" class="dropdown-item"><i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar Sesión</a>

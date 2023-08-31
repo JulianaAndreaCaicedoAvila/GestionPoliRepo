@@ -1,15 +1,29 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202307271845:
+SELECT * FROM "Clasificador";
+SELECT * FROM "ClasificadorTipo" WHERE "Nombre" LIKE '%gén%';
+SELECT * FROM "Clasificador" ORDER BY "Id" DESC;
+SELECT * FROM "Clasificador" ORDER BY "Id" DESC;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+https://stackoverflow.com/a/57070108
+dotnet tool install --global dotnet-ef
+
+202307182316:
+Prueba de PUSH
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202306161422:
 dotnet ef database update
 dotnet ef database update 0
+dotnet ef database update 20230828220312_Inicial
 dotnet ef migrations add Inicial
 dotnet ef migrations add Sql
 dotnet ef migrations add CursoEntidades
-
-dotnet ef migrations remove 20230616214233_BancoNucleoPrograma
-dotnet ef database update 20230616214630_BancoNucleoPrograma
+dotnet ef migrations add Actualizacion
 
 -- Eliminar la ultima migración... EL ARCHIVO!!
 dotnet ef migrations remove

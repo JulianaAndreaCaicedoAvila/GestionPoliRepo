@@ -7,6 +7,7 @@
 			"request": "launch",
 			"console": "integratedTerminal",
 			"preLaunchTask": "app-clean-build",
+			"justMyCode": false,
 			"externalConsole": false,
 			"program": "${workspaceFolder}/Api/bin/Debug/net6.0/ESAP.Sirecec.Api.dll",
 			"args": [],
@@ -27,6 +28,9 @@
 			},
 			"sourceFileMap": {
 				"/Views": "${workspaceFolder}/Views"
+			},
+			"logging": {
+				"moduleLoad": false
 			}
 		},
 		{

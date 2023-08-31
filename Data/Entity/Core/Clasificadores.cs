@@ -11,6 +11,7 @@ namespace ESAP.Sirecec.Data.Core
 	public partial class Clasificadores : BaseEntity
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int? PadreTipoId { get; set; }
 		public string? PadreTipoNombre { get; set; }

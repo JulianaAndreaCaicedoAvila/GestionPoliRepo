@@ -311,7 +311,7 @@ let reset = async (endPoint) => {
 };
 
 onMounted(() => {
-	console.clear();
+	// console.clear();
 	console.log("MOUNTED!!");
 	console.log("route.query =>"), route.query;
 	console.log("config =>", window._config);

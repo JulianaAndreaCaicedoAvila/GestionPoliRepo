@@ -29,9 +29,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("ed")] // /api/curso/ed => CREATE - UPDATE
-		public ActionResult Edit(Producto item)
+		public ActionResult Edit()
 		{
 			var u = User;
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			Producto item = JsonConvert.DeserializeObject<Producto>(str);
 
 			// Registro nuevo: CREATE
 			if (item.Id == 0)
@@ -75,7 +78,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _db.Producto.OrderBy(o => o.Nombre).ToList();
+			var items = _db.Productos.OrderBy(o => o.Nombre).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

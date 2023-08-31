@@ -10,6 +10,7 @@ namespace ESAP.Sirecec.Data.Core
 	public partial class Documento : BaseEntity
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int TipoId { get; set; }
 		public int ClasificacionId { get; set; }

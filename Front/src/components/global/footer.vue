@@ -22,7 +22,7 @@ const count = ref(0);
 					<div class="col text-center">
 						<p class="text-color-white font-weight-semibold">
 							© Copyright {{ new Date().getFullYear() }} - Escuela Superior de Administración Pública (ESAP) - Todos los derechos reservados - SIRECEC
-							v4.0.20230531
+							v4.0.20230822
 						</p>
 					</div>
 				</div>

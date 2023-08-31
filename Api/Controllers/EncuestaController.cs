@@ -14,7 +14,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 {
 	[@Authorize]
 	[ApiController]
-	[Route("cursoEncuesta")]
+	[Route("encuesta")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
 	public class EncuestaController : ControllerBase

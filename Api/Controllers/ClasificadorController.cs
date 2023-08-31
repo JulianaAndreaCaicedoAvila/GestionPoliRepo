@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
 {
-	[Authorize]
+	[@Authorize]
 	[ApiController]
 	[Route("clasificador")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -36,7 +36,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return items;
 		}
 
-		[HttpGet("tipos")]
+		[HttpPost("tipos")]
 		public List<ClasificadorTipo> Tipos()
 		{
 			var items = _db.ClasificadorTipo;
@@ -55,12 +55,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				var obj = (Clasificador)item.CopyTo(new Clasificador());
 				obj.CreadoPor = 1;
 				obj.CreadoEl = DateTime.Now;
-				_db.Clasificador.Add(obj);
+				_db.Clasificador?.Add(obj);
 				_db.SaveChanges();
 				return Ok(obj);
 			}
 
-			var current = _db.Clasificador.First(o => o.Id == item.Id);
+			var current = _db.Clasificador?.First(o => o.Id == item.Id);
 			if (current != null)
 			{
 				var final = (Clasificador)item.CopyTo(current);
@@ -84,12 +84,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				var obj = (ClasificadorTipo)item.CopyTo(new ClasificadorTipo());
 				obj.CreadoPor = 1;
 				obj.CreadoEl = DateTime.Now;
-				_db.ClasificadorTipo.Add(obj);
+				_db.ClasificadorTipo?.Add(obj);
 				_db.SaveChanges();
 				return Ok(obj);
 			}
 
-			var current = _db.ClasificadorTipo.First(o => o.Id == item.Id);
+			var current = _db.ClasificadorTipo?.First(o => o.Id == item.Id);
 			if (current != null)
 			{
 				var final = (ClasificadorTipo)item.CopyTo(current);

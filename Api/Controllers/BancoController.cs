@@ -39,14 +39,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				var obj = (BancoPrograma)item.CopyTo(new BancoPrograma());
 				obj.CreadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
 				obj.CreadoEl = DateTime.Now;
-				_db.BancoPrograma.Add(obj);
+				_db.BancoPrograma?.Add(obj);
 				_db.SaveChanges();
 				return Ok(obj);
 			}
 			else
 			{
 				// Registro existente: EDIT
-				var current = _db.BancoPrograma.First(o => o.Id == item.Id);
+				var current = _db.BancoPrograma?.First(o => o.Id == item.Id);
 				if (current != null)
 				{
 					var final = (BancoPrograma)item.CopyTo(current);
@@ -61,11 +61,17 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpGet("{itemId?}")] // /api/banco/5 => CREATE - 
-		[Authorization.AllowAnonymous]
 		public ActionResult Get(int? itemId = null)
 		{
-			var item = _db.BancoPrograma.FirstOrDefault(o => o.Id == itemId);
+			var item = _db.BancoPrograma?.FirstOrDefault(o => o.Id == itemId);
 			return Ok(item);
+		}
+
+		[HttpGet("all")] // /api/banco/all => Obtiene todos los items
+		public ActionResult GetAll()
+		{
+			var items = _db.BancoPrograma?.ToList();
+			return Ok(items);
 		}
 
 		[HttpPost("dx")] // /api/banco/dx => DevExtreme DataGrid Get
@@ -75,7 +81,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _db.BancoPrograma.OrderBy(o => o.Nombre).ToList();
+			var items = _db.BancoPrograma?.OrderBy(o => o.Nombre).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

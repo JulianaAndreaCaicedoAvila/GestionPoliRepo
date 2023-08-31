@@ -17,17 +17,14 @@
 	"tipo_clasificador": [
 		{ "id": 1, "name": "departamento" },
 		{ "id": 2, "name": "municipio" },
-		{ "id": 3, "name": "entidad" },
-		{ "id": 4, "name": "dependencia" },
-		{ "id": 5, "name": "plan_accion" },
-		{ "id": 6, "name": "area_intervencion" },
-		{ "id": 7, "name": "objetivo_general" },
-		{ "id": 8, "name": "objetivo_especifico" },
-		{ "id": 11, "name": "tipo_indicador" },
-		{ "id": 12, "name": "unidad_medida" },
-		{ "id": 13, "name": "periodicidad" },
-		{ "id": 14, "name": "tipo_acumulacion" },
-		{ "id": 15, "name": "sector" }
+		{ "id": 3, "name": "tipo_documento_identidad" },
+		{ "id": 4, "name": "genero" },
+		{ "id": 5, "name": "nivel_escolar" },
+		{ "id": 6, "name": "estado_civil" },
+		{ "id": 7, "name": "dependencia" },
+		{ "id": 8, "name": "territorial" },
+		{ "id": 11, "name": "programa" },
+		{ "id": 32, "name": "entidad" }
 	],
 	"tipo_acumulacion": [
 		{ "id": 1376, "name": "mantenimiento" },

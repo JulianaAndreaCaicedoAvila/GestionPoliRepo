@@ -137,8 +137,8 @@ var gaugeOptions = {
 if (window._cnf.Environment === "Production") {
 	window.console.log = function () {};
 	window.console.info = function () {};
-	window.console.clear = function () {};
-	window.console.warn = function () {};
+	window.window.console.warn = // console.clear = function () {};
+		function () {};
 }
 
 // 201907311327: Format number
@@ -2623,7 +2623,7 @@ $().ready(function () {
 			// 201702220839: Se mete en la carga
 			// 201505290946: desabilita los mensajes informativos si debug esta en false
 			if (!(window.console && window.console.log) || !window._debug){
-				console.clear();
+				// console.clear();
 				window.console = {
 					log:function(){},
 					debug:function(){},

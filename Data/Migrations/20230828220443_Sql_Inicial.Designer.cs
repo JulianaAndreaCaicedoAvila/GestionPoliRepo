@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230713051033_EntitiesUpdate")]
-    partial class EntitiesUpdate
+    [Migration("20230828220443_Sql_Inicial")]
+    partial class Sql_Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -48,7 +48,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -85,7 +85,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -98,7 +98,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -114,7 +114,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int>("PadreId")
+                    b.Property<int?>("PadreId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("TipoId")
@@ -136,9 +136,11 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .HasColumnType("NUMBER(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(1)")
+                        .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -151,7 +153,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -175,12 +177,13 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificadores", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<bool?>("Activo")
                         .HasColumnType("NUMBER(1)");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
@@ -189,7 +192,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
@@ -266,7 +269,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("CorreoElectronico")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -288,7 +291,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -406,7 +409,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("AnexoId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -419,7 +422,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -455,7 +458,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -468,7 +471,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -504,7 +507,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -517,7 +520,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -553,7 +556,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -572,7 +575,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("DocenteId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -619,7 +622,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("ClasificacionId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -632,7 +635,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -672,7 +675,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -685,7 +688,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -722,7 +725,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -732,7 +735,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -773,7 +776,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -786,7 +789,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -831,7 +834,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -844,7 +847,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -890,7 +893,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("BancoId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -900,7 +903,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -913,6 +916,9 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<int?>("IndicadorId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -922,6 +928,8 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BancoId");
+
+                    b.HasIndex("IndicadorId");
 
                     b.ToTable("Nucleo");
                 });
@@ -957,7 +965,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Correo")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -976,7 +984,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("DocumentoNumero")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1049,7 +1057,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1062,7 +1070,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1099,7 +1107,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1115,7 +1123,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1133,9 +1141,50 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DependenciaId");
-
                     b.ToTable("Producto");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Productos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("DependenciaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DependenciaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Productos", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Programa", b =>
@@ -1151,7 +1200,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1161,7 +1210,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1203,7 +1252,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(1)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1216,10 +1265,10 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int>("DependenciaId")
+                    b.Property<int?>("DependenciaId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1229,7 +1278,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<int>("ModuloId")
+                    b.Property<int?>("ModuloId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
@@ -1265,7 +1314,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int>("Codigo")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<DateTime>("CreadoEl")
+                    b.Property<DateTime?>("CreadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1275,7 +1324,7 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<DateTime>("EditadoEl")
+                    b.Property<DateTime?>("EditadoEl")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TIMESTAMP(7)")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -1417,6 +1466,7 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.Users", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("AccessFailedCount")
@@ -1691,24 +1741,17 @@ namespace ESAP.Sirecec.Data.Migrations
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
                 {
-                    b.HasOne("ESAP.Sirecec.Data.Core.BancoPrograma", "Banco")
+                    b.HasOne("ESAP.Sirecec.Data.Core.BancoPrograma", "BancoPrograma")
                         .WithMany("Nucleos")
                         .HasForeignKey("BancoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Banco");
-                });
+                    b.HasOne("ESAP.Sirecec.Data.Core.Indicador", null)
+                        .WithMany("Nucleos")
+                        .HasForeignKey("IndicadorId");
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Producto", b =>
-                {
-                    b.HasOne("ESAP.Sirecec.Data.Core.Clasificador", "Dependencia")
-                        .WithMany()
-                        .HasForeignKey("DependenciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dependencia");
+                    b.Navigation("BancoPrograma");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Programa", b =>
@@ -1730,15 +1773,11 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasOne("ESAP.Sirecec.Data.Core.Clasificador", "Dependencia")
                         .WithMany()
-                        .HasForeignKey("DependenciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DependenciaId");
 
                     b.HasOne("ESAP.Sirecec.Data.Core.Modulo", "Modulo")
                         .WithMany("Temas")
-                        .HasForeignKey("ModuloId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ModuloId");
 
                     b.Navigation("Dependencia");
 
@@ -1820,6 +1859,11 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Encuesta", b =>
                 {
                     b.Navigation("Preguntas");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
+                {
+                    b.Navigation("Nucleos");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>

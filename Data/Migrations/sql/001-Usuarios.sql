@@ -1,4 +1,4 @@
-﻿CREATE VIEW "Usuarios"
+﻿CREATE OR REPLACE VIEW "Usuarios"
 AS
 SELECT
 	UR."RoleId",
@@ -32,4 +32,4 @@ FROM
 	"AuthUsers" U ON D."Id" = U."DependenceId" LEFT OUTER JOIN
 	"Clasificador" C ON U."CompanyId" = C."Id" LEFT OUTER JOIN
 	"AuthRoles" R RIGHT OUTER JOIN
-	"AuthUserRoles" UR ON R."Id" = UR."RoleId" ON U."Id" = UR."UserId";
+	"AuthUserRoles" UR ON R."Id" = UR."RoleId" ON U."Id" = UR."UserId"

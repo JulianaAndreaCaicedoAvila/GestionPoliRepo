@@ -9,14 +9,14 @@ namespace ESAP.Sirecec.Data.Core
 {
 	public partial class Programa : BaseEntity
 	{
-
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
+
+		[ForeignKey("Nucleo")]
 		public int NucleoId { get; set; }
 		public string? Nombre { get; set; }
 		public DateTime FechaInicio { get; set; }
 		public virtual Nucleo? Nucleo { get; set; }
-
-		// public virtual List<Nucleo>? Nucleos { get; set; }
 	}
 }

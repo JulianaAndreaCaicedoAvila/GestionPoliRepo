@@ -50,7 +50,7 @@ namespace ESAP.Sirecec.Data
 
 		// public int? EditadoPor { get; set; } = null;
 
-		public DateTime CreadoEl
+		public DateTime? CreadoEl
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace ESAP.Sirecec.Data
 			set { this.creadoEl = value; }
 		}
 		private DateTime? creadoEl = null;
-		public DateTime EditadoEl
+		public DateTime? EditadoEl
 		{
 			get
 			{

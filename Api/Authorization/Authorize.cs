@@ -38,9 +38,11 @@ public class Authorize : Attribute, IAuthorizationFilter
 			var response = filterContext.HttpContext.Response;
 			var reqHeaders = filterContext.HttpContext.Request.Headers;
 			var respHeaders = response.Headers;
-			var token = reqHeaders["Authorization"].FirstOrDefault()?.Split(" ").Last();
+			var token = reqHeaders["Authorization"].FirstOrDefault();
 			if (token != null)
 			{
+				if (token.Contains(" "))
+					token = token.Split(" ").Last();
 				if (IsValidToken(token))
 				{
 					respHeaders.Add("token", token);
@@ -67,7 +69,7 @@ public class Authorize : Attribute, IAuthorizationFilter
 			}
 			else
 			{
-				var error = "Provide a valid token";
+				var error = "Se debe proporcionar un token válido";
 				response.StatusCode = (int)HttpStatusCode.Forbidden;
 				response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = error;
 				filterContext.Result = new JsonResult(error)

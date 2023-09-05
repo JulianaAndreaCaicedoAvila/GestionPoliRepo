@@ -1,13 +1,9 @@
 using System.Text;
 using DevExtreme.AspNet.Data;
-using ESAP.Sirecec.Data;
 using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Core;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
@@ -18,17 +14,11 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public class ClasificadorController : BaseController
 	{
-		private readonly DataContext _db;
-		private readonly IHttpContextAccessor _context;
+		public ClasificadorController(DataContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+			: base(context, httpContextAccessor, configuration) { }
 
-		public ClasificadorController(DataContext context, IHttpContextAccessor httpContextAccessor)
-		{
-			_db = context;
-			_context = httpContextAccessor;
-		}
-
+		[AllowAnonymous]
 		[HttpGet("{tipoId?}")]
-		[Authorization.AllowAnonymous]
 		public List<Clasificadores> Get(int? tipoId)
 		{
 			var items = _db.Clasificadores.ToList();

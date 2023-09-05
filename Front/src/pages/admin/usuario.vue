@@ -2,7 +2,7 @@
 import api from "@/utils/api";
 import DxStore from "@/utils/dx";
 import { ref, toRaw, onMounted } from "vue";
-import { useClasificadorStore } from "@/stores";
+import { useClasificadorStore, useAuthStore } from "@/stores";
 import { DxSelectBox, DxTextBox, DxValidationGroup } from "devextreme-vue";
 import DxValidator, { DxRequiredRule, DxCustomRule, DxEmailRule, DxCompareRule, DxStringLengthRule } from "devextreme-vue/validator";
 import {
@@ -23,7 +23,8 @@ import {
 	DxSummary,
 } from "devextreme-vue/data-grid";
 const store = useClasificadorStore();
-let ansvCompanyId = 1164,
+const authStore = useAuthStore();
+let companyId = 1518,
 	entidades = ref([]),
 	dependencias = ref([]),
 	item = ref({
@@ -41,11 +42,7 @@ let ansvCompanyId = 1164,
 	valGroup = ref(null),
 	panelData = null,
 	panelGrid = null,
-	roles = [
-		{ id: 1, name: "Administrador" },
-		{ id: 2, name: "Analista" },
-		{ id: 3, name: "Gerente" },
-	],
+	roles = ref([]),
 	dxStore = DxStore({
 		key: ["id"],
 		userData: "",
@@ -74,7 +71,7 @@ let ansvCompanyId = 1164,
 		return item.value.password;
 	},
 	ansvEmailRule = (e) => {
-		if (item.value.companyId !== ansvCompanyId) return true;
+		if (item.value.companyId !== companyId) return true;
 		return e.value.contains("@esap.edu.co");
 	},
 	grid = null,
@@ -142,7 +139,7 @@ let ansvCompanyId = 1164,
 							grid.refresh();
 						});
 					})
-					.error((r) => {
+					.catch((r) => {
 						console.log("r =>", r);
 						addCancel(function () {
 							panelData.unlock();
@@ -186,12 +183,14 @@ let ansvCompanyId = 1164,
 			textCancel: "CANCELAR",
 			textOk: data.isActive ? "DESACTIVAR" : "ACTIVAR",
 			text: `¿Realmente desea ${data.isActive ? "desactivar" : "activar"} al usuario ${data.name}?`,
-			onConfirm: () => {},
-			onCancel: () => {},
+			onConfirm: () => { },
+			onCancel: () => { },
 		});
 	},
 	addStart = (data) => {
 		// console.clear();
+		panelData = $("#data");
+		panelGrid = $("#grid");
 		console.log("data =>", data);
 		panelGrid.fadeOut("normal", function () {
 			console.log(typeof data);
@@ -221,10 +220,12 @@ let ansvCompanyId = 1164,
 onMounted(async () => {
 	// console.clear();
 	console.log(_sep);
+	roles.value = await authStore.getRoles();
+	console.log("roles.value =>", roles.value);
 	let res = await store.porTipoNombre("entidad");
 	// res = res.filter((o) => o.hijos > 0);
 	entidades.value = res;
-	console.log("entidades =>", toRaw(entidades));
+	console.log("entidades =>", toRaw(entidades.value));
 	res = await store.porTipoNombre("dependencia");
 	dependencias.value = res;
 	console.log("dependencias =>", toRaw(dependencias));
@@ -256,21 +257,10 @@ onMounted(async () => {
 					<div class="row">
 						<div class="col-md-6 mb-3">
 							<label class="tit">Entidad</label>
-							<DxSelectBox
-								id="companyId"
-								:data-source="entidades"
-								:grouped="false"
-								:min-search-length="3"
-								:search-enabled="true"
-								:show-clear-button="true"
-								:show-data-before-search="true"
-								v-model:value="item.companyId"
-								@value-changed="itemSelected"
-								class="form-control"
-								display-expr="nombre"
-								placeholder="Entidad"
-								value-expr="id"
-							>
+							<DxSelectBox id="companyId" :data-source="entidades" :grouped="false" :min-search-length="3"
+								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
+								v-model:value="item.companyId" @value-changed="itemSelected" class="form-control" display-expr="nombre"
+								placeholder="Entidad" value-expr="id">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -278,21 +268,10 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-6 mb-3">
 							<label class="tit">Dependencia</label>
-							<DxSelectBox
-								id="dependenceId"
-								:data-source="dependencias"
-								:disabled="dependencias.length <= 0"
-								:grouped="false"
-								:min-search-length="3"
-								:search-enabled="true"
-								:show-clear-button="true"
-								:show-data-before-search="true"
-								v-model:value="item.dependenceId"
-								class="form-control"
-								display-expr="nombre"
-								placeholder="Dependencia"
-								value-expr="id"
-							>
+							<DxSelectBox id="dependenceId" :data-source="dependencias" :disabled="dependencias.length <= 0"
+								:grouped="false" :min-search-length="3" :search-enabled="true" :show-clear-button="true"
+								:show-data-before-search="true" v-model:value="item.dependenceId" class="form-control"
+								display-expr="nombre" placeholder="Dependencia" value-expr="id">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -300,14 +279,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-3 mb-3">
 							<label class="tit">Correo electrónico (usuario)</label>
-							<DxTextBox
-								id="email"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								v-model:value="item.email"
-								class="form-control"
-								placeholder="Correo electrónico"
-							>
+							<DxTextBox id="email" value-change-event="keyup" :show-clear-button="true" v-model:value="item.email"
+								class="form-control" placeholder="Correo electrónico">
 								<!-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/Validation/Overview/Vue/Light/ -->
 								<DxValidator>
 									<DxRequiredRule />
@@ -318,20 +291,9 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-3 mb-3">
 							<label class="tit">Rol</label>
-							<DxSelectBox
-								id="companyId"
-								:data-source="roles"
-								:grouped="false"
-								:min-search-length="3"
-								:search-enabled="true"
-								:show-clear-button="true"
-								:show-data-before-search="true"
-								v-model:value="item.roleId"
-								class="form-control"
-								display-expr="name"
-								placeholder="Rol"
-								value-expr="id"
-							>
+							<DxSelectBox id="companyId" :data-source="roles" :grouped="false" :min-search-length="3"
+								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
+								v-model:value="item.roleId" class="form-control" display-expr="name" placeholder="Rol" value-expr="id">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -339,14 +301,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-3">
 							<label class="tit">Nombre(s)</label>
-							<DxTextBox
-								id="firstName"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								v-model:value="item.firstName"
-								class="form-control text-capitalize"
-								placeholder="Nombre"
-							>
+							<DxTextBox id="firstName" value-change-event="keyup" :show-clear-button="true"
+								v-model:value="item.firstName" class="form-control text-capitalize" placeholder="Nombre">
 								<DxValidator>
 									<DxRequiredRule />
 									<DxStringLengthRule :min="3" />
@@ -355,14 +311,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-3">
 							<label class="tit">Apellido(s)</label>
-							<DxTextBox
-								id="lastName"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								v-model:value="item.lastName"
-								class="form-control text-capitalize"
-								placeholder="Apellido"
-							>
+							<DxTextBox id="lastName" value-change-event="keyup" :show-clear-button="true" v-model:value="item.lastName"
+								class="form-control text-capitalize" placeholder="Apellido">
 								<DxValidator>
 									<DxRequiredRule />
 									<DxStringLengthRule :min="3" />
@@ -370,25 +320,17 @@ onMounted(async () => {
 							</DxTextBox>
 						</div>
 						<div class="col-md-12">
-							<div class="row" v-if="item.companyId === ansvCompanyId">
+							<div class="row" v-if="item.companyId === companyId">
 								<div class="col text-center pt-2">
-									<span class="subtitle font-weight-semibold"
-										><i class="fa-solid fa-circle-info fa-sm me-2"></i> El usuario ingresará con credenciales ANSV</span
-									>
+									<span class="subtitle font-weight-semibold"><i class="fa-solid fa-circle-info fa-sm me-2"></i> El
+										usuario ingresará con credenciales ESAP</span>
 								</div>
 							</div>
 							<div class="row" v-else>
 								<div class="col-md-3 offset-md-3">
 									<label class="tit" id="pwd">Contraseña</label>
-									<DxTextBox
-										id="password"
-										mode="password"
-										value-change-event="keyup"
-										:show-clear-button="true"
-										v-model:value="item.password"
-										class="form-control"
-										placeholder="Contraseña"
-									>
+									<DxTextBox id="password" mode="password" value-change-event="keyup" :show-clear-button="true"
+										v-model:value="item.password" class="form-control" placeholder="Contraseña">
 										<DxValidator>
 											<!-- <DxRequiredRule />
 											<DxStringLengthRule :min="5" /> -->
@@ -398,15 +340,8 @@ onMounted(async () => {
 								</div>
 								<div class="col-md-3">
 									<label class="tit">Confirmar contraseña</label>
-									<DxTextBox
-										id="password1"
-										mode="password"
-										value-change-event="keyup"
-										:show-clear-button="true"
-										v-model:value="item.password1"
-										class="form-control"
-										placeholder="Confirmar contraseña"
-									>
+									<DxTextBox id="password1" mode="password" value-change-event="keyup" :show-clear-button="true"
+										v-model:value="item.password1" class="form-control" placeholder="Confirmar contraseña">
 										<DxValidator>
 											<DxCompareRule :comparison-target="passwordComparison" message="Las contraseñas no coinciden" />
 										</DxValidator>
@@ -419,7 +354,8 @@ onMounted(async () => {
 			</DxValidationGroup>
 			<div class="card-footer">
 				<div class="d-flex justify-content-between align-items-center">
-					<a class="btn btn-gray" @click.prevent="addCancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
+					<a class="btn btn-gray" @click.prevent="addCancel"><i
+							class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
 					<a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
 				</div>
 			</div>
@@ -432,7 +368,8 @@ onMounted(async () => {
 					Administración &raquo; Usuarios
 				</span>
 				<span>
-					<button type="button" class="btn btn-trans" @click.prevent="addStart()" title="Nuevo..."><i class="fa-solid fa-square-plus"></i>NUEVO</button>
+					<button type="button" class="btn btn-trans" @click.prevent="addStart()" title="Nuevo..."><i
+							class="fa-solid fa-square-plus"></i>NUEVO</button>
 				</span>
 			</div>
 
@@ -441,18 +378,9 @@ onMounted(async () => {
 					<div class="col">
 						<!-- <h2 class="font-weight-normal text-7 mb-2 color-main"><strong class="font-weight-semibold">Usuarios</strong> Principal o Interna</h2> -->
 						<!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
-						<DxDataGrid
-							witdh="100%"
-							:customize-columns="customizeColumns"
-							:data-source="dxStore"
-							:hover-state-enabled="true"
-							:remote-operations="true"
-							:row-alternation-enabled="true"
-							:show-borders="false"
-							:word-wrap-enabled="false"
-							id="gridContainer"
-							@initialized="onInitialized"
-						>
+						<DxDataGrid witdh="100%" :customize-columns="customizeColumns" :data-source="dxStore"
+							:hover-state-enabled="true" :remote-operations="true" :row-alternation-enabled="true" :show-borders="false"
+							:word-wrap-enabled="false" id="gridContainer" @initialized="onInitialized">
 							<DxColumnChooser :enabled="false" mode="dragAndDrop" />
 							<DxExport :enabled="false" />
 							<DxFilterRow :visible="false" />
@@ -466,29 +394,27 @@ onMounted(async () => {
 							<DxSummary>
 								<DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
 							</DxSummary>
-							<DxPager
-								:visible="true"
-								:show-info="true"
-								:show-page-size-selector="true"
-								:show-navigation-buttons="true"
-								:allowed-page-sizes="[15, 30, 50, 'Todos']"
-								info-text="{2} usuarios (página {0} de {1})"
-							/>
+							<DxPager :visible="true" :show-info="true" :show-page-size-selector="true" :show-navigation-buttons="true"
+								:allowed-page-sizes="[15, 30, 50, 'Todos']" info-text="{2} usuarios (página {0} de {1})" />
 							<DxColumn data-field="name" caption="Nombre" width="180" :sort-index="0" />
 							<DxColumn data-field="email" caption="Correo (usuario)" width="220" />
 							<DxColumn data-field="companyName" caption="Entidad" :group-index="0" />
 							<DxColumn data-field="dependenceName" caption="Dependencia" />
 							<DxColumn data-field="roleName" caption="Rol" width="120" :group-index="1" />
-							<DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true" fixed-position="right" />
+							<DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
+								fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">
-									<a title="Modificar..." class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
+									<a title="Modificar..." class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)"
+										href="#">
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
-									<a v-if="data.data.isActive" title="Desactivar..." class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
+									<a v-if="data.data.isActive" title="Desactivar..." class="cmd-item color-main-600"
+										@click.prevent="active(data.data, false)" href="#">
 										<i class="fa-regular fa-square-check fa-lg"></i>
 									</a>
-									<a v-else title="Activar Entidad..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
+									<a v-else title="Activar Entidad..." class="cmd-item color-main-600"
+										@click.prevent="active(data.data, true)" href="#">
 										<i class="fa-regular fa-square-minus fa-lg"></i>
 									</a>
 									<!-- <a title="Eliminar..." class="cmd-item color-main-600 me-2" @click.prevent="remove(data.data)" href="#">
@@ -504,7 +430,8 @@ onMounted(async () => {
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">
-				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span class="font-weight-semibold">item_copy:</span> {{ item_copy }}
+				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span
+					class="font-weight-semibold">item_copy:</span> {{ item_copy }}
 			</div>
 		</div>
 	</div>

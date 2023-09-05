@@ -26,6 +26,11 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 		public BaseController() { }
 
+		public BaseController(DataContext dbContext)
+		{
+			_db = dbContext;
+		}
+
 		public BaseController(DataContext dbContext, IConfiguration iConfiguration)
 		{
 			_db = dbContext;
@@ -39,7 +44,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			_context = httpContextAccessor;
 		}
 
-		public int GetUserId()
+		internal static int GetUserId()
 		{
 			var userId = 0;
 			var identity = (ClaimsIdentity)Thread.CurrentPrincipal.Identity;
@@ -48,33 +53,33 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return userId;
 		}
 
-		public async Task<int> GetUserIdAsync()
-		{
-			// var ValidIssuer = _conf["Jwt:Issuer"];
-			// var ValidAudience = _conf["Jwt:Audience"];
-			// var IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"]));
-			// var header = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-			// var claim = Thread.CurrentPrincipal.Identity.Claims.First(x => x.Type == ClaimTypes.Sid);
-			// var claimsIdentity = identity.cla;
-			// var token = header.Parameter;
-			// var scheme = header.Scheme;
-			// if (User.Identity is ClaimsIdentity claimsIdentity)
-			// {
-			// 	var uId = claimsIdentity.FindFirst(ClaimTypes.Sid);
-			// 	userId = uId != null ? int.Parse(uId.Value) : 8;
-			// }
-			var userId = 1;
-			var header = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-			var token = header.Parameter;
-			var scheme = header.Scheme;
-			var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
-			var claims = User.Claims;
-			if (User.Identity is ClaimsIdentity claimsIdentity)
-			{
-				var uId = claimsIdentity.FindFirst(ClaimTypes.Sid);
-				userId = uId != null ? int.Parse(uId.Value) : 1;
-			}
-			return userId;
-		}
+		// internal static Task<int> GetUserIdAsync()
+		// {
+		// var ValidIssuer = _conf["Jwt:Issuer"];
+		// var ValidAudience = _conf["Jwt:Audience"];
+		// var IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"]));
+		// var header = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
+		// var claim = Thread.CurrentPrincipal.Identity.Claims.First(x => x.Type == ClaimTypes.Sid);
+		// var claimsIdentity = identity.cla;
+		// var token = header.Parameter;
+		// var scheme = header.Scheme;
+		// if (User.Identity is ClaimsIdentity claimsIdentity)
+		// {
+		// 	var uId = claimsIdentity.FindFirst(ClaimTypes.Sid);
+		// 	userId = uId != null ? int.Parse(uId.Value) : 8;
+		// }
+		// var userId = 1;
+		// var header = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
+		// var token = header.Parameter;
+		// var scheme = header.Scheme;
+		// var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
+		// var claims = User.Claims;
+		// if (User.Identity is ClaimsIdentity claimsIdentity)
+		// {
+		// 	var uId = claimsIdentity.FindFirst(ClaimTypes.Sid);
+		// 	userId = uId != null ? int.Parse(uId.Value) : 1;
+		// }
+		// return userId;
+		// }
 	}
 }

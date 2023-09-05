@@ -16,7 +16,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	[ApiController]
 	[Route("clasificador")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public class ClasificadorController : ControllerBase
+	public class ClasificadorController : BaseController
 	{
 		private readonly DataContext _db;
 		private readonly IHttpContextAccessor _context;
@@ -53,7 +53,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (item.Id == 0)
 			{
 				var obj = (Clasificador)item.CopyTo(new Clasificador());
-				obj.CreadoPor = 1;
+				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.Clasificador?.Add(obj);
 				_db.SaveChanges();
@@ -64,7 +64,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (current != null)
 			{
 				var final = (Clasificador)item.CopyTo(current);
-				final.EditadoPor = 1;
+				final.EditadoPor = GetUserId();
 				final.EditadoEl = DateTime.Now;
 				_db.SaveChanges();
 				return Ok(final);
@@ -82,7 +82,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (item.Id == 0)
 			{
 				var obj = (ClasificadorTipo)item.CopyTo(new ClasificadorTipo());
-				obj.CreadoPor = 1;
+				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.ClasificadorTipo?.Add(obj);
 				_db.SaveChanges();
@@ -93,7 +93,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (current != null)
 			{
 				var final = (ClasificadorTipo)item.CopyTo(current);
-				final.EditadoPor = 1;
+				final.EditadoPor = GetUserId();
 				final.EditadoEl = DateTime.Now;
 				_db.SaveChanges();
 				return Ok(final);

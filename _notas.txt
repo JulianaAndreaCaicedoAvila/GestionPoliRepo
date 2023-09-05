@@ -1,5 +1,15 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
+202309021725:
+SET ORACLE_SID=ORCL1 && sqlplus / as sysdba
+ALTER SESSION SET CONTAINER=ORCLPDB1;
+ALTER SESSION SET "_ORACLE_SCRIPT"=TRUE;
+ALTER DATABASE OPEN;
+SHUTDOWN IMMEDIATE;
+STARTUP MOUNT;
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
 202307271845:
 SELECT * FROM "Clasificador";
 SELECT * FROM "ClasificadorTipo" WHERE "Nombre" LIKE '%gén%';
@@ -17,8 +27,12 @@ Prueba de PUSH
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202306161422:
-dotnet ef database update
+-- Lista migraciones YA aplicadas a la BD
+dotnet ef migrations list
+
+-- Varios
 dotnet ef database update 0
+dotnet ef database update
 dotnet ef database update 20230828220312_Inicial
 dotnet ef migrations add Inicial
 dotnet ef migrations add Sql
@@ -28,10 +42,7 @@ dotnet ef migrations add Actualizacion
 -- Eliminar la ultima migración... EL ARCHIVO!!
 dotnet ef migrations remove
 
--- Lista migraciones YA aplicadas a la BD
-dotnet ef migrations list
-
-Actualizar herramientas EF
+-- Actualizar herramientas EF
 dotnet tool update --global dotnet-ef
 
 SQL => STRUCTURE QUERY LANGUAGE => Oracle, SQL Server, Postgres, MySQL, Sqlite

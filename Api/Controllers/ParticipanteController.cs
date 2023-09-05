@@ -17,7 +17,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	[Route("participante")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
-	public class ParticipanteController : ControllerBase
+	public class ParticipanteController : BaseController
 	{
 		private readonly DataContext _db;
 		private readonly IHttpContextAccessor _context;
@@ -37,7 +37,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (item.Id == 0)
 			{
 				var obj = (Participante)item.CopyTo(new Participante());
-				obj.CreadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
+				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.Participante.Add(obj);
 				_db.SaveChanges();
@@ -50,7 +50,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				if (current != null)
 				{
 					var final = (Participante)item.CopyTo(current);
-					final.EditadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
+					final.EditadoPor = GetUserId();
 					final.EditadoEl = DateTime.Now;
 					_db.SaveChanges();
 					return Ok(final);

@@ -19,7 +19,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
     [@Authorize]
     [ApiController]
     [Route("usuario")]
-    public class UsuarioController : ControllerBase
+    public class UsuarioController : BaseController
     {
         private readonly IConfiguration _configuration;
         private readonly IEmailService _email;
@@ -108,6 +108,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
             }
             return Ok();
         }
+
         [AllowAnonymous]
 
         [HttpPost("resetear")]

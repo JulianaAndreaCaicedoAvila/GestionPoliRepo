@@ -5,7 +5,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	[Route("")]
 	[ApiController]
 	[ApiExplorerSettings(IgnoreApi = true)]
-	public class IndexController : ControllerBase
+	public class IndexController : BaseController
 	{
 		[HttpGet]
 		public ActionResult Get()

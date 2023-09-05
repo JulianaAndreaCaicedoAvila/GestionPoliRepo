@@ -636,7 +636,7 @@ Window.prototype.popup = function (url, name, width, height) {
 // Variables
 var gAnalyticsKey = "UA-3173634-23";
 var gMapsKey = "AIzaSyBctG1HrS4AvXGRIvOOSmrwZsazOlCqX8E";
-var mainColor = "#367FB6"; // TODO: 201608031826 Integrar a "e:/files/scss/sass-to-js.scss"!
+var mainColor = "#367FB6"; // TO DO: 201608031826 Integrar a "e:/files/scss/sass-to-js.scss"!
 var animationEndSelector = "animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd";
 var transitionEndSelector = "transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd";
 //<div class="list-icons">
@@ -998,7 +998,7 @@ jQuery.fn.dataTo = function (object, callback, copyNulls) {
 
 			// 201603100223: Ordena la fuente por el campo a agrupar
 			// 201703171523: Selectivo si viene un campo para ordenar
-			// TODO: 201703191854: Verificar el ordenamiento
+			// TO DO: 201703191854: Verificar el ordenamiento
 			console.log("Source: " + JSON.stringify(source));
 			source = this.sort(source, sortField !== null ? sortField : groupField);
 
@@ -1901,7 +1901,7 @@ function RunTests() {
         });
     });
 
-    // TODO: 201702111912 Corregir error de referencia
+    // TO DO: 201702111912 Corregir error de referencia
     // No se puede cargar el archivo o ensamblado 'RestSharp, Version=105.2.3.0 ni una de sus dependencias!
     Service.Twilio.getIpAccessControlList(null, function(data){
         alert(JSON.stringify(data));

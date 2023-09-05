@@ -17,16 +17,10 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	[Route("banco")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
-	public class BancoController : ControllerBase
+	public class BancoController : BaseController
 	{
-		private readonly DataContext _db;
-		private readonly IHttpContextAccessor _context;
-
-		public BancoController(DataContext context, IHttpContextAccessor httpContextAccessor)
-		{
-			_db = context;
-			_context = httpContextAccessor;
-		}
+		public BancoController(DataContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+			: base(context, httpContextAccessor, configuration) { }
 
 		[HttpPost("ed")] // /api/banco/ed => CREATE - UPDATE
 		public ActionResult Edit(BancoPrograma item)
@@ -37,7 +31,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (item.Id == 0)
 			{
 				var obj = (BancoPrograma)item.CopyTo(new BancoPrograma());
-				obj.CreadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
+				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.BancoPrograma?.Add(obj);
 				_db.SaveChanges();
@@ -50,7 +44,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				if (current != null)
 				{
 					var final = (BancoPrograma)item.CopyTo(current);
-					final.EditadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
+					final.EditadoPor = GetUserId();
 					final.EditadoEl = DateTime.Now;
 					_db.SaveChanges();
 					return Ok(final);

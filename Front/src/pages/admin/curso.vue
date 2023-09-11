@@ -266,14 +266,6 @@ onMounted(async () => {
           <span v-html="titulo" />
         </span>
         <span>
-          <!-- <button
-            type="button"
-            class="btn btn-trans"
-            @click.prevent="start()"
-            title="Nuevo"
-          >
-            <i class="fa-solid fa-square-plus"></i>NUEVO
-          </button> -->
           <router-link :to="{ path: '/admin/curso' }" class="btn btn-trans"
             ><i class="fa-solid fa-square-plus"></i>NUEVO</router-link
           >

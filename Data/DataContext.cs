@@ -48,6 +48,8 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.BancoPrograma>? BancoPrograma { get; set; } = null!;
 		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Programa { get; set; } = null!;
+		public virtual DbSet<Core.Escuela>? Escuela { get; set; } = null!;
+		public virtual DbSet<Core.Nivel>? Nivel { get; set; } = null!;
 		public virtual DbSet<Core.Producto>? Producto { get; set; } = null!;
 		public virtual DbSet<Core.Indicador>? Indicador { get; set; } = null!;
 		public virtual DbSet<Core.Tema>? Tema { get; set; } = null!;
@@ -119,6 +121,22 @@ namespace ESAP.Sirecec.Data
 				entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 			});
 			builder.Entity<Core.BancoPrograma>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Escuela>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.Nivel>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");

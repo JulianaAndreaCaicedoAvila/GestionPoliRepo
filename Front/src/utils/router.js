@@ -76,6 +76,18 @@ export const router = createRouter({
       component: () => import("@/pages/admin/banco-programa.vue"),
     },
     {
+      name: "escuela",
+      path: "/admin/escuela",
+      meta: { title: "Escuelas", requiresAuth: true },
+      component: () => import("@/pages/admin/escuela.vue"),
+    },
+    {
+      name: "nivel",
+      path: "/admin/nivel",
+      meta: { title: "Niveles", requiresAuth: true },
+      component: () => import("@/pages/admin/nivel.vue"),
+    },
+    {
       name: "nucleos",
       path: "/admin/nucleos",
       meta: { title: "Nucleos", requiresAuth: true },

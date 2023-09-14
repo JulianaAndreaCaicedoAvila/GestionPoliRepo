@@ -16,6 +16,7 @@ namespace ESAP.Sirecec.Data.Core
 		public int? NucleoId { get; set; }
 		public int? DependenciaId { get; set; }
 		public int? TipoCursoId { get; set; }
+		public int? NivelId { get; set; }
 		public int? TipoAsistenciaId { get; set; }
 		public int? ProductoId { get; set; }
 		public int? IndicadorId { get; set; }

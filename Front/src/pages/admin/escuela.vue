@@ -46,7 +46,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Escuelas",
   item = ref({
     id: 0,
     nombre: null,
-    fechaInicio: new Date(),
+    descripcion: null,
     activo: true,
     creadoEl: null,
     creadoPor: null,
@@ -265,7 +265,7 @@ onMounted(async () => {
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-9 mb-2">
+            <div class="col-md-4 mb-2">
               <label class="tit">Nombre de la escuela</label>
               <DxTextBox
                 id="nombre"
@@ -281,21 +281,22 @@ onMounted(async () => {
                 </DxValidator>
               </DxTextBox>
             </div>
-            <div class="col-md-3 mb-2">
-              <label class="tit">Fecha de inicio</label>
-              <DxDateBox
-                id="fechaInicio"
-                @focus-in="date_focus_in"
-                @focus-out="date_focus_out"
+            <div class="col-md-8 mb-2">
+              <label class="tit">Descripción escuela</label>
+              <DxTextArea
+                :height="110"
+                :max-length="400"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                id="descripcion"
+                v-model="item.descripcion"
                 class="form-control"
-                v-model="item.fechaInicio"
-                display-format="dd/MM/yyyy"
-                type="date"
+                placeholder="Descripción"
               >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
-              </DxDateBox>
+              </DxTextArea>
             </div>
           </div>
         </div>
@@ -388,13 +389,9 @@ onMounted(async () => {
                 :visible="true"
               />
               <DxColumn
-                :width="150"
-                data-field="fechaInicio"
-                caption="Fecha de inicio"
+                data-field="descripcion"
+                caption="Descripción"
                 :visible="true"
-                alignment="center"
-                data-type="date"
-                format="dd/MM/yyyy"
               />
               <DxColumn
                 :width="100"

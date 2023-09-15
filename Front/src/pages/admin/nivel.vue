@@ -12,6 +12,7 @@ import DxValidator, {
 import {
   DxSelectBox,
   DxTextBox,
+  DxTextArea,
   DxDateBox,
   DxValidationGroup,
 } from "devextreme-vue";
@@ -239,7 +240,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Niveles",
   };
 
 onMounted(async () => {
-  // console.clear();
+  console.clear();
   console.log(_sep);
   $("#grid").lock("Cargando");
   escuelas.value = await store.all();
@@ -260,8 +261,8 @@ onMounted(async () => {
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-9 mb-1">
-              <label class="tit">Escuela:</label>
+            <div class="col-md-6 mb-1">
+              <label class="tit">Escuela</label>
               <DxSelectBox
                 id="escuelaId"
                 ref="escuelaIdTxtRef"
@@ -287,24 +288,7 @@ onMounted(async () => {
                 </DxValidator>
               </DxSelectBox>
             </div>
-            <div class="col-md-3 mb-2">
-              <label class="tit">Fecha de inicio</label>
-              <DxDateBox
-                id="fechaInicio"
-                class="form-control"
-                v-model="item.fechaInicio"
-                display-format="dd/MM/yyyy"
-                type="date"
-              >
-                <!-- :max="new Date()" -->
-                <!-- :calendar-options="{ maxZoomLevel: 'year', minZoomLevel: 'century' }" -->
-                <!-- display-format="monthAndYear" -->
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxDateBox>
-            </div>
-            <div class="col-md-12 mb-2">
+            <div class="col-md-6 mb-2">
               <label class="tit">Nombre del nivel</label>
               <DxTextBox
                 id="nombre"
@@ -319,6 +303,23 @@ onMounted(async () => {
                   <DxStringLengthRule :min="3" />
                 </DxValidator>
               </DxTextBox>
+            </div>
+            <div class="col-md-12 mb-2">
+              <label class="tit">Descripción Nivel</label>
+              <DxTextArea
+                :height="110"
+                :max-length="400"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                id="descripcion"
+                v-model="item.descripcion"
+                class="form-control"
+                placeholder="Descripción"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                </DxValidator>
+              </DxTextArea>
             </div>
           </div>
         </div>
@@ -417,15 +418,11 @@ onMounted(async () => {
                 :allow-sorting="true"
                 alignment="center"
               />
-              <DxColumn data-field="nombre" caption="Núcleos" :visible="true" />
+              <DxColumn data-field="nombre" caption="Nivel" :visible="true" />
               <DxColumn
-                :width="150"
-                data-field="fechaInicio"
-                caption="Fecha de inicio"
+                data-field="descripcion"
+                caption="descripcion"
                 :visible="true"
-                alignment="center"
-                data-type="date"
-                format="dd/MM/yyyy"
               />
               <DxColumn
                 :width="100"

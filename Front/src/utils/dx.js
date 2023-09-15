@@ -28,6 +28,7 @@ export default (
 		onLoading: null,
 		onApiLoaded: null,
 		onLoaded: null,
+		baseUrl: null,
 		loadBaseEntity: false,
 		userData: null,
 	}
@@ -51,7 +52,10 @@ export default (
 			console.log("params =>", params);
 			if (typeof o.userData !== "undefined" && o.userData !== null) loadOptions["userData"] = o.userData;
 			if (typeof o.id !== "undefined" && o.id !== null && o.id.length > 0) loadOptions["id"] = o.id;
-			return await api()
+			// 202309111213: Local
+			let apiArgs = {};
+			if (typeof o.baseUrl !== "undefined" && o.baseUrl !== null && o.baseUrl.length > 0) apiArgs["base_url"] = o.baseUrl;
+			return await api(apiArgs)
 				.post(o.endPoint, loadOptions)
 				.then((r) => {
 					return r.data;

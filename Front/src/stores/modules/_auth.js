@@ -38,6 +38,7 @@ const tokenVariableName = "user_token",
 export const useAuthStore = defineStore("auth", {
 	id: "auth",
 	state: () => ({
+		roles: [],
 		msal: null,
 		returnUrl: null,
 		token: localStorage.getItem(tokenVariableName),
@@ -87,6 +88,16 @@ export const useAuthStore = defineStore("auth", {
 		// 		}, 2000);
 		// 	} else window.clearInterval(window._int);
 		// },
+		async getRoles() {
+			console.log("Roles =>", this.roles);
+			if (this.roles.length > 0) return this.roles;
+			return await api()
+				.get(`usuario/roles`)
+				.then(async (r) => {
+					this.roles = r.data;
+					return this.roles;
+				});
+		},
 		// 202208182242: Login integrado Local, Azure
 		async do(args) {
 			// console.clear();

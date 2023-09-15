@@ -343,6 +343,9 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("MunicipioId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<int?>("NivelId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -386,6 +389,8 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NivelId");
 
                     b.ToTable("Curso");
                 });
@@ -760,6 +765,53 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("EncuestaPregunta");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Escuela", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(1)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int?>("CreadoPor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int?>("EditadoPor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Escuela");
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
                 {
                     b.Property<int>("Id")
@@ -872,6 +924,58 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modulo");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(1)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int?>("CreadoPor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TIMESTAMP(7)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int?>("EditadoPor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValueSql("((1))");
+
+                    b.Property<int>("EscuelaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EscuelaId");
+
+                    b.ToTable("Nivel");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
@@ -1662,6 +1766,13 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("ClasificadorTipo");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Curso", b =>
+                {
+                    b.HasOne("ESAP.Sirecec.Data.Core.Nivel", null)
+                        .WithMany("Cursos")
+                        .HasForeignKey("NivelId");
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoAnexo", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Curso", null)
@@ -1734,6 +1845,15 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasForeignKey("ObjetivoId");
 
                     b.Navigation("Objetivo");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>
+                {
+                    b.HasOne("ESAP.Sirecec.Data.Core.Escuela", null)
+                        .WithMany("Niveles")
+                        .HasForeignKey("EscuelaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
@@ -1858,6 +1978,11 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("Preguntas");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Escuela", b =>
+                {
+                    b.Navigation("Niveles");
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
                 {
                     b.Navigation("Nucleos");
@@ -1866,6 +1991,11 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>
                 {
                     b.Navigation("Temas");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>
+                {
+                    b.Navigation("Cursos");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>

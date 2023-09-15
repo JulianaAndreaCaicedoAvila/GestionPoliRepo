@@ -134,7 +134,7 @@ let titAccion = ref("Crear"),
 						});
 				});
 			},
-			onCancel: () => {},
+			onCancel: () => { },
 		});
 	},
 	addStart = (data) => {
@@ -148,7 +148,7 @@ let titAccion = ref("Crear"),
 				titAccion.value = "Crear";
 				item.value = Clone(base);
 			}
-			panelData.fadeIn(function () {});
+			panelData.fadeIn(function () { });
 		});
 	},
 	addCancel = (cb) => {
@@ -201,7 +201,7 @@ let titAccion = ref("Crear"),
 				permitirAgrupar.value = false;
 				descriptionColumnName.value = "Descripción";
 				if (tipoId == "1" || tipoId == "2") {
-					descriptionColumnName.value = "Divipola";
+					descriptionColumnName.value = "DIVIPOLA";
 				}
 				if (tipoId == "2") {
 					// Municipio
@@ -268,7 +268,8 @@ onMounted(async () => {
 						<div class="col-md-10 pb-2">
 							<label class="tit">Nombre</label>
 							<!-- <input class="form-control" type="text" placeholder="Nombre" id="nombre" name="nombre" v-model="item.nombre" /> -->
-							<DxTextBox id="nombre" :show-clear-button="true" value-change-event="keyup" v-model:value="item.nombre" class="form-control" placeholder="Nombre">
+							<DxTextBox id="nombre" :show-clear-button="true" value-change-event="keyup" v-model:value="item.nombre"
+								class="form-control" placeholder="Nombre">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -277,17 +278,8 @@ onMounted(async () => {
 						<div class="col-md-2 pb-2">
 							<label class="tit">Orden</label>
 							<!-- <input class="form-control" type="text" placeholder="Nombre" id="nombre" name="nombre" v-model="item.nombre" /> -->
-							<DxNumberBox
-								id="orden"
-								:show-clear-button="true"
-								value-change-event="keyup"
-								v-model:value="item.orden"
-								:show-spin-buttons="true"
-								:step="1"
-								:min="0"
-								class="form-control"
-								placeholder="Orden"
-							>
+							<DxNumberBox id="orden" :show-clear-button="true" value-change-event="keyup" v-model:value="item.orden"
+								:show-spin-buttons="true" :step="1" :min="0" class="form-control" placeholder="Orden">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -296,15 +288,8 @@ onMounted(async () => {
 						<div class="col-md-12 pb-2">
 							<label class="tit">{{ descriptionColumnName }}</label>
 							<!-- <input class="form-control" type="text" placeholder="Descripción" id="descripcion" name="descripcion" v-model="item.descripcion" nonrequired /> -->
-							<DxTextArea
-								id="nombre"
-								:show-clear-button="true"
-								value-change-event="keyup"
-								:height="140"
-								v-model:value="item.descripcion"
-								class="form-control"
-								placeholder="Descripción"
-							>
+							<DxTextArea id="nombre" :show-clear-button="true" value-change-event="keyup" :height="140"
+								v-model:value="item.descripcion" class="form-control" placeholder="Descripción">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -316,7 +301,8 @@ onMounted(async () => {
 
 			<div class="card-footer">
 				<div class="d-flex justify-content-between align-items-center">
-					<a class="btn btn-gray" @click.prevent="addCancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
+					<a class="btn btn-gray" @click.prevent="addCancel"><i
+							class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
 					<a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
 				</div>
 			</div>
@@ -329,25 +315,17 @@ onMounted(async () => {
 					Administración &raquo; {{ clasificacion }}
 				</span>
 				<span>
-					<button type="button" class="btn btn-trans" @click.prevent="addStart()" title="Nuevo..."><i class="fa-solid fa-square-plus"></i>NUEVO</button>
+					<button type="button" class="btn btn-trans" @click.prevent="addStart()" title="Nuevo..."><i
+							class="fa-solid fa-square-plus"></i>NUEVO</button>
 				</span>
 			</div>
 			<div class="card-body pt-3 pb-4">
 				<div class="row">
 					<div class="col">
-						<DxDataGrid
-							:customize-columns="customizeColumns"
-							:data-source="dxStore"
-							:hover-state-enabled="true"
-							:remote-operations="true"
-							:row-alternation-enabled="true"
-							:show-borders="false"
-							:word-wrap-enabled="false"
-							@content-ready="onReady"
-							@editor-preparing="editorPreparing"
-							@initialized="onInitialized"
-							id="gridContainer"
-						>
+						<DxDataGrid :customize-columns="customizeColumns" :data-source="dxStore" :hover-state-enabled="true"
+							:remote-operations="true" :row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="false"
+							@content-ready="onReady" @editor-preparing="editorPreparing" @initialized="onInitialized"
+							id="gridContainer">
 							<DxPaging :page-size="15" />
 							<DxFilterRow :visible="true" />
 							<DxLoadPanel :enabled="false" />
@@ -357,51 +335,34 @@ onMounted(async () => {
 							<DxSummary>
 								<DxGroupItem summary-type="count" column="group_type_name" display-format="{0} municipios" />
 							</DxSummary>
-							<DxPager
-								:allowed-page-sizes="pageSizes"
-								:display-mode="displayMode"
-								:show-info="showInfo"
-								:show-navigation-buttons="showNavButtons"
-								:show-page-size-selector="showPageSizeSelector"
-								:visible="true"
-							/>
-							<DxColumn
-								width="20%"
-								data-field="padreId"
-								caption="Departamento"
-								data-type="number"
-								alignment="left"
-								:allow-sorting="true"
-								v-if="mostrarPadre"
-								:group-index="0"
-							>
+							<DxPager :allowed-page-sizes="pageSizes" :display-mode="displayMode" :show-info="showInfo"
+								:show-navigation-buttons="showNavButtons" :show-page-size-selector="showPageSizeSelector"
+								:visible="true" />
+							<DxColumn width="20%" data-field="padreId" caption="Departamento" data-type="number" alignment="left"
+								:allow-sorting="true" v-if="mostrarPadre" :group-index="0">
 								<DxLookup :data-source="padres" value-expr="id" display-expr="nombre" />
 							</DxColumn>
-							<DxColumn
-								data-field="id"
-								caption="Id"
-								data-type="number"
-								alignment="center"
-								:width="80"
-								:allow-sorting="true"
-								:allow-filtering="false"
-								:visible="mostrarId"
-							/>
+							<DxColumn data-field="id" caption="Id" data-type="number" alignment="center" :width="80"
+								:allow-sorting="true" :allow-filtering="false" :visible="mostrarId" />
 							<DxColumn data-field="nombre" caption="Nombre" sort-order="asc" />
 							<DxColumn data-field="descripcion" :caption="descriptionColumnName" />
 							<DxColumn :width="90" data-field="activo" caption="Activo" alignment="center" :visible="true">
 								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
 							</DxColumn>
-							<DxColumn :width="100" alignment="center" cell-template="tpl" name="cmds" :fixed="true" fixed-position="right" />
+							<DxColumn :width="100" alignment="center" cell-template="tpl" name="cmds" :fixed="true"
+								fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">
-									<a title="Modificar..." class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
+									<a title="Modificar..." class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)"
+										href="#">
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
-									<a v-if="data.data.activo" title="Desactivar..." class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
+									<a v-if="data.data.activo" title="Desactivar..." class="cmd-item color-main-600"
+										@click.prevent="active(data.data, false)" href="#">
 										<i class="fa-regular fa-square-minus fa-lg"></i>
 									</a>
-									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
+									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+										href="#">
 										<i class="fa-regular fa-square-check fa-lg"></i>
 									</a>
 								</span>

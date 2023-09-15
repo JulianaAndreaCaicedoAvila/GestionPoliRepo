@@ -55,7 +55,7 @@ namespace ESAP.Sirecec.Data
 					}
 					else
 					{
-						// TODO: I usually replace this generic exception with `AppMigrationException`.
+						// TO DO: I usually replace this generic exception with `AppMigrationException`.
 						throw new Exception($"Migration .sql file not found: ${filename}");
 					}
 					return builder;

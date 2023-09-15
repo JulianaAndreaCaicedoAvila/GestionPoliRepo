@@ -259,7 +259,7 @@ namespace ESAP.Sirecec.Data.Api.Utils
 		// 	 bool formatted = false,
 		// 	 bool ignoreNulls = true,
 		// 	 List<string> ignoreAttributes = null) {
-		// 	// TODO: 201810052144 Implementar el ignorado de propiedades dinámico
+		// 	// TO DO: 201810052144 Implementar el ignorado de propiedades dinámico
 		// 	var settings = new JsonSerializerSettings {
 		// 		// JSON.NET Error Self referencing loop detected for type
 		// 		// https://stackoverflow.com/a/18223985

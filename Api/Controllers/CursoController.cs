@@ -18,7 +18,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	[ResponseCache(CacheProfileName = "3m")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
-	public class CursoController : ControllerBase
+	public class CursoController : BaseController
 	{
 		private readonly DataContext _db;
 		private readonly ILogger _logger;
@@ -40,7 +40,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (item.Id == 0)
 			{
 				var obj = (Curso)item.CopyTo(new Curso());
-				obj.CreadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
+				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.Curso.Add(obj);
 				_db.SaveChanges();
@@ -53,7 +53,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				if (current != null)
 				{
 					var final = (Curso)item.CopyTo(current);
-					final.EditadoPor = 1; // TODO: 202307121748: Obtener el Id del usuario logueado
+					final.EditadoPor = GetUserId();
 					final.EditadoEl = DateTime.Now;
 					_db.SaveChanges();
 					return Ok(final);

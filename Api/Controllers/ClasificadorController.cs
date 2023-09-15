@@ -1,13 +1,9 @@
 using System.Text;
 using DevExtreme.AspNet.Data;
-using ESAP.Sirecec.Data;
 using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Core;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
@@ -16,19 +12,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	[ApiController]
 	[Route("clasificador")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public class ClasificadorController : ControllerBase
+	public class ClasificadorController : BaseController
 	{
-		private readonly DataContext _db;
-		private readonly IHttpContextAccessor _context;
+		public ClasificadorController(DataContext context, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+			: base(context, httpContextAccessor, configuration) { }
 
-		public ClasificadorController(DataContext context, IHttpContextAccessor httpContextAccessor)
-		{
-			_db = context;
-			_context = httpContextAccessor;
-		}
-
+		[AllowAnonymous]
 		[HttpGet("{tipoId?}")]
-		[Authorization.AllowAnonymous]
 		public List<Clasificadores> Get(int? tipoId)
 		{
 			var items = _db.Clasificadores.ToList();
@@ -53,7 +43,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (item.Id == 0)
 			{
 				var obj = (Clasificador)item.CopyTo(new Clasificador());
-				obj.CreadoPor = 1;
+				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.Clasificador?.Add(obj);
 				_db.SaveChanges();
@@ -64,7 +54,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (current != null)
 			{
 				var final = (Clasificador)item.CopyTo(current);
-				final.EditadoPor = 1;
+				final.EditadoPor = GetUserId();
 				final.EditadoEl = DateTime.Now;
 				_db.SaveChanges();
 				return Ok(final);
@@ -82,7 +72,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (item.Id == 0)
 			{
 				var obj = (ClasificadorTipo)item.CopyTo(new ClasificadorTipo());
-				obj.CreadoPor = 1;
+				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.ClasificadorTipo?.Add(obj);
 				_db.SaveChanges();
@@ -93,7 +83,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			if (current != null)
 			{
 				var final = (ClasificadorTipo)item.CopyTo(current);
-				final.EditadoPor = 1;
+				final.EditadoPor = GetUserId();
 				final.EditadoEl = DateTime.Now;
 				_db.SaveChanges();
 				return Ok(final);

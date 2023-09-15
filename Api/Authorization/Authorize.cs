@@ -1,6 +1,7 @@
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using Microsoft.AspNetCore.Http.Features;
@@ -43,7 +44,7 @@ public class Authorize : Attribute, IAuthorizationFilter
 			{
 				if (token.Contains(" "))
 					token = token.Split(" ").Last();
-				if (IsValidToken(token))
+				if (IsValidToken(token, filterContext))
 				{
 					respHeaders.Add("token", token);
 					respHeaders.Add("AuthStatus", "Authorized");
@@ -84,7 +85,7 @@ public class Authorize : Attribute, IAuthorizationFilter
 		}
 	}
 
-	public bool IsValidToken(string token)
+	public bool IsValidToken(string token, AuthorizationFilterContext filterContext)
 	{
 		SecurityToken validatedToken;
 		var handler = new JwtSecurityTokenHandler();
@@ -155,6 +156,13 @@ public class Authorize : Attribute, IAuthorizationFilter
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"]))
 				};
 				IPrincipal principal = handler.ValidateToken(token, validationParameters, out validatedToken);
+				var jwtToken = (JwtSecurityToken)validatedToken;
+				var claim = jwtToken.Claims.First(x => x.Type == ClaimTypes.Sid);
+				if (claim != null)
+				{
+					var userId = int.Parse(claim.Value);
+					filterContext.HttpContext.Items["UserId"] = userId;
+				}
 				Thread.CurrentPrincipal = principal;
 				return true;
 			}

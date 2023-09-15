@@ -17,3 +17,6 @@ namespace ESAP.Sirecec.Data.Core
 		public virtual List<Nivel>? Niveles { get; set; } = new List<Nivel>();
 	}
 }
+
+
+

@@ -12,6 +12,7 @@ Pasos:
 7. Crear rutas (routes)
 8. Agregar al menú
 9. Modificar controles .vue
+10. Crear (copiar y modificar) stores
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

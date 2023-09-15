@@ -37,7 +37,7 @@ import {
 const route = useRoute(),
   store = useClasificadorStore(),
   auth = useAuthStore();
-let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
+let titulo = "Administración &raquo; Cursos &raquo; Escuelas",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
@@ -63,7 +63,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       companyId: auth.user.companyId,
       dependenceId: auth.user.dependenceId,
     }),
-    endPoint: "banco/dx",
+    endPoint: "escuela/dx",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -123,9 +123,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
       text: `¿Realmente desea ${
         data.activo ? "desactivar" : "activar"
-      } el programa "<span class="font-weight-semibold">${
-        data.nombre
-      }</span>"?`,
+      } la escuela "<span class="font-weight-semibold">${data.nombre}</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -133,7 +131,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
           async function () {
             data.activo = data.activo ? false : true;
             await api()
-              .post(`banco/ed`, data)
+              .post(`escuela/ed`, data)
               .then((r) => {
                 console.log("r =>", r);
                 store.limpiar();
@@ -157,11 +155,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
     panelGrid = $("#grid");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar programa");
+      $("#tit-action").text("Editar escuela");
       panelGrid.lock("Cargando");
       item.value = Clone(data);
     } else {
-      $("#tit-action").text("Nuevo programa");
+      $("#tit-action").text("Nuevo escuela");
       item.value = Clone(item_copy);
     }
     panelGrid.fadeOut("normal", async function () {
@@ -204,12 +202,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} programa`,
+        `${item.id == 0 ? "Creando" : "Actualizando"} escuelas`,
         async function () {
           let dto = item.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
-            .post("banco/ed", dto)
+            .post("escuela/ed", dto)
             .then((r) => {
               console.log("r =>", r);
               cancel(function () {
@@ -260,7 +258,7 @@ onMounted(async () => {
         <span>
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" /> &raquo;
-          <span id="tit-action">Nuevo programa</span>
+          <span id="tit-action">Nueva escuela</span>
         </span>
       </div>
 
@@ -268,14 +266,14 @@ onMounted(async () => {
         <div class="card-body pt-3 pb-4">
           <div class="row">
             <div class="col-md-9 mb-2">
-              <label class="tit">Nombre del programa</label>
+              <label class="tit">Nombre de la escuela</label>
               <DxTextBox
                 id="nombre"
                 value-change-event="keyup"
                 :show-clear-button="true"
                 v-model="item.nombre"
                 class="form-control"
-                placeholder="Nombre del programa"
+                placeholder="Nombre de la escuela"
               >
                 <DxValidator>
                   <DxRequiredRule />
@@ -294,9 +292,6 @@ onMounted(async () => {
                 display-format="dd/MM/yyyy"
                 type="date"
               >
-                <!-- :max="new Date()" -->
-                <!-- :calendar-options="{ maxZoomLevel: 'year', minZoomLevel: 'century' }" -->
-                <!-- display-format="monthAndYear" -->
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -376,7 +371,7 @@ onMounted(async () => {
                 :show-page-size-selector="false"
                 :show-navigation-buttons="true"
                 :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} programas (página {0} de {1})"
+                info-text="{2} escuelas (página {0} de {1})"
               />
               <DxColumn
                 data-field="id"
@@ -389,7 +384,7 @@ onMounted(async () => {
               />
               <DxColumn
                 data-field="nombre"
-                caption="Nombre programa"
+                caption="Nombre Escuela"
                 :visible="true"
               />
               <DxColumn

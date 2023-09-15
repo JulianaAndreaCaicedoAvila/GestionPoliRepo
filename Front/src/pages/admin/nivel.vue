@@ -4,7 +4,7 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import { useGeneralStore, useEscuelaStore, useAuthStore } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,
@@ -12,7 +12,6 @@ import DxValidator, {
 import {
   DxSelectBox,
   DxTextBox,
-  DxTextArea,
   DxDateBox,
   DxValidationGroup,
 } from "devextreme-vue";
@@ -35,16 +34,17 @@ import {
   DxSummary,
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
-  store = useClasificadorStore(),
+  store = useEscuelaStore(),
   auth = useAuthStore();
-let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
+let titulo = "Administración &raquo; Cursos &raquo; Niveles",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
-  dependencias = ref([]),
+  escuelas = ref([]),
   especificos = ref([]),
   item = ref({
     id: 0,
+    escuelaId: null,
     nombre: null,
     fechaInicio: new Date(),
     activo: true,
@@ -63,7 +63,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       companyId: auth.user.companyId,
       dependenceId: auth.user.dependenceId,
     }),
-    endPoint: "banco/dx",
+    endPoint: "nivel/dx",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -83,27 +83,21 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
     let v = e.value;
     let id = $(e.element).attr("id");
     console.log("id =>", id);
-    if (v !== null && v !== undefined) {
-      let hijos = await store.porPadre(v);
-      if (id == "dependenciaId") {
-        objetivos.value = hijos;
-      } else if (id == "objetivoId") {
-        especificos.value = hijos;
-      } else if (id == "sectorId") {
-        entidades.value = hijos;
-      } else if (id == "entidadId") {
-        dependencias.value = hijos;
-      }
-    } else {
-      objetivos.value = [];
-      especificos.value = [];
-    }
-  },
-  date_focus_in = (e) => {
-    // e.component.open();
-  },
-  date_focus_out = (e) => {
-    // e.component.close();
+    // if (v !== null && v !== undefined) {
+    //   let hijos = await store.porPadre(v);
+    //   if (id == "dependenciaId") {
+    //     objetivos.value = hijos;
+    //   } else if (id == "objetivoId") {
+    //     especificos.value = hijos;
+    //   } else if (id == "sectorId") {
+    //     entidades.value = hijos;
+    //   } else if (id == "entidadId") {
+    //     bancos.value = hijos;
+    //   }
+    // } else {
+    //   objetivos.value = [];
+    //   especificos.value = [];
+    // }
   },
   customizeColumns = () => {
     // console.log("customizeColumns!");
@@ -123,20 +117,19 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
       text: `¿Realmente desea ${
         data.activo ? "desactivar" : "activar"
-      } el programa "<span class="font-weight-semibold">${
-        data.nombre
-      }</span>"?`,
+      } el Nivel "<span class="font-weight-semibold">${data.nombre}</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
-          `${data.activo ? "Desactivando" : "Activando"}, un momento por favor`,
+          `${
+            data.activo ? "Desactivando" : "Activando"
+          }, Nivel un momento por favor`,
           async function () {
             data.activo = data.activo ? false : true;
             await api()
-              .post(`banco/ed`, data)
+              .post(`nivel/ed`, data)
               .then((r) => {
                 console.log("r =>", r);
-                store.limpiar();
                 cancel(function () {
                   // panelGrid.unlock();
                   grid.refresh();
@@ -157,11 +150,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
     panelGrid = $("#grid");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar programa");
+      $("#tit-action").text("Editar Núcleos");
       panelGrid.lock("Cargando");
       item.value = Clone(data);
     } else {
-      $("#tit-action").text("Nuevo programa");
+      $("#tit-action").text("Nuevo nivel");
       item.value = Clone(item_copy);
     }
     panelGrid.fadeOut("normal", async function () {
@@ -204,12 +197,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} programa`,
+        `${item.id == 0 ? "Creando" : "Actualizando"} Niveles`,
         async function () {
           let dto = item.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
-            .post("banco/ed", dto)
+            .post("nivel/ed", dto)
             .then((r) => {
               console.log("r =>", r);
               cancel(function () {
@@ -249,8 +242,8 @@ onMounted(async () => {
   // console.clear();
   console.log(_sep);
   $("#grid").lock("Cargando");
+  escuelas.value = await store.all();
   console.log("route.name =>", route.name);
-  dependencias.value = await store.porTipoNombre("dependencia");
 });
 </script>
 <template>
@@ -260,35 +253,44 @@ onMounted(async () => {
         <span>
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" /> &raquo;
-          <span id="tit-action">Nuevo programa</span>
+          <span id="tit-action">Niveles</span>
         </span>
       </div>
 
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-9 mb-2">
-              <label class="tit">Nombre del programa</label>
-              <DxTextBox
-                id="nombre"
-                value-change-event="keyup"
+            <div class="col-md-9 mb-1">
+              <label class="tit">Escuela:</label>
+              <DxSelectBox
+                id="escuelaId"
+                ref="escuelaIdTxtRef"
+                :data-source="escuelas"
+                :grouped="false"
+                :min-search-length="3"
+                :search-enabled="true"
+                v-model="item.escuelaId"
                 :show-clear-button="true"
-                v-model="item.nombre"
+                :show-data-before-search="true"
                 class="form-control"
-                placeholder="Nombre del programa"
+                @value-changed="itemSelected"
+                placeholder="Escuelas"
+                value-expr="id"
+                display-expr="nombre"
+                item-template="item"
               >
+                <template #item="{ data }">
+                  {{ data.nombre }}
+                </template>
                 <DxValidator>
                   <DxRequiredRule />
-                  <DxStringLengthRule :min="3" />
                 </DxValidator>
-              </DxTextBox>
+              </DxSelectBox>
             </div>
             <div class="col-md-3 mb-2">
               <label class="tit">Fecha de inicio</label>
               <DxDateBox
                 id="fechaInicio"
-                @focus-in="date_focus_in"
-                @focus-out="date_focus_out"
                 class="form-control"
                 v-model="item.fechaInicio"
                 display-format="dd/MM/yyyy"
@@ -301,6 +303,22 @@ onMounted(async () => {
                   <DxRequiredRule />
                 </DxValidator>
               </DxDateBox>
+            </div>
+            <div class="col-md-12 mb-2">
+              <label class="tit">Nombre del nivel</label>
+              <DxTextBox
+                id="nombre"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.nombre"
+                class="form-control"
+                placeholder="Nombre nivel"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                  <DxStringLengthRule :min="3" />
+                </DxValidator>
+              </DxTextBox>
             </div>
           </div>
         </div>
@@ -376,22 +394,30 @@ onMounted(async () => {
                 :show-page-size-selector="false"
                 :show-navigation-buttons="true"
                 :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} programas (página {0} de {1})"
+                info-text="{2} niveles (página {0} de {1})"
               />
+              <DxColumn
+                data-field="escuelaId"
+                caption="Escuelas"
+                :visible="true"
+                :allow-filtering="true"
+              >
+                <DxLookup
+                  :data-source="escuelas"
+                  value-expr="id"
+                  display-expr="nombre"
+                />
+              </DxColumn>
               <DxColumn
                 data-field="id"
                 caption="Id"
-                :visible="true"
+                :visible="false"
                 :width="80"
                 :allow-filtering="false"
                 :allow-sorting="true"
                 alignment="center"
               />
-              <DxColumn
-                data-field="nombre"
-                caption="Nombre programa"
-                :visible="true"
-              />
+              <DxColumn data-field="nombre" caption="Núcleos" :visible="true" />
               <DxColumn
                 :width="150"
                 data-field="fechaInicio"

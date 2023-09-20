@@ -127,8 +127,9 @@ let titulo = "Administración &raquo; Cursos",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
-        } el módulo "<span class="font-weight-semibold">${data.nombre}</span>"?`,
+      text: `¿Realmente desea ${
+        data.activo ? "desactivar" : "activar"
+      } el módulo "<span class="font-weight-semibold">${data.nombre}</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -149,7 +150,7 @@ let titulo = "Administración &raquo; Cursos",
           }
         );
       },
-      onCancel: () => { },
+      onCancel: () => {},
     });
   },
   start = async (data) => {
@@ -264,8 +265,9 @@ onMounted(async () => {
           <span id="tit-action">Nuevo curso o existente</span>
         </span>
         <span>
-          <router-link :to="{ path: '/admin/cursos' }" class="btn btn-trans"><i
-              class="fa-solid fa-circle-arrow-left"></i>VOLVER</router-link>
+          <router-link :to="{ path: '/admin/cursos' }" class="btn btn-trans"
+            ><i class="fa-solid fa-circle-arrow-left"></i>VOLVER</router-link
+          >
         </span>
       </div>
 
@@ -276,18 +278,10 @@ onMounted(async () => {
             <div id="step-1">
               <Datos />
             </div>
-            <div id="step-2">CTL 2</div>
+            <!-- <div id="step-2">CTL 2</div>
             <div id="step-3">CTL 3</div>
-            <div id="step-4">CTL 4</div>
+            <div id="step-4">CTL 4</div> -->
           </div>
-        </div>
-      </div>
-
-      <div class="card-footer">
-        <div class="d-flex justify-content-between align-items-center">
-          <a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
-          <a class="btn btn-main" @click.prevent="save">SIGUIENTE&nbsp;&nbsp;<i
-              class="fa-solid fa-circle-arrow-right"></i></a>
         </div>
       </div>
     </div>
@@ -295,7 +289,9 @@ onMounted(async () => {
     <div class="card mt-4" v-if="$conf.debug">
       <div class="card-body">
         <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-          class="font-weight-semibold">item_copy:</span>
+          class="font-weight-semibold"
+          >item_copy:</span
+        >
         {{ item_copy }}
       </div>
     </div>

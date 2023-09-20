@@ -76,35 +76,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Escuelas",
       $("#data").unlock();
     },
   }),
-  itemSelected = async (e) => {
-    // console.clear();
-    console.log(_sep);
-    console.log("itemSelected =>", e);
-    let v = e.value;
-    let id = $(e.element).attr("id");
-    console.log("id =>", id);
-    if (v !== null && v !== undefined) {
-      let hijos = await store.porPadre(v);
-      if (id == "dependenciaId") {
-        objetivos.value = hijos;
-      } else if (id == "objetivoId") {
-        especificos.value = hijos;
-      } else if (id == "sectorId") {
-        entidades.value = hijos;
-      } else if (id == "entidadId") {
-        dependencias.value = hijos;
-      }
-    } else {
-      objetivos.value = [];
-      especificos.value = [];
-    }
-  },
-  date_focus_in = (e) => {
-    // e.component.open();
-  },
-  date_focus_out = (e) => {
-    // e.component.close();
-  },
   customizeColumns = () => {
     // console.log("customizeColumns!");
     // columns[0].width = 70;
@@ -248,7 +219,6 @@ onMounted(async () => {
   console.log(_sep);
   $("#grid").lock("Cargando");
   console.log("route.name =>", route.name);
-  dependencias.value = await store.porTipoNombre("dependencia");
 });
 </script>
 <template>

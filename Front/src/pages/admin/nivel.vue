@@ -151,7 +151,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Niveles",
     panelGrid = $("#grid");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar Núcleos");
+      $("#tit-action").text("Editar nivel");
       panelGrid.lock("Cargando");
       item.value = Clone(data);
     } else {

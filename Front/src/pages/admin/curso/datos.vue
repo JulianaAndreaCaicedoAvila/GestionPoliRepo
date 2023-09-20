@@ -4,7 +4,14 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import {
+  useProductoStore,
+  useBancoStore,
+  useNucleoStore,
+  useProgramaStore,
+  useClasificadorStore,
+  useAuthStore,
+} from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,
@@ -21,38 +28,27 @@ import {
   DxImageUpload,
   DxItem,
 } from "devextreme-vue";
-import {
-  DxColumn,
-  DxColumnChooser,
-  DxColumnFixing,
-  DxDataGrid,
-  DxEditing,
-  DxExport,
-  DxFilterRow,
-  DxGrouping,
-  DxGroupItem,
-  DxGroupPanel,
-  DxLoadPanel,
-  DxLookup,
-  DxPager,
-  DxPaging,
-  DxScrolling,
-  DxSearchPanel,
-  DxSorting,
-  DxSummary,
-} from "devextreme-vue/data-grid";
 const route = useRoute(),
   store = useClasificadorStore(),
+  storeProductos = useProductoStore(),
+  storeBancos = useBancoStore(),
+  storeNucleos = useNucleoStore(),
+  storeProgramas = useProgramaStore(),
   auth = useAuthStore();
 let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
   dependencias = ref([]),
+  productos = ref([]),
+  nucleos = ref([]),
+  bancos = ref([]),
+  programas = ref([]),
   especificos = ref([]),
   item = ref({
     id: 0,
     dependencia: null,
+    codigoVerificacion: null,
     nombre: null,
     descripcion: null,
     elaboradoPor: null,
@@ -87,26 +83,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   item_copy = Clone(item.value),
   panelData = null,
   panelGrid = null,
-  dxStore = DxStore({
-    key: ["id"],
-    userData: JSON.stringify({
-      esAdmin: auth.esAdmin,
-      companyId: auth.user.companyId,
-      dependenceId: auth.user.dependenceId,
-    }),
-    endPoint: "cursoModulo/dx",
-    onLoading: function (loadOptions) {
-      $("#grid").lock("Cargando");
-      console.log("loadOptions =>", loadOptions);
-      console.log("onLoading");
-    },
-    onLoaded: function (results) {
-      console.log("results", results);
-      console.log("onLoaded!");
-      $("#grid").unlock();
-      $("#data").unlock();
-    },
-  }),
+  grid = null,
   itemSelected = async (e) => {
     // console.clear();
     console.log(_sep);
@@ -130,72 +107,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
       especificos.value = [];
     }
   },
-  customizeColumns = () => {
-    // console.log("customizeColumns!");
-    // columns[0].width = 70;
-  },
-  grid = null,
-  onInitialized = (o) => {
-    grid = o.component;
-    console.log("grid =>", grid);
-  },
-  active = (data) => {
-    // console.clear();
-    console.log("data =>", data);
-    msg.confirm({
-      // title: "otro",
-      textCancel: "CANCELAR",
-      textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${
-        data.activo ? "desactivar" : "activar"
-      } el módulo "<span class="font-weight-semibold">${data.nombre}</span>"?`,
-      onConfirm: () => {
-        panelGrid = $("#grid");
-        panelGrid.lock(
-          `${data.activo ? "Desactivando" : "Activando"}, un momento por favor`,
-          async function () {
-            data.activo = data.activo ? false : true;
-            await api()
-              .post(`cursoModulo/ed`, data)
-              .then((r) => {
-                console.log("r =>", r);
-                store.limpiar();
-                cancel(function () {
-                  // panelGrid.unlock();
-                  grid.refresh();
-                });
-                return r.data;
-              });
-          }
-        );
-      },
-      onCancel: () => {},
-    });
-  },
-  start = async (data) => {
-    // console.clear();
-    console.log(_sep);
-    console.log("data =>", data);
-    panelData = $("#data");
-    panelGrid = $("#grid");
-    // Editando
-    if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar módulo");
-      panelGrid.lock("Cargando");
-      item.value = Clone(data);
-    } else {
-      $("#tit-action").text("Nuevo módulo");
-      item.value = Clone(item_copy);
-    }
-    panelGrid.fadeOut("normal", async function () {
-      console.log(typeof data);
-      panelData.fadeIn("normal", function () {
-        console.log(_sep);
-        console.log("item =>", item.value);
-        panelGrid.unlock();
-      });
-    });
-  },
   cancel = (cb) => {
     // console.clear();
     panelData = $("#data");
@@ -218,6 +129,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     });
   },
   save = async () => {
+    (panelData = null), (panelGrid = null);
     // console.clear();
     let result = valGroup.value.instance.validate();
     if (!result.isValid) {
@@ -227,12 +139,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} módulo`,
+        `${item.id == 0 ? "Creando" : "Actualizando"} cursos`,
         async function () {
           let dto = item.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
-            .post("cursoModulo/ed", dto)
+            .post("curso/ed", dto)
             .then((r) => {
               console.log("r =>", r);
               cancel(function () {
@@ -270,7 +182,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
 
 onMounted(async () => {
   console.clear();
-  console.log(_sep);
+  dependencias.value = await store.porTipoNombre("dependencia");
+  productos.value = await storeProductos.all();
+  bancos.value = await storeBancos.all();
+  nucleos.value = await storeNucleos.all();
+  programas.value = await storeProgramas.all();
+  // indicadores.value = await storeIndicador.all();
 });
 //----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
@@ -310,96 +227,92 @@ onMounted(async () => {
       </div>
       <div class="col-md-4 mb-2">
         <label class="tit">Código de verificación</label>
-        <DxTextArea
-          height="37"
+        <DxTextBox
           value-change-event="keyup"
           :show-clear-button="true"
-          v-model="item.descripcion"
+          v-model="item.codigoVerificacion"
           class="form-control"
-          placeholder="Descripcion"
+          placeholder="Codigo de verificacion"
         >
           <DxValidator>
             <DxRequiredRule />
           </DxValidator>
-        </DxTextArea>
+        </DxTextBox>
       </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Dependencia Principal</label>
+      <div class="col-md-6 mb-1">
+        <label class="tit">Dependencia</label>
         <DxSelectBox
-          id="dependencia"
-          :data-source="dependencia"
+          id="dependenciaId"
+          ref="dependenciaIdTxtRef"
+          :data-source="dependencias"
           :grouped="false"
           :min-search-length="3"
           :search-enabled="true"
+          v-model="item.dependenciaId"
           :show-clear-button="true"
           :show-data-before-search="true"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.dependencia"
-          placeholder="Dependencias"
+          @value-changed="itemSelected"
+          placeholder="Dependencia"
           value-expr="id"
-          @value-changed="valueChanged"
-        />
+          display-expr="nombre"
+          item-template="item"
+        >
+          <template #item="{ data }">
+            {{ data.nombre }}
+          </template>
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxSelectBox>
       </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Elaborado por</label>
-        <DxSelectBox
-          id="elaboradoPor"
-          :data-source="elaboradoPor"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
+      <div class="col-md-6 mb-1">
+        <label class="tit">Elaborado Por</label>
+        <DxTextBox
+          value-change-event="keyup"
           :show-clear-button="true"
-          :show-data-before-search="true"
+          v-model="item.elaboradoPor"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.elaboradoPor"
-          placeholder="Elaborado por"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
+          placeholder="Elaborado Por"
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxTextBox>
       </div>
       <div class="col-md-6 mb-2">
         <label class="tit">Tipo de curso</label>
-        <DxSelectBox
-          id="tipoCurso"
-          :data-source="elaboradoPor"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
+        <DxTextBox
+          value-change-event="keyup"
           :show-clear-button="true"
-          :show-data-before-search="true"
+          v-model="item.tipoCurso"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.elaboradoPor"
-          placeholder="Elaborado por"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
+          placeholder="Tipo de Curso"
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxTextBox>
       </div>
       <div class="col-md-6 mb-2">
         <label class="tit">Asistencia</label>
-        <DxSelectBox
-          id="asistencia"
-          :data-source="asistencia"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
+        <DxTextBox
+          value-change-event="keyup"
           :show-clear-button="true"
-          :show-data-before-search="true"
+          v-model="item.asistencia"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.asistencia"
-          placeholder=" Asistencia"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
+          placeholder="Tipo Asistencia"
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxTextBox>
       </div>
       <div class="col-md-12 mb-2">
         <label class="tit">Producto</label>
         <DxSelectBox
           id="producto"
-          :data-source="producto"
+          :data-source="productos"
           :grouped="false"
           :min-search-length="3"
           :search-enabled="true"
@@ -415,75 +328,59 @@ onMounted(async () => {
       </div>
       <div class="col-md-12 mb-2">
         <label class="tit">Indicador</label>
-        <DxSelectBox
-          id="indicador"
-          :data-source="indicador"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
+        <DxTextBox
+          value-change-event="keyup"
           :show-clear-button="true"
-          :show-data-before-search="true"
+          v-model="item.indicador"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.indicador"
           placeholder="Indicador"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxTextBox>
       </div>
       <div class="col-md-4 mb-2">
         <label class="tit">Territorial</label>
-        <DxSelectBox
-          id="territorial"
-          :data-source="territorial"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
+        <DxTextBox
+          value-change-event="keyup"
           :show-clear-button="true"
-          :show-data-before-search="true"
+          v-model="item.territorial"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.territorial"
           placeholder="Territorial"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxTextBox>
       </div>
       <div class="col-md-4 mb-2">
         <label class="tit">Departamento</label>
-        <DxSelectBox
-          id="departamento"
-          :data-source="departamento"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
+        <DxTextBox
+          value-change-event="keyup"
           :show-clear-button="true"
-          :show-data-before-search="true"
+          v-model="item.departamento"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.departamento"
-          placeholder="Departamento"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
+          placeholder="Tipo Asistencia"
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxTextBox>
       </div>
       <div class="col-md-4 mb-2">
         <label class="tit">Municipio</label>
-        <DxSelectBox
-          id="municipio"
-          :data-source="municipio"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
+        <DxTextBox
+          value-change-event="keyup"
           :show-clear-button="true"
-          :show-data-before-search="true"
+          v-model="item.municipio"
           class="form-control"
-          display-expr="nombre"
-          v-model:value="item.municipio"
-          placeholder="Municipio"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
+          placeholder="Tipo Asistencia"
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxTextBox>
       </div>
       <div class="col-md-6 mb-2">
         <label class="tit">Cupo total</label>
@@ -564,7 +461,7 @@ onMounted(async () => {
         <label class="tit">Banco Programa</label>
         <DxSelectBox
           id="bancoPrograma"
-          :data-source="bancoPrograma"
+          :data-source="bancos"
           :grouped="false"
           :min-search-length="3"
           :search-enabled="true"
@@ -582,7 +479,7 @@ onMounted(async () => {
         <label class="tit">Núcleo</label>
         <DxSelectBox
           id="nucleo"
-          :data-source="nucleo"
+          :data-source="nucleos"
           :grouped="false"
           :min-search-length="3"
           :search-enabled="true"
@@ -600,7 +497,7 @@ onMounted(async () => {
         <label class="tit">Programa de Capacitación</label>
         <DxSelectBox
           id="programaCapacitacion"
-          :data-source="programaCapacitacion"
+          :data-source="programas"
           :grouped="false"
           :min-search-length="3"
           :search-enabled="true"
@@ -793,6 +690,16 @@ onMounted(async () => {
       </div>
     </div>
   </DxValidationGroup>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between align-items-center">
+      <a class="btn btn-gray" @click.prevent="cancel"
+        ><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a
+      >
+      <a class="btn btn-main" @click.prevent="save"
+        >GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i
+      ></a>
+    </div>
+  </div>
 
   <div class="card mt-4" v-if="$conf.debug">
     <div class="card-body">

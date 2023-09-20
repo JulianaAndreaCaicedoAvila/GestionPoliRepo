@@ -14,8 +14,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 {
 	[@Authorize]
 	[ApiController]
-	[Route("[controller]")]
-	[ResponseCache(CacheProfileName = "3m")]
+	[Route("curso")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
 	public class CursoController : BaseController

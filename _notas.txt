@@ -6,6 +6,7 @@ Pasos:
 1. Entidades => Asegurandose de las relaciones (Core.LoQueSea)
 2. Agregar al DataContext.cs
 3. Crear Migración => dotnet ef migrations add LoQueSea
+3a. Crear Migración SQL => dotnet ef migrations add Sql_Inicial (o lo que sea)
 4. Aplicar Migración => dotnet ef database update
 5. Crear Controladores
 6. Crear controles .vue (copiar controles similares)
@@ -49,7 +50,8 @@ dotnet ef migrations list
 -- Varios
 dotnet ef database update 0
 dotnet ef database update
-dotnet ef database update 20230828220312_Inicial
+-- Devolverse a una migracion
+dotnet ef database update 20230929022139_Inicial
 dotnet ef migrations add Inicial
 dotnet ef migrations add Sql
 dotnet ef migrations add CursoEntidades

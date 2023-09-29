@@ -13,6 +13,11 @@ namespace ESAP.Sirecec.Data.Migrations
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/001-Usuarios.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/002-Clasificadores.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/003-Productos.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/004-TerritorialesDepartamentos.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/005-ProductosIndicadores.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/006-DepartamentosMunicipios.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/007-BancoProgramasNucleos.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/008-NucleosProgramas.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/999-Datos.sql"));
         }
 
@@ -44,6 +49,11 @@ namespace ESAP.Sirecec.Data.Migrations
             EXECUTE IMMEDIATE 'DROP VIEW ""Usuarios""';
             EXECUTE IMMEDIATE 'DROP VIEW ""Clasificadores""';
             EXECUTE IMMEDIATE 'DROP VIEW ""Productos""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""TerritorialesDepartamentos""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""ProductosIndicadores""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""DepartamentosMunicipios""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""BancoProgramasNucleos""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""NucleosProgramas""';
             END;");
         }
     }

@@ -41,13 +41,14 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   entidades = ref([]),
   dependencias = ref([]),
   productos = ref([]),
+  territoriales = ref([]),
   nucleos = ref([]),
   bancos = ref([]),
   programas = ref([]),
   especificos = ref([]),
   item = ref({
     id: 0,
-    dependencia: null,
+    dependenciaId: null,
     codigoVerificacion: null,
     nombre: null,
     descripcion: null,
@@ -56,7 +57,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     asistencia: null,
     producto: null,
     indicador: null,
-    territorial: null,
+    territorialId: null,
     departamento: null,
     municipio: null,
     cupoTotal: null,
@@ -182,6 +183,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
 
 onMounted(async () => {
   console.clear();
+  territoriales.value = await store.porTipoNombre("territorial");
   dependencias.value = await store.porTipoNombre("dependencia");
   productos.value = await storeProductos.all();
   bancos.value = await storeBancos.all();
@@ -324,7 +326,11 @@ onMounted(async () => {
           placeholder="Producto"
           value-expr="id"
           @value-changed="valueChanged"
-        />
+        >
+          <DxValidator>
+            <DxRequiredRule />
+          </DxValidator>
+        </DxSelectBox>
       </div>
       <div class="col-md-12 mb-2">
         <label class="tit">Indicador</label>
@@ -342,17 +348,25 @@ onMounted(async () => {
       </div>
       <div class="col-md-4 mb-2">
         <label class="tit">Territorial</label>
-        <DxTextBox
-          value-change-event="keyup"
+        <DxSelectBox
+          id="territorialId"
+          :data-source="territoriales"
+          :grouped="false"
+          :min-search-length="3"
+          :search-enabled="true"
           :show-clear-button="true"
-          v-model="item.territorial"
+          :show-data-before-search="true"
           class="form-control"
-          placeholder="Territorial"
+          display-expr="nombre"
+          v-model="item.territorialId"
+          placeholder="Territoriales"
+          value-expr="id"
+          @value-changed="valueChanged"
         >
           <DxValidator>
             <DxRequiredRule />
           </DxValidator>
-        </DxTextBox>
+        </DxSelectBox>
       </div>
       <div class="col-md-4 mb-2">
         <label class="tit">Departamento</label>

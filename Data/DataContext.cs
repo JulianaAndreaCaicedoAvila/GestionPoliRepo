@@ -42,10 +42,20 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Core.Clasificador>? Clasificador { get; set; } = null!;
 		public virtual DbSet<Core.ClasificadorTipo>? ClasificadorTipo { get; set; } = null!;
 		public virtual DbSet<Core.Clasificadores>? Clasificadores { get; set; } = null!;
+		public virtual DbSet<Core.TerritorialesDepartamentos>? TerritorialesDepartamentos { get; set; } = null!;
+		public virtual DbSet<Core.ProductosIndicadores>? ProductosIndicadores { get; set; } = null!;
+		public virtual DbSet<Core.DepartamentosMunicipios>? DepartamentosMunicipios { get; set; } = null!;
+		public virtual DbSet<Core.BancoProgramasNucleos>? BancoProgramasNucleos { get; set; } = null!;
+		public virtual DbSet<Core.NucleosProgramas>? NucleosProgramas { get; set; } = null!;
 		public virtual DbSet<Core.Productos>? Productos { get; set; } = null!;
+		public virtual DbSet<Core.TerritorialDepartamento>? TerritorialDepartamento { get; set; } = null!;
 		public virtual DbSet<Identity.Users> Usuarios { get; set; } = null!;
 		public virtual DbSet<Core.Modulo>? Modulo { get; set; } = null!;
 		public virtual DbSet<Core.BancoPrograma>? BancoPrograma { get; set; } = null!;
+		public virtual DbSet<Core.BancoProgramaNucleo>? BancoProgramaNucleo { get; set; } = null!;
+		public virtual DbSet<Core.NucleoPrograma>? NucleoPrograma { get; set; } = null!;
+		public virtual DbSet<Core.ProductoIndicador>? ProductoIndicador { get; set; } = null!;
+		public virtual DbSet<Core.DepartamentoMunicipio>? DepartamentoMunicipio { get; set; } = null!;
 		public virtual DbSet<Core.Nucleo>? Nucleo { get; set; } = null!;
 		public virtual DbSet<Core.Programa>? Programa { get; set; } = null!;
 		public virtual DbSet<Core.Escuela>? Escuela { get; set; } = null!;
@@ -110,6 +120,11 @@ namespace ESAP.Sirecec.Data
 				// .HasPrincipalKey(e => e.Id);
 				// entity.ToTable("ClasificadorTipo");
 			});
+			builder.Entity<Core.TerritorialesDepartamentos>(entity => { entity.ToView("TerritorialesDepartamentos"); });
+			builder.Entity<Core.ProductosIndicadores>(entity => { entity.ToView("ProductosIndicadores"); });
+			builder.Entity<Core.DepartamentosMunicipios>(entity => { entity.ToView("DepartamentosMunicipios"); });
+			builder.Entity<Core.BancoProgramasNucleos>(entity => { entity.ToView("BancoProgramasNucleos"); });
+			builder.Entity<Core.NucleosProgramas>(entity => { entity.ToView("NucleosProgramas"); });
 			builder.Entity<Core.Clasificadores>(entity => { entity.ToView("Clasificadores"); });
 			builder.Entity<Core.Productos>(entity => { entity.ToView("Productos"); });
 			builder.Entity<Core.Modulo>(entity =>
@@ -145,6 +160,38 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
 			builder.Entity<Core.Nucleo>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.NucleoPrograma>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.DepartamentoMunicipio>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.ProductoIndicador>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.BancoProgramaNucleo>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
@@ -233,6 +280,14 @@ namespace ESAP.Sirecec.Data
 					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 				});
 			builder.Entity<Core.Encuesta>(entity =>
+				{
+					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.EditadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
+					entity.Property(e => e.EditadoPor).HasDefaultValueSql("((1))");
+					entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
+				});
+			builder.Entity<Core.TerritorialDepartamento>(entity =>
 				{
 					entity.Property(e => e.CreadoEl).HasDefaultValueSql("CURRENT_TIMESTAMP");
 					entity.Property(e => e.CreadoPor).HasDefaultValueSql("((1))");

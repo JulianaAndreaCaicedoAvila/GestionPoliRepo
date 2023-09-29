@@ -13,7 +13,7 @@ namespace ESAP.Sirecec.Data.Core
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public int? ObjetivoId { get; set; }
+		public int? ProductoId { get; set; }
 		public string? Nombre { get; set; }
 		public string? Descripcion { get; set; }
 		public virtual Clasificador? Objetivo { get; set; }

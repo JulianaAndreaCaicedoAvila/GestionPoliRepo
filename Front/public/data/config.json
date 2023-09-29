@@ -3,8 +3,8 @@
 	"msalConfig": {
 		"enabled": true,
 		"auth": {
-			"clientId": "4765445b-32c6-49b0-83e6-1d93765276ca",
-			"authority1": "https://login.microsoftonline.com/33fa6907-21c6-4126-aa66-bcbed95361bb"
+			"clientId": "6c0f9105-044f-4992-8a31-6710244e9e34",
+			"authority": "https://login.microsoftonline.com/b24f0388-e61b-43e0-b9e7-baa5b0d5121e"
 		},
 		"cache": {
 			"cacheLocation": "localStorage"
@@ -25,6 +25,7 @@
 		{ "id": 8, "name": "territorial" },
 		{ "id": 11, "name": "programa" },
 		{ "id": 32, "name": "entidad" }
+
 	],
 	"tipo_acumulacion": [
 		{ "id": 1376, "name": "mantenimiento" },

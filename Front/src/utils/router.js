@@ -82,6 +82,12 @@ export const router = createRouter({
       component: () => import("@/pages/admin/escuela.vue"),
     },
     {
+      name: "indicador",
+      path: "/admin/indicador",
+      meta: { title: "Indicadores", requiresAuth: true },
+      component: () => import("@/pages/admin/indicador.vue"),
+    },
+    {
       name: "nivel",
       path: "/admin/nivel",
       meta: { title: "Niveles", requiresAuth: true },

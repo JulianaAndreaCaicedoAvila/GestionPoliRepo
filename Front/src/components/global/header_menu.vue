@@ -142,7 +142,7 @@ onMounted(() => {
                           </li>
                           <li>
                             <router-link
-                              :to="{ path: '/admin/clasificador/11' }"
+                              :to="{ path: '/admin/indicador' }"
                               class="dropdown-item"
                               >Indicadores</router-link
                             >

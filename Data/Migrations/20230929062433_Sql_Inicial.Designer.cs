@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230929022139_Inicial")]
-    partial class Inicial
+    [Migration("20230929062433_Sql_Inicial")]
+    partial class Sql_Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1034,15 +1034,15 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("ObjetivoId")
+                    b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int?>("Orden")
+                    b.Property<int?>("ProductoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjetivoId");
+                    b.HasIndex("ProductoId");
 
                     b.ToTable("Indicador");
                 });
@@ -1200,9 +1200,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("TIMESTAMP(7)");
 
-                    b.Property<int?>("IndicadorId")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -1212,8 +1209,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BancoId");
-
-                    b.HasIndex("IndicadorId");
 
                     b.ToTable("Nucleo");
                 });
@@ -1729,7 +1724,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int?>("DependenciaId")
+                    b.Property<int>("DependenciaId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
@@ -2293,11 +2288,11 @@ namespace ESAP.Sirecec.Data.Migrations
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
                 {
-                    b.HasOne("ESAP.Sirecec.Data.Core.Clasificador", "Objetivo")
+                    b.HasOne("ESAP.Sirecec.Data.Core.Producto", "Producto")
                         .WithMany()
-                        .HasForeignKey("ObjetivoId");
+                        .HasForeignKey("ProductoId");
 
-                    b.Navigation("Objetivo");
+                    b.Navigation("Producto");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>
@@ -2316,10 +2311,6 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasForeignKey("BancoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ESAP.Sirecec.Data.Core.Indicador", null)
-                        .WithMany("Nucleos")
-                        .HasForeignKey("IndicadorId");
 
                     b.Navigation("BancoPrograma");
                 });
@@ -2343,7 +2334,9 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasOne("ESAP.Sirecec.Data.Core.Clasificador", "Dependencia")
                         .WithMany()
-                        .HasForeignKey("DependenciaId");
+                        .HasForeignKey("DependenciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ESAP.Sirecec.Data.Core.Modulo", "Modulo")
                         .WithMany("Temas")
@@ -2434,11 +2427,6 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Escuela", b =>
                 {
                     b.Navigation("Niveles");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
-                {
-                    b.Navigation("Nucleos");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>

@@ -9,7 +9,6 @@ namespace ESAP.Sirecec.Data.Core
 {
 	public partial class Indicador : BaseEntity
 	{
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
@@ -17,6 +16,5 @@ namespace ESAP.Sirecec.Data.Core
 		public string? Nombre { get; set; }
 		public string? Descripcion { get; set; }
 		public virtual Producto? Producto { get; set; }
-		public virtual List<Nucleo>? Nucleos { get; set; }
 	}
 }

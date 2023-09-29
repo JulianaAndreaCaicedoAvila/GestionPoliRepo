@@ -13,15 +13,20 @@ namespace ESAP.Sirecec.Data.Core
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public int? NucleoId { get; set; }
 		public int? DependenciaId { get; set; }
 		public int? TipoCursoId { get; set; }
+
+		[ForeignKey("Nivel")]
 		public int? NivelId { get; set; }
 		public int? TipoAsistenciaId { get; set; }
-		public int? ProductoId { get; set; }
+
+		[ForeignKey("Indicador")]
 		public int? IndicadorId { get; set; }
-		public int? TerritorialId { get; set; }
+
+		[ForeignKey("Municipio")]
 		public int? MunicipioId { get; set; }
+
+		[ForeignKey("Programa")]
 		public int? ProgramaId { get; set; }
 		public int? EstadoCursoId { get; set; }
 		public int? CertificadoEtiquetaId { get; set; }
@@ -54,7 +59,6 @@ namespace ESAP.Sirecec.Data.Core
 		public string? CertificadoCiudad { get; set; }
 		public bool? CertificadoVerCiudad { get; set; }
 		public DateTime CertificadoFechaExpedicion { get; set; }
-		public virtual List<Tema>? Temas { get; set; }
 		public virtual List<CursoAnexo>? Anexos { get; set; }
 		public virtual List<CursoEncuesta>? Encuestas { get; set; }
 		public virtual List<CursoFecha>? Fechas { get; set; }

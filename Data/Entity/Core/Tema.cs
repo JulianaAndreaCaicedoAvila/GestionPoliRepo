@@ -12,10 +12,9 @@ namespace ESAP.Sirecec.Data.Core
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
+
+		[ForeignKey("Clasificador")]
 		public int DependenciaId { get; set; }
 		public string? Nombre { get; set; }
-		public virtual Modulo? Modulo { get; set; }
-		public virtual Clasificador? Dependencia { get; set; }
-
 	}
 }

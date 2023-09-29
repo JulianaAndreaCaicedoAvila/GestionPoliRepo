@@ -7,10 +7,10 @@ dotnet ef migrations list
 -- Varios
 dotnet ef database update 0
 dotnet ef database update
+
 -- Devolverse a una migracion
-dotnet ef database update 20230929095512_Inicial
-dotnet ef migrations add Inicial
-dotnet ef migrations add Sql
+dotnet ef database update 20230929164148_Inicial
+dotnet ef migrations add Inicial; dotnet ef migrations add Sql_Inicial
 dotnet ef migrations add CursoEntidades
 dotnet ef migrations add Actualizacion
 

@@ -1,37 +1,29 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
 
-1	Departamento
-2	Municipio
-3	Tipo documento de identidad
-4	Género
-5	Nivel escolar
-6	Estado civil
-7	Dependencia
-8	Territorial
-9	Programa
-10	Producto
-11	Indicador
-12	Núcleo
-13	Tema
-14	Tipo de curso
-15	Tipo de asistencia
-16	Clasificación de documento
-17	Clasificación de multimedia
-18	Grupo de documento
-19	Tipo de documento
-20	Objetivo Indicadores
-21	Característica ESAP
-22	Tipo de Discapacidad
-23	Tipo de Vulnerabilidad
-24	Cargo actual
-25	Tipo Participante
-26	Tipo Servidor Público
-27	Grupo Étnico
-28	Tipo de Valor General
-29	Tipo de Encuesta
-30	Certificado etiqueta
-31	Estado de curso
-32	Entidad
-33	Cargo
+202306161422:
+-- Lista migraciones YA aplicadas a la BD
+dotnet ef migrations list
+
+-- Varios
+dotnet ef database update 0
+dotnet ef database update
+-- Devolverse a una migracion
+dotnet ef database update 20230929095512_Inicial
+dotnet ef migrations add Inicial
+dotnet ef migrations add Sql
+dotnet ef migrations add CursoEntidades
+dotnet ef migrations add Actualizacion
+
+-- Eliminar la ultima migración... EL ARCHIVO!!
+dotnet ef migrations remove
+
+-- Actualizar herramientas EF
+dotnet tool update --global dotnet-ef
+
+SQL => STRUCTURE QUERY LANGUAGE => Oracle, SQL Server, Postgres, MySQL, Sqlite
+DDL => DATA DEFINITION LANGUAGE (SQL)
+Code First => Clase a SQL a database
+BD First
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -74,33 +66,6 @@ dotnet tool install --global dotnet-ef
 
 202307182316:
 Prueba de PUSH
-
----------------------------------------------------------------------------------------------------------------------------------------------
-
-202306161422:
--- Lista migraciones YA aplicadas a la BD
-dotnet ef migrations list
-
--- Varios
-dotnet ef database update 0
-dotnet ef database update
--- Devolverse a una migracion
-dotnet ef database update 20230929022139_Inicial
-dotnet ef migrations add Inicial
-dotnet ef migrations add Sql
-dotnet ef migrations add CursoEntidades
-dotnet ef migrations add Actualizacion
-
--- Eliminar la ultima migración... EL ARCHIVO!!
-dotnet ef migrations remove
-
--- Actualizar herramientas EF
-dotnet tool update --global dotnet-ef
-
-SQL => STRUCTURE QUERY LANGUAGE => Oracle, SQL Server, Postgres, MySQL, Sqlite
-DDL => DATA DEFINITION LANGUAGE (SQL)
-Code First => Clase a SQL a database
-BD First
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

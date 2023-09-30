@@ -7,3 +7,5 @@ export * from "./modules/_user";
 export * from "./modules/_escuela";
 export * from "./modules/_producto";
 export * from "./modules/_programa";
+export * from "./modules/_indicador";
+export * from "./modules/_geo";

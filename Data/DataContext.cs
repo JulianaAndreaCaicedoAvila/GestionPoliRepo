@@ -31,6 +31,7 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Clasificadores>? Clasificadores { get; set; } = null!;
 		public virtual DbSet<ClasificadorTipo>? ClasificadorTipo { get; set; } = null!;
 		public virtual DbSet<Curso>? Curso { get; set; } = null!;
+		public virtual DbSet<Cursos>? Cursos { get; set; } = null!;
 		public virtual DbSet<CursoAnexo>? CursoAnexo { get; set; } = null!;
 		public virtual DbSet<CursoEncuesta>? CursoEncuesta { get; set; } = null!;
 		public virtual DbSet<CursoFecha>? CursoFecha { get; set; } = null!;
@@ -45,6 +46,7 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<Indicador>? Indicador { get; set; } = null!;
 		public virtual DbSet<Modulo>? Modulo { get; set; } = null!;
 		public virtual DbSet<Municipio>? Municipio { get; set; } = null!;
+		public virtual DbSet<Municipios>? Municipios { get; set; } = null!;
 		public virtual DbSet<Nivel>? Nivel { get; set; } = null!;
 		public virtual DbSet<Nucleo>? Nucleo { get; set; } = null!;
 		public virtual DbSet<NucleoPrograma>? NucleoPrograma { get; set; } = null!;
@@ -82,6 +84,8 @@ namespace ESAP.Sirecec.Data
 
 			// Vistas
 			builder.Entity<Users>(entity => { entity.ToView("Usuarios"); });
+			builder.Entity<Users>(entity => { entity.ToView("Cursos"); });
+			builder.Entity<Users>(entity => { entity.ToView("Municipios"); });
 			builder.Entity<BancoProgramasNucleos>(entity => { entity.ToView("BancoProgramasNucleos"); });
 			builder.Entity<Clasificadores>(entity => { entity.ToView("Clasificadores"); });
 			builder.Entity<DepartamentosMunicipios>(entity => { entity.ToView("DepartamentosMunicipios"); });

@@ -927,3 +927,9 @@ $height: 45px;
 .form-label {
 	margin-bottom: 0 !important;
 }
+
+.form-control{
+	&.no-border{
+		border: 1px solid transparent;
+	}
+}

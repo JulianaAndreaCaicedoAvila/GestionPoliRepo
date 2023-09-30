@@ -82,6 +82,9 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     horasTotales: 0,
     numeroDias: 0,
     publicado: false,
+    jornadaManana: false,
+    jornadaTarde: false,
+    jornadaNoche: false,
     porcentajeAsistencia: 0,
     cantidadAulas: 0,
     lugarRealizacion: null,
@@ -732,6 +735,24 @@ onMounted(async () => {
 
       <div class="col-md-3 mb-2">
         <label class="tit">Publicado</label>
+        <div class="form-control no-border">
+          <DxCheckBox v-model="item.publicado" />
+        </div>
+      </div>
+      <div class="col-md-3 mb-2">
+        <label class="tit">Jornada Mañana</label>
+        <div class="form-control no-border">
+          <DxCheckBox v-model="item.publicado" />
+        </div>
+      </div>
+      <div class="col-md-3 mb-2">
+        <label class="tit">Jornada Tarde</label>
+        <div class="form-control no-border">
+          <DxCheckBox v-model="item.publicado" />
+        </div>
+      </div>
+      <div class="col-md-3 mb-2">
+        <label class="tit">Jornada Noche</label>
         <div class="form-control no-border">
           <DxCheckBox v-model="item.publicado" />
         </div>

@@ -218,7 +218,7 @@ onMounted(async () => {
 <template>
   <DxValidationGroup ref="valGroup">
     <div class="row">
-      <div class="col-md-4 mb-2">
+      <div class="col-md-5 mb-2">
         <label class="tit">Nombre del curso</label>
         <DxTextArea id="nombre" :height="100" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre"
           class="form-control" placeholder="Nombre">
@@ -227,7 +227,7 @@ onMounted(async () => {
           </DxValidator>
         </DxTextArea>
       </div>
-      <div class="col-md-4 mb-2">
+      <div class="col-md-5 mb-2">
         <label class="tit">Descripción</label>
         <DxTextArea :height="100" value-change-event="keyup" :show-clear-button="true" v-model="item.descripcion"
           class="form-control" placeholder="Descripcion">
@@ -236,7 +236,7 @@ onMounted(async () => {
           </DxValidator>
         </DxTextArea>
       </div>
-      <div class="col-md-4 mb-2">
+      <div class="col-md-2 mb-2">
         <label class="tit">Código de verificación</label>
         <DxTextBox value-change-event="keyup" :show-clear-button="true" v-model="item.codigoVerificacion"
           class="form-control" placeholder="Codigo de verificacion">

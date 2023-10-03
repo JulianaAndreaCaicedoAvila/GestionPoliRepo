@@ -1443,6 +1443,8 @@ INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (31,'Estado de curso');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (32,'Entidad');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (33,'Cargo');
 -- ======================================================================================================
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (7, 0, N'Capacitación', 'Capacitación', 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (7, 0, N'Alto Gobierno', 'Alto Gobierno', 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (8, 0, N'Dirección Nacional (Sede Central)	', 'Nacional', 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (8, 0, N'Territorial Antioquia', 'Antioquia', 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (8, 0, N'Territorial Atlántico', 'Atlántico', 0, 1, 1, 1, SYSDATE, SYSDATE);

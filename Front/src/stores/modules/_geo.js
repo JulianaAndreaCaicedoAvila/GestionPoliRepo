@@ -24,7 +24,7 @@ export const useGeografiaStore = defineStore({
 				});
 		},
 		async dptoAll() {
-			console.log("Dpto items =>", this.departamentos);
+			// console.log("Dpto items =>", this.departamentos);
 			if (this.departamentos.length > 0) return this.departamentos;
 			return await api()
 				.get(`geo/dpto/all`)
@@ -43,17 +43,14 @@ export const useGeografiaStore = defineStore({
 					return this.municipios;
 				});
 		},
-		async getByIdPais(id) {
-			if (this.municipios.length <= 0) await this.PaisAll();
-			return this.municipios.find((o) => o.id == id);
+		async dptosPorTerritorialId(territorialId) {
+			let items = await this.dptoAll();
+			// console.log("departamentos =>", items);
+			return items.filter((o) => o.territorialId == territorialId);
 		},
-		async getByIdDpto(id) {
-			if (this.municipios.length <= 0) await this.DptoAll();
-			return this.municipios.find((o) => o.id == id);
-		},
-		async getByIdMun(id) {
-			if (this.municipios.length <= 0) await this.MunAll();
-			return this.municipios.find((o) => o.id == id);
+		async municipiosPorDepartamentoId(dptoId) {
+			let items = await this.munAll();
+			return items.filter((o) => o.departamentoId == dptoId);
 		},
 	},
 });

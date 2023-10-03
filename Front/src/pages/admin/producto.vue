@@ -53,12 +53,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Productos",
     editadoEl: null,
     editadoPor: null,
   }),
-  date_focus_in = (e) => {
-    e.component.open();
-  },
-  date_focus_out = (e) => {
-    e.component.close();
-  },
   item_copy = Clone(item.value),
   panelData = null,
   panelGrid = null,

@@ -7,29 +7,45 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class Curso : BaseEntity
+	// [Keyless]
+	public partial class Cursos : BaseEntity
 	{
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int? DependenciaId { get; set; }
+		public string? DependenciaNombre { get; set; }
+		public string? TipoCursoNombre { get; set; }
+		public string? NivelNombre { get; set; }
+		public string? EscuelaNombre { get; set; }
 		public int? TipoCursoId { get; set; }
-
-		[ForeignKey("Nivel")]
+		public int? EscuelaId { get; set; }
 		public int? NivelId { get; set; }
 		public int? TipoAsistenciaId { get; set; }
-
-		[ForeignKey("Indicador")]
+		public string? TipoAsistenciaNombre { get; set; }
 		public int? IndicadorId { get; set; }
-
-		[ForeignKey("Municipio")]
+		public string? IndicadorNombre { get; set; }
+		public int? ProductoId { get; set; }
+		public string? ProductoNombre { get; set; }
 		public int? MunicipioId { get; set; }
-
-		[ForeignKey("Programa")]
+		public int? DepartamentoId { get; set; }
+		public int? TerritorialId { get; set; }
+		public int? PaisId { get; set; }
+		public string? MunicipioNombre { get; set; }
+		public string? DepartamentoNombre { get; set; }
+		public string? TerritorialNombre { get; set; }
+		public string? PaisIso1 { get; set; }
+		public string? PaisIso2 { get; set; }
 		public int? ProgramaId { get; set; }
+		public int? NucleoId { get; set; }
+		public string? ProgramaNombre { get; set; }
+		public string? NucleoNombre { get; set; }
+		public int? BancoId { get; set; }
+		public string? BancoNombre { get; set; }
 		public int? EstadoCursoId { get; set; }
+		public string? EstadoCursoNombre { get; set; }
 		public int? CertificadoEtiquetaId { get; set; }
+		public string? CertificadoEtiquetaNombre { get; set; }
 		public int? CupoTotal { get; set; }
 		public int? CupoAula { get; set; }
 		public string? Nombre { get; set; }
@@ -44,6 +60,9 @@ namespace ESAP.Sirecec.Data.Core
 		public int? CantidadAulas { get; set; }
 		public string? LugarRealizacion { get; set; }
 		public DateTime FechaInicioInscripcion { get; set; }
+		public DateTime ProgramaFechaInicio { get; set; }
+		public DateTime NucleoFechaInicio { get; set; }
+		public DateTime BancoFechaInicio { get; set; }
 		public DateTime FechaFinInscripcion { get; set; }
 		public DateTime FechaInicio { get; set; }
 		public DateTime FechaFin { get; set; }

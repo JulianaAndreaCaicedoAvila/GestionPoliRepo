@@ -1,9 +1,10 @@
 <script setup>
 import api from "@/utils/api";
 import DxStore from "@/utils/dx";
-import { ref, onMounted, toRaw, watch } from "vue";
+import List from "devextreme/ui/list";
 import { useRouter, useRoute } from "vue-router";
-import { useClasificadorStore } from "@/stores";
+import { ref, onMounted, toRaw, watch } from "vue";
+import { useClasificadorStore, useGeografiaStore } from "@/stores";
 import DxValidator, { DxRequiredRule } from "devextreme-vue/validator";
 import { DxTextBox, DxList, DxNumberBox, DxTextArea, DxValidationGroup } from "devextreme-vue";
 import {
@@ -25,14 +26,18 @@ import {
 	DxSummary,
 } from "devextreme-vue/data-grid";
 const store = useClasificadorStore();
+const geoStore = useGeografiaStore();
 const route = useRoute();
 const router = useRouter();
-let titAccion = ref("Crear"),
+let list1 = null, list2 = null, itemId = ref(8), fromData = ref([]),
+	toData = ref([]), selRightClass = ref(""), selLeftClass = ref(""),
+	dptosAll = ref([]), dptos = ref([]), dptosFrom = ref([]), dptosTo = ref([]),
+	titAccion = ref("Crear"),
 	tipos = null,
 	mostrarId = ref(true),
 	mostrarPadre = ref(false),
 	permitirAgrupar = ref(false),
-	clasificacion = ref("departamento"),
+	clasificacion = ref("Territorial"),
 	tipoId = route.params.id,
 	path = `clasificador/dx/${tipoId}`,
 	grid = null,
@@ -76,37 +81,40 @@ let titAccion = ref("Crear"),
 		// if (panelGrid != null) panelGrid.unlock();
 	},
 	save = () => {
+		console.clear();
 		let res = valGroup.value.instance.validate();
 		console.clear();
 		console.log("res =>", res);
 		if (res.isValid) {
 			let msg = `${item.id == 0 ? "Creando" : "Actualizando"}, un momento por favor`;
-			// panelGrid.lock();
 			panelData.lock(msg, async function (params) {
 				console.log("ITEM =>", item.value);
 				let dto = toRaw(item.value);
 				console.log("dto =>", dto);
 				await api()
 					.post(`clasificador/ed`, dto)
-					.then((r) => {
-						console.log("r =>", r);
-						store.limpiar();
-						addCancel(function () {
-							panelData.unlock();
-							grid.refresh();
+					.then(async (r) => {
+						// 202310030104: Guarda los dptos
+						dptosFrom.value.forEach(item => {
+							item.territorialId = null;
 						});
-					})
-					.catch((r) => {
-						console.log("r =>", r);
-						addCancel(function () {
-							panelData.unlock();
-							grid.refresh();
+						dptosTo.value.forEach(item => {
+							item.territorialId = dto.id;
 						});
+						// 202310030155: https://stackoverflow.com/a/53404382
+						dto = [...toRaw(dptosFrom.value), ...toRaw(dptosTo.value)];
+						console.log("dto =>", dto);
+						await api()
+							.post(`geo/dptos-ed`, dto)
+							.then((r) => {
+								console.log("r =>", r);
+								geoStore.limpiar();
+								addCancel(function () {
+									panelData.unlock();
+									grid.refresh();
+								});
+							});
 					});
-
-				// 	},
-				// 	true
-				// );
 			});
 		}
 	},
@@ -140,7 +148,8 @@ let titAccion = ref("Crear"),
 	addStart = (data) => {
 		// console.clear();
 		console.log("data =>", data);
-		panelGrid.fadeOut(function () {
+		panelGrid.lock("Cargando");
+		panelGrid.fadeOut(async function () {
 			if (typeof data !== "undefined") {
 				titAccion.value = "Editar";
 				item.value = Clone(data);
@@ -148,7 +157,15 @@ let titAccion = ref("Crear"),
 				titAccion.value = "Crear";
 				item.value = Clone(base);
 			}
-			panelData.fadeIn(function () { });
+			dptosAll.value = await geoStore.dptoAll();
+			dptos.value = Object.assign([], dptosAll.value).filter(o => o.territorialId == null);
+			dptosFrom.value = Object.assign([], dptos.value);
+			dptosTo.value = Object.assign([], dptosAll.value).filter(o => o.territorialId == data.id);
+			console.log("dptos =>", toRaw(dptos.value));
+			updateButtons();
+			panelData.fadeIn(function () {
+				panelGrid.unlock();
+			});
 		});
 	},
 	addCancel = (cb) => {
@@ -181,7 +198,7 @@ let titAccion = ref("Crear"),
 		dxStore.value = DxStore({
 			id: tipoId,
 			userData: "",
-			endPoint: `clasificador/dx/${tipoId}`,
+			endPoint: `clasificador/dx/${itemId.value}`,
 			onLoading: function (loadOptions) {
 				panelGrid.lock("Cargando");
 				console.log("loadOptions =>", loadOptions);
@@ -195,8 +212,8 @@ let titAccion = ref("Crear"),
 				// root.totaCount = results.totalCount;
 				// root.loaderHide();
 				console.log("onLoaded!");
-				let cl = tipos.filter((o) => o.id == tipoId)[0];
-				clasificacion.value = cl.nombre;
+				// let cl = tipos.filter((o) => o.id == tipoId)[0];
+				// clasificacion.value = cl.nombre;
 				mostrarPadre.value = false;
 				permitirAgrupar.value = false;
 				descriptionColumnName.value = "Descripción";
@@ -218,7 +235,7 @@ watch(
 	(newId, oldId) => {
 		// console.clear();
 		console.log("newId, oldId =>", newId, oldId);
-		tipoId = route.params.id;
+		tipoId = itemId;
 		console.log("tipoId =>", tipoId);
 		console.log("route.params.id =>", route.params.id);
 		path = `clasificador/dx/${tipoId}`;
@@ -233,18 +250,88 @@ watch(
 	}
 );
 
+// https://js.devexpress.com/Documentation/ApiReference/UI_Components/dxList/Methods/
+function moveSelectedRight() {
+	console.clear();
+	var items = list1.option("selectedItems");
+	console.log("items =>", toRaw(items));
+	items.forEach(item => {
+		for (var x = 0; x < dptosFrom.value.length; x++) {
+			var current = dptosFrom.value[x];
+			// console.log(`${item.id} == ${current.id}`);
+			if (item.id == current.id) {
+				dptosFrom.value.splice(x, 1);
+				dptosTo.value.push(current);
+				x--;
+			}
+		}
+	});
+	updateButtons();
+}
+function moveSelectedLeft() {
+	console.clear();
+	var items = list2.option("selectedItems");
+	console.log("items =>", toRaw(items));
+	items.forEach(item => {
+		for (var x = 0; x < dptosTo.value.length; x++) {
+			var current = dptosTo.value[x];
+			// console.log(`${item.id} == ${current.id}`);
+			if (item.id == current.id) {
+				dptosTo.value.splice(x, 1);
+				dptosFrom.value.push(current);
+				x--;
+			}
+		}
+	});
+	updateButtons();
+}
+function moveAllRight() {
+	dptosFrom.value = [];
+	dptosTo.value = Object.assign([], dptos.value);
+	updateButtons();
+}
+function moveAllLeft() {
+	dptosFrom.value = Object.assign([], dptos.value);
+	dptosTo.value = [];
+	updateButtons();
+}
+function updateButtons() {
+	dptosTo.value = dptosTo.value.sort((a, b) => a.nombre - b.nombre);
+	dptosFrom.value = dptosFrom.value.sort((a, b) => a.nombre - b.nombre);
+	list1.reload();
+	list2.reload();
+	selRightClass.value = dptosFrom.value.length > 0 ? "" : "disabled";
+	selLeftClass.value = dptosTo.value.length > 0 ? "" : "disabled";
+}
+function getDptos(cell) {
+	console.log("cellInfo =>", cell);
+	let items = dptosAll.value.filter(o => o.territorialId == cell.value);
+	console.log("items =>", items);
+	let n = items.length > 0 ? items.length : 0;
+	console.log("n =>", n);
+	return n.toString();
+}
 onMounted(async () => {
 	// console.clear();
 	console.log("Clasificador mounted");
+	// https://demos.devexpress.com/aspxeditorsdemos/ListEditors/MovingItems.aspx
+	list1 = List.getInstance(document.getElementById("list1"));
+	list2 = List.getInstance(document.getElementById("list2"));
+	dptosAll.value = await geoStore.dptoAll();
+	console.log("dptosAll =>", toRaw(dptosAll.value));
+	console.log("list1 =>", list1);
+	console.log("list2 =>", list2);
 	panelData = $("#data");
 	panelGrid = $("#grid");
 	// console.clear();
 	console.log(_sep);
 	panelGrid.lock("Cargando");
-	tipoId = route.params.id;
-	tipos = await store.tipos();
-	padres = await store.porTipoNombre("departamento");
-	console.log("tipos =>", tipos);
+	tipoId = itemId;
+	// dptosAll.value = await geoStore.dptoAll();
+	// dptos.value = Object.assign([], dptosAll.value).filter(o => o.territorialId == null);
+	// dptosFrom.value = Object.assign([], dptos.value);
+	// console.log("dptos =>", toRaw(dptos.value));
+	// updateButtons();
 	getData();
 });
 </script>
@@ -265,11 +352,21 @@ onMounted(async () => {
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-2 pb-4">
 					<div class="row">
-						<div class="col-md-10 pb-2">
+						<div class="col-md-5 pb-2">
 							<label class="tit">Nombre</label>
 							<!-- <input class="form-control" type="text" placeholder="Nombre" id="nombre" name="nombre" v-model="item.nombre" /> -->
 							<DxTextBox id="nombre" :show-clear-button="true" value-change-event="keyup" v-model:value="item.nombre"
 								class="form-control" placeholder="Nombre">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxTextBox>
+						</div>
+						<div class="col-md-5 pb-2">
+							<label class="tit">Descripción</label>
+							<!-- <input class="form-control" type="text" placeholder="Nombre" id="nombre" name="nombre" v-model="item.nombre" /> -->
+							<DxTextBox id="descripcion" :show-clear-button="true" value-change-event="keyup"
+								v-model:value="item.descripcion" class="form-control" placeholder="Descripción">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -286,16 +383,36 @@ onMounted(async () => {
 							</DxNumberBox>
 						</div>
 						<div class="col-md-12 pb-2">
-							<label class="tit">{{ descriptionColumnName }}</label>
-							<!-- <input class="form-control" type="text" placeholder="Descripción" id="descripcion" name="descripcion" v-model="item.descripcion" nonrequired /> -->
-							<DxTextArea id="nombre" :show-clear-button="true" value-change-event="keyup" :height="140"
-								v-model:value="item.descripcion" class="form-control" placeholder="Descripción">
-								<DxValidator>
-									<DxRequiredRule />
-								</DxValidator>
-							</DxTextArea>
+							<div class="row">
+								<div class="col pb-2">
+									<label class="tit">Departamentos disponibles</label>
+									<DxList id="list1" v-model:selected-item-keys="fromData" :data-source="dptosFrom" :height="250"
+										page-load-mode="scrollBottom" :search-enabled="false" display-expr="nombre" value-expr="nombre"
+										:show-selection-controls="true" search-mode="contains" selection-mode="multiple"
+										select-all-mode="allPages" :select-by-click="true" />
+								</div>
+								<div class="col-md-1 pb-2 d-flex flex-column justify-content-center align-items-center">
+									<a href="#" @click.prevent="moveSelectedRight()" :class="`d-block mb-2 ${selRightClass}`"><i
+											class="fa-solid fa-chevron-right fa-2x"></i></a>
+									<a href="#" @click.prevent="moveAllRight()" :class="`d-block mb-2 ${selRightClass}`"><i
+											class="fa-solid fa-chevrons-right fa-2x"></i></a>
+									<a href="#" @click.prevent="moveSelectedLeft()" :class="`d-block mb-2 ${selLeftClass}`"><i
+											class="fa-solid fa-chevron-left fa-2x"></i></a>
+									<a href="#" @click.prevent="moveAllLeft()" :class="`d-block ${selLeftClass}`"><i
+											class="fa-solid fa-chevrons-left fa-2x"></i></a>
+								</div>
+								<div class="col pb-2">
+									<label class="tit">Departamentos seleccionados</label>
+									<DxList id="list2" v-model:selected-item-keys="toData" :data-source="dptosTo" :height="250"
+										page-load-mode="scrollBottom" :search-enabled="false" display-expr="nombre" value-expr="nombre"
+										:show-selection-controls="true" search-mode="contains" selection-mode="multiple"
+										select-all-mode="allPages" :select-by-click="true" />
+								</div>
+							</div>
 						</div>
+
 					</div>
+					<!-- {{ selectedItemKeys }} -->
 				</div>
 			</DxValidationGroup>
 
@@ -346,6 +463,8 @@ onMounted(async () => {
 								:allow-sorting="true" :allow-filtering="false" :visible="mostrarId" />
 							<DxColumn data-field="nombre" caption="Nombre" sort-order="asc" />
 							<DxColumn data-field="descripcion" :caption="descriptionColumnName" />
+							<DxColumn :width="120" data-field="id" caption="Departamentos" alignment="center" :visible="true"
+								:customize-text="getDptos" />
 							<DxColumn :width="90" data-field="activo" caption="Activo" alignment="center" :visible="true">
 								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
 							</DxColumn>

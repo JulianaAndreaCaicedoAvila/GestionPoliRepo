@@ -4,16 +4,28 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import {
+  useProductoStore,
+  useBancoStore,
+  useNucleoStore,
+  useIndicadorStore,
+  useProgramaStore,
+  useClasificadorStore,
+  useAuthStore,
+  useGeografiaStore,
+} from "@/stores";
 import DxValidator, {
   DxRequiredRule,
+  DxEmailRule,
   DxStringLengthRule,
 } from "devextreme-vue/validator";
 import {
   DxSelectBox,
   DxHtmlEditor,
+  DxNumberBox,
   DxTextBox,
   DxTextArea,
+  DxCheckBox,
   DxDateBox,
   DxValidationGroup,
   DxToolbar,
@@ -21,38 +33,36 @@ import {
   DxImageUpload,
   DxItem,
 } from "devextreme-vue";
-import {
-  DxColumn,
-  DxColumnChooser,
-  DxColumnFixing,
-  DxDataGrid,
-  DxEditing,
-  DxExport,
-  DxFilterRow,
-  DxGrouping,
-  DxGroupItem,
-  DxGroupPanel,
-  DxLoadPanel,
-  DxLookup,
-  DxPager,
-  DxPaging,
-  DxScrolling,
-  DxSearchPanel,
-  DxSorting,
-  DxSummary,
-} from "devextreme-vue/data-grid";
 const route = useRoute(),
   store = useClasificadorStore(),
+  storeProductos = useProductoStore(),
+  storeBancos = useBancoStore(),
+  storeNucleos = useNucleoStore(),
+  storeIndicadores = useIndicadorStore(),
+  storeProgramas = useProgramaStore(),
+  geoStore = useGeografiaStore(),
   auth = useAuthStore();
 let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   dependenciaIdTxtRef = ref(null),
+  // asistencia = ["Presencial", "Virtual"],
   valGroup = ref(null),
   entidades = ref([]),
+  asistencias = ref([]),
+  indicadores = ref([]),
+  municipios = ref([]),
   dependencias = ref([]),
+  tipo_de_curso = ref([]),
+  productos = ref([]),
+  territoriales = ref([]),
+  departamentos = ref([]),
+  nucleos = ref([]),
+  bancos = ref([]),
+  programas = ref([]),
   especificos = ref([]),
   item = ref({
     id: 0,
-    dependencia: null,
+    dependenciaId: null,
+    codigoVerificacion: null,
     nombre: null,
     descripcion: null,
     elaboradoPor: null,
@@ -60,11 +70,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     asistencia: null,
     producto: null,
     indicador: null,
-    territorial: null,
-    departamento: null,
-    municipio: null,
-    cupoTotal: null,
-    cupoAula: null,
+    territorialId: null,
+    departamentoId: null,
+    municipioId: null,
+    cupoTotal: 0,
+    cupoAula: 0,
     responsable: null,
     correo: null,
     telefono: 0,
@@ -73,6 +83,10 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     programaCapacitacion: null,
     horasTotales: 0,
     numeroDias: 0,
+    publicado: false,
+    jornadaManana: false,
+    jornadaTarde: false,
+    jornadaNoche: false,
     porcentajeAsistencia: 0,
     cantidadAulas: 0,
     lugarRealizacion: null,
@@ -87,28 +101,9 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   item_copy = Clone(item.value),
   panelData = null,
   panelGrid = null,
-  dxStore = DxStore({
-    key: ["id"],
-    userData: JSON.stringify({
-      esAdmin: auth.esAdmin,
-      companyId: auth.user.companyId,
-      dependenceId: auth.user.dependenceId,
-    }),
-    endPoint: "cursoModulo/dx",
-    onLoading: function (loadOptions) {
-      $("#grid").lock("Cargando");
-      console.log("loadOptions =>", loadOptions);
-      console.log("onLoading");
-    },
-    onLoaded: function (results) {
-      console.log("results", results);
-      console.log("onLoaded!");
-      $("#grid").unlock();
-      $("#data").unlock();
-    },
-  }),
+  grid = null,
   itemSelected = async (e) => {
-    // console.clear();
+    console.clear();
     console.log(_sep);
     console.log("itemSelected =>", e);
     let v = e.value;
@@ -116,7 +111,17 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     console.log("id =>", id);
     if (v !== null && v !== undefined) {
       let hijos = await store.porPadre(v);
-      if (id == "dependenciaId") {
+      if (id == "territorialId") {
+        municipios.value = [];
+        item.municipioId = null;
+        item.departamentoId = null;
+        departamentos.value = await geoStore.dptosPorTerritorialId(v);
+        console.log("departamentos =>", toRaw(departamentos.value));
+      } else if (id == "departamentoId") {
+        item.municipioId = null;
+        municipios.value = await geoStore.municipiosPorDepartamentoId(v);
+        console.log("departamentos =>", toRaw(departamentos.value));
+      } if (id == "dependenciaId") {
         objetivos.value = hijos;
       } else if (id == "objetivoId") {
         especificos.value = hijos;
@@ -129,72 +134,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
       objetivos.value = [];
       especificos.value = [];
     }
-  },
-  customizeColumns = () => {
-    // console.log("customizeColumns!");
-    // columns[0].width = 70;
-  },
-  grid = null,
-  onInitialized = (o) => {
-    grid = o.component;
-    console.log("grid =>", grid);
-  },
-  active = (data) => {
-    // console.clear();
-    console.log("data =>", data);
-    msg.confirm({
-      // title: "otro",
-      textCancel: "CANCELAR",
-      textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${
-        data.activo ? "desactivar" : "activar"
-      } el módulo "<span class="font-weight-semibold">${data.nombre}</span>"?`,
-      onConfirm: () => {
-        panelGrid = $("#grid");
-        panelGrid.lock(
-          `${data.activo ? "Desactivando" : "Activando"}, un momento por favor`,
-          async function () {
-            data.activo = data.activo ? false : true;
-            await api()
-              .post(`cursoModulo/ed`, data)
-              .then((r) => {
-                console.log("r =>", r);
-                store.limpiar();
-                cancel(function () {
-                  // panelGrid.unlock();
-                  grid.refresh();
-                });
-                return r.data;
-              });
-          }
-        );
-      },
-      onCancel: () => {},
-    });
-  },
-  start = async (data) => {
-    // console.clear();
-    console.log(_sep);
-    console.log("data =>", data);
-    panelData = $("#data");
-    panelGrid = $("#grid");
-    // Editando
-    if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar módulo");
-      panelGrid.lock("Cargando");
-      item.value = Clone(data);
-    } else {
-      $("#tit-action").text("Nuevo módulo");
-      item.value = Clone(item_copy);
-    }
-    panelGrid.fadeOut("normal", async function () {
-      console.log(typeof data);
-      panelData.fadeIn("normal", function () {
-        console.log(_sep);
-        console.log("item =>", item.value);
-        panelGrid.unlock();
-      });
-    });
   },
   cancel = (cb) => {
     // console.clear();
@@ -218,6 +157,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     });
   },
   save = async () => {
+    (panelData = null), (panelGrid = null);
     // console.clear();
     let result = valGroup.value.instance.validate();
     if (!result.isValid) {
@@ -227,12 +167,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} módulo`,
+        `${item.id == 0 ? "Creando" : "Actualizando"} cursos`,
         async function () {
           let dto = item.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
-            .post("cursoModulo/ed", dto)
+            .post("curso/ed", dto)
             .then((r) => {
               console.log("r =>", r);
               cancel(function () {
@@ -270,537 +210,390 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
 
 onMounted(async () => {
   console.clear();
-  console.log(_sep);
+  territoriales.value = await store.porTipoNombre("territorial");
+  // departamentos.value = await store.porTipoNombre("departamento");
+  // municipios.value = await store.porTipoNombre("municipio");
+  dependencias.value = await store.porTipoNombre("dependencia");
+  tipo_de_curso.value = await store.porTipoNombre("tipo_curso");
+  asistencias.value = await store.porTipoNombre("tipo_asistencia");
+  productos.value = await storeProductos.all();
+  indicadores.value = await storeIndicadores.all();
+  bancos.value = await storeBancos.all();
+  nucleos.value = await storeNucleos.all();
+  programas.value = await storeProgramas.all();
+  programas.value = await storeProgramas.all();
+  // departamentos.value = await storeGeo.dptoAll();
+  // municipios.value = await storeGeo.munAll();
 });
 //----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 <template>
-  <DxValidationGroup ref="valGroup">
-    <div class="row">
-      <div class="col-md-4 mb-2">
-        <label class="tit">Nombre del curso</label>
-        <DxTextArea
-          id="nombre"
-          :height="100"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.nombre"
-          class="form-control"
-          placeholder="Nombre"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
+  <div class="row">
+    <div class="col py-4 px-4 ms-3">
+      <div class="row">
+        <div class="col pb-3 mb-3 bbd">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec urna eros, lacinia eu ullamcorper a, egestas
+          porta
+          nulla. Donec nec est nibh, rhoncus lobortis magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Donec urna eros, lacinia eu ullamcorper a, egestas porta nulla. Donec nec est nibh, rhoncus lobortis magna.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec urna eros, lacinia eu ullamcorper a, egestas
+          porta nulla. Donec nec est nibh, rhoncus lobortis magna.
+        </div>
       </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Descripción</label>
-        <DxTextArea
-          :height="100"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.descripcion"
-          class="form-control"
-          placeholder="Descripcion"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Código de verificación</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.descripcion"
-          class="form-control"
-          placeholder="Descripcion"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Dependencia Principal</label>
-        <DxSelectBox
-          id="dependencia"
-          :data-source="dependencia"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.dependencia"
-          placeholder="Dependencias"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Elaborado por</label>
-        <DxSelectBox
-          id="elaboradoPor"
-          :data-source="elaboradoPor"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.elaboradoPor"
-          placeholder="Elaborado por"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Tipo de curso</label>
-        <DxSelectBox
-          id="tipoCurso"
-          :data-source="elaboradoPor"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.elaboradoPor"
-          placeholder="Elaborado por"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Asistencia</label>
-        <DxSelectBox
-          id="asistencia"
-          :data-source="asistencia"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.asistencia"
-          placeholder=" Asistencia"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-12 mb-2">
-        <label class="tit">Producto</label>
-        <DxSelectBox
-          id="producto"
-          :data-source="producto"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.producto"
-          placeholder="Producto"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-12 mb-2">
-        <label class="tit">Indicador</label>
-        <DxSelectBox
-          id="indicador"
-          :data-source="indicador"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.indicador"
-          placeholder="Indicador"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Territorial</label>
-        <DxSelectBox
-          id="territorial"
-          :data-source="territorial"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.territorial"
-          placeholder="Territorial"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Departamento</label>
-        <DxSelectBox
-          id="departamento"
-          :data-source="departamento"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.departamento"
-          placeholder="Departamento"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Municipio</label>
-        <DxSelectBox
-          id="municipio"
-          :data-source="municipio"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.municipio"
-          placeholder="Municipio"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Cupo total</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.cupoTotal"
-          class="form-control"
-          placeholder="Numero de cupos"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-6 mb-2">
-        <label class="tit">Cupo esta aula</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.cupoAula"
-          class="form-control"
-          placeholder="Numero de cupos"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Responsable</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.responsable"
-          class="form-control"
-          placeholder="Nombre Responsable"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Correo Electrónico</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.correo"
-          class="form-control"
-          placeholder="Correo"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Teléfono de contacto</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.telefono"
-          class="form-control"
-          placeholder="Contacto"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-12 mb-2">
-        <label class="tit">Banco Programa</label>
-        <DxSelectBox
-          id="bancoPrograma"
-          :data-source="bancoPrograma"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.bancoPrograma"
-          placeholder="Banco de Programas"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-12 mb-2">
-        <label class="tit">Núcleo</label>
-        <DxSelectBox
-          id="nucleo"
-          :data-source="nucleo"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.nucleo"
-          placeholder="Nucleos"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-12 mb-2">
-        <label class="tit">Programa de Capacitación</label>
-        <DxSelectBox
-          id="programaCapacitacion"
-          :data-source="programaCapacitacion"
-          :grouped="false"
-          :min-search-length="3"
-          :search-enabled="true"
-          :show-clear-button="true"
-          :show-data-before-search="true"
-          class="form-control"
-          display-expr="nombre"
-          v-model:value="item.programaCapacitacion"
-          placeholder="Programa de capacitación"
-          value-expr="id"
-          @value-changed="valueChanged"
-        />
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Horas Totales</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.horasTotales"
-          class="form-control"
-          placeholder="Total horas"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Número de Días</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.numeroDias"
-          class="form-control"
-          placeholder="Número de Días"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Porcentaje Válido Asistencia</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.porcentajeAsistencia"
-          class="form-control"
-          placeholder="Porcentaje Válido de Asistencias"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-4 mb-2">
-        <label class="tit">Cantidad Aulas</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.cantidadAulas"
-          class="form-control"
-          placeholder="Cantidad de Aulas"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-8 mb-2">
-        <label class="tit">Lugar realización</label>
-        <DxTextArea
-          height="37"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          v-model="item.lugarRealizacion"
-          class="form-control"
-          placeholder="Lugar realización"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-3 mb-2">
-        <label class="tit">Fecha de inicio</label>
-        <DxDateBox
-          id="fechaInicioInscripciones"
-          class="form-control"
-          v-model="item.fechaInicioInscripciones"
-          display-format="dd/MM/yyyy"
-          type="date"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxDateBox>
-      </div>
-      <div class="col-md-3 mb-2">
-        <label class="tit">Fecha Fin de Inscripciones</label>
-        <DxDateBox
-          id="fechaFinInscripciones"
-          class="form-control"
-          v-model="item.fechaFinInscripciones"
-          display-format="dd/MM/yyyy"
-          type="date"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxDateBox>
-      </div>
-      <div class="col-md-3 mb-2">
-        <label class="tit">Inicio Curso</label>
-        <DxDateBox
-          id="fechaInicio"
-          class="form-control"
-          v-model="item.fechaInicio"
-          display-format="dd/MM/yyyy"
-          type="date"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxDateBox>
-      </div>
-      <div class="col-md-3 mb-2">
-        <label class="tit">Fin Curso</label>
-        <DxDateBox
-          id="fechaFin"
-          class="form-control"
-          v-model="item.fechaFin"
-          display-format="dd/MM/yyyy"
-          type="date"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxDateBox>
-      </div>
-      <div class="col-md-3 mb-2">
-        <label class="tit">Hora Inicio</label>
-        <DxDateBox
-          id="horaInicio"
-          class="form-control"
-          v-model="item.horaInicio"
-          display-format="dd/MM/yyyy"
-          type="date"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxDateBox>
-      </div>
-      <div class="col-md-12 mb-2">
-        <label class="tit">Objetivos</label>
-        <DxTextArea
-          :height="110"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          id="objetivos"
-          v-model="item.objetivos"
-          class="form-control"
-          placeholder="Objetivos"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-      <div class="col-md-12 mb-2">
-        <label class="tit">Contenidos</label>
-        <DxTextArea
-          :height="110"
-          value-change-event="keyup"
-          :show-clear-button="true"
-          id="descripcion"
-          v-model="item.contenidos"
-          class="form-control"
-          placeholder="Contenidos"
-        >
-          <DxValidator>
-            <DxRequiredRule />
-          </DxValidator>
-        </DxTextArea>
-      </div>
-    </div>
-  </DxValidationGroup>
+      <DxValidationGroup ref="valGroup">
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <label class="tit">Nombre del curso</label>
+            <DxTextArea id="nombre" :height="100" value-change-event="keyup" :show-clear-button="true"
+              v-model="item.nombre" class="form-control" placeholder="Nombre">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextArea>
+          </div>
+          <div class="col-md-5 mb-3">
+            <label class="tit">Descripción</label>
+            <DxTextArea :height="100" value-change-event="keyup" :show-clear-button="true" v-model="item.descripcion"
+              class="form-control" placeholder="Descripcion">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextArea>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Código de verificación</label>
+            <DxTextBox value-change-event="keyup" :show-clear-button="true" v-model="item.codigoVerificacion"
+              class="form-control" placeholder="Cód. de verificación" />
+          </div>
+          <div class="col-md-3 mb-1">
+            <label class="tit">Dependencia</label>
+            <DxSelectBox id="dependenciaId" ref="dependenciaIdTxtRef" :data-source="dependencias" :grouped="false"
+              :min-search-length="2" :search-enabled="true" v-model="item.dependenciaId" :show-clear-button="true"
+              :show-data-before-search="true" class="form-control" @value-changed="itemSelected" placeholder="Dependencia"
+              value-expr="id" display-expr="nombre" item-template="item">
+              <template #item="{ data }">
+                {{ data.nombre }}
+              </template>
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-3 mb-1">
+            <label class="tit">Elaborado por</label>
+            <DxTextBox value-change-event="keyup" :show-clear-button="true" v-model="item.elaboradoPor"
+              class="form-control" placeholder="Elaborado Por">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextBox>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label class="tit">Tipo de curso</label>
+            <DxSelectBox id="tipo_de_curso" :data-source="tipo_de_curso" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.tipoCurso" placeholder="Tipo de curso" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label class="tit">Asistencia</label>
+            <DxSelectBox id="asistencia" :data-source="asistencias" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.asistencia" placeholder="Tipo de asistencia" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="tit">Producto</label>
+            <DxSelectBox id="producto" :data-source="productos" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.producto" placeholder="Producto" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="tit">Indicador</label>
+            <DxSelectBox id="indicadores" :data-source="indicadores" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.indicador" placeholder="Indicadores" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="tit">Territorial</label>
+            <DxSelectBox id="territorialId" :data-source="territoriales" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.territorialId" placeholder="Territoriales" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="tit">Departamento</label>
+            <DxSelectBox id="departamentoId" :data-source="departamentos" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.departamentoId" placeholder="Departamentos" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="tit">Municipio</label>
+            <DxSelectBox id="municipioId" :data-source="municipios" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.municipioId" placeholder="Municipios" value-expr="id"
+              @value-changed="itemSelected" item-template="item">
+              <!-- <template #field="{ data }">
+            <DxTextBox :value="data.nombre + '(' + data.codigo + ')'" style="display:inline-block" />
+          </template> -->
+              <template #item="{ data }">{{ data.nombre }} ({{ data.codigo }})</template>
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-3">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="tit">Cupo total</label>
+                <DxNumberBox value-change-event="keyup" :show-spin-buttons="true" :min="0" :show-clear-button="false"
+                  v-model="item.cupoTotal" class="form-control" placeholder="Numero de cupos"
+                  @value-changed="itemSelected">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxNumberBox>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="tit">Cupo aula</label>
+                <DxNumberBox value-change-event="keyup" :show-spin-buttons="true" :min="0" :show-clear-button="false"
+                  v-model="item.cupoAula" class="form-control" placeholder="Numero de cupos"
+                  @value-changed="itemSelected">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxNumberBox>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="tit">Responsable</label>
+            <DxTextBox value-change-event="keyup" :show-clear-button="true" v-model="item.responsable"
+              class="form-control" placeholder="Nombre Responsable">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextBox>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label class="tit">Correo Electrónico</label>
+            <DxTextBox value-change-event="keyup" :show-clear-button="true" v-model="item.correo" class="form-control"
+              placeholder="Correo">
+              <DxValidator>
+                <DxRequiredRule />
+                <DxEmailRule />
+              </DxValidator>
+            </DxTextBox>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Teléfono de contacto</label>
+            <DxTextBox value-change-event="keyup" :show-clear-button="true" v-model="item.telefono" class="form-control"
+              placeholder="Teléfono">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextBox>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="tit">Banco de programas</label>
+            <DxSelectBox id="bancoPrograma" :data-source="bancos" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.bancoPrograma" placeholder="Banco de Programas" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="tit">Núcleo</label>
+            <DxSelectBox id="nucleo" :data-source="nucleos" :grouped="false" :min-search-length="2" :search-enabled="true"
+              :show-clear-button="true" :show-data-before-search="true" class="form-control" display-expr="nombre"
+              v-model="item.nucleo" placeholder="Nucleos" value-expr="id" @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="tit">Programas</label>
+            <DxSelectBox id="programas" :data-source="programas" :grouped="false" :min-search-length="2"
+              :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+              display-expr="nombre" v-model="item.programas" placeholder="Programas" value-expr="id"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Total de horas</label>
+            <DxNumberBox value-change-event="keyup" :show-spin-buttons="true" :min="0" :show-clear-button="false"
+              v-model="item.horasTotales" class="form-control" placeholder="Total horas" @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxNumberBox>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Número de días</label>
+            <DxNumberBox value-change-event="keyup" :show-spin-buttons="true" :min="0" :show-clear-button="false"
+              v-model="item.numeroDias" class="form-control" placeholder="Número de días" @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxNumberBox>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Porcentaje asistencia</label>
+            <DxNumberBox value-change-event="keyup" :show-spin-buttons="true" :min="0" :max="100"
+              :show-clear-button="false" v-model="item.porcentajeAsistencia" class="form-control"
+              placeholder="Porcentaje válido asistencia" @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxNumberBox>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Cantidad aulas</label>
+            <DxNumberBox value-change-event="keyup" :show-spin-buttons="true" :min="0" :max="100"
+              :show-clear-button="false" v-model="item.cantidadAulas" class="form-control" placeholder="Cantidad de aulas"
+              @value-changed="itemSelected">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxNumberBox>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="tit">Lugar de realización</label>
+            <DxTextBox value-change-event="keyup" :show-clear-button="true" v-model="item.lugarRealizacion"
+              class="form-control" placeholder="Lugar de realización">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextBox>
+          </div>
+          <div class="col-md-10">
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha inicio inscripciones</label>
+                <DxDateBox id="fechaInicioInscripciones" class="form-control" v-model="item.fechaInicioInscripciones"
+                  display-format="dd/MM/yyyy" type="date">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha fin inscripciones</label>
+                <DxDateBox id="fechaFinInscripciones" class="form-control" v-model="item.fechaFinInscripciones"
+                  display-format="dd/MM/yyyy" type="date">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha inicio curso</label>
+                <DxDateBox id="fechaInicio" class="form-control" v-model="item.fechaInicio" display-format="dd/MM/yyyy"
+                  type="date">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha fin curso</label>
+                <DxDateBox id="fechaFin" class="form-control" v-model="item.fechaFin" display-format="dd/MM/yyyy"
+                  type="date">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Hora inicio</label>
+            <DxDateBox id="horaInicio" class="form-control" v-model="item.horaInicio" type="time">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxDateBox>
+          </div>
 
-  <div class="card mt-4" v-if="$conf.debug">
-    <div class="card-body">
-      <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-        class="font-weight-semibold"
-        >item_copy:</span
-      >
-      {{ item_copy }}
+          <div class="col-md-3 mt-2 mb-3 text-center">
+            <label class="tit d-inline-block me-2">Publicado</label>
+            <DxCheckBox v-model="item.publicado" />
+          </div>
+          <div class="col-md-3 mt-2 mb-3 text-center">
+            <label class="tit d-inline-block me-2">Jornada mañana</label>
+            <DxCheckBox v-model="item.jornadaManana" />
+          </div>
+          <div class="col-md-3 mt-2 mb-3 text-center">
+            <label class="tit d-inline-block me-2">Jornada tarde</label>
+            <DxCheckBox v-model="item.jornadaTarde" />
+          </div>
+          <div class="col-md-3 mt-2 mb-3 text-center">
+            <label class="tit d-inline-block me-2">Jornada noche</label>
+            <DxCheckBox v-model="item.jornadaNoche" />
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="tit">Objetivos</label>
+            <DxTextArea :height="110" value-change-event="keyup" :show-clear-button="true" id="objetivos"
+              v-model="item.objetivos" class="form-control" placeholder="Objetivos">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextArea>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="tit">Contenidos</label>
+            <DxTextArea :height="110" value-change-event="keyup" :show-clear-button="true" id="descripcion"
+              v-model="item.contenidos" class="form-control" placeholder="Contenidos">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxTextArea>
+          </div>
+        </div>
+      </DxValidationGroup>
+      <!-- {{ item }} -->
+      <div class="row">
+        <div class="col pt-2 d-flex justify-content-between align-items-center">
+          <a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
+          <a class="btn btn-main" @click.prevent="save">SIGUIENTE&nbsp;&nbsp;<i
+              class="fa-solid fa-circle-chevron-right"></i></a>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>

@@ -7,14 +7,15 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class Indicador : BaseEntity
+	// [Keyless]
+	public partial class BancoProgramasNucleos : BaseEntity
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public int? ProductoId { get; set; }
-		public string? Nombre { get; set; }
-		public string? Descripcion { get; set; }
-		public virtual Producto? Producto { get; set; }
+		public int BancoId { get; set; }
+		public string? BancoProgramaNombre { get; set; }
+		public int? NucleoId { get; set; }
+		public string? NucleoNombre { get; set; }
 	}
 }

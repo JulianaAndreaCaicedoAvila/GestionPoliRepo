@@ -366,9 +366,9 @@ span.cmds {
 .card {
 	&.data {
 		label.tit {
-			font-weight: 500 !important;
-			font-size: 1.04rem !important;
-			letter-spacing: -0.8px;
+			font-weight: 600 !important;
+			font-size: 1.1rem !important;
+			letter-spacing: -0.6px;
 			color: $main-color;
 			&::after {
 				content: ":";
@@ -550,7 +550,7 @@ label.help {
 	.dx-popup-title {
 		.dx-item-content {
 			color: $main-color;
-			font-size: 1rem;
+			font-size: 1.1rem;
 			font-weight: 500;
 			letter-spacing: -1px;
 		}
@@ -558,9 +558,9 @@ label.help {
 	.dx-popup-content {
 		.dx-item-content {
 			// color: $main-color;
-			font-size: 0.96rem;
+			font-size: 1.06rem;
 			font-weight: 500;
-			letter-spacing: $letter-spacing * 2.5;
+			letter-spacing: $letter-spacing * 1.5;
 		}
 	}
 }
@@ -586,11 +586,6 @@ label.help {
 	}
 }
 
-.dx-popup-content {
-	.dx-item-content {
-		font-size: 1rem;
-	}
-}
 //  dx-list-item-content
 span.subtitle {
 	color: $main-color;
@@ -926,4 +921,35 @@ $height: 45px;
 
 .form-label {
 	margin-bottom: 0 !important;
+}
+
+.form-control {
+	&.no-border {
+		border: 1px solid transparent;
+	}
+}
+
+.dx-scrollable-wrapper {
+	margin: 0;
+	// padding: 7px 9px 8px;
+	background: rgba(0, 0, 0, 0);
+	color: #333;
+	font-size: 1em;
+	border-radius: 4px;
+	min-height: 34px;
+	border: 1px solid #ddd;
+}
+
+a.disabled {
+	pointer-events: none;
+	opacity: 0.2;
+}
+
+.bbd {
+	border-bottom: 1px dotted #ccc;
+}
+
+.dx-multiview-item-content {
+	min-height: 450px;
+	padding: 1rem;
 }

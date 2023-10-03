@@ -20,6 +20,8 @@ console.log("window._env =>", window._env);
 window._apiUrl = window._basePath + window._baseUrl + "api";
 if (import.meta.env.DEV) window._apiUrl = "http://localhost:3550";
 console.log("window._apiUrl =>", window._apiUrl);
+
+const capitalize = (str, lower = true) => (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) => match.toUpperCase());
 $().ready(function () {});
 
 // Global

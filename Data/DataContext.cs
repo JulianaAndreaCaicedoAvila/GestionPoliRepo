@@ -84,8 +84,8 @@ namespace ESAP.Sirecec.Data
 
 			// Vistas
 			builder.Entity<Users>(entity => { entity.ToView("Usuarios"); });
-			builder.Entity<Users>(entity => { entity.ToView("Cursos"); });
-			builder.Entity<Users>(entity => { entity.ToView("Municipios"); });
+			builder.Entity<Cursos>(entity => { entity.ToView("Cursos"); });
+			builder.Entity<Municipios>(entity => { entity.ToView("Municipios"); });
 			builder.Entity<BancoProgramasNucleos>(entity => { entity.ToView("BancoProgramasNucleos"); });
 			builder.Entity<Clasificadores>(entity => { entity.ToView("Clasificadores"); });
 			builder.Entity<DepartamentosMunicipios>(entity => { entity.ToView("DepartamentosMunicipios"); });

@@ -93,6 +93,24 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[HttpPost("dptos-ed")] // /api/geo/dpto-ed => CREATE - UPDATE
+		public ActionResult EditDptos(List<Departamento> items)
+		{
+			foreach (Departamento item in items)
+			{
+				// Registro existente: EDIT
+				var current = _db.Departamento?.First(o => o.Id == item.Id);
+				if (current != null)
+				{
+					var final = (Departamento)item.CopyTo(current);
+					final.EditadoPor = GetUserId();
+					final.EditadoEl = DateTime.Now;
+					_db.SaveChanges();
+				}
+			}
+			return Ok();
+		}
+
 		[HttpGet("dpto/all")] // /api/banco/all => Obtiene todos los items
 		public ActionResult DptoGetAll()
 		{

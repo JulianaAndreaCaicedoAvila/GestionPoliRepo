@@ -71,9 +71,14 @@ export const useAuthStore = defineStore("auth", {
 		},
 	},
 	actions: {
-		init() {
+		async init() {
 			// 202206080106: MSAL, en propiedad global -> http://t.ly/bu6L
-			this.msal = new PublicClientApplication(window._config.msalConfig);
+			// 202310030307: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md#uninitialized_public_client_application
+			const msalInstance = new PublicClientApplication(window._config.msalConfig);
+			await msalInstance.initialize();
+			await msalInstance.handleRedirectPromise();
+			msalInstance.acquireTokenSilent();
+			this.msal = msalInstance;
 		},
 		// checkExpired() {
 		// 	if (this.user) {

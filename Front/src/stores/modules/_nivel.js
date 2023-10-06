@@ -1,7 +1,7 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
-export const useProgramaStore = defineStore({
-  id: "Programa",
+export const useNivelStore = defineStore({
+  id: "nivel",
   state: () => ({
     items: [],
   }),
@@ -10,10 +10,10 @@ export const useProgramaStore = defineStore({
       this.items = [];
     },
     async all() {
-      console.log("Programa items =>", this.items);
+      console.log("Nivel items =>", this.items);
       if (this.items.length > 0) return this.items;
       return await api()
-        .get(`programa/all`)
+        .get(`nivel/all`)
         .then(async (r) => {
           this.items = r.data;
           return this.items;
@@ -23,10 +23,10 @@ export const useProgramaStore = defineStore({
       if (this.items.length <= 0) await this.all();
       return this.items.find((o) => o.id == id);
     },
-    async programaPorNucleoId(nucleoId) {
+    async nivelesPorEscuelaId(escuelaId) {
       let items = await this.all();
       // console.log("departamentos =>", items);
-      return items.filter((o) => o.nucleoId == nucleoId);
+      return items.filter((o) => o.escuelaId == escuelaId);
     },
   },
 });

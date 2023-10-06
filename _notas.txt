@@ -1,3 +1,17 @@
+
+<option value="182">Contrato CISP – ESAP (Espacio Alto Gobierno)</option>
+<option value="183">Contrato CMA – ESAP (Espacio Proyección Institucional)</option>
+<option value="184">Contrato CMA – ESAP (Espacio Alto Gobierno)</option>
+<option value="185">Contrato Beltrán Pardo – ESAP (Espacio Proyección Institucional)</option>
+<option value="201">No Aplica</option>
+<option value="222">ECRI</option>
+<option value="262">Alto Gobierno (Sede Central)</option>
+<option value="244">OTROS</option>
+<option value="360">Facultad de Investigaciones</option>
+<option value="261">Alto Gobierno (Territoriales)</option>
+<option value="541">FORTALECIMIENTO DE LAS CAPACIDADES DE LOS ALTOS FUNCIONARIOS DEL ESTADO NACIONAL</option>
+<option value="601">PROGRAMA DE FORTALECIMIENTO</option>
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202306161422:

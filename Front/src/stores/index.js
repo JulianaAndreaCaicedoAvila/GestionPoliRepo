@@ -8,4 +8,6 @@ export * from "./modules/_indicador";
 export * from "./modules/_nucleo";
 export * from "./modules/_producto";
 export * from "./modules/_programa";
+export * from "./modules/_departamento";
+export * from "./modules/_nivel";
 export * from "./modules/_user";

@@ -77,7 +77,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _db.Curso.OrderBy(o => o.Nombre).ToList();
+			var items = _db.Cursos.OrderBy(o => o.Nombre).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

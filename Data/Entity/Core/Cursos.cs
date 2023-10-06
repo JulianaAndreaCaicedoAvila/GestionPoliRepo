@@ -78,9 +78,9 @@ namespace ESAP.Sirecec.Data.Core
 		public string? CertificadoCiudad { get; set; }
 		public bool? CertificadoVerCiudad { get; set; }
 		public DateTime CertificadoFechaExpedicion { get; set; }
-		public virtual List<CursoAnexo>? Anexos { get; set; }
-		public virtual List<CursoEncuesta>? Encuestas { get; set; }
-		public virtual List<CursoFecha>? Fechas { get; set; }
+		// public virtual List<CursoAnexo>? Anexos { get; set; }
+		// public virtual List<CursoEncuesta>? Encuestas { get; set; }
+		// public virtual List<CursoFecha>? Fechas { get; set; }
 
 	}
 }

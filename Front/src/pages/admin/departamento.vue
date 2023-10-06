@@ -4,61 +4,48 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import { useGeneralStore, useBancoStore, useAuthStore } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,
 } from "devextreme-vue/validator";
 import {
   DxSelectBox,
-  DxHtmlEditor,
   DxTextBox,
-  DxTextArea,
+  DxDateBox,
   DxValidationGroup,
-  DxToolbar,
-  DxMediaResizing,
-  DxImageUpload,
-  DxItem,
 } from "devextreme-vue";
 import {
   DxColumn,
   DxColumnChooser,
-  DxColumnFixing,
-  DxDataGrid,
-  DxEditing,
   DxExport,
+  DxScrolling,
   DxFilterRow,
+  DxDataGrid,
   DxGrouping,
   DxGroupItem,
+  DxLookup,
   DxGroupPanel,
   DxLoadPanel,
-  DxLookup,
   DxPager,
   DxPaging,
-  DxScrolling,
   DxSearchPanel,
   DxSorting,
   DxSummary,
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
-  store = useClasificadorStore(),
+  store = useBancoStore(),
   auth = useAuthStore();
-
-let titulo = "Administración &raquo; Cursos",
+let titulo = "Administración &raquo; Departamentos",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
-  dependencias = ref([]),
+  bancos = ref([]),
   especificos = ref([]),
   item = ref({
     id: 0,
-    dependenciaId: null,
     nombre: null,
-    descripcion: null,
-    actividadAprendizaje: null,
-    actividadEvaluacion: null,
-    justificacion: null,
-    metodologia: null,
+    codigo: null,
     activo: true,
     creadoEl: null,
     creadoPor: null,
@@ -75,7 +62,7 @@ let titulo = "Administración &raquo; Cursos",
       companyId: auth.user.companyId,
       dependenceId: auth.user.dependenceId,
     }),
-    endPoint: "curso/dx",
+    endPoint: "geo/dx-dpto",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -88,6 +75,29 @@ let titulo = "Administración &raquo; Cursos",
       $("#data").unlock();
     },
   }),
+  itemSelected = async (e) => {
+    // console.clear();
+    console.log(_sep);
+    console.log("itemSelected =>", e);
+    let v = e.value;
+    let id = $(e.element).attr("id");
+    console.log("id =>", id);
+    // if (v !== null && v !== undefined) {
+    //   let hijos = await store.porPadre(v);
+    //   if (id == "dependenciaId") {
+    //     objetivos.value = hijos;
+    //   } else if (id == "objetivoId") {
+    //     especificos.value = hijos;
+    //   } else if (id == "sectorId") {
+    //     entidades.value = hijos;
+    //   } else if (id == "entidadId") {
+    //     bancos.value = hijos;
+    //   }
+    // } else {
+    //   objetivos.value = [];
+    //   especificos.value = [];
+    // }
+  },
   customizeColumns = () => {
     // console.log("customizeColumns!");
     // columns[0].width = 70;
@@ -106,7 +116,9 @@ let titulo = "Administración &raquo; Cursos",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
       text: `¿Realmente desea ${
         data.activo ? "desactivar" : "activar"
-      } el curso "<span class="font-weight-semibold">${data.nombre}</span>"?`,
+      } el Departamento "<span class="font-weight-semibold">${
+        data.nombre
+      }</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -114,10 +126,9 @@ let titulo = "Administración &raquo; Cursos",
           async function () {
             data.activo = data.activo ? false : true;
             await api()
-              .post(`curso/ed`, data)
+              .post(`geo/dpto-ed`, data)
               .then((r) => {
                 console.log("r =>", r);
-                store.limpiar();
                 cancel(function () {
                   // panelGrid.unlock();
                   grid.refresh();
@@ -138,11 +149,11 @@ let titulo = "Administración &raquo; Cursos",
     panelGrid = $("#grid");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar módulo");
+      $("#tit-action").text("Editar Departamento");
       panelGrid.lock("Cargando");
       item.value = Clone(data);
     } else {
-      $("#tit-action").text("Nuevo curso");
+      $("#tit-action").text("Nuevo Departamento");
       item.value = Clone(item_copy);
     }
     panelGrid.fadeOut("normal", async function () {
@@ -174,17 +185,128 @@ let titulo = "Administración &raquo; Cursos",
         if (typeof cb === "function") cb();
       });
     });
+  },
+  save = async () => {
+    // console.clear();
+    let result = valGroup.value.instance.validate();
+    if (!result.isValid) {
+      $.scrollTo($(".dx-invalid:first"), {
+        duration: 600,
+        offset: -110,
+      });
+    } else {
+      panelData.lock(
+        `${item.id == 0 ? "Creando" : "Actualizando"} Departamentos`,
+        async function () {
+          let dto = item.value;
+          console.log("dto =>", dto);
+          await api({ hideErrors: true })
+            .post("geo/dpto-ed", dto)
+            .then((r) => {
+              console.log("r =>", r);
+              cancel(function () {
+                // panelData.unlock();
+                grid.refresh();
+              });
+            })
+            .catch(function (error) {
+              if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+              } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log("Error", error.message);
+              }
+              console.log(error.config);
+              // console.log("r =>", r);
+              cancel(function () {
+                // panelData.unlock();
+                grid.refresh();
+              });
+            });
+        }
+      );
+    }
   };
+
 onMounted(async () => {
   // console.clear();
   console.log(_sep);
-  // $("#grid").lock("Cargando");
+  $("#grid").lock("Cargando");
+  bancos.value = await store.all();
   console.log("route.name =>", route.name);
 });
-//----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 <template>
   <div class="container content">
+    <div class="card data hidden" id="data">
+      <div class="card-header main d-flex justify-content-between">
+        <span>
+          <i class="fa-solid fa-gears"></i>
+          <span v-html="titulo" /> &raquo;
+          <span id="tit-action">Departamentos</span>
+        </span>
+      </div>
+
+      <DxValidationGroup ref="valGroup">
+        <div class="card-body pt-3 pb-4">
+          <div class="row">
+            <div class="col-md-8 mb-2">
+              <label class="tit">Nombre</label>
+              <DxTextBox
+                id="nombre"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.nombre"
+                class="form-control"
+                placeholder="Nombre"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                  <DxStringLengthRule :min="3" />
+                </DxValidator>
+              </DxTextBox>
+            </div>
+            <div class="col-md-4 mb-2">
+              <label class="tit">DIVIPOLA</label>
+              <DxTextBox
+                id="codigo"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.codigo"
+                class="form-control"
+                placeholder="Codigo"
+              >
+                <DxValidator>
+                  <DxRequiredRule />
+                  <DxStringLengthRule :min="2" />
+                </DxValidator>
+              </DxTextBox>
+            </div>
+          </div>
+        </div>
+      </DxValidationGroup>
+
+      <div class="card-footer">
+        <div class="d-flex justify-content-between align-items-center">
+          <a class="btn btn-gray" @click.prevent="cancel"
+            ><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a
+          >
+          <a class="btn btn-main" @click.prevent="save"
+            >GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+
     <div class="card content" id="grid">
       <div class="card-header main d-flex justify-content-between">
         <span>
@@ -192,123 +314,89 @@ onMounted(async () => {
           <span v-html="titulo" />
         </span>
         <span>
-          <router-link
-            :to="{ path: '/admin/curso' }"
+          <button
+            type="button"
             class="btn btn-trans"
             @click.prevent="start()"
-            ><i class="fa-solid fa-square-plus"></i>NUEVO</router-link
+            title="Nuevo"
           >
+            <i class="fa-solid fa-square-plus"></i>NUEVO
+          </button>
         </span>
       </div>
 
       <div class="card-body pt-3 pb-4">
         <div class="row">
           <div class="col">
+            <!-- <h2 class="font-weight-normal text-7 mb-1 color-main"><strong class="font-weight-semibold">Indicadores</strong> Principal o Interna</h2> -->
+            <!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
             <DxDataGrid
-              :column-auto-width="false"
               :customize-columns="customizeColumns"
               :data-source="dxStore"
               :hover-state-enabled="true"
-              :remote-operations="false"
-              :repaint-changes-only="true"
+              :remote-operations="true"
+              :word-wrap-enabled="true"
               :row-alternation-enabled="true"
               :show-borders="false"
-              :word-wrap-enabled="true"
-              horizontal-alignment="Stretch"
-              @initialized="onInitialized"
               id="gridContainer"
-              key-expr="id"
+              @initialized="onInitialized"
             >
-              <DxColumnChooser :enabled="false" mode="dragAndDrop" />
-              <DxColumnFixing :enabled="true" />
-              <DxEditing
-                :allow-updating="false"
-                :allow-deleting="false"
-                :allow-adding="false"
-                mode="cell"
-              />
-              <DxExport :enabled="false" />
-              <DxFilterRow :visible="true" />
-              <DxGrouping :auto-expand-all="true" />
-              <DxGroupPanel :visible="true" :allow-column-dragging="true" />
               <DxLoadPanel :enabled="false" />
-              <DxScrolling row-rendering-mode="virtual" />
-              <DxSearchPanel
-                :visible="false"
-                :highlight-case-sensitive="false"
-              />
+              <DxFilterRow :visible="true" />
+              <!-- <DxColumnChooser :enabled="true" mode="dragAndDrop" />
+							<DxExport :enabled="true" />
+							
+							<DxGrouping :auto-expand-all="true" />
+							<DxGroupPanel :visible="true" :allow-column-dragging="true" />
+							<DxScrolling row-rendering-mode="virtual" />
+							<DxSearchPanel :visible="false" :highlight-case-sensitive="false" /> -->
               <DxSorting mode="single" /><!-- single, multiple, none" -->
               <DxSummary>
                 <DxGroupItem
                   summary-type="count"
                   column="group_type_name"
-                  display-format="{0} ítems"
+                  display-format="{0}"
                 />
               </DxSummary>
-              <DxPaging :page-size="5" />
+              <DxPaging :page-size="15" />
               <DxPager
                 :visible="true"
                 :show-info="true"
                 :show-page-size-selector="false"
                 :show-navigation-buttons="true"
                 :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} cursos (página {0} de {1})"
+                info-text="{2} departamentos (página {0} de {1})"
               />
+              <!-- <DxColumn
+                data-field="bancoId"
+                caption="Banco de programas"
+                :visible="true"
+                :allow-filtering="true"
+              >
+                <DxLookup
+                  :data-source="bancos"
+                  value-expr="id"
+                  display-expr="nombre"
+                />
+              </DxColumn> -->
               <DxColumn
                 data-field="id"
                 caption="Id"
-                :visible="true"
+                :visible="false"
                 :width="80"
                 :allow-filtering="false"
                 :allow-sorting="true"
                 alignment="center"
               />
               <DxColumn
-                :width="80"
-                data-field="CODIGO"
-                caption="Código"
-                alignment="center"
-                :visible="true"
-              />
-              <DxColumn
                 data-field="nombre"
-                caption="Nombre"
-                :visible="true"
-                :fixed="false"
-                fixed-position="left"
-              />
-              <DxColumn
-                data-field="descripcion"
-                caption="Descripción"
+                caption="Departamentos"
                 :visible="true"
               />
               <DxColumn
-                data-field="territorial"
-                caption="Territorial"
+                data-field="codigo"
+                caption="DIVIPOLA"
                 :visible="true"
-                :width="130"
-              />
-              <DxColumn
-                data-field="porcentajeAsistencia"
-                caption="Asistencia"
-                :visible="true"
-                :width="100"
-                alignment="center"
-              />
-              <DxColumn
-                data-field="objetivos"
-                caption="Objetivos"
-                :visible="false"
-              />
-              <DxColumn
-                data-field="actividadAprendizaje"
-                caption="Aprendizaje"
-                :visible="false"
-              />
-              <DxColumn
-                data-field="actividadEvaluacion"
-                caption="Evaluacion"
-                :visible="false"
               />
               <DxColumn
                 :width="100"
@@ -334,7 +422,7 @@ onMounted(async () => {
                 cell-template="tpl"
                 caption=""
                 name="cmds"
-                :fixed="false"
+                :fixed="true"
                 fixed-position="right"
               />
               <template #tpl="{ data }">

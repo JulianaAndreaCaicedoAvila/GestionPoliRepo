@@ -631,7 +631,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     TerritorialId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     Nombre = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Codigo = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
                     EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
                     Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true),

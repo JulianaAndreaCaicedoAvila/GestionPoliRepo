@@ -18,6 +18,9 @@ namespace ESAP.Sirecec.Data.Core
 
 		[ForeignKey("Nivel")]
 		public int? NivelId { get; set; }
+
+		// [ForeignKey("Escuela")]
+		// public int? EscuelaId { get; set; 
 		public int? TipoAsistenciaId { get; set; }
 
 		[ForeignKey("Indicador")]

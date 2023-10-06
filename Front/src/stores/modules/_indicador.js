@@ -23,5 +23,10 @@ export const useIndicadorStore = defineStore({
       if (this.items.length <= 0) await this.all();
       return this.items.find((o) => o.id == id);
     },
+    async indicadorPorProductoId(productoId) {
+      let items = await this.all();
+      // console.log("departamentos =>", items);
+      return items.filter((o) => o.productoId == productoId);
+    },
   },
 });

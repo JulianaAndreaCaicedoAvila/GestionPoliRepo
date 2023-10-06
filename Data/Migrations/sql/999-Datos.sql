@@ -1409,40 +1409,52 @@ INSERT INTO "Municipio" ("DepartamentoId", "Nombre", "Codigo","Orden","CreadoPor
 INSERT INTO "Municipio" ("DepartamentoId", "Nombre", "Codigo","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (33, N'Santa Rosalía', N'99624', 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Municipio" ("DepartamentoId", "Nombre", "Codigo","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (33, N'Cumaribo', N'99773', 0, 1, 1, 1, SYSDATE, SYSDATE);
 -- ======================================================================================================
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (1,'Departamento');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (2,'Municipio');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (1,'Elaborado por'); -- NO
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (2,'Municipio'); -- NO
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (3,'Tipo documento de identidad');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (4,'Género');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (5,'Nivel escolar');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (6,'Estado civil');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (7,'Dependencia');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (8,'Territorial');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (9,'Programa');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (10,'Producto');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (11,'Indicador');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (12,'Núcleo');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (13,'Tema');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (8,'Territorial'); -- NO
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (9,'Programa'); -- NO
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (10,'Producto'); -- NO
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (11,'Indicador'); -- NO
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (12,'Núcleo'); -- NO
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (13,'Tema'); -- NO
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (14,'Tipo de curso');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (15,'Tipo de asistencia');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (16,'Clasificación de documento');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (17,'Clasificación de multimedia');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (18,'Grupo de documento');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (19,'Tipo de documento');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (20,'Objetivo Indicadores');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (20,'Objetivo Indicadores'); -- NO
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (21,'Característica ESAP');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (22,'Tipo de Discapacidad');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (23,'Tipo de Vulnerabilidad');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (22,'Tipo de discapacidad');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (23,'Tipo de vulnerabilidad');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (24,'Cargo actual');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (25,'Tipo Participante');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (26,'Tipo Servidor Público');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (27,'Grupo Étnico');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (28,'Tipo de Valor General');
-INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (29,'Tipo de Encuesta');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (25,'Tipo participante');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (26,'Tipo servidor público');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (27,'Grupo étnico');
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (28,'Tipo de Valor General'); -- NO
+INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (29,'Tipo de encuesta');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (30,'Certificado etiqueta');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (31,'Estado de curso');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (32,'Entidad');
 INSERT INTO "ClasificadorTipo" ("Id","Nombre") VALUES (33,'Cargo');
 -- ======================================================================================================
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Contrato CISP – ESAP (Espacio Proyección Institucional)', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Contrato CISP – ESAP (Espacio Alto Gobierno)', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Contrato CMA – ESAP (Espacio Proyección Institucional)', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Contrato Beltrán Pardo – ESAP (Espacio Proyección Institucional)', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'No Aplica', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'ECRI', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Alto Gobierno (Sede Central)', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Otros', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Facultad de Investigaciones', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Alto Gobierno (Territoriales)', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Fortalecimiento de las capacidades de los altos funcionarios del estado nacional', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (1, 0, N'Programa de fortalecimiento', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (7, 0, N'Capacitación', 'Capacitación', 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (7, 0, N'Alto Gobierno', 'Alto Gobierno', 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (8, 0, N'Dirección Nacional (Sede Central)	', 'Nacional', 0, 1, 1, 1, SYSDATE, SYSDATE);
@@ -1728,6 +1740,9 @@ INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","C
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (14, 0, N'SEMINARIO', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (14, 0, N'TALLER MIXTO', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (14, 0, N'TALLER', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (15, 0, N'Virtual', '', 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (15, 0, N'Presencial', '', 0, 1, 1, 1, SYSDATE, SYSDATE);
+INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (15, 0, N'Virtual y Presencial', '', 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (21, 0, N'DOCENTE ESAP', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (21, 0, N'ESTUDIANTE ESAP', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);
 INSERT INTO "Clasificador" ("TipoId","PadreId","Nombre","Descripcion","Orden","CreadoPor","EditadoPor","Activo","CreadoEl","EditadoEl") VALUES (21, 0, N'FUNCIONARIO ESAP', NULL, 0, 1, 1, 1, SYSDATE, SYSDATE);

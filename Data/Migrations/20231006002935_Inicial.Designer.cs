@@ -12,7 +12,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace ESAP.Sirecec.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230929175522_Inicial")]
+    [Migration("20231006002935_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -599,6 +599,232 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("CursoTema");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Cursos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("BancoFechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("BancoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("BancoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("CantidadAulas")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("CertificadoCiudad")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("CertificadoEtiquetaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("CertificadoEtiquetaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("CertificadoFechaExpedicion")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<bool?>("CertificadoVerCiudad")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("CodigoVerificacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Contenidos")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("CorreoElectronico")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("CupoAula")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("CupoTotal")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DepartamentoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("DependenciaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DependenciaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("EscuelaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("EscuelaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("EstadoCursoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("EstadoCursoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("FechaFinInscripcion")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("FechaInicioInscripcion")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("HoraInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("HorasTotales")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ImagenCertificado")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("ImagenCurso")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("IndicadorId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("IndicadorNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool?>("JornadaManana")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool?>("JornadaNoche")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool?>("JornadaTarde")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("LugarRealizacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("MunicipioId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("MunicipioNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("NivelId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NivelNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("NucleoFechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("NucleoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NucleoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("NumeroDias")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Objetivos")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("PaisId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PaisIso1")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PaisIso2")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("PorcentajeValidoAsistencia")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("ProductoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ProductoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("ProgramaFechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("ProgramaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ProgramaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool?>("Publicado")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("Responsable")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("TelefonoContacto")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TerritorialId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TerritorialNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TipoAsistenciaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TipoAsistenciaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TipoCursoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TipoCursoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Cursos", (string)null);
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Departamento", b =>
                 {
                     b.Property<int>("Id")
@@ -618,9 +844,6 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.Property<int?>("CreadoPor")
                         .HasColumnType("NUMBER(10)");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
                         .HasColumnType("TIMESTAMP(7)");
@@ -1031,6 +1254,48 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasIndex("DepartamentoId");
 
                     b.ToTable("Municipio");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Municipios", b =>
+                {
+                    b.Property<int>("MunicipioId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("DepartamentoCodigo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DepartamentoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("MunicipioCodigo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("MunicipioNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("PaisId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PaisIso1")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PaisIso2")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PaisNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("MunicipioId");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Municipios", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>

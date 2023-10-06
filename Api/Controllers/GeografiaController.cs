@@ -171,14 +171,26 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(items);
 		}
 
-		[HttpPost("dx")] // /api/banco/dx => DevExtreme DataGrid Get
-		public ActionResult GetDx()
+		[HttpPost("dx-dpto")] // /api/banco/dx => DevExtreme DataGrid Get
+		public ActionResult GetDxDpto()
 		{
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _db.Municipios?.OrderBy(o => o.Nombre).ToList();
+			var items = _db.Departamento?.OrderBy(o => o.Nombre).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
+		}
+
+		[HttpPost("dx-mun")] // /api/banco/dx => DevExtreme DataGrid Get
+		public ActionResult GetDxMun()
+		{
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "MunicipioId" };
+			var items = _db.Municipios?.OrderBy(o => o.MunicipioNombre).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

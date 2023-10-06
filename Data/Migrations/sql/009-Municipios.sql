@@ -1,9 +1,9 @@
 ﻿CREATE OR REPLACE VIEW "Municipios" AS
 SELECT
 D."PaisId",
-P."Nombre" AS PaisNombre,
-P."Iso1" AS PaisIso1,
-P."Iso2" AS PaisIso2,
+P."Nombre" AS "PaisNombre",
+P."Iso1" AS "PaisIso1",
+P."Iso2" AS "PaisIso2",
 M."DepartamentoId",
 D."Nombre" AS "DepartamentoNombre",
 D."Codigo" AS "DepartamentoCodigo",

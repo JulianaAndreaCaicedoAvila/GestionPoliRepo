@@ -2,7 +2,7 @@
 SELECT
 C."Id",
 C."DependenciaId",
-DP."Nombre" AS" DependenciaNombre",
+DP."Nombre" AS "DependenciaNombre",
 C."TipoCursoId",
 TC."Nombre" AS "TipoCursoNombre",
 C."NivelId",

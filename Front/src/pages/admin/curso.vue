@@ -265,7 +265,7 @@ onMounted(async () => {
               />
               <DxColumn
                 :width="80"
-                data-field="CODIGO"
+                data-field="codigoVerificacion"
                 caption="Código"
                 alignment="center"
                 :visible="true"
@@ -283,7 +283,7 @@ onMounted(async () => {
                 :visible="true"
               />
               <DxColumn
-                data-field="territorial"
+                data-field="territorialNombre"
                 caption="Territorial"
                 :visible="true"
                 :width="130"
@@ -295,7 +295,7 @@ onMounted(async () => {
                 :width="100"
                 alignment="center"
               />
-              <DxColumn
+              <!-- <DxColumn
                 data-field="objetivos"
                 caption="Objetivos"
                 :visible="false"
@@ -309,7 +309,7 @@ onMounted(async () => {
                 data-field="actividadEvaluacion"
                 caption="Evaluacion"
                 :visible="false"
-              />
+              /> -->
               <DxColumn
                 :width="100"
                 data-field="activo"

@@ -56,6 +56,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   municipios = ref([]),
   dependencias = ref([]),
   tipo_de_curso = ref([]),
+  creadoPor = ref([]),
   escuelas = ref([]),
   productos = ref([]),
   territoriales = ref([]),
@@ -71,7 +72,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     codigoVerificacion: null,
     nombre: null,
     descripcion: null,
-    elaboradoPor: null,
+    creadoPor: null,
     tipoCursoId: null,
     escuelaId: null,
     nucleoId: null,
@@ -96,7 +97,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     jornadaManana: false,
     jornadaTarde: false,
     jornadaNoche: false,
-    porcentajeAsistencia: 0,
+    porcentajeValidoAsistencia: 0,
     cantidadAulas: 0,
     lugarRealizacion: null,
     fechaInicioInscripciones: new Date(),
@@ -165,7 +166,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   },
   cancel = (cb) => {
     // console.clear();
-    panelData = $("#data");
+    panelData = $("#panel-data");
     panelGrid = $("#grid");
     console.log("CANCEL!");
     panelData.fadeOut("normal", function () {
@@ -185,7 +186,8 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     });
   },
   save = async () => {
-    (panelData = null), (panelGrid = null);
+    panelData = $("#panel-data");
+    panelGrid = null;
     // console.clear();
     let result = valGroup.value.instance.validate();
     if (!result.isValid) {
@@ -244,6 +246,7 @@ onMounted(async () => {
   dependencias.value = await store.porTipoNombre("dependencia");
   tipo_de_curso.value = await store.porTipoNombre("tipo_curso");
   asistencias.value = await store.porTipoNombre("tipo_asistencia");
+  creadoPor.value = await store.porTipoNombre("elaborado_por");
   productos.value = await storeProductos.all();
   indicadores.value = await storeIndicadores.all();
   bancos.value = await storeBancos.all();
@@ -257,7 +260,7 @@ onMounted(async () => {
 //----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
 <template>
-  <div class="row">
+  <div class="row" id="panel-data">
     <div class="col py-4 px-4 ms-3">
       <div class="row">
         <div class="col pb-3 mb-3 bbd">
@@ -341,24 +344,10 @@ onMounted(async () => {
               </DxValidator>
             </DxSelectBox>
           </div>
-          <div class="col-md-4 mb-1">
-            <label class="tit">Elaborado por</label>
-            <DxTextBox
-              value-change-event="keyup"
-              :show-clear-button="true"
-              v-model="item.elaboradoPor"
-              class="form-control"
-              placeholder="Elaborado Por"
-            >
-              <DxValidator>
-                <DxRequiredRule />
-              </DxValidator>
-            </DxTextBox>
-          </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Tipo de curso</label>
             <DxSelectBox
-              id="tipo_de_curso"
+              id="creadoPor"
               :data-source="tipo_de_curso"
               :grouped="false"
               :min-search-length="2"
@@ -367,8 +356,31 @@ onMounted(async () => {
               :show-data-before-search="true"
               class="form-control"
               display-expr="nombre"
+              v-model="item.creadoPor"
+              placeholder="Elaborado Por"
+              value-expr="id"
+              @value-changed="itemSelected"
+            >
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxSelectBox>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label class="tit">Elaborado por</label>
+            <DxSelectBox
+              id="tipo_de_curso"
+              :data-source="creadoPor"
+              :grouped="false"
+              :min-search-length="2"
+              :search-enabled="true"
+              :show-clear-button="true"
+              :show-data-before-search="true"
+              class="form-control"
+              display-expr="nombre"
               v-model="item.tipoCursoId"
-              placeholder="Tipo de curso"
+              placeholder="Elaborado por"
               value-expr="id"
               @value-changed="itemSelected"
             >
@@ -749,7 +761,7 @@ onMounted(async () => {
               :min="0"
               :max="100"
               :show-clear-button="false"
-              v-model="item.porcentajeAsistencia"
+              v-model="item.porcentajeValidoAsistencia"
               class="form-control"
               placeholder="Porcentaje válido asistencia"
               @value-changed="itemSelected"

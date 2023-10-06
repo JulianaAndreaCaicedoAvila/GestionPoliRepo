@@ -15,7 +15,7 @@
 		"anno_final": 2031
 	},
 	"tipo_clasificador": [
-		{ "id": 1, "name": "departamento" },
+		{ "id": 1, "name": "elaborado_por" },
 		{ "id": 2, "name": "municipio" },
 		{ "id": 3, "name": "tipo_documento_identidad" },
 		{ "id": 4, "name": "genero" },

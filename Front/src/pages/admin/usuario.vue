@@ -24,10 +24,10 @@ import {
 } from "devextreme-vue/data-grid";
 const store = useClasificadorStore();
 const authStore = useAuthStore();
-let companyId = 1518,
+let companyId = 358,
 	entidades = ref([]),
 	dependencias = ref([]),
-	item = ref({
+	item2 = ref({
 		id: 0,
 		roleId: null,
 		companyId: null,

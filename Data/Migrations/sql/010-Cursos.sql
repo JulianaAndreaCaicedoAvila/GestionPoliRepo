@@ -104,5 +104,5 @@ LEFT OUTER JOIN "BancoPrograma" BP
 ON NU."BancoId" = BP."Id"
 LEFT OUTER JOIN "Clasificador" EC
 ON C."EstadoCursoId" = EC."Id"
-INNER JOIN "Clasificador" CE
+LEFT OUTER JOIN "Clasificador" CE
 ON C."CertificadoEtiquetaId" = CE."Id"

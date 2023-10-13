@@ -37,7 +37,7 @@ const route = useRoute();
 const router = useRouter();
 let list1 = null,
   list2 = null,
-  itemId = ref(8),
+  itemId = ref(8), // TipoId
   fromData = ref([]),
   toData = ref([]),
   selRightClass = ref(""),
@@ -108,9 +108,8 @@ let list1 = null,
         let dto = toRaw(item.value);
         console.log("dto =>", dto);
         await api()
-          .post(`clasificador/ed`, dto)
+          .post(`clasificador/ed`, dto) // Guarda item
           .then(async (r) => {
-            // 202310030104: Guarda los dptos
             dptosFrom.value.forEach((item) => {
               item.territorialId = null;
             });
@@ -119,7 +118,15 @@ let list1 = null,
             });
             // 202310030155: https://stackoverflow.com/a/53404382
             dto = [...toRaw(dptosFrom.value), ...toRaw(dptosTo.value)];
+            /*
+            var lst = [{
+              id: 0,
+              encuestaId: r.id,
+              preguntaId: 
+            }];
             console.log("dto =>", dto);
+            */
+            // 202310030104: Guarda los dptos
             await api()
               .post(`geo/dptos-ed`, dto)
               .then((r) => {
@@ -167,7 +174,11 @@ let list1 = null,
     });
   },
   addStart = (data) => {
-    // console.clear();
+    console.clear();
+    if (typeof data == "undefined") {
+      console.log("CREANDO REGISTRO");
+      data = Clone(base);
+    }
     console.log("data =>", data);
     panelGrid.lock("Cargando");
     panelGrid.fadeOut(async function () {
@@ -183,6 +194,7 @@ let list1 = null,
         (o) => o.territorialId == null
       );
       dptosFrom.value = Object.assign([], dptos.value);
+      // TODO: Asociar al store dptosTo.value = geoStore.dptosPorTerritorialId(data.id);
       dptosTo.value = Object.assign([], dptosAll.value).filter(
         (o) => o.territorialId == data.id
       );
@@ -480,6 +492,7 @@ onMounted(async () => {
                   <label class="tit">Departamentos seleccionados</label>
                   <DxList
                     id="list2"
+                    v-model="toData"
                     v-model:selected-item-keys="toData"
                     :data-source="dptosTo"
                     :height="250"

@@ -41,6 +41,7 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<DepartamentosMunicipios>? DepartamentosMunicipios { get; set; } = null!;
 		public virtual DbSet<Documento>? Documento { get; set; } = null!;
 		public virtual DbSet<Encuesta>? Encuesta { get; set; } = null!;
+		public virtual DbSet<Encuestas>? Encuestas { get; set; } = null!;
 		public virtual DbSet<EncuestaPregunta>? EncuestaPregunta { get; set; } = null!;
 		public virtual DbSet<Escuela>? Escuela { get; set; } = null!;
 		public virtual DbSet<Indicador>? Indicador { get; set; } = null!;
@@ -93,6 +94,7 @@ namespace ESAP.Sirecec.Data
 			builder.Entity<Productos>(entity => { entity.ToView("Productos"); });
 			builder.Entity<ProductosIndicadores>(entity => { entity.ToView("ProductosIndicadores"); });
 			builder.Entity<TerritorialesDepartamentos>(entity => { entity.ToView("TerritorialesDepartamentos"); });
+			builder.Entity<Encuestas>(entity => { entity.ToView("Encuestas"); });
 		}
 	}
 }

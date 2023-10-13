@@ -118,6 +118,27 @@ namespace ESAP.Sirecec.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CursoAnexo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    CursoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    TipoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    AnexoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
+                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
+                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true),
+                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CursoAnexo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DepartamentoMunicipio",
                 columns: table => new
                 {
@@ -167,7 +188,6 @@ namespace ESAP.Sirecec.Data.Migrations
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    TipoEncuestaId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     Titulo = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
@@ -316,9 +336,7 @@ namespace ESAP.Sirecec.Data.Migrations
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    TipoEncuestaId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     Titulo = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Descripcion = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
                     EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
                     Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true),
@@ -822,33 +840,6 @@ namespace ESAP.Sirecec.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CursoAnexo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    CursoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    TipoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    AnexoId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    CreadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    EditadoEl = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    Activo = table.Column<bool>(type: "NUMBER(1)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true),
-                    EditadoPor = table.Column<int>(type: "NUMBER(10)", nullable: true),
-                    Orden = table.Column<int>(type: "NUMBER(10)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CursoAnexo", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CursoAnexo_Curso_CursoId",
-                        column: x => x.CursoId,
-                        principalTable: "Curso",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CursoEncuesta",
                 columns: table => new
                 {
@@ -982,11 +973,6 @@ namespace ESAP.Sirecec.Data.Migrations
                 name: "IX_Curso_NivelId",
                 table: "Curso",
                 column: "NivelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CursoAnexo_CursoId",
-                table: "CursoAnexo",
-                column: "CursoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CursoEncuesta_CursoId",

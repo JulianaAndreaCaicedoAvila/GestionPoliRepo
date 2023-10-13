@@ -20,6 +20,7 @@ namespace ESAP.Sirecec.Data.Migrations
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/008-NucleosProgramas.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/009-Municipios.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/010-Cursos.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/011-Encuestas.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/999-Datos.sql"));
         }
 
@@ -66,6 +67,7 @@ namespace ESAP.Sirecec.Data.Migrations
             EXECUTE IMMEDIATE 'DROP VIEW ""NucleosProgramas""';
             EXECUTE IMMEDIATE 'DROP VIEW ""Municipios""';
             EXECUTE IMMEDIATE 'DROP VIEW ""Cursos""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""Encuestas""';
             END;");
         }
     }

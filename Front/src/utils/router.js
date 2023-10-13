@@ -94,6 +94,18 @@ export const router = createRouter({
       component: () => import("@/pages/admin/escuela.vue"),
     },
     {
+      name: "encuesta",
+      path: "/admin/encuesta",
+      meta: { title: "Encuestas", requiresAuth: true },
+      component: () => import("@/pages/admin/encuesta.vue"),
+    },
+    {
+      name: "pregunta",
+      path: "/admin/pregunta",
+      meta: { title: "Preguntas", requiresAuth: true },
+      component: () => import("@/pages/admin/pregunta.vue"),
+    },
+    {
       name: "indicador",
       path: "/admin/indicador",
       meta: { title: "Indicadores", requiresAuth: true },

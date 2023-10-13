@@ -60,6 +60,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[HttpGet("all")] // /api/banco/all => Obtiene todos los items
+		public ActionResult GetAll()
+		{
+			var items = _db.Pregunta?.ToList();
+			return Ok(items);
+		}
+
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 
 		[Authorization.AllowAnonymous]
 		public ActionResult Get(int? itemId = null)

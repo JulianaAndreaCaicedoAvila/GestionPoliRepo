@@ -118,6 +118,27 @@ onMounted(() => {
                   </li>
                   <li class="dropdown-submenu">
                     <a class="dropdown-item" href="#"
+                      >Encuestas<i class="fas fa-chevron-down"></i
+                    ></a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <router-link
+                          :to="{ path: '/admin/encuesta' }"
+                          class="dropdown-item"
+                          >Banco de Encuestas</router-link
+                        >
+                      </li>
+                      <li>
+                        <router-link
+                          :to="{ path: '/admin/pregunta' }"
+                          class="dropdown-item"
+                          >Banco de Preguntas</router-link
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="dropdown-submenu">
+                    <a class="dropdown-item" href="#"
                       >Cursos<i class="fas fa-chevron-down"></i
                     ></a>
                     <ul class="dropdown-menu">
@@ -137,7 +158,7 @@ onMounted(() => {
                             <router-link
                               :to="{ path: '/admin/producto' }"
                               class="dropdown-item"
-                              >Productos (Objetivos))</router-link
+                              >Productos => Objetivos</router-link
                             >
                           </li>
                           <li>

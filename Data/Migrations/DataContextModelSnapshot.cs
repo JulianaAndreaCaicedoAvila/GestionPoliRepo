@@ -463,8 +463,6 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CursoId");
-
                     b.ToTable("CursoAnexo");
                 });
 
@@ -1025,9 +1023,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int?>("TipoEncuestaId")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<string>("Titulo")
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -1075,6 +1070,46 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasIndex("PreguntaId");
 
                     b.ToTable("EncuestaPregunta");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Encuestas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Preguntas")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Encuestas", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Escuela", b =>
@@ -1619,9 +1654,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<int?>("CreadoPor")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("NVARCHAR2(2000)");
-
                     b.Property<DateTime?>("EditadoEl")
                         .HasColumnType("TIMESTAMP(7)");
 
@@ -1629,9 +1661,6 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("Orden")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int?>("TipoEncuestaId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Titulo")
@@ -2328,19 +2357,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasForeignKey("NivelId");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoAnexo", b =>
-                {
-                    b.HasOne("ESAP.Sirecec.Data.Core.Curso", null)
-                        .WithMany("Anexos")
-                        .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoEncuesta", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Curso", "Curso")
-                        .WithMany("Encuestas")
+                        .WithMany()
                         .HasForeignKey("CursoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2351,7 +2371,7 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoFecha", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Curso", "Curso")
-                        .WithMany("Fechas")
+                        .WithMany()
                         .HasForeignKey("CursoId");
 
                     b.Navigation("Curso");
@@ -2388,16 +2408,16 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.EncuestaPregunta", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Encuesta", "Encuesta")
-                        .WithMany("Preguntas")
+                        .WithMany()
                         .HasForeignKey("EncuestaId");
 
-                    b.HasOne("ESAP.Sirecec.Data.Core.Pregunta", "Curso")
+                    b.HasOne("ESAP.Sirecec.Data.Core.Pregunta", "Pregunta")
                         .WithMany()
                         .HasForeignKey("PreguntaId");
 
-                    b.Navigation("Curso");
-
                     b.Navigation("Encuesta");
+
+                    b.Navigation("Pregunta");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
@@ -2510,23 +2530,9 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("Clasificadores");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Curso", b =>
-                {
-                    b.Navigation("Anexos");
-
-                    b.Navigation("Encuestas");
-
-                    b.Navigation("Fechas");
-                });
-
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Departamento", b =>
                 {
                     b.Navigation("Municipios");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Encuesta", b =>
-                {
-                    b.Navigation("Preguntas");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Escuela", b =>

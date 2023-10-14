@@ -259,7 +259,7 @@ onMounted(async () => {
         <div class="card-body pt-3 pb-4">
           <div class="row">
             <div class="col-md-12 mb-2">
-              <label class="tit">Descripción Pregunta</label>
+              <label class="tit">Pregunta</label>
               <DxTextArea
                 :height="110"
                 :max-length="400"
@@ -366,7 +366,7 @@ onMounted(async () => {
               <DxColumn
                 data-field="id"
                 caption="Id"
-                :visible="false"
+                :visible="true"
                 :width="80"
                 :allow-filtering="false"
                 :allow-sorting="true"

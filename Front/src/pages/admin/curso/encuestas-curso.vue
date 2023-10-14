@@ -1,20 +1,20 @@
 <script setup>
 import api from "@/utils/api";
 import DxStore from "@/utils/dx";
+import List from "devextreme/ui/list";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import { useEncuestaStore, useAuthStore } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,
 } from "devextreme-vue/validator";
 import {
-  DxSelectBox,
   DxTextBox,
   DxTextArea,
-  DxDateBox,
   DxValidationGroup,
+  DxList,
 } from "devextreme-vue";
 import {
   DxColumn,
@@ -35,18 +35,23 @@ import {
   DxSummary,
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
-  store = useClasificadorStore(),
+  encuestaStore = useEncuestaStore(),
   auth = useAuthStore();
-let titulo = "Banco de Encuestas",
-  dependenciaIdTxtRef = ref(null),
+let titulo = "Temas",
+  list1 = null,
+  list2 = null,
   valGroup = ref(null),
-  entidades = ref([]),
-  dependencias = ref([]),
-  especificos = ref([]),
+  encuestasAll = ref([]),
+  ecnuestas = ref([]),
+  encuestasFrom = ref([]),
+  encuestasTo = ref([]),
+  fromData = ref([]),
+  toData = ref([]),
+  selRightClass = ref(""),
+  selLeftClass = ref(""),
   item = ref({
     id: 0,
-    titulo: null,
-    descripcion: null,
+    nombre: null,
     activo: true,
     creadoEl: null,
     creadoPor: null,
@@ -63,7 +68,7 @@ let titulo = "Banco de Encuestas",
       companyId: auth.user.companyId,
       dependenceId: auth.user.dependenceId,
     }),
-    endPoint: "encuesta/dx",
+    endPoint: "curso/dx",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -94,8 +99,8 @@ let titulo = "Banco de Encuestas",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
       text: `¿Realmente desea ${
         data.activo ? "desactivar" : "activar"
-      } la encuesta "<span class="font-weight-semibold">${
-        data.nombre
+      } la Encuesta "<span class="font-weight-semibold">${
+        data.titulo
       }</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
@@ -104,10 +109,10 @@ let titulo = "Banco de Encuestas",
           async function () {
             data.activo = data.activo ? false : true;
             await api()
-              .post(`encuesta/ed`, data)
+              .post(`curso/ed-encuesta`, data)
               .then((r) => {
                 console.log("r =>", r);
-                store.limpiar();
+                encuestaStore.limpiar();
                 cancel(function () {
                   // panelGrid.unlock();
                   grid.refresh();
@@ -120,23 +125,47 @@ let titulo = "Banco de Encuestas",
       onCancel: () => {},
     });
   },
-  start = async (data) => {
-    // console.clear();
-    console.log(_sep);
+  addStart = async (data) => {
+    console.clear();
+    valGroup.value.instance.reset();
     console.log("data =>", data);
     panelData = $("#data");
     panelGrid = $("#grid");
+    panelGrid.lock("Cargando");
     // Editando
     if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar encuesta");
-      panelGrid.lock("Cargando");
+      $("#tit-action").text("Editar Tema");
       item.value = Clone(data);
     } else {
-      $("#tit-action").text("Nuevo encuesta");
+      // Creando
+      $("#tit-action").text("Nuevo Tema");
       item.value = Clone(item_copy);
     }
+    let ids = [];
+    let surveys =
+      item.value.id == 0 ? [] : await encuestaStore.byEncuestaId(item.value.id);
+    surveys.forEach((surveys) => {
+      ids.push(surveys.encuestaId);
+    });
+    console.log("Survey =>", surveys); // [{id: 5, encuestaId:8, preguntaId: 6},{id: 2, encuestaId:8, preguntaId: 6}]
+    console.log("ids =>", ids); // [2, 3, 5, 6]
     panelGrid.fadeOut("normal", async function () {
       console.log(typeof data);
+      // preguntasAll.value = await preguntaStore.all();
+      // preguntas.value = Object.assign([], preguntasAll.value).filter(
+      //   (o) => o.territorialId == null
+      // );
+      let q = Object.assign([], encuestasAll.value);
+      // preguntasFrom.value = q;
+      encuestasFrom.value = q.filter((o) => !ids.includes(o.id));
+      console.log("Encuestas =>", toRaw(ecnuestas.value));
+      // TODO: Asociar al store dptosTo.value = geoStore.dptosPorTerritorialId(data.id);
+      encuestasTo.value = q.filter((o) => ids.includes(o.id));
+      console.log("encuestasTo =>", toRaw(encuestasTo.value));
+      updateButtons();
+      panelData.fadeIn(function () {
+        panelGrid.unlock();
+      });
       panelData.fadeIn("normal", function () {
         console.log(_sep);
         console.log("item =>", item.value);
@@ -166,7 +195,7 @@ let titulo = "Banco de Encuestas",
     });
   },
   save = async () => {
-    // console.clear();
+    console.clear();
     let result = valGroup.value.instance.validate();
     if (!result.isValid) {
       $.scrollTo($(".dx-invalid:first"), {
@@ -174,40 +203,31 @@ let titulo = "Banco de Encuestas",
         offset: -110,
       });
     } else {
+      // CUandoes válido
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} encuestas`,
+        `${item.id == 0 ? "Adicionando" : "Actualizando"} Encuestas`,
         async function () {
-          let dto = item.value;
-          console.log("dto =>", dto);
+          let registro = r.data;
+          let dto = {
+            cursoId: registro.id,
+            encuestas: [],
+          };
+          console.log("Registro =>", registro);
+          console.log("encuestasTo =>", toRaw(encuestasTo));
+          encuestasTo.value.forEach((encuesta) => {
+            dto.encuestas.push({
+              id: 0,
+              cursoId: registro.id,
+              temaId: tema.id,
+              activo: true,
+            });
+          });
+          console.log("DTO =>", dto);
           await api({ hideErrors: true })
-            .post("encuesta/ed", dto)
+            .post("curso/ed-tema", dto)
             .then((r) => {
-              console.log("r =>", r);
               cancel(function () {
-                // panelData.unlock();
-                grid.refresh();
-              });
-            })
-            .catch(function (error) {
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log("Error", error.message);
-              }
-              console.log(error.config);
-              // console.log("r =>", r);
-              cancel(function () {
-                // panelData.unlock();
+                panelData.unlock();
                 grid.refresh();
               });
             });
@@ -215,60 +235,149 @@ let titulo = "Banco de Encuestas",
       );
     }
   };
+function moveSelectedRight() {
+  console.clear();
+  var items = list1.option("selectedItems");
+  console.log("items =>", toRaw(items));
+  items.forEach((item) => {
+    for (var x = 0; x < encuestasFrom.value.length; x++) {
+      var current = encuestasFrom.value[x];
+      // console.log(`${item.id} == ${current.id}`);
+      if (item.id == current.id) {
+        encuestasFrom.value.splice(x, 1);
+        encuestasTo.value.push(current);
+        x--;
+      }
+    }
+  });
+  updateButtons();
+}
+function moveSelectedLeft() {
+  console.clear();
+  console.log("list2 =>", list2);
+  var items = list2.option("selectedItems");
+  console.log("items =>", toRaw(items));
+  items.forEach((item) => {
+    for (var x = 0; x < encuestasTo.value.length; x++) {
+      var current = encuestasTo.value[x];
+      // console.log(`${item.id} == ${current.id}`);
+      if (item.id == current.id) {
+        encuestasTo.value.splice(x, 1);
+        encuestasFrom.value.push(current);
+        x--;
+      }
+    }
+  });
+  updateButtons();
+}
+function moveAllRight() {
+  encuestasFrom.value = [];
+  encuestasTo.value = Object.assign([], encuestasAll.value);
+  updateButtons();
+}
+function moveAllLeft() {
+  encuestasFrom.value = Object.assign([], encuestasAll.value);
+  encuestasTo.value = [];
+  updateButtons();
+}
+function updateButtons() {
+  encuestasTo.value = encuestasTo.value.sort((a, b) => a.nombre - b.nombre);
+  encuestasFrom.value = encuestasFrom.value.sort((a, b) => a.nombre - b.nombre);
+  list1.reload();
+  list2.reload();
+  selRightClass.value = encuestasFrom.value.length > 0 ? "" : "disabled";
+  selLeftClass.value = encuestasTo.value.length > 0 ? "" : "disabled";
+}
 
 onMounted(async () => {
-  // console.clear();
-  console.log(_sep);
   $("#grid").lock("Cargando");
-  console.log("route.name =>", route.name);
+  encuestasAll.value = await encuestaStore.all();
+  console.log("temasAll =>", encuestasAll.value);
+  list1 = List.getInstance(document.getElementById("list1"));
+  list2 = List.getInstance(document.getElementById("list2"));
 });
 </script>
 <template>
   <div class="container content">
-    <div class="card data hidden" id="data">
+    <div class="card data hiddenx" id="data">
       <div class="card-header main d-flex justify-content-between">
         <span>
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" /> &raquo;
-          <span id="tit-action">Adicionar encuesta</span>
+          <span id="tit-action">Agregar Encuesta</span>
         </span>
       </div>
 
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
           <div class="row">
-            <div class="col-md-4 mb-2">
-              <label class="tit">Nombre de la encuesta</label>
-              <DxTextBox
-                id="nombre"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                v-model="item.titulo"
-                class="form-control"
-                placeholder="Nombre de la encuesta"
-              >
-                <DxValidator>
-                  <DxRequiredRule />
-                  <DxStringLengthRule :min="3" />
-                </DxValidator>
-              </DxTextBox>
-            </div>
-            <div class="col-md-8 mb-2">
-              <label class="tit">Descripción encuesta</label>
-              <DxTextArea
-                :height="110"
-                :max-length="400"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                id="descripcion"
-                v-model="item.descripcion"
-                class="form-control"
-                placeholder="Descripción"
-              >
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxTextArea>
+            <div class="col-md-12 pb-2">
+              <div class="row">
+                <div class="col pb-2">
+                  <label class="tit">Encuestas disponibles</label>
+                  <DxList
+                    id="list1"
+                    v-model:selected-item-keys="fromData"
+                    :data-source="encuestasFrom"
+                    :height="250"
+                    page-load-mode="scrollBottom"
+                    :search-enabled="false"
+                    display-expr="nombre"
+                    value-expr="id"
+                    :show-selection-controls="true"
+                    search-mode="contains"
+                    selection-mode="multiple"
+                    select-all-mode="allPages"
+                    :select-by-click="true"
+                  />
+                </div>
+                <div
+                  class="col-md-1 pb-2 d-flex flex-column justify-content-center align-items-center"
+                >
+                  <a
+                    href="#"
+                    @click.prevent="moveSelectedRight()"
+                    :class="`d-block mb-2 ${selRightClass}`"
+                    ><i class="fa-solid fa-chevron-right fa-2x"></i
+                  ></a>
+                  <a
+                    href="#"
+                    @click.prevent="moveAllRight()"
+                    :class="`d-block mb-2 ${selRightClass}`"
+                    ><i class="fa-solid fa-chevrons-right fa-2x"></i
+                  ></a>
+                  <a
+                    href="#"
+                    @click.prevent="moveSelectedLeft()"
+                    :class="`d-block mb-2 ${selLeftClass}`"
+                    ><i class="fa-solid fa-chevron-left fa-2x"></i
+                  ></a>
+                  <a
+                    href="#"
+                    @click.prevent="moveAllLeft()"
+                    :class="`d-block ${selLeftClass}`"
+                    ><i class="fa-solid fa-chevrons-left fa-2x"></i
+                  ></a>
+                </div>
+                <div class="col pb-2">
+                  <label class="tit">Encuestas seleccionadas</label>
+                  <DxList
+                    id="list2"
+                    v-model:selected-item-keys="toData"
+                    :data-source="encuestasTo"
+                    :height="250"
+                    page-load-mode="scrollBottom"
+                    :search-enabled="false"
+                    display-expr="nombre"
+                    value-expr="id"
+                    :show-selection-controls="true"
+                    search-mode="contains"
+                    selection-mode="multiple"
+                    select-all-mode="allPages"
+                    :select-by-click="true"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -296,10 +405,10 @@ onMounted(async () => {
           <button
             type="button"
             class="btn btn-trans"
-            @click.prevent="start()"
+            @click.prevent="addStart()"
             title="Nuevo"
           >
-            <i class="fa-solid fa-square-plus"></i>Adicionar Encuesta
+            <i class="fa-solid fa-square-plus"></i>Adicionar Encuestas
           </button>
         </span>
       </div>
@@ -356,13 +465,8 @@ onMounted(async () => {
                 alignment="center"
               />
               <DxColumn
-                data-field="titulo"
+                data-field="nombre"
                 caption="Nombre Encuesta"
-                :visible="true"
-              />
-              <DxColumn
-                data-field="descripcion"
-                caption="Descripción"
                 :visible="true"
               />
               <DxColumn
@@ -397,7 +501,7 @@ onMounted(async () => {
                   <a
                     title="Editar"
                     class="cmd-item color-main-600 me-2"
-                    @click.prevent="start(data.data)"
+                    @click.prevent="addStart(data.data)"
                     href="#"
                   >
                     <i class="fa-solid fa-pen-to-square fa-lg"></i>

@@ -12,4 +12,5 @@ export * from "./modules/_departamento";
 export * from "./modules/_nivel";
 export * from "./modules/_encuesta";
 export * from "./modules/_pregunta";
+export * from "./modules/_tema";
 export * from "./modules/_user";

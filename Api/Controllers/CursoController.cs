@@ -4,6 +4,7 @@ using ESAP.Sirecec.Data;
 using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Core;
+using ESAP.Sirecec.Data.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +62,50 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				return Ok(item);
 			}
 		}
+
+		[HttpPost("by-curso-id")] // /api/geo/mun/by-dpto-id => Obtiene todos los items
+		public ActionResult ByCursoId([FromBody] int cursoId)
+		{
+			var items = _db.CursoTema?.Where(o => o.CursoId == cursoId).ToList();
+			return Ok(items);
+		}
+
+		[HttpPost("ed-tema")] // /api/curso/ed => CREATE - UPDATE
+		public ActionResult EditTemas(CursoTemaModel curso)
+		{
+			var tId = curso.CursoId;
+			var temasActuales = _db.CursoTema.Where(o => o.CursoId == tId).ToList();
+			_db.CursoTema.RemoveRange(temasActuales);
+			_db.SaveChanges();
+			foreach (var item in curso.Temas)
+			{
+				var obj = (CursoTema)item.CopyTo(new CursoTema());
+				obj.CreadoPor = GetUserId();
+				obj.CreadoEl = DateTime.Now;
+				_db.CursoTema.Add(obj);
+				_db.SaveChanges();
+			}
+			return Ok();
+		}
+
+		[HttpPost("ed-encuesta")] // /api/curso/ed => CREATE - UPDATE
+		public ActionResult EditEncuestas(CursoEncuestaModel curso)
+		{
+			var eId = curso.CursoId;
+			var encuestasActuales = _db.CursoEncuesta.Where(o => o.CursoId == eId).ToList();
+			_db.CursoEncuesta.RemoveRange(encuestasActuales);
+			_db.SaveChanges();
+			foreach (var item in curso.Encuestas)
+			{
+				var obj = (CursoEncuesta)item.CopyTo(new CursoEncuesta());
+				obj.CreadoPor = GetUserId();
+				obj.CreadoEl = DateTime.Now;
+				_db.CursoEncuesta.Add(obj);
+				_db.SaveChanges();
+			}
+			return Ok();
+		}
+
 
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 
 		[Authorization.AllowAnonymous]

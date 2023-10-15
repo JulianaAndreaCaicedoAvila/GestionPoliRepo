@@ -63,7 +63,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
-		[HttpPost("by-curso-id")] // /api/geo/mun/by-dpto-id => Obtiene todos los items
+		[HttpPost("by-curso-id")]
 		public ActionResult ByCursoId([FromBody] int cursoId)
 		{
 			var items = _db.CursoTema?.Where(o => o.CursoId == cursoId).ToList();

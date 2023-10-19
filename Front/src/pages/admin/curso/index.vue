@@ -1,6 +1,6 @@
 <script setup>
 import Datos from "@/pages/admin/curso/curso-datos.vue";
-import Temas from "@/pages/admin/curso/cusro-tema.vue";
+import Temas from "@/pages/admin/curso/curso-tema.vue";
 import Encuestas from "@/pages/admin/curso/curso-encuesta.vue";
 import { ref, onMounted } from "vue";
 // https://js.devexpress.com/Documentation/Guide/UI_Components/TabPanel/Getting_Started_with_TabPanel/

@@ -71,15 +71,15 @@ let titulo = "Temas",
     }),
     endPoint: "curso/dx",
     onLoading: function (loadOptions) {
-      $("#grid").lock("Cargando");
+      $("#grid-tema").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
       console.log("onLoading");
     },
     onLoaded: function (results) {
       console.log("results", results);
       console.log("onLoaded!");
-      $("#grid").unlock();
-      $("#data").unlock();
+      $("#grid-tema").unlock();
+      $("#data-tema").unlock();
     },
   }),
   customizeColumns = () => {
@@ -98,11 +98,10 @@ let titulo = "Temas",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${
-        data.activo ? "desactivar" : "activar"
-      } el Tema "<span class="font-weight-semibold">${data.titulo}</span>"?`,
+      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
+        } el Tema "<span class="font-weight-semibold">${data.titulo}</span>"?`,
       onConfirm: () => {
-        panelGrid = $("#grid");
+        panelGrid = $("#grid-tema");
         panelGrid.lock(
           `${data.activo ? "Desactivando" : "Activando"}, un momento por favor`,
           async function () {
@@ -121,15 +120,15 @@ let titulo = "Temas",
           }
         );
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   },
   addStart = async (data) => {
     console.clear();
     valGroup.value.instance.reset();
     console.log("data =>", data);
-    panelData = $("#data");
-    panelGrid = $("#grid");
+    panelData = $("#data-tema");
+    panelGrid = $("#grid-tema");
     panelGrid.lock("Cargando");
     // Editando
     if (typeof data !== "undefined") {
@@ -174,8 +173,8 @@ let titulo = "Temas",
   },
   cancel = (cb) => {
     // console.clear();
-    panelData = $("#data");
-    panelGrid = $("#grid");
+    panelData = $("#data-tema");
+    panelGrid = $("#grid-tema");
     console.log("CANCEL!");
     panelData.fadeOut("normal", function () {
       panelData.clear();
@@ -291,7 +290,7 @@ function updateButtons() {
 onMounted(async () => {
   // console.clear();
   // console.log(_sep);
-  $("#grid").lock("Cargando");
+  $("#grid-tema").lock("Cargando");
   temasAll.value = await temaStore.all();
   console.log("temasAll =>", temasAll.value);
   list1 = List.getInstance(document.getElementById("list1"));
@@ -301,7 +300,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="container content">
-    <div class="card data hiddenx" id="data">
+    <div class="card data hidden" id="data-tema">
       <div class="card-header main d-flex justify-content-between">
         <span>
           <i class="fa-solid fa-gears"></i>
@@ -317,67 +316,27 @@ onMounted(async () => {
               <div class="row">
                 <div class="col pb-2">
                   <label class="tit">Temas disponibles</label>
-                  <DxList
-                    id="list1"
-                    v-model:selected-item-keys="fromData"
-                    :data-source="temasFrom"
-                    :height="250"
-                    page-load-mode="scrollBottom"
-                    :search-enabled="false"
-                    display-expr="nombre"
-                    value-expr="id"
-                    :show-selection-controls="true"
-                    search-mode="contains"
-                    selection-mode="multiple"
-                    select-all-mode="allPages"
-                    :select-by-click="true"
-                  />
+                  <DxList id="list1" v-model:selected-item-keys="fromData" :data-source="temasFrom" :height="250"
+                    page-load-mode="scrollBottom" :search-enabled="false" display-expr="nombre" value-expr="id"
+                    :show-selection-controls="true" search-mode="contains" selection-mode="multiple"
+                    select-all-mode="allPages" :select-by-click="true" />
                 </div>
-                <div
-                  class="col-md-1 pb-2 d-flex flex-column justify-content-center align-items-center"
-                >
-                  <a
-                    href="#"
-                    @click.prevent="moveSelectedRight()"
-                    :class="`d-block mb-2 ${selRightClass}`"
-                    ><i class="fa-solid fa-chevron-right fa-2x"></i
-                  ></a>
-                  <a
-                    href="#"
-                    @click.prevent="moveAllRight()"
-                    :class="`d-block mb-2 ${selRightClass}`"
-                    ><i class="fa-solid fa-chevrons-right fa-2x"></i
-                  ></a>
-                  <a
-                    href="#"
-                    @click.prevent="moveSelectedLeft()"
-                    :class="`d-block mb-2 ${selLeftClass}`"
-                    ><i class="fa-solid fa-chevron-left fa-2x"></i
-                  ></a>
-                  <a
-                    href="#"
-                    @click.prevent="moveAllLeft()"
-                    :class="`d-block ${selLeftClass}`"
-                    ><i class="fa-solid fa-chevrons-left fa-2x"></i
-                  ></a>
+                <div class="col-md-1 pb-2 d-flex flex-column justify-content-center align-items-center">
+                  <a href="#" @click.prevent="moveSelectedRight()" :class="`d-block mb-2 ${selRightClass}`"><i
+                      class="fa-solid fa-chevron-right fa-2x"></i></a>
+                  <a href="#" @click.prevent="moveAllRight()" :class="`d-block mb-2 ${selRightClass}`"><i
+                      class="fa-solid fa-chevrons-right fa-2x"></i></a>
+                  <a href="#" @click.prevent="moveSelectedLeft()" :class="`d-block mb-2 ${selLeftClass}`"><i
+                      class="fa-solid fa-chevron-left fa-2x"></i></a>
+                  <a href="#" @click.prevent="moveAllLeft()" :class="`d-block ${selLeftClass}`"><i
+                      class="fa-solid fa-chevrons-left fa-2x"></i></a>
                 </div>
                 <div class="col pb-2">
                   <label class="tit">Temas seleccionados</label>
-                  <DxList
-                    id="list2"
-                    v-model:selected-item-keys="toData"
-                    :data-source="temasTo"
-                    :height="250"
-                    page-load-mode="scrollBottom"
-                    :search-enabled="false"
-                    display-expr="nombre"
-                    value-expr="id"
-                    :show-selection-controls="true"
-                    search-mode="contains"
-                    selection-mode="multiple"
-                    select-all-mode="allPages"
-                    :select-by-click="true"
-                  />
+                  <DxList id="list2" v-model:selected-item-keys="toData" :data-source="temasTo" :height="250"
+                    page-load-mode="scrollBottom" :search-enabled="false" display-expr="nombre" value-expr="id"
+                    :show-selection-controls="true" search-mode="contains" selection-mode="multiple"
+                    select-all-mode="allPages" :select-by-click="true" />
                 </div>
               </div>
             </div>
@@ -387,29 +346,20 @@ onMounted(async () => {
 
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
-          <a class="btn btn-gray" @click.prevent="cancel"
-            ><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a
-          >
-          <a class="btn btn-main" @click.prevent="save"
-            >GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i
-          ></a>
+          <a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
+          <a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
         </div>
       </div>
     </div>
 
-    <div class="card content" id="grid">
+    <div class="card content" id="grid-tema">
       <div class="card-header main d-flex justify-content-between">
         <span>
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" />
         </span>
         <span>
-          <button
-            type="button"
-            class="btn btn-trans"
-            @click.prevent="addStart()"
-            title="Nuevo"
-          >
+          <button type="button" class="btn btn-trans" @click.prevent="addStart()" title="Nuevo">
             <i class="fa-solid fa-square-plus"></i>Adicionar Temas
           </button>
         </span>
@@ -420,17 +370,9 @@ onMounted(async () => {
           <div class="col">
             <!-- <h2 class="font-weight-normal text-7 mb-1 color-main"><strong class="font-weight-semibold">Indicadores</strong> Principal o Interna</h2> -->
             <!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
-            <DxDataGrid
-              :customize-columns="customizeColumns"
-              :data-source="dxStore"
-              :hover-state-enabled="true"
-              :remote-operations="true"
-              :word-wrap-enabled="true"
-              :row-alternation-enabled="true"
-              :show-borders="false"
-              id="gridContainer"
-              @initialized="onInitialized"
-            >
+            <DxDataGrid :customize-columns="customizeColumns" :data-source="dxStore" :hover-state-enabled="true"
+              :remote-operations="true" :word-wrap-enabled="true" :row-alternation-enabled="true" :show-borders="false"
+              id="gridContainer" @initialized="onInitialized">
               <DxLoadPanel :enabled="false" />
               <DxFilterRow :visible="true" />
               <!-- <DxColumnChooser :enabled="true" mode="dragAndDrop" />
@@ -442,88 +384,35 @@ onMounted(async () => {
 							<DxSearchPanel :visible="false" :highlight-case-sensitive="false" /> -->
               <DxSorting mode="single" /><!-- single, multiple, none" -->
               <DxSummary>
-                <DxGroupItem
-                  summary-type="count"
-                  column="group_type_name"
-                  display-format="{0}"
-                />
+                <DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
               </DxSummary>
               <DxPaging :page-size="15" />
-              <DxPager
-                :visible="true"
-                :show-info="true"
-                :show-page-size-selector="false"
-                :show-navigation-buttons="true"
-                :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} temas (página {0} de {1})"
-              />
-              <DxColumn
-                data-field="id"
-                caption="Id"
-                :visible="true"
-                :width="80"
-                :allow-filtering="false"
-                :allow-sorting="true"
-                alignment="center"
-              />
-              <DxColumn
-                data-field="nombre"
-                caption="Nombre Tema"
-                :visible="true"
-              />
-              <DxColumn
-                :width="100"
-                data-field="activo"
-                caption="Activo"
-                alignment="center"
-                :visible="true"
-                cell-template="tpl1"
-              >
-                <DxLookup
-                  :data-source="$si_no"
-                  value-expr="value"
-                  display-expr="name"
-                />
+              <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
+                :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} temas (página {0} de {1})" />
+              <DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false"
+                :allow-sorting="true" alignment="center" />
+              <DxColumn data-field="nombre" caption="Nombre Tema" :visible="true" />
+              <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+                cell-template="tpl1">
+                <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
               </DxColumn>
               <template #tpl1="{ data }">
                 <span v-if="data.data.activo">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn
-                :width="70"
-                alignment="center"
-                cell-template="tpl"
-                caption=""
-                name="cmds"
-                :fixed="true"
-                fixed-position="right"
-              />
+              <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
+                fixed-position="right" />
               <template #tpl="{ data }">
                 <span class="cmds">
-                  <a
-                    title="Editar"
-                    class="cmd-item color-main-600 me-2"
-                    @click.prevent="addStart(data.data)"
-                    href="#"
-                  >
+                  <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                   </a>
-                  <a
-                    v-if="data.data.activo"
-                    title="Desactivar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, false)"
-                    href="#"
-                  >
+                  <a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
+                    @click.prevent="active(data.data, false)" href="#">
                     <i class="fa-regular fa-square-minus fa-lg"></i>
                   </a>
-                  <a
-                    v-else
-                    title="Activar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, true)"
-                    href="#"
-                  >
+                  <a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+                    href="#">
                     <i class="fa-regular fa-square-check fa-lg"></i>
                   </a>
                 </span>
@@ -537,9 +426,7 @@ onMounted(async () => {
     <div class="card mt-4" v-if="$conf.debug">
       <div class="card-body">
         <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-          class="font-weight-semibold"
-          >item_copy:</span
-        >
+          class="font-weight-semibold">item_copy:</span>
         {{ item_copy }}
       </div>
     </div>

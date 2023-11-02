@@ -66,17 +66,19 @@ let login = async () => {
 	if (loginZone.isValid()) {
 		loginZone.find(".card").lock("Verificando credenciales,<br/>un momento por favor");
 		let res = await authStore.do(["autenticar", email.value, password.value]).catch((error) => {
+			// console.clear();
 			console.error("error =>", error);
 			let title = "Error de autenticación";
 			let text = "Verifique credenciales e inténtelo nuevamente";
-			if (error.response.status == 500) {
+			console.log("error =>",);
+			if (typeof (error.response) != "undefined" && error.response.status == 500) {
 				title = "Error: " + error.message;
 				text = error.response.data.message;
 			}
-			loginZone.find(".card").unlock();
 			msg.error(title, text, function (params) {
 				$("#txt-email").focus();
 			});
+			loginZone.find(".card").unlock();
 		});
 		if (typeof res != "undefined") {
 			console.log("res =>", res);
@@ -345,6 +347,14 @@ onMounted(() => {
 		} else {
 			loginZone.fadeIn();
 		}
+
+		// 202311021543: Enter key on elements -> https://stackoverflow.com/a/46063448
+		const node = document.getElementsByClassName("input1")[0];
+		node.addEventListener("keyup", function (event) {
+			if (event.key === "Enter") {
+				// Do work
+			}
+		});
 	}, 300);
 });
 
@@ -356,7 +366,7 @@ $().ready(function () { });
 			<div class="col d-flex align-items-center justify-content-center">
 				<div class="card col-5">
 					<div class="card-header main"><i class="fa-solid fa-user-lock"></i> Ingresar al sistema</div>
-					<div class="card-body pt-3 pb-4">
+					<div class="card-body pt-3 pb-4" @keyup.enter="login">
 						<div class="row">
 							<div class="form-group">
 								<label class="form-label color-main font-weight-semibold">Correo electrónico: <span

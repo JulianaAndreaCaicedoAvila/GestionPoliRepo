@@ -37,6 +37,7 @@ let companyId = 358,
 		"territorialId": 15,
 		"dependenceId": 13,
 		"projectId": 5,
+		"emailConfirmed": true,
 		"email": null,
 		"firstName": null,
 		"lastName": null,
@@ -44,6 +45,7 @@ let companyId = 358,
 		"password": "Acceso*2023",
 		"password1": "Acceso*2023"
 	}),
+	item2 = { "id": 2, "roleId": 5, "roleName": "Docente", "companyId": 357, "companyName": "Departamento Nacional de Planeación (DNP)", "dependenceId": 13, "dependenceName": "Capacitación", "territorialId": null, "territorialName": null, "projectId": null, "projectName": null, "name": "Jesús Emiliano Castañeda Palacios", "firstName": "Jesús Emiliano", "lastName": "Castañeda Palacios", "email": "donjesus2008@gmail.com", "userName": "donjesus2008@gmail.com", "emailConfirmed": false, "passwordHash": "AQAAAAEAACcQAAAAEDug0UNfxf4TbUjxdD81vXYSX+IPu8nYl01tbFRkS/g7/J9OfPsAShrVO+zjq78Jfg==", "securityStamp": "UW2VI74BNEGZIC2IGM5VGKMTXHFGLDV6", "phoneNumber": null, "phoneNumberConfirmed": false, "twoFactorEnabled": false, "lockoutEnd": null, "lockoutEnabled": true, "accessFailedCount": 0, "concurrencyStamp": "9bbee46f-518e-4559-933f-8669172a92f1", "normalizedEmail": "DONJESUS2008@GMAIL.COM", "normalizedUserName": "DONJESUS2008@GMAIL.COM", "isActive": true },
 	item_copy = Clone(item.value),
 	valGroup = ref(null),
 	panelData = null,
@@ -134,6 +136,7 @@ let companyId = 358,
 				console.log("item =>", item.value);
 				let dto = toRaw(item.value);
 				if (!dto.hasOwnProperty("password")) dto["password"] = null;
+				dto["emailConfirmed"] = true;
 				console.log("dto =>", dto);
 				await api()
 					.post(`usuario/ed`, dto)
@@ -262,7 +265,7 @@ onMounted(async () => {
 
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-3 pb-4">
-					{{ item }}
+					<!-- {{ item }} -->
 					<div class="row">
 						<div class="col-md-3 mb-3">
 							<label class="tit">Rol</label>

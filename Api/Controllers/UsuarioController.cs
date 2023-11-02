@@ -89,7 +89,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("resetear")]
-        public async Task<ActionResult> Reset(UserRequest request)
+        public async Task<ActionResult> Reset(UserRequestModel request)
         {
             var email = request.Email.Trim().ToUpper();
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
@@ -105,7 +105,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("activar")]
-        public async Task<ActionResult> Activate(UserRequest request)
+        public async Task<ActionResult> Activate(UserRequestModel request)
         {
             var email = request.Email.Trim().ToUpper();
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
@@ -127,7 +127,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("registrar")]
-        public async Task<ActionResult> Register(UserRequest user)
+        public async Task<ActionResult> Register(UserRequestModel user)
         {
             var email = user.Email;
             var newUser = new AuthUser
@@ -164,17 +164,18 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         {
             StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
             var str = reader.ReadToEndAsync().Result;
-            var uReq = JsonConvert.DeserializeObject<UserRequest>(str);
+            var uReq = JsonConvert.DeserializeObject<UserRequestModel>(str);
             if (uReq.Id != 0)
             {
                 // 202208170339: Actualizando usuario
                 var user = await _userManager.FindByEmailAsync(uReq.Email);
                 if (user != null)
                 {
-                    user.CompanyId = uReq.CompanyId;
-                    user.DependenceId = uReq.DependenceId;
-                    user.FirstName = uReq.FirstName;
-                    user.LastName = uReq.LastName;
+                    user = (AuthUser)uReq.CopyTo(user, true);
+                    // user.CompanyId = uReq.CompanyId;
+                    // user.DependenceId = uReq.DependenceId;
+                    // user.FirstName = uReq.FirstName;
+                    // user.LastName = uReq.LastName;
                     await _userManager.UpdateAsync(user);
                     var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
                     if (role != null)

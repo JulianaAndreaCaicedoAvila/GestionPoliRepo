@@ -21,8 +21,9 @@ const count = ref(0);
 				<div class="row pb-4 pt-4">
 					<div class="col text-center">
 						<p class="text-color-white font-weight-semibold">
-							© Copyright {{ new Date().getFullYear() }} - Escuela Superior de Administración Pública (ESAP) - Todos los derechos reservados - SIRECEC
-							v4.0.20230822
+							© Copyright {{ new Date().getFullYear() }} - Escuela Superior de Administración Pública (ESAP) - Todos los
+							derechos reservados - SIRECEC
+							v4.0.20231103
 						</p>
 					</div>
 				</div>

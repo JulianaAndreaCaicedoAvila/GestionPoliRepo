@@ -126,7 +126,7 @@ export const useAuthStore = defineStore("auth", {
 			if (ep == "autenticar") data = { email, password };
 			else if (ep == "email") data = email;
 			console.log("data =>", data);
-			return await api({ hideErrors: true })
+			return await api({ hideErrors: import.meta.env.PROD })
 				.post(endPoint, data)
 				.then((r) => {
 					if (ep == "autenticar") {
@@ -143,7 +143,7 @@ export const useAuthStore = defineStore("auth", {
 			console.log("loginAzureAd");
 			console.log("window._apiUrl =>", window._apiUrl);
 			console.log("email =>", email);
-			return await api({ hideErrors: true })
+			return await api({ hideErrors: import.meta.env.PROD })
 				.post(`${window._apiUrl}/usuario/email`, email)
 				.then((r) => {
 					this.token = r.data.token;

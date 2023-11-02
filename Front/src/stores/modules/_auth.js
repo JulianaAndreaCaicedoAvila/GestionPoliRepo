@@ -93,13 +93,20 @@ export const useAuthStore = defineStore("auth", {
 		// 		}, 2000);
 		// 	} else window.clearInterval(window._int);
 		// },
+		async porRol(rol) {
+			return await api()
+				.post(`usuario/porRol`, rol)
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async getRoles() {
 			console.log("Roles =>", this.roles);
 			if (this.roles.length > 0) return this.roles;
 			return await api()
 				.get(`usuario/roles`)
 				.then(async (r) => {
-					this.roles = r.data;
+					this.roles = r.data.sort((a, b) => a.name - b.name);
 					return this.roles;
 				});
 		},

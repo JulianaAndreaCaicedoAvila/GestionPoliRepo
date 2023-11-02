@@ -238,6 +238,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
             return Ok(loadResult);
         }
 
+        [HttpPost("porRol")]
+        public async Task<ActionResult> AllUsersAsync([FromBody] string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+            var items = _context.Usuarios.Where(o => o.RoleId == role.Id).ToList();
+            return Ok(items);
+        }
+
         private async Task<ActionResult> GetUserResult(AuthUser user)
         {
             var roleName = (await _userManager.GetRolesAsync(user)).First();

@@ -63,7 +63,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		[HttpGet("all")]
 		public ActionResult GetAll()
 		{
-			var items = _db.Tema?.ToList();
+			var items = _db.Temas?.ToList();
 			return Ok(items);
 		}
 
@@ -82,7 +82,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _db.Tema.OrderBy(o => o.Nombre).ToList();
+			var items = _db.Temas.OrderBy(o => o.Nombre).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

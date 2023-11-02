@@ -50,7 +50,7 @@ export default (args = {}) => {
 		axiosConfig.headers["Authorization"] = `${preffix}${args.token}`;
 	} else {
 		let token = useAuthStore().token;
-		console.log("token =>", token);
+		// console.log("token =>", token);
 		if (typeof token !== "undefined" && token !== null) {
 			axiosConfig.headers["Authorization"] = `${preffix}${token}`;
 		}

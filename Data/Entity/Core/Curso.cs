@@ -32,6 +32,7 @@ namespace ESAP.Sirecec.Data.Core
 		[ForeignKey("Programa")]
 		public int? ProgramaId { get; set; }
 		public int? EstadoCursoId { get; set; }
+		public int? ElaboradoPorId { get; set; }
 		public int? CertificadoEtiquetaId { get; set; }
 		public int? CupoTotal { get; set; }
 		public int? CupoAula { get; set; }

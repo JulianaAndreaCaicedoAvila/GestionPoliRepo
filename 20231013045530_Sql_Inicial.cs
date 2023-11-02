@@ -21,6 +21,11 @@ namespace ESAP.Sirecec.Data.Migrations
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/009-Municipios.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/010-Cursos.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/011-Encuestas.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/012-CursosTemas.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/013-CursosImagenes.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/014-CursosDocumentos.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/015-CursosEncuestas.sql"));
+            migrationBuilder.Sql(File.ReadAllText("Migrations/sql/016-Temas.sql"));
             migrationBuilder.Sql(File.ReadAllText("Migrations/sql/999-Datos.sql"));
         }
 
@@ -67,7 +72,11 @@ namespace ESAP.Sirecec.Data.Migrations
             EXECUTE IMMEDIATE 'DROP VIEW ""NucleosProgramas""';
             EXECUTE IMMEDIATE 'DROP VIEW ""Municipios""';
             EXECUTE IMMEDIATE 'DROP VIEW ""Cursos""';
-            EXECUTE IMMEDIATE 'DROP VIEW ""Encuestas""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""CursosTemas""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""CursosImagenes""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""CursosDocumentos""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""CursosEncuestas""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""Temas""';
             END;");
         }
     }

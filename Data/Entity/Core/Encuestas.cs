@@ -4,13 +4,8 @@ using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data.Core
 {
-	public partial class Encuestas : BaseEntity
+	public partial class Encuestas : Encuesta
 	{
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int Id { get; set; }
-		public string? Titulo { get; set; }
-		public string? Descripcion { get; set; }
 		public int? Preguntas { get; set; }
 	}
 }

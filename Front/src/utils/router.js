@@ -55,7 +55,7 @@ export const router = createRouter({
 			name: "curso",
 			path: "/admin/curso/:id?",
 			meta: { title: "Curso", requiresAuth: true },
-			component: () => import("@/pages/admin/curso/index.vue"), // 202309071141: Lleva al Wizard
+			component: () => import("@/pages/admin/curso/tabs.vue"), // 202309071141: Lleva al Wizard
 		},
 		{
 			name: "cursos",
@@ -164,6 +164,18 @@ export const router = createRouter({
 			path: "/admin-clasificador-tipo",
 			meta: { title: "Tipos Clasificadores", requiresAuth: true },
 			component: () => import("@/pages/admin/clasificador-tipo.vue"),
+		},
+		{
+			name: "admin-documentos",
+			path: "/admin/documentos",
+			meta: { title: "Documentos", requiresAuth: true },
+			component: () => import("@/pages/admin/archivos.vue"),
+		},
+		{
+			name: "admin-imagenes",
+			path: "/admin/imagenes",
+			meta: { title: "Imagenes", requiresAuth: true },
+			component: () => import("@/pages/admin/archivos.vue"),
 		},
 	],
 });

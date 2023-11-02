@@ -42,7 +42,7 @@
 		{ "id": 25, "name": "tipo_participante" },
 		{ "id": 26, "name": "tipo_servidor_publico" },
 		{ "id": 27, "name": "grupo_etnico" },
-		{ "id": 28, "name": "tipo_valor_general" },
+		{ "id": 28, "name": "momento_encuesta" },
 		{ "id": 29, "name": "tipo_encuesta" },
 		{ "id": 30, "name": "certificado_etiqueta" },
 		{ "id": 31, "name": "estado_curso" },

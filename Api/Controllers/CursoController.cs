@@ -106,13 +106,46 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok();
 		}
 
+		[HttpGet("temas")]
+		public ActionResult CursosTemas()
+		{
+			var items = _db.CursosTemas?.ToList();
+			return Ok(items);
+		}
+
 
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 
 		[Authorization.AllowAnonymous]
 		public ActionResult Get(int? itemId = null)
 		{
-			var item = _db.Curso.FirstOrDefault(o => o.Id == itemId);
+			var item = _db.Cursos.FirstOrDefault(o => o.Id == itemId);
 			return Ok(item);
+		}
+
+		[HttpPost("temas-dx")] // /api/curso/dx => DevExtreme DataGrid Get
+		public ActionResult TemasDx()
+		{
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "Id" };
+			var data = JsonConvert.DeserializeObject<GenericModel>(opts.UserData);
+			var items = _db.CursosTemas.Where(o => o.CursoId == data.id).OrderBy(o => o.TemaNombre).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
+		}
+
+		[HttpPost("encuestas-dx")] // /api/curso/dx => DevExtreme DataGrid Get
+		public ActionResult EncuestasDx()
+		{
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "Id" };
+			var data = JsonConvert.DeserializeObject<GenericModel>(opts.UserData);
+			var items = _db.CursosEncuestas.Where(o => o.CursoId == data.id).OrderBy(o => o.Titulo).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
 		}
 
 		[HttpPost("dx")] // /api/curso/dx => DevExtreme DataGrid Get
@@ -121,6 +154,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			dynamic data = JsonConvert.DeserializeObject<dynamic>(opts.UserData);
 			opts.PrimaryKey = new[] { "Id" };
 			var items = _db.Cursos.OrderBy(o => o.Nombre).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);

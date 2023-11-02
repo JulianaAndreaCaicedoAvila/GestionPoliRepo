@@ -5,12 +5,14 @@ C."DependenciaId",
 DP."Nombre" AS "DependenciaNombre",
 C."TipoCursoId",
 TC."Nombre" AS "TipoCursoNombre",
-C."NivelId",
-NV."Nombre" AS "NivelNombre",
 NV."EscuelaId",
 ES."Nombre" AS "EscuelaNombre",
+C."NivelId",
+NV."Nombre" AS "NivelNombre",
 C."TipoAsistenciaId",
 TA."Nombre" AS "TipoAsistenciaNombre",
+C."ElaboradoPorId",
+EP."Nombre" AS "ElaboradoPorNombre",
 C."IndicadorId",
 "IN"."Nombre" AS "IndicadorNombre",
 "IN"."ProductoId",
@@ -84,6 +86,8 @@ LEFT OUTER JOIN "Escuela" ES
 ON NV."EscuelaId" = ES."Id"
 LEFT OUTER JOIN "Clasificador" TA
 ON C."TipoAsistenciaId" = TA."Id"
+LEFT OUTER JOIN "Clasificador" EP
+ON C."ElaboradoPorId" = EP."Id"
 LEFT OUTER JOIN "Indicador" "IN"
 ON C."IndicadorId" = "IN"."Id"
 LEFT OUTER JOIN "Producto" PR

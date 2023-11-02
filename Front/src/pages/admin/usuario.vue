@@ -26,17 +26,23 @@ const store = useClasificadorStore();
 const authStore = useAuthStore();
 let companyId = 358,
 	entidades = ref([]),
+	esLocal = ref(false),
 	dependencias = ref([]),
+	convenios = ref([]),
+	territoriales = ref([]),
 	item = ref({
-		id: 0,
-		roleId: null,
-		companyId: null,
-		email: null,
-		firstName: null,
-		lastName: null,
-		isActive: true,
-		password: null,
-		password1: null,
+		"id": 0,
+		"roleId": null, // 7 -> Docente
+		"companyId": 357,
+		"territorialId": 15,
+		"dependenceId": 13,
+		"projectId": 5,
+		"email": null,
+		"firstName": null,
+		"lastName": null,
+		"isActive": true,
+		"password": "Acceso*2023",
+		"password1": "Acceso*2023"
 	}),
 	item_copy = Clone(item.value),
 	valGroup = ref(null),
@@ -151,28 +157,28 @@ let companyId = 358,
 		}
 	},
 	itemSelected = async (e) => {
-		// console.clear();
 		console.log(_sep);
-		// objetivosAsignados.value = [];
 		console.log("itemSelected =>", e);
 		let v = e.value;
 		let id = $(e.element).attr("id");
 		console.log("id =>", id);
-		item.value.padreId = null;
 		if (v !== null && v !== undefined) {
-			let hijos = await store.porPadre(v);
-			if (id == "areaId") {
-				// objetivos.value = hijos;
-			} else if (id == "objetivoId") {
-				// especificos.value = hijos;
-			} else if (id == "sectorId") {
-				// entidades.value = hijos;
-			} else if (id == "companyId") {
-				dependencias.value = hijos;
+			if (id == "email") {
+				if (v.includes("@esap.edu.co")) {
+					item.companyId = companyId;
+					esLocal.value = true;
+					console.log("MOSTRAR!");
+				} else {
+					esLocal.value = false;
+				}
 			}
-		} else {
-			// objetivos.value = [];
-			// especificos.value = [];
+			if (id == "email") {
+				if (v.includes("@esap.edu.co")) {
+					item.companyId = companyId;
+					esLocal.value = true;
+					console.log("MOSTRAR!");
+				}
+			}
 		}
 	},
 	active = (data) => {
@@ -228,6 +234,8 @@ onMounted(async () => {
 	console.log("entidades =>", toRaw(entidades.value));
 	res = await store.porTipoNombre("dependencia");
 	dependencias.value = res;
+	convenios.value = await store.porTipoNombre("elaborado_por");
+	territoriales.value = await store.porTipoNombre("territorial");
 	console.log("dependencias =>", toRaw(dependencias));
 	console.log("valGroup =>", valGroup);
 	console.log("valGroup.value =>", valGroup.value);
@@ -254,8 +262,53 @@ onMounted(async () => {
 
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-3 pb-4">
+					{{ item }}
 					<div class="row">
-						<div class="col-md-6 mb-3">
+						<div class="col-md-3 mb-3">
+							<label class="tit">Rol</label>
+							<DxSelectBox id="roleId" :data-source="roles" :grouped="false" :min-search-length="3" :search-enabled="true"
+								:show-clear-button="true" :show-data-before-search="true" v-model:value="item.roleId" class="form-control"
+								display-expr="name" placeholder="Rol" value-expr="id">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox>
+						</div>
+						<div class="col-md-3 mb-3">
+							<label class="tit">Correo electrónico</label>
+							<DxTextBox id="email" value-change-event="keyup" :show-clear-button="true" v-model:value="item.email"
+								class="form-control" placeholder="Correo electrónico" @value-changed="itemSelected"
+								@focus-out="$lowerCase">
+								<!-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/Validation/Overview/Vue/Light/ -->
+								<DxValidator>
+									<DxRequiredRule />
+									<DxEmailRule />
+									<DxCustomRule :validationCallback="ansvEmailRule" message="El correo debe ser de la ANSV" />
+								</DxValidator>
+							</DxTextBox>
+						</div>
+						<div class="col-md-3">
+							<label class="tit">Nombre(s)</label>
+							<DxTextBox id="firstName" value-change-event="keyup" :show-clear-button="true"
+								v-model:value="item.firstName" class="form-control text-capitalize" placeholder="Nombre"
+								@focus-out="$capitalizeAll">
+								<DxValidator>
+									<DxRequiredRule />
+									<DxStringLengthRule :min="3" />
+								</DxValidator>
+							</DxTextBox>
+						</div>
+						<div class="col-md-3">
+							<label class="tit">Apellido(s)</label>
+							<DxTextBox id="lastName" value-change-event="keyup" :show-clear-button="true" v-model:value="item.lastName"
+								@focus-out="$capitalizeAll" class="form-control text-capitalize" placeholder="Apellido">
+								<DxValidator>
+									<DxRequiredRule />
+									<DxStringLengthRule :min="3" />
+								</DxValidator>
+							</DxTextBox>
+						</div>
+						<div class="col-md-5 mb-3">
 							<label class="tit">Entidad</label>
 							<DxSelectBox id="companyId" :data-source="entidades" :grouped="false" :min-search-length="3"
 								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
@@ -266,7 +319,18 @@ onMounted(async () => {
 								</DxValidator>
 							</DxSelectBox>
 						</div>
-						<div class="col-md-6 mb-3">
+						<div class="col-md-7 mb-3">
+							<label class="tit">Territorial</label>
+							<DxSelectBox id="territorialId" :data-source="territoriales" :grouped="false" :min-search-length="3"
+								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
+								@value-changed="itemSelected" v-model:value="item.territorialId" class="form-control"
+								display-expr="nombre" placeholder="Territorial" value-expr="id">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox>
+						</div>
+						<div class="col-md-3 mb-3">
 							<label class="tit">Dependencia</label>
 							<DxSelectBox id="dependenceId" :data-source="dependencias" :disabled="dependencias.length <= 0"
 								:grouped="false" :min-search-length="3" :search-enabled="true" :show-clear-button="true"
@@ -277,50 +341,19 @@ onMounted(async () => {
 								</DxValidator>
 							</DxSelectBox>
 						</div>
-						<div class="col-md-3 mb-3">
-							<label class="tit">Correo electrónico (usuario)</label>
-							<DxTextBox id="email" value-change-event="keyup" :show-clear-button="true" v-model:value="item.email"
-								class="form-control" placeholder="Correo electrónico">
-								<!-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/Validation/Overview/Vue/Light/ -->
-								<DxValidator>
-									<DxRequiredRule />
-									<DxEmailRule />
-									<DxCustomRule :validationCallback="ansvEmailRule" message="El correo debe ser de la ANSV" />
-								</DxValidator>
-							</DxTextBox>
-						</div>
-						<div class="col-md-3 mb-3">
-							<label class="tit">Rol</label>
-							<DxSelectBox id="companyId" :data-source="roles" :grouped="false" :min-search-length="3"
-								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-								v-model:value="item.roleId" class="form-control" display-expr="name" placeholder="Rol" value-expr="id">
+						<div class="col-md-9 mb-3">
+							<label class="tit">Elaborado por (convenio)</label>
+							<DxSelectBox id="projectId" :data-source="convenios" :disabled="dependencias.length <= 0" :grouped="false"
+								:min-search-length="3" :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
+								v-model:value="item.projectId" class="form-control" display-expr="nombre" placeholder="Dependencia"
+								value-expr="id">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
 							</DxSelectBox>
 						</div>
-						<div class="col-md-3">
-							<label class="tit">Nombre(s)</label>
-							<DxTextBox id="firstName" value-change-event="keyup" :show-clear-button="true"
-								v-model:value="item.firstName" class="form-control text-capitalize" placeholder="Nombre">
-								<DxValidator>
-									<DxRequiredRule />
-									<DxStringLengthRule :min="3" />
-								</DxValidator>
-							</DxTextBox>
-						</div>
-						<div class="col-md-3">
-							<label class="tit">Apellido(s)</label>
-							<DxTextBox id="lastName" value-change-event="keyup" :show-clear-button="true" v-model:value="item.lastName"
-								class="form-control text-capitalize" placeholder="Apellido">
-								<DxValidator>
-									<DxRequiredRule />
-									<DxStringLengthRule :min="3" />
-								</DxValidator>
-							</DxTextBox>
-						</div>
 						<div class="col-md-12">
-							<div class="row" v-if="item.companyId === companyId">
+							<div class="row" v-if="esLocal">
 								<div class="col text-center pt-2">
 									<span class="subtitle font-weight-semibold"><i class="fa-solid fa-circle-info fa-sm me-2"></i> El
 										usuario ingresará con credenciales ESAP</span>
@@ -398,9 +431,10 @@ onMounted(async () => {
 								:allowed-page-sizes="[15, 30, 50, 'Todos']" info-text="{2} usuarios (página {0} de {1})" />
 							<DxColumn data-field="name" caption="Nombre" width="180" :sort-index="0" />
 							<DxColumn data-field="email" caption="Correo (usuario)" width="220" />
-							<DxColumn data-field="companyName" caption="Entidad" :group-index="0" />
+							<DxColumn data-field="companyName" caption="Entidad" />
+							<!-- :group-index="0" -->
 							<DxColumn data-field="dependenceName" caption="Dependencia" />
-							<DxColumn data-field="roleName" caption="Rol" width="120" :group-index="1" />
+							<DxColumn data-field="roleName" caption="Rol" width="120" />
 							<DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
 								fixed-position="right" />
 							<template #tpl="{ data }">

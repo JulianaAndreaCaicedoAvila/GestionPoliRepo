@@ -7,15 +7,17 @@ namespace ESAP.Sirecec.Data.Identity
 	{
 
 		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		public int RoleId { get; set; }
 		public string? RoleName { get; set; }
 		public int? CompanyId { get; set; }
 		public string? CompanyName { get; set; }
-		public string? CompanyAcronym { get; set; }
 		public int? DependenceId { get; set; }
 		public string? DependenceName { get; set; }
+		public int? TerritorialId { get; set; }
+		public string? TerritorialName { get; set; }
+		public int? ProjectId { get; set; }
+		public string? ProjectName { get; set; }
 		public string? Name { get; set; }
 		public string? FirstName { get; set; }
 		public string? LastName { get; set; }

@@ -953,3 +953,35 @@ a.disabled {
 	min-height: 450px;
 	padding: 1rem;
 }
+
+.dx-tabs {
+	background-color: none !important;
+	.dx-tab {
+		padding: 0.6rem 1.4rem !important;
+
+		.dx-tab-text {
+			font-weight: 600;
+			font-size: 1.18rem;
+			color: #999 !important;
+		}
+		&.dx-tab-selected {
+			// border: 1px solid red;
+			.dx-tab-text {
+				color: $main-color !important;
+			}
+		}
+	}
+
+	.dx-state-focused {
+		border: none !important;
+	}
+}
+
+.dx-filemanager-thumbnails-item {
+	$size: 200px;
+	// width: $size;
+	// height: $size;
+	// width: $size;
+	// height: $size;
+	// font-size: $size;
+}

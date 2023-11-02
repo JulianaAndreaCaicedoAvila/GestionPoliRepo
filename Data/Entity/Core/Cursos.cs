@@ -25,6 +25,8 @@ namespace ESAP.Sirecec.Data.Core
 		public string? TipoAsistenciaNombre { get; set; }
 		public int? IndicadorId { get; set; }
 		public string? IndicadorNombre { get; set; }
+		public int? ElaboradoPorId { get; set; }
+		public string? ElaboradoPorNombre { get; set; }
 		public int? ProductoId { get; set; }
 		public string? ProductoNombre { get; set; }
 		public int? MunicipioId { get; set; }

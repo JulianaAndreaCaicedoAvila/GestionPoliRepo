@@ -1,35 +1,44 @@
-﻿CREATE OR REPLACE VIEW "Usuarios"
-AS
+﻿CREATE OR REPLACE VIEW "Usuarios" AS
 SELECT
 UR."RoleId",
-R."Name" AS "RoleName",
-U."CompanyId",
-C."Nombre" AS "CompanyName",
-C."Descripcion" AS "CompanyAcronym",
-U."DependenceId",
-D."Nombre" AS "DependenceName",
+RO."Name" AS "RoleName",
 U."Id",
-U."FirstName" || ' ' || U."LastName" AS "Name",
 U."FirstName",
 U."LastName",
-U."Email",
+U."FirstName" || ' ' || U."LastName" AS "Name",
+U."IsActive",
+U."CompanyId",
+CO."Nombre" AS "CompanyName",
+U."DependenceId",
+DE."Nombre" AS "DependenceName",
+U."TerritorialId",
+TE."Nombre" AS "TerritorialName",
+U."ProjectId",
+PR."Nombre" AS "ProjectName",
 U."UserName",
+U."NormalizedUserName",
+U."Email",
+U."NormalizedEmail",
 U."EmailConfirmed",
 U."PasswordHash",
 U."SecurityStamp",
+U."ConcurrencyStamp",
 U."PhoneNumber",
 U."PhoneNumberConfirmed",
 U."TwoFactorEnabled",
 U."LockoutEnd",
 U."LockoutEnabled",
-U."AccessFailedCount",
-U."ConcurrencyStamp",
-U."NormalizedEmail",
-U."NormalizedUserName",
-U."IsActive"
-FROM
-"Clasificador" D RIGHT OUTER JOIN
-"AuthUsers" U ON D."Id" = U."DependenceId" LEFT OUTER JOIN
-"Clasificador" C ON U."CompanyId" = C."Id" LEFT OUTER JOIN
-"AuthRoles" R RIGHT OUTER JOIN
-"AuthUserRoles" UR ON R."Id" = UR."RoleId" ON U."Id" = UR."UserId"
+U."AccessFailedCount"
+FROM "AuthUsers" U
+LEFT OUTER JOIN "Clasificador" CO
+ON U."CompanyId" = CO."Id"
+LEFT OUTER JOIN "Clasificador" DE
+ON U."DependenceId" = DE."Id"
+LEFT OUTER JOIN "Clasificador" TE
+ON U."TerritorialId" = TE."Id"
+LEFT OUTER JOIN "Clasificador" PR
+ON U."ProjectId" = PR."Id"
+LEFT OUTER JOIN "AuthUserRoles" UR
+ON UR."UserId" = U."Id"
+LEFT OUTER JOIN "AuthRoles" RO
+ON UR."RoleId" = RO."Id"

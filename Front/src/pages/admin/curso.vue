@@ -1,25 +1,22 @@
 <script setup>
 import api from "@/utils/api";
 import DxStore from "@/utils/dx";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
-import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
-import DxValidator, {
-  DxRequiredRule,
-  DxStringLengthRule,
-} from "devextreme-vue/validator";
+import { ref, onMounted, toRaw } from "vue";
 import {
-  DxSelectBox,
-  DxHtmlEditor,
-  DxTextBox,
-  DxTextArea,
-  DxValidationGroup,
-  DxToolbar,
-  DxMediaResizing,
-  DxImageUpload,
-  DxItem,
-} from "devextreme-vue";
+  useAuthStore,
+  useBancoStore,
+  useClasificadorStore,
+  useCursoStore,
+  useEscuelaStore,
+  useGeografiaStore,
+  useIndicadorStore,
+  useNivelStore,
+  useNucleoStore,
+  useProductoStore,
+  useProgramaStore,
+} from "@/stores";
 import {
   DxColumn,
   DxColumnChooser,
@@ -40,8 +37,17 @@ import {
   DxSorting,
   DxSummary,
 } from "devextreme-vue/data-grid";
-const route = useRoute(),
+const router = useRouter(),
   store = useClasificadorStore(),
+  storeBancos = useBancoStore(),
+  storeCursos = useCursoStore(),
+  storeEscuelas = useEscuelaStore(),
+  storeGeo = useGeografiaStore(),
+  storeIndicadores = useIndicadorStore(),
+  storeNiveles = useNivelStore(),
+  storeNucleos = useNucleoStore(),
+  storeProductos = useProductoStore(),
+  storeProgramas = useProgramaStore(),
   auth = useAuthStore();
 
 let titulo = "Administración &raquo; Cursos",
@@ -104,9 +110,8 @@ let titulo = "Administración &raquo; Cursos",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${
-        data.activo ? "desactivar" : "activar"
-      } el curso "<span class="font-weight-semibold">${data.nombre}</span>"?`,
+      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
+        } el curso "<span class="font-weight-semibold">${data.nombre}</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -116,43 +121,25 @@ let titulo = "Administración &raquo; Cursos",
             await api()
               .post(`curso/ed`, data)
               .then((r) => {
-                console.log("r =>", r);
-                store.limpiar();
-                cancel(function () {
-                  // panelGrid.unlock();
-                  grid.refresh();
-                });
+                console.clear();
+                console.log("r =>", r.data);
+                grid.refresh();
                 return r.data;
               });
           }
         );
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   },
-  start = async (data) => {
-    // console.clear();
-    console.log(_sep);
-    console.log("data =>", data);
-    panelData = $("#data");
-    panelGrid = $("#grid");
-    // Editando
-    if (typeof data !== "undefined") {
-      $("#tit-action").text("Editar módulo");
-      panelGrid.lock("Cargando");
-      item.value = Clone(data);
-    } else {
-      $("#tit-action").text("Nuevo curso");
-      item.value = Clone(item_copy);
+  edit = async (data) => {
+    let id = "";
+    if (typeof (data) != "undefined") {
+      storeCursos.item = data;
+      id = data.id;
+      console.log("storeCursos.item =>", toRaw(storeCursos.item));
     }
-    panelGrid.fadeOut("normal", async function () {
-      console.log(typeof data);
-      panelData.fadeIn("normal", function () {
-        console.log(_sep);
-        console.log("item =>", item.value);
-        panelGrid.unlock();
-      });
-    });
+    router.push(`/admin/curso/${id}`);
   },
   cancel = (cb) => {
     // console.clear();
@@ -176,10 +163,17 @@ let titulo = "Administración &raquo; Cursos",
     });
   };
 onMounted(async () => {
-  // console.clear();
   console.log(_sep);
-  // $("#grid").lock("Cargando");
-  console.log("route.name =>", route.name);
+  await store.cargar();
+  await storeBancos.all();
+  await storeEscuelas.all();
+  await storeGeo.dptoAll();
+  await storeGeo.munAll();
+  await storeIndicadores.all();
+  await storeNiveles.all();
+  await storeNucleos.all();
+  await storeProductos.all();
+  await storeProgramas.all();
 });
 //----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
@@ -192,109 +186,44 @@ onMounted(async () => {
           <span v-html="titulo" />
         </span>
         <span>
-          <router-link
-            :to="{ path: '/admin/curso' }"
-            class="btn btn-trans"
-            @click.prevent="start()"
-            ><i class="fa-solid fa-square-plus"></i>NUEVO</router-link
-          >
+          <router-link :to="{ path: '/admin/curso' }" class="btn btn-trans" @click.prevent="edit()"
+            title="Crear nuevo curso..."><i class="fa-solid fa-square-plus"></i>NUEVO CURSO</router-link>
         </span>
       </div>
 
       <div class="card-body pt-3 pb-4">
         <div class="row">
           <div class="col">
-            <DxDataGrid
-              :column-auto-width="false"
-              :customize-columns="customizeColumns"
-              :data-source="dxStore"
-              :hover-state-enabled="true"
-              :remote-operations="false"
-              :repaint-changes-only="true"
-              :row-alternation-enabled="true"
-              :show-borders="false"
-              :word-wrap-enabled="true"
-              horizontal-alignment="Stretch"
-              @initialized="onInitialized"
-              id="gridContainer"
-              key-expr="id"
-            >
+            <DxDataGrid :column-auto-width="false" :customize-columns="customizeColumns" :data-source="dxStore"
+              :hover-state-enabled="true" :remote-operations="false" :repaint-changes-only="true"
+              :row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="true"
+              horizontal-alignment="Stretch" @initialized="onInitialized" id="gridContainer" key-expr="id">
               <DxColumnChooser :enabled="false" mode="dragAndDrop" />
               <DxColumnFixing :enabled="true" />
-              <DxEditing
-                :allow-updating="false"
-                :allow-deleting="false"
-                :allow-adding="false"
-                mode="cell"
-              />
+              <DxEditing :allow-updating="false" :allow-deleting="false" :allow-adding="false" mode="cell" />
               <DxExport :enabled="false" />
               <DxFilterRow :visible="true" />
               <DxGrouping :auto-expand-all="true" />
               <DxGroupPanel :visible="true" :allow-column-dragging="true" />
               <DxLoadPanel :enabled="false" />
               <DxScrolling row-rendering-mode="virtual" />
-              <DxSearchPanel
-                :visible="false"
-                :highlight-case-sensitive="false"
-              />
+              <DxSearchPanel :visible="false" :highlight-case-sensitive="false" />
               <DxSorting mode="single" /><!-- single, multiple, none" -->
               <DxSummary>
-                <DxGroupItem
-                  summary-type="count"
-                  column="group_type_name"
-                  display-format="{0} ítems"
-                />
+                <DxGroupItem summary-type="count" column="group_type_name" display-format="{0} ítems" />
               </DxSummary>
               <DxPaging :page-size="5" />
-              <DxPager
-                :visible="true"
-                :show-info="true"
-                :show-page-size-selector="false"
-                :show-navigation-buttons="true"
-                :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} cursos (página {0} de {1})"
-              />
-              <DxColumn
-                data-field="id"
-                caption="Id"
-                :visible="true"
-                :width="80"
-                :allow-filtering="false"
-                :allow-sorting="true"
-                alignment="center"
-              />
-              <DxColumn
-                :width="80"
-                data-field="codigoVerificacion"
-                caption="Código"
-                alignment="center"
-                :visible="true"
-              />
-              <DxColumn
-                data-field="nombre"
-                caption="Nombre"
-                :visible="true"
-                :fixed="false"
-                fixed-position="left"
-              />
-              <DxColumn
-                data-field="descripcion"
-                caption="Descripción"
-                :visible="true"
-              />
-              <DxColumn
-                data-field="territorialNombre"
-                caption="Territorial"
-                :visible="true"
-                :width="130"
-              />
-              <DxColumn
-                data-field="porcentajeAsistencia"
-                caption="Asistencia"
-                :visible="true"
-                :width="100"
-                alignment="center"
-              />
+              <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
+                :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} cursos (página {0} de {1})" />
+              <DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false"
+                :allow-sorting="true" alignment="center" sort-order="desc" />
+              <DxColumn :width="80" data-field="codigoVerificacion" caption="Código" alignment="center"
+                :visible="false" />
+              <DxColumn data-field="nombre" caption="Nombre" :visible="true" :fixed="false" fixed-position="left" />
+              <DxColumn data-field="descripcion" caption="Descripción" :visible="true" />
+              <DxColumn data-field="territorialNombre" caption="Territorial" :visible="true" :width="130" />
+              <DxColumn data-field="porcentajeValidoAsistencia" caption="Asistencia" :visible="true" :width="100"
+                alignment="center" />
               <!-- <DxColumn
                 data-field="objetivos"
                 caption="Objetivos"
@@ -310,59 +239,27 @@ onMounted(async () => {
                 caption="Evaluacion"
                 :visible="false"
               /> -->
-              <DxColumn
-                :width="100"
-                data-field="activo"
-                caption="Activo"
-                alignment="center"
-                :visible="true"
-                cell-template="tpl1"
-              >
-                <DxLookup
-                  :data-source="$si_no"
-                  value-expr="value"
-                  display-expr="name"
-                />
+              <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+                cell-template="tpl1">
+                <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
               </DxColumn>
               <template #tpl1="{ data }">
                 <span v-if="data.data.activo">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn
-                :width="70"
-                alignment="center"
-                cell-template="tpl"
-                caption=""
-                name="cmds"
-                :fixed="false"
-                fixed-position="right"
-              />
+              <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false"
+                fixed-position="right" />
               <template #tpl="{ data }">
                 <span class="cmds">
-                  <a
-                    title="Editar"
-                    class="cmd-item color-main-600 me-2"
-                    @click.prevent="start(data.data)"
-                    href="#"
-                  >
+                  <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)" href="#">
                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                   </a>
-                  <a
-                    v-if="data.data.activo"
-                    title="Desactivar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, false)"
-                    href="#"
-                  >
+                  <a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
+                    @click.prevent="active(data.data, false)" href="#">
                     <i class="fa-regular fa-square-minus fa-lg"></i>
                   </a>
-                  <a
-                    v-else
-                    title="Activar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, true)"
-                    href="#"
-                  >
+                  <a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+                    href="#">
                     <i class="fa-regular fa-square-check fa-lg"></i>
                   </a>
                 </span>
@@ -376,9 +273,7 @@ onMounted(async () => {
     <div class="card mt-4" v-if="$conf.debug">
       <div class="card-body">
         <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-          class="font-weight-semibold"
-          >item_copy:</span
-        >
+          class="font-weight-semibold">item_copy:</span>
         {{ item_copy }}
       </div>
     </div>

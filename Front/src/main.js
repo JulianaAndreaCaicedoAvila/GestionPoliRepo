@@ -22,6 +22,7 @@ if (import.meta.env.DEV) window._apiUrl = "http://localhost:3550";
 console.log("window._apiUrl =>", window._apiUrl);
 
 const capitalize = (str, lower = true) => (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) => match.toUpperCase());
+
 $().ready(function () {});
 
 // Global
@@ -71,6 +72,22 @@ axios
 			{ name: "SI", value: 1 },
 			{ name: "NO", value: 0 },
 		];
+		props.$clean = (e) => {
+			let v = e.component.option("value");
+			e.component.option("value", v.clean());
+		};
+		props.$capitalize = (e) => {
+			let v = e.component.option("value");
+			e.component.option("value", v.capitalize());
+		};
+		props.$capitalizeAll = (e) => {
+			let v = e.component.option("value");
+			e.component.option("value", v.capitalizeAll());
+		};
+		props.$lowerCase = (e) => {
+			let v = e.component.option("value");
+			if (v != null) e.component.option("value", v.toLowerCase().clean());
+		};
 	})
 	.catch((err) => {
 		console.log("ERROR", err);

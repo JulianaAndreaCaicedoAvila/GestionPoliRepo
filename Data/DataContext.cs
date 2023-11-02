@@ -32,10 +32,13 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<ClasificadorTipo>? ClasificadorTipo { get; set; } = null!;
 		public virtual DbSet<Curso>? Curso { get; set; } = null!;
 		public virtual DbSet<Cursos>? Cursos { get; set; } = null!;
+		public virtual DbSet<CursosTemas>? CursosTemas { get; set; } = null!;
 		public virtual DbSet<CursoAnexo>? CursoAnexo { get; set; } = null!;
 		public virtual DbSet<CursoEncuesta>? CursoEncuesta { get; set; } = null!;
+		public virtual DbSet<CursosEncuestas>? CursosEncuestas { get; set; } = null!;
 		public virtual DbSet<CursoFecha>? CursoFecha { get; set; } = null!;
 		public virtual DbSet<CursoTema>? CursoTema { get; set; } = null!;
+		public virtual DbSet<CursoDocumento>? CursoDocumento { get; set; } = null!;
 		public virtual DbSet<Departamento>? Departamento { get; set; } = null!;
 		public virtual DbSet<DepartamentoMunicipio>? DepartamentoMunicipio { get; set; } = null!;
 		public virtual DbSet<DepartamentosMunicipios>? DepartamentosMunicipios { get; set; } = null!;
@@ -61,6 +64,7 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<ProductosIndicadores>? ProductosIndicadores { get; set; } = null!;
 		public virtual DbSet<Programa>? Programa { get; set; } = null!;
 		public virtual DbSet<Tema>? Tema { get; set; } = null!;
+		public virtual DbSet<Temas>? Temas { get; set; } = null!;
 		public virtual DbSet<TerritorialDepartamento>? TerritorialDepartamento { get; set; } = null!;
 		public virtual DbSet<TerritorialesDepartamentos>? TerritorialesDepartamentos { get; set; } = null!;
 		public virtual DbSet<Users> Usuarios { get; set; } = null!;
@@ -86,6 +90,9 @@ namespace ESAP.Sirecec.Data
 			// Vistas
 			builder.Entity<Users>(entity => { entity.ToView("Usuarios"); });
 			builder.Entity<Cursos>(entity => { entity.ToView("Cursos"); });
+			builder.Entity<CursosTemas>(entity => { entity.ToView("CursosTemas"); });
+			builder.Entity<CursosEncuestas>(entity => { entity.ToView("CursosEncuestas"); });
+			builder.Entity<Temas>(entity => { entity.ToView("Temas"); });
 			builder.Entity<Municipios>(entity => { entity.ToView("Municipios"); });
 			builder.Entity<BancoProgramasNucleos>(entity => { entity.ToView("BancoProgramasNucleos"); });
 			builder.Entity<Clasificadores>(entity => { entity.ToView("Clasificadores"); });

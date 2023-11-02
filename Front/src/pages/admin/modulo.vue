@@ -61,7 +61,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
 			companyId: auth.user.companyId,
 			dependenceId: auth.user.dependenceId,
 		}),
-		endPoint: "cursoModulo/dx",
+		endPoint: "modulo/dx",
 		onLoading: function (loadOptions) {
 			$("#grid").lock("Cargando");
 			console.log("loadOptions =>", loadOptions);
@@ -119,7 +119,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
 				panelGrid.lock(`${data.activo ? "Desactivando" : "Activando"}, un momento por favor`, async function () {
 					data.activo = data.activo ? false : true;
 					await api()
-						.post(`cursoModulo/ed`, data)
+						.post(`modulo/ed`, data)
 						.then((r) => {
 							console.log("r =>", r);
 							store.limpiar();
@@ -131,10 +131,34 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
 						});
 				});
 			},
-			onCancel: () => {},
+			onCancel: () => { },
 		});
 	},
 	start = async (data) => {
+		// console.clear();
+		console.log(_sep);
+		console.log("data =>", data);
+		panelData = $("#data");
+		panelGrid = $("#grid");
+		// Editando
+		if (typeof data !== "undefined") {
+			$("#tit-action").text("Editar módulo");
+			panelGrid.lock("Cargando");
+			item.value = Clone(data);
+		} else {
+			$("#tit-action").text("Nuevo módulo");
+			item.value = Clone(item_copy);
+		}
+		panelGrid.fadeOut("normal", async function () {
+			console.log(typeof data);
+			panelData.fadeIn("normal", function () {
+				console.log(_sep);
+				console.log("item =>", item.value);
+				panelGrid.unlock();
+			});
+		});
+	},
+	temas = async (data) => {
 		// console.clear();
 		console.log(_sep);
 		console.log("data =>", data);
@@ -192,7 +216,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
 				let dto = item.value;
 				console.log("dto =>", dto);
 				await api({ hideErrors: true })
-					.post("cursoModulo/ed", dto)
+					.post("modulo/ed", dto)
 					.then((r) => {
 						console.log("r =>", r);
 						cancel(function () {
@@ -252,7 +276,8 @@ onMounted(async () => {
 					<div class="row">
 						<div class="col-md-12 mb-2">
 							<label class="tit">Nombre</label>
-							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre" class="form-control" placeholder="Nombre">
+							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre"
+								class="form-control" placeholder="Nombre">
 								<DxValidator>
 									<DxRequiredRule />
 									<DxStringLengthRule :min="3" />
@@ -261,15 +286,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-6 mb-2">
 							<label class="tit">Descripción</label>
-							<DxTextArea
-								:height="80"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								id="objetivos"
-								v-model="item.descripcion"
-								class="form-control"
-								placeholder="Descripcion"
-							>
+							<DxTextArea :height="80" value-change-event="keyup" :show-clear-button="true" id="objetivos"
+								v-model="item.descripcion" class="form-control" placeholder="Descripcion">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -277,15 +295,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-6 mb-2">
 							<label class="tit">Metodología</label>
-							<DxTextArea
-								:height="80"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								id="objetivos"
-								v-model="item.metodologia"
-								class="form-control"
-								placeholder="Metodologia"
-							>
+							<DxTextArea :height="80" value-change-event="keyup" :show-clear-button="true" id="objetivos"
+								v-model="item.metodologia" class="form-control" placeholder="Metodologia">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -304,15 +315,8 @@ onMounted(async () => {
 									<DxRequiredRule />
 								</DxValidator>
 							</DxHtmlEditor> -->
-							<DxTextArea
-								:height="200"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								id="objetivos"
-								v-model="item.actividadAprendizaje"
-								class="form-control"
-								placeholder="Actividad de aprendisaje"
-							>
+							<DxTextArea :height="200" value-change-event="keyup" :show-clear-button="true" id="objetivos"
+								v-model="item.actividadAprendizaje" class="form-control" placeholder="Actividad de aprendisaje">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -320,15 +324,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-6 mb-2">
 							<label class="tit">Actividad de Evaluación</label>
-							<DxTextArea
-								:height="200"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								id="objetivos"
-								v-model="item.actividadEvaluacion"
-								class="form-control"
-								placeholder="Actividad de Evaluacion"
-							>
+							<DxTextArea :height="200" value-change-event="keyup" :show-clear-button="true" id="objetivos"
+								v-model="item.actividadEvaluacion" class="form-control" placeholder="Actividad de Evaluacion">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -336,15 +333,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-12 mb-2">
 							<label class="tit">Objetivos</label>
-							<DxTextArea
-								:height="110"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								id="objetivos"
-								v-model="item.objetivos"
-								class="form-control"
-								placeholder="Objetivos"
-							>
+							<DxTextArea :height="110" value-change-event="keyup" :show-clear-button="true" id="objetivos"
+								v-model="item.objetivos" class="form-control" placeholder="Objetivos">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -352,15 +342,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-12 mb-2">
 							<label class="tit">Justificación</label>
-							<DxTextArea
-								:height="110"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								id="descripcion"
-								v-model="item.justificacion"
-								class="form-control"
-								placeholder="Justificacion"
-							>
+							<DxTextArea :height="110" value-change-event="keyup" :show-clear-button="true" id="descripcion"
+								v-model="item.justificacion" class="form-control" placeholder="Justificacion">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -385,7 +368,8 @@ onMounted(async () => {
 					<span v-html="titulo" />
 				</span>
 				<span>
-					<button type="button" class="btn btn-trans" @click.prevent="start()" title="Nuevo"><i class="fa-solid fa-square-plus"></i>NUEVO</button>
+					<button type="button" class="btn btn-trans" @click.prevent="start()" title="Nuevo"><i
+							class="fa-solid fa-square-plus"></i>NUEVO</button>
 				</span>
 			</div>
 
@@ -394,21 +378,10 @@ onMounted(async () => {
 					<div class="col">
 						<!-- <h2 class="font-weight-normal text-7 mb-1 color-main"><strong class="font-weight-semibold">Indicadores</strong> Principal o Interna</h2> -->
 						<!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
-						<DxDataGrid
-							:column-auto-width="false"
-							:customize-columns="customizeColumns"
-							:data-source="dxStore"
-							:hover-state-enabled="true"
-							:remote-operations="true"
-							:repaint-changes-only="true"
-							:row-alternation-enabled="true"
-							:show-borders="false"
-							:word-wrap-enabled="true"
-							horizontal-alignment="Stretch"
-							@initialized="onInitialized"
-							id="gridContainer"
-							key-expr="id"
-						>
+						<DxDataGrid :column-auto-width="false" :customize-columns="customizeColumns" :data-source="dxStore"
+							:hover-state-enabled="true" :remote-operations="true" :repaint-changes-only="true"
+							:row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="true"
+							horizontal-alignment="Stretch" @initialized="onInitialized" id="gridContainer" key-expr="id">
 							<DxColumnChooser :enabled="false" mode="dragAndDrop" />
 							<DxColumnFixing :enabled="true" />
 							<DxEditing :allow-updating="false" :allow-deleting="false" :allow-adding="false" mode="cell" />
@@ -424,15 +397,10 @@ onMounted(async () => {
 								<DxGroupItem summary-type="count" column="group_type_name" display-format="{0} ítems" />
 							</DxSummary>
 							<DxPaging :page-size="15" />
-							<DxPager
-								:visible="true"
-								:show-info="true"
-								:show-page-size-selector="false"
-								:show-navigation-buttons="true"
-								:allowed-page-sizes="[15, 50, 'Todos']"
-								info-text="{2} módulos (página {0} de {1})"
-							/>
-							<DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false" :allow-sorting="true" alignment="center" />
+							<DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
+								:allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} módulos (página {0} de {1})" />
+							<DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
+								:allow-sorting="true" alignment="center" />
 							<DxColumn data-field="nombre" caption="Nombre" :visible="true" :fixed="false" fixed-position="left" />
 							<DxColumn data-field="justificacion" caption="Justificacion" :visible="false" />
 							<DxColumn data-field="descripcion" caption="Descripción" :visible="true" />
@@ -440,23 +408,31 @@ onMounted(async () => {
 							<DxColumn data-field="objetivos" caption="Objetivos" :visible="false" />
 							<DxColumn data-field="actividadAprendizaje" caption="Aprendizaje" :visible="false" />
 							<DxColumn data-field="actividadEvaluacion" caption="Evaluacion" :visible="false" />
-							<DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true" cell-template="tpl1">
+							<DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+								cell-template="tpl1">
 								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
 							</DxColumn>
 							<template #tpl1="{ data }">
 								<span v-if="data.data.activo">SI</span>
 								<span v-else>NO</span>
 							</template>
-							<DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false" fixed-position="right" />
+							<DxColumn :width="80" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false"
+								fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">
+									<a title="Temas del módulo" class="cmd-item color-main-600 me-3" @click.prevent="temas(data.data)"
+										href="#">
+										<i class="fa-solid fa-list fa-lg"></i>
+									</a>
 									<a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="start(data.data)" href="#">
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
-									<a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
+									<a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
+										@click.prevent="active(data.data, false)" href="#">
 										<i class="fa-regular fa-square-minus fa-lg"></i>
 									</a>
-									<a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
+									<a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+										href="#">
 										<i class="fa-regular fa-square-check fa-lg"></i>
 									</a>
 								</span>
@@ -469,7 +445,8 @@ onMounted(async () => {
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">
-				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span class="font-weight-semibold">item_copy:</span>
+				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span
+					class="font-weight-semibold">item_copy:</span>
 				{{ item_copy }}
 			</div>
 		</div>

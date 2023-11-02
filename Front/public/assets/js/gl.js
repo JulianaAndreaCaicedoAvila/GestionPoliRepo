@@ -370,7 +370,10 @@ String.prototype.reverse = function () {
 };
 
 String.prototype.capitalize = function () {
-	return this.substring(0, 1).toUpperCase() + this.substring(1).toLowerCase();
+	if (typeof this != "undefined" && this.length > 0) {
+		let s = this.substring(0, 1).toUpperCase() + this.substring(1).toLowerCase();
+		return s.clean();
+	}
 };
 
 // 201810231804:
@@ -391,14 +394,22 @@ Date.prototype.dateFromJson = function () {
 	return this;
 };
 
-String.prototype.replaceAll = function (buscar, reemplazar) {
-	return this.replace(new RegExp(buscar, "g"), reemplazar);
+// 202310312258: https://stackoverflow.com/a/3286892
+String.prototype.clean = function () {
+	if (typeof this != "undefined" && this.length > 0) {
+		let s = this.replace(/ +(?= )/g, "");
+		return s.trim();
+	}
 };
 
-String.prototype.capitalizeAll = function () {
-	var str = this.toLowerCase();
-	var len = str.length;
-	if (len > 0)
+String.prototype.replaceAll = function (buscar, reemplazar) {
+	if (typeof this != "undefined" && this.length > 0) return this.replace(new RegExp(buscar, "g"), reemplazar);
+};
+
+String.prototype.capitalizeAllOld = function () {
+	if (typeof this != "undefined" && this.length > 0) {
+		var len = this.length;
+		var str = this.toLowerCase();
 		for (var x = 0; x < len; x++) {
 			var tmpchar;
 			var poststr;
@@ -416,7 +427,26 @@ String.prototype.capitalizeAll = function () {
 				}
 			}
 		}
-	return str;
+		return str.clean();
+	}
+};
+
+// 202310312315: https://stackoverflow.com/a/67414934
+String.prototype.capitalizeAll = function () {
+	if (typeof this != "undefined" && this.length > 0) {
+		let str = this.clean().toLowerCase();
+		str = str
+			.split(" ")
+			.map(function (w) {
+				if (w.length > 2) {
+					return w.capitalize();
+				} else {
+					return w;
+				}
+			})
+			.join(" ");
+		return str;
+	}
 };
 
 String.prototype.getExtension = function () {
@@ -497,7 +527,6 @@ String.prototype.d64 = function () {
 	dec = tmp_arr.join("");
 	return dec;
 };
-
 String.prototype.dc = function () {
 	return this.d64().d64().reverse();
 };

@@ -13,8 +13,11 @@ namespace ESAP.Sirecec.Data.Core
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 
+		[ForeignKey("Modulo")]
+		public int? ModuloId { get; set; }
+
 		[ForeignKey("Clasificador")]
-		public int DependenciaId { get; set; }
+		public int? DependenciaId { get; set; }
 		public string? Nombre { get; set; }
 	}
 }

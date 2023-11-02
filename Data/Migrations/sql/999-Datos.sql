@@ -4,9 +4,10 @@ INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Ad
 INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Pedagógo Líder','PEDAGOGO_LIDER','ABAC25611EBA4D14AD63A70E75FC4230');
 INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Pedagógo','PEDAGOGO','4CF4EFF088C94C28AAE35B1BB3F2D331');
 INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Gestor Territorial','GESTOR_TERRITORIAL','BC8B00AEC3064EA4B5B7A32D8F5A7E3F');
+INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Docente','DOCENTE','9138F3013D36478C9DF2D2F781AC3AA0');
 INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Auditor','AUDITOR','F7CE2AC16736431C879D81C33B9D96EC');
 INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Monitor','MONITOR','57D0E028D2F344DB9CB8C9B297B485FE');
--- INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Docente','DOCENTE','660DB5E0DF4C4FCB9AC11A5B58565FE0');
+INSERT INTO "AuthRoles" ("Name","NormalizedName","ConcurrencyStamp") VALUES ('Participante','PARTICIPANTE','660DB5E0DF4C4FCB9AC11A5B58565FE0');
 INSERT INTO "AuthUsers" ("FirstName","LastName","IsActive","CompanyId","DependenceId","UserName","NormalizedUserName","Email","NormalizedEmail","EmailConfirmed","PasswordHash","SecurityStamp","ConcurrencyStamp","PhoneNumber","PhoneNumberConfirmed","TwoFactorEnabled","LockoutEnd","LockoutEnabled","AccessFailedCount") VALUES ('Diego','Vargas',1,0,0,'diego.vargasv@esap.edu.co','DIEGO.VARGASV@ESAP.EDU.CO','diego.vargasv@esap.edu.co','DIEGO.VARGASV@ESAP.EDU.CO',1,'AQAAAAEAACcQAAAAEAL7nfPa2gQLP5QKH5ukmhlhExAUNypn5OFFNup+mNdX600MXrkoZRrjuupYHJ0xlg==', SYS_GUID(), SYS_GUID(),'311-571-1667',0,0,SYSDATE,0,0);
 INSERT INTO "AuthUserRoles"("UserId","RoleId") VALUES (1,1);
 -- ======================================================================================================

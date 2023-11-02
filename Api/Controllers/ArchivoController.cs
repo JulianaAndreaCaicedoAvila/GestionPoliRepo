@@ -20,15 +20,17 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	public class ArchivoController : BaseController
 	{
 		private readonly DataContext _db;
+		private readonly IConfiguration _config;
 		private readonly IHttpContextAccessor _context;
 
 		private readonly string _baseDir;
 
-		public ArchivoController(DataContext context, IHttpContextAccessor httpContextAccessor)
+		public ArchivoController(DataContext context, IHttpContextAccessor httpContextAccessor, IConfiguration config)
 		{
 			_db = context;
+			_config = config;
 			_context = httpContextAccessor;
-			_baseDir = @"D:\Web\esap\sirecec\v4\app\Front\public\store\";
+			_baseDir = _config["Path:FilesPath"] ?? @"D:\Web\esap\sirecec\v4\app\Front\public\store\";
 		}
 
 		[HttpGet("imagenes")] //archivo/imagen => CREATE - 

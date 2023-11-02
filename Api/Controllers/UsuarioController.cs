@@ -80,7 +80,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = _configuration["BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
+                var callbackUrl = _configuration["Path:BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
                 _email.Send(user.Email, "RECUPERAR CONTRASEÑA", $"Hola {user.FirstName}, puede recuperar su contraseña haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
                 return Ok(user);
             }
@@ -151,7 +151,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 // _logger.LogInformation(LoggerEventIds.UserCreated, "User created a new account with password.");
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = _configuration["BasePath"] + "/activar?c=" + code + "&e=" + email.Trim().ToLower();
+                var callbackUrl = _configuration["Path:BasePath"] + "/activar?c=" + code + "&e=" + email.Trim().ToLower();
                 _email.Send(user.Email, "ACTIVAR CUENTA", $"Hola {user.FirstName}, por favor active su cuenta haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
                 return Ok(newUser);
             }

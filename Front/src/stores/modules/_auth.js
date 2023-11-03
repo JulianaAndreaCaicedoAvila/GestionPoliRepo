@@ -62,7 +62,7 @@ export const useAuthStore = defineStore("auth", {
 			// 202205291105: https://stackoverflow.com/a/28742860
 			// https://devblogs.microsoft.com/azure-sdk/vue-js-user-authentication/
 			// user["token_expired"] = state.user.exp < Date.now() / 1000;
-			return state.user.token.exp < Date.now() / 1000;
+			return state.user ? state.user.token.exp < Date.now() / 1000 : true;
 		},
 	},
 	watch: {
@@ -138,13 +138,13 @@ export const useAuthStore = defineStore("auth", {
 					return r.data;
 				});
 		},
-		async loginAzureAd(email) {
+		async login(name, email) {
 			console.log(_sep);
 			console.log("loginAzureAd");
 			console.log("window._apiUrl =>", window._apiUrl);
 			console.log("email =>", email);
 			return await api({ hideErrors: import.meta.env.PROD })
-				.post(`${window._apiUrl}/usuario/email`, email)
+				.post(`${window._apiUrl}/usuario/email`, { name: name, email: email })
 				.then((r) => {
 					this.token = r.data.token;
 					let usr = makeUser(r, "azure");

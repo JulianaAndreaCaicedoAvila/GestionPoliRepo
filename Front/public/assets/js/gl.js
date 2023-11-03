@@ -387,13 +387,6 @@ String.prototype.dateFromJson = function () {
 	return null;
 };
 
-// 201810231804:
-// Parse JSON to receive a Date object in JavaScript \/Date(1293034567877)\/
-// https://stackoverflow.com/a/14509447
-Date.prototype.dateFromJson = function () {
-	return this;
-};
-
 // 202310312258: https://stackoverflow.com/a/3286892
 String.prototype.clean = function () {
 	if (typeof this != "undefined" && this.length > 0) {
@@ -620,16 +613,55 @@ Number.prototype.sizeFormat = function () {
 
 /* Date extensions */
 
-// 201810221852: Obtiene la fecha en formato dd/mm/yyyy
-// https://stackoverflow.com/a/12409344
-Date.prototype.getFormatted = function (date) {
+// 201810231804:
+// Parse JSON to receive a Date object in JavaScript \/Date(1293034567877)\/
+// https://stackoverflow.com/a/14509447
+Date.prototype.dateFromJson = function () {
+	return this;
+};
+
+// 202311030549: https://stackoverflow.com/a/563442
+Date.prototype.addDays = function (days) {
+	var date = new Date(this.valueOf());
+	date.setDate(date.getDate() + days);
+	return date;
+};
+
+window.addDays = function (d, days) {
+	var date = new Date(d);
+	date.setDate(date.getDate() + days);
+	return date;
+};
+
+Date.prototype.formatDate = function (format = "dd/mm/yyyy") {
 	var date = this;
-	var dd = date.getDate();
-	var mm = date.getMonth() + 1; //January is 0!
-	var yyyy = date.getFullYear();
-	if (dd < 10) dd = "0" + dd;
-	if (mm < 10) mm = "0" + mm;
-	return dd + "/" + mm + "/" + yyyy;
+	// 201810221852: Obtiene la fecha en formato dd/mm/yyyy
+	// https://stackoverflow.com/a/12409344
+	if (format == "dd/mm/yyyy") {
+		var dd = date.getDate();
+		var mm = date.getMonth() + 1; //January is 0!
+		var yyyy = date.getFullYear();
+		if (dd < 10) dd = "0" + dd;
+		if (mm < 10) mm = "0" + mm;
+		return dd + "/" + mm + "/" + yyyy;
+	}
+
+	// 202311031005: Format a Date as YYYYMMDD using JavaScript
+	// https://bobbyhadz.com/blog/javascript-format-date-yyyymmdd#format-a-date-as-yyyymmdd-using-javascript
+	if ((format = "yyyymmdd")) {
+		const year = date.toLocaleString("default", { year: "numeric" });
+		const month = date.toLocaleString("default", {
+			month: "2-digit",
+		});
+		const day = date.toLocaleString("default", { day: "2-digit" });
+		return [year, month, day].join("");
+	}
+
+	return date;
+};
+
+window.formatDate = (date, format) => {
+	return date.formatDate(format);
 };
 
 // Funciones
@@ -649,7 +681,7 @@ Date.prototype.getHourAmPm = function (date) {
 // 202305302059
 Date.prototype.getDateTimeAmPm = function (date) {
 	var date = this;
-	return date.getFormatted() + " " + date.getHourAmPm();
+	return date.formatDate() + " " + date.getHourAmPm();
 };
 
 // 201612141726: Obtiene un Timestamp formato YYYYMMDDHHMMSS

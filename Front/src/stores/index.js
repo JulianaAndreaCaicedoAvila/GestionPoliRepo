@@ -6,7 +6,7 @@ export * from "./modules/_curso";
 export * from "./modules/_departamento";
 export * from "./modules/_encuesta";
 export * from "./modules/_escuela";
-export * from "./modules/_general";
+export * from "./modules/_generic";
 export * from "./modules/_geo";
 export * from "./modules/_indicador";
 export * from "./modules/_modulo";

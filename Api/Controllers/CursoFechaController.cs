@@ -29,35 +29,34 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("ed")] // /api/curso/ed => CREATE - UPDATE
-		public ActionResult Edit(CursoFecha item)
+		public ActionResult Edit(List<CursoFecha> items)
 		{
-			var u = User;
-
-			// Registro nuevo: CREATE
-			if (item.Id == 0)
+			foreach (CursoFecha item in items)
 			{
-				var obj = (CursoFecha)item.CopyTo(new CursoFecha());
-				obj.CreadoPor = GetUserId();
-				obj.CreadoEl = DateTime.Now;
-				_db.CursoFecha.Add(obj);
-				_db.SaveChanges();
-				return Ok(obj);
-			}
-			else
-			{
-				// Registro existente: EDIT
-				var current = _db.CursoFecha.First(o => o.Id == item.Id);
-				if (current != null)
+				// Registro nuevo: CREATE
+				if (item.Id == 0)
 				{
-					var final = (CursoFecha)item.CopyTo(current);
-					final.EditadoPor = GetUserId();
-					final.EditadoEl = DateTime.Now;
+					var obj = (CursoFecha)item.CopyTo(new CursoFecha());
+					obj.CreadoPor = GetUserId();
+					obj.CreadoEl = DateTime.Now;
+					_db.CursoFecha.Add(obj);
 					_db.SaveChanges();
-					return Ok(final);
 				}
-
-				return Ok(item);
+				else
+				{
+					// Registro existente: EDIT
+					var current = _db.CursoFecha.First(o => o.Id == item.Id);
+					if (current != null)
+					{
+						var final = (CursoFecha)item.CopyTo(current);
+						final.EditadoPor = GetUserId();
+						final.EditadoEl = DateTime.Now;
+						_db.SaveChanges();
+						return Ok(final);
+					}
+				}
 			}
+			return Ok();
 		}
 
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 

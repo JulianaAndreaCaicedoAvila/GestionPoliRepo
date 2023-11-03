@@ -990,3 +990,16 @@ a.disabled {
 	// height: $size;
 	// font-size: $size;
 }
+
+.dx-state-readonly {
+	cursor: pointer !important;
+}
+.dx-dropdowneditor-icon {
+	&::before {
+		color: $main-color !important;
+	}
+}
+
+.font-size-sm {
+	font-size: 82%;
+}

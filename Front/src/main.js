@@ -88,6 +88,9 @@ axios
 			let v = e.component.option("value");
 			if (v != null) e.component.option("value", v.toLowerCase().clean());
 		};
+		props.$addDays = (date, days) => {
+			return window.addDays(date, days);
+		};
 	})
 	.catch((err) => {
 		console.log("ERROR", err);

@@ -219,11 +219,12 @@ onMounted(async () => {
                 :allow-sorting="true" alignment="center" sort-order="desc" />
               <DxColumn :width="80" data-field="codigoVerificacion" caption="Código" alignment="center"
                 :visible="false" />
-              <DxColumn data-field="nombre" caption="Nombre" :visible="true" :fixed="false" fixed-position="left" />
+              <DxColumn data-field="nombre" caption="Nombre" :visible="true" :fixed="false" fixed-position="left"
+                width="180" />
               <DxColumn data-field="descripcion" caption="Descripción" :visible="true" />
               <DxColumn data-field="territorialNombre" caption="Territorial" :visible="true" :width="130" />
               <DxColumn data-field="porcentajeValidoAsistencia" caption="Asistencia" :visible="true" :width="100"
-                alignment="center" />
+                alignment="center" format="#'%'" />
               <!-- <DxColumn
                 data-field="objetivos"
                 caption="Objetivos"

@@ -45,10 +45,10 @@ onMounted(async () => {
       <div class="card-header main d-flex justify-content-between">
         <span class=" d-flex justify-content-between">
           <i class="fa-solid fa-gears"></i>
-          <span id="tit-action" v-if="cursoId == 0">Administración &raquo; Cursos &raquo; Nuevo</span>
+          <span v-if="cursoId == 0">Administración &raquo; Cursos &raquo; Nuevo</span>
           <span v-else>
-            <span id="tit-action" v-if="curso">Administración &raquo; Cursos<br>"{{ curso.nombre }}"</span>
-            <span id="tit-action" v-else>Cargando curso...</span>
+            <span v-if="curso">Administración &raquo; Cursos<br>"{{ curso.nombre }}"</span>
+            <span v-else>Cargando curso...</span>
           </span>
         </span>
         <span>

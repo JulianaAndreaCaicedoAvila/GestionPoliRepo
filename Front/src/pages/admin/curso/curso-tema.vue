@@ -350,8 +350,10 @@ onMounted(async () => {
           <DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
             :allow-sorting="true" alignment="center" />
           <DxColumn data-field="temaNombre" caption="Tema" :visible="true" />
+          <DxColumn data-field="dependenciaNombre" caption="Dependencia" :visible="true" width="120" />
           <DxColumn data-field="docenteNombre" caption="Docente" :visible="true" />
-          <DxColumn data-field="dependenciaNombre" caption="Dependencia" :visible="true" width="150" />
+          <DxColumn data-field="lugarRealizacion" caption="Lugar" :visible="true" width="120" />
+          <DxColumn data-field="direccionRealizacion" caption="Dirección" :visible="true" width="120" />
           <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
             cell-template="tpl1">
             <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />

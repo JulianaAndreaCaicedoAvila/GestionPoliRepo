@@ -64,6 +64,10 @@ let recoverBack = () => {
 };
 let login = async () => {
 	if (loginZone.isValid()) {
+		if (email.value.toLowerCase().contains("@esap.edu.co")) {
+			signin();
+			return false;
+		}
 		loginZone.find(".card").lock("Verificando credenciales,<br/>un momento por favor");
 		let res = await authStore.do(["autenticar", email.value, password.value]).catch((error) => {
 			// console.clear();
@@ -109,8 +113,9 @@ let signin = async () => {
 				authStore.token = loginResponse.idToken;
 				// let firstName = account.idTokenClaims.name.split(" ")[0];
 				// 202208181954 Login
+				let name = account.name;
 				let email = account.username;
-				let res = await authStore.login(["email", email]).catch((error) => {
+				let res = await authStore.login(name, email).catch((error) => {
 					console.error("error =>", error);
 					loginZone.find(".card").unlock();
 					msg.error("Error de autenticación", "Verifique credenciales e inténtelo nuevamente", function (params) {
@@ -347,14 +352,6 @@ onMounted(() => {
 		} else {
 			loginZone.fadeIn();
 		}
-
-		// 202311021543: Enter key on elements -> https://stackoverflow.com/a/46063448
-		const node = document.getElementsByClassName("input1")[0];
-		node.addEventListener("keyup", function (event) {
-			if (event.key === "Enter") {
-				// Do work
-			}
-		});
 	}, 300);
 });
 

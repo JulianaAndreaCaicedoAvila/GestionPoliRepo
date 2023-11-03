@@ -51,19 +51,27 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         public async Task<ActionResult> Authenticate(AuthenticateRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is null || !user.EmailConfirmed || !await _userManager.CheckPasswordAsync(user, request.Password))
+            if (user is null || !user.EmailConfirmed || !user.IsActive || !await _userManager.CheckPasswordAsync(user, request.Password))
                 return Forbid();
             return await GetUserResult(user);
         }
 
         [AllowAnonymous]
         [HttpPost("email")]
-        public async Task<ActionResult> ByEmail()
+        public async Task<ActionResult> ByEmail(AuthenticateRequest request)
         {
-            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            var email = reader.ReadToEndAsync().Result;
-            var user = await _userManager.FindByEmailAsync(email);
+            // StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            // var email = reader.ReadToEndAsync().Result;
+            var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null) return BadRequest($"El usuario con el correo {user.Email} no existe");
+            if (request.Email.Trim().ToLower().Contains("esap.edu.co") && user.FirstName + " " + user.LastName != request.Name)
+            {
+                var ns = request.Name.Trim().Split(" "); // Divide el nombre 'Sandra Reyes García'
+                var l = ns.Length;
+                user.FirstName = ns[0] + (l <= 3 ? "" : " " + ns[1]); // Nombres 'Sandra'
+                user.LastName = ns[l - 2] + " " + ns[l - 1]; // Apellidos 'Reyes García'
+                var identityResult = await _userManager.UpdateAsync(user);
+            }
             return await GetUserResult(user);
         }
 
@@ -213,19 +221,21 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                         uReq.LastName = "ESAP";
                     }
                 }
-                var newUser = new AuthUser
-                {
-                    CompanyId = uReq.CompanyId,
-                    DependenceId = uReq.DependenceId,
-                    Email = uReq.Email,
-                    UserName = uReq.Email,
-                    FirstName = uReq.FirstName,
-                    LastName = uReq.LastName
-                };
+                var newUser = new AuthUser();
+                newUser = (AuthUser)uReq.CopyTo(newUser);
+                newUser.UserName = newUser.Email.ToLower();
+                newUser.NormalizedUserName = newUser.Email.ToUpper();
                 var identityResult = await _userManager.CreateAsync(newUser, uReq.Password);
-                var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
-                if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
-                return Ok(newUser);
+                if (identityResult.Succeeded)
+                {
+                    var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
+                    if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+                    return Ok(newUser);
+                }
+                else
+                {
+                    return BadRequest(identityResult.Errors.First());
+                }
             }
         }
 

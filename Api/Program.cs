@@ -33,7 +33,6 @@ builder.Logging.ClearProviders();
 
 // 202202071938: Migration to ASP.NET Core in .NET 6 -> https://gist.github.com/davidfowl/0e0372c3c1d895c3ce195ba983b1e03d
 // 202201282046: Add services to the container -> https://stackoverflow.com/a/69722959
-// Migrate from ASP.NET Core 5.0 to 6.0 -> https://t.ly/oQGmj
 ConfigurationManager configuration = builder.Configuration;
 IWebHostEnvironment env = builder.Environment;
 configuration.SetBasePath(env.ContentRootPath)

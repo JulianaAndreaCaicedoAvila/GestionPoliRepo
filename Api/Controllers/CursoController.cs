@@ -122,6 +122,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(item);
 		}
 
+		[HttpPost("fechas")] // /curso/fechas
+		public ActionResult TemasDx([FromBody] int cursoId)
+		{
+			var items = _db.CursoFecha?.Where(o => o.CursoId == cursoId).ToList();
+			return Ok(items);
+		}
+
 		[HttpPost("temas-dx")] // /api/curso/dx => DevExtreme DataGrid Get
 		public ActionResult TemasDx()
 		{

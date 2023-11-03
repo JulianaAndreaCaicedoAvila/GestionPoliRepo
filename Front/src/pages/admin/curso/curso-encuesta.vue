@@ -95,7 +95,7 @@ let titulo = "Temas",
       text: `¿Realmente desea ${data.descripcion ? "desactivar" : "activar"
         } la encuesta "<span class="font-weight-semibold">${data.titulo}</span>"?`,
       onConfirm: () => {
-        panelGrid = $("#grid-tema");
+        panelGrid = $("#grid-encuesta");
         panelGrid.lock(
           `${data.activo ? "Desactivando" : "Activando"}, un momento por favor`,
           async function () {
@@ -119,8 +119,8 @@ let titulo = "Temas",
     console.clear();
     valGroup.value.instance.reset();
     console.log("data =>", data);
-    panelData = $("#data-tema");
-    panelGrid = $("#grid-tema");
+    panelData = $("#data-encuesta");
+    panelGrid = $("#grid-encuesta");
     panelGrid.lock("Cargando");
     // Editando
     if (typeof data !== "undefined") {
@@ -139,8 +139,8 @@ let titulo = "Temas",
   },
   cancel = (cb) => {
     // console.clear();
-    panelData = $("#data-tema");
-    panelGrid = $("#grid-tema");
+    panelData = $("#data-encuesta");
+    panelGrid = $("#grid-encuesta");
     console.log("CANCEL!");
     panelData.fadeOut("normal", function () {
       panelData.clear();
@@ -160,8 +160,8 @@ let titulo = "Temas",
   },
   save = async () => {
     console.clear();
-    panelData = $("#data-tema");
-    panelGrid = $("#grid-tema");
+    panelData = $("#data-encuesta");
+    panelGrid = $("#grid-encuesta");
     let result = valGroup.value.instance.validate();
     if (!result.isValid) {
       $.scrollTo($(".dx-invalid:first"), {
@@ -194,15 +194,15 @@ let titulo = "Temas",
       endPoint: "curso/encuestas-dx",
       userData: JSON.stringify({ id: props.itemId }),
       onLoading: function (loadOptions) {
-        $("#grid-tema").lock("Cargando");
+        $("#grid-encuesta").lock("Cargando");
         console.log("loadOptions =>", loadOptions);
         console.log("onLoading");
       },
       onLoaded: function (results) {
         console.log("results", results);
         console.log("onLoaded!");
-        $("#grid-tema").unlock();
-        $("#data-tema").unlock();
+        $("#grid-encuesta").unlock();
+        $("#data-encuesta").unlock();
       },
     })
   };
@@ -214,9 +214,9 @@ let props = defineProps({
 });
 
 onMounted(async () => {
-  $("#grid-tema").lock("Cargando");
+  $("#grid-encuesta").lock("Cargando");
   console.log(_sep);
-  console.log("curso-tema.vue MOUNTED!");
+  console.log("curso-encuesta.vue MOUNTED!");
   encuestas.value = await encuestaStore.all();
   momentos.value = await store.porTipoNombre("momento_encuesta")
   console.log("temasAll =>", encuestas.value);
@@ -230,7 +230,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="container content">
-    <div class="card data hidden" id="data-tema">
+    <div class="card data hidden" id="data-encuesta">
       <!-- {{ item }} -->
       <!-- <div class="card-header main d-flex justify-content-between">
         <span>
@@ -275,7 +275,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="row" id="grid-tema">
+    <div class="row" id="grid-encuesta">
       <div class="col-md-12 text-end pb-2">
         <a href="#" class="btn pe-0" @click.prevent="addStart()"><i class="fa-solid fa-square-plus me-1"></i>Asociar
           encuesta</a>

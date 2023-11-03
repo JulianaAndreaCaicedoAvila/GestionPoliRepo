@@ -10,10 +10,22 @@
 			"cacheLocation": "localStorage"
 		}
 	},
-	"seguimiento": {
-		"anno_inicial": 2021,
-		"anno_final": 2031
+	"general": {
+		"entidad_esap_id": 358,
+		"territorial_direccion_nacional_id": 15,
+		"dependencia_capacitacion_id": 13,
+		"elaborado_por_convenio_na_id": 5
 	},
+	"roles": [
+		{ "id": 1, "name": "Administrador", "normalizedName": "ADMINISTRADOR", "concurrencyStamp": "C13D6F8AE8D54FAD8FDD3582CD1D64C4" },
+		{ "id": 2, "name": "Pedagógo Líder", "normalizedName": "PEDAGOGO_LIDER", "concurrencyStamp": "ABAC25611EBA4D14AD63A70E75FC4230" },
+		{ "id": 3, "name": "Pedagógo", "normalizedName": "PEDAGOGO", "concurrencyStamp": "4CF4EFF088C94C28AAE35B1BB3F2D331" },
+		{ "id": 4, "name": "Gestor Territorial", "normalizedName": "GESTOR_TERRITORIAL", "concurrencyStamp": "BC8B00AEC3064EA4B5B7A32D8F5A7E3F" },
+		{ "id": 5, "name": "Docente", "normalizedName": "DOCENTE", "concurrencyStamp": "9138F3013D36478C9DF2D2F781AC3AA0" },
+		{ "id": 6, "name": "Auditor", "normalizedName": "AUDITOR", "concurrencyStamp": "F7CE2AC16736431C879D81C33B9D96EC" },
+		{ "id": 7, "name": "Monitor", "normalizedName": "MONITOR", "concurrencyStamp": "57D0E028D2F344DB9CB8C9B297B485FE" },
+		{ "id": 8, "name": "Participante", "normalizedName": "PARTICIPANTE", "concurrencyStamp": "660DB5E0DF4C4FCB9AC11A5B58565FE0" }
+	],
 	"tipo_clasificador": [
 		{ "id": 1, "name": "elaborado_por" },
 		{ "id": 2, "name": "municipio" },
@@ -48,18 +60,5 @@
 		{ "id": 31, "name": "estado_curso" },
 		{ "id": 32, "name": "entidad" },
 		{ "id": 33, "name": "cargo" }
-	],
-	"tipo_acumulacion": [
-		{ "id": 1376, "name": "mantenimiento" },
-		{ "id": 1377, "name": "flujo" },
-		{ "id": 1378, "name": "acumulado" },
-		{ "id": 1379, "name": "capacidad" },
-		{ "id": 1380, "name": "reduccion" },
-		{ "id": 1381, "name": "reduccion_anual" }
-	],
-	"tipo_indicador": [
-		{ "id": 1343, "name": "general" },
-		{ "id": 1344, "name": "producto" },
-		{ "id": 1345, "name": "resultado_intermedio" }
 	]
 }

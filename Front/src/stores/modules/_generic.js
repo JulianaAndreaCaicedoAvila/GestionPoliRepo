@@ -1,6 +1,6 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
-export const useGeneralStore = defineStore({
+export const useGenericStore = defineStore({
 	id: "generico",
 	state: () => ({
 		items: [],
@@ -9,16 +9,18 @@ export const useGeneralStore = defineStore({
 		limpiar() {
 			this.items = [];
 		},
-		guardar: async (endPoint, item) => {
+		post: async (endPoint, item) => {
+			let url = `${window._apiUrl}${endPoint}`;
+			console.log("url =>", url);
 			return await api()
-				.post(`${window._apiUrl}${endPoint}`, item)
+				.post(url, item)
 				.then(async (r) => {
 					return r.data;
 				});
 		},
-		guardar: async (endPoint, item) => {
+		get: async (endPoint, item) => {
 			return await api()
-				.post(`${window._apiUrl}${endPoint}`, item)
+				.get(`${window._apiUrl}${endPoint}`, item)
 				.then(async (r) => {
 					return r.data;
 				});

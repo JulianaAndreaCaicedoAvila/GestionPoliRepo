@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { RouterLink } from "vue-router";
 import { useAuthStore } from "@/stores";
 const un = ref(null),
@@ -23,6 +23,11 @@ const un = ref(null),
       auth.logout();
     }
   };
+
+// watch(auth.user, async (newUsr, oldUsr) => {
+//   console.log("WATCH =>", auth.user);
+//   un.value = auth.user.name;
+// });
 
 onMounted(() => {
   // console.clear();
@@ -204,7 +209,7 @@ onMounted(() => {
               </li>
               <li class="dropdown dropdown-reverse ms-lg-auto no-line-effect" v-if="auth.user">
                 <a class="dropdown-item dropdown-toggle" href="#">
-                  <i class="fa-solid fa-user me-2"></i> {{ un }} <i class="ms-2 fa-solid fa-angle-down"></i>
+                  <i class="fa-solid fa-user me-2"></i> {{ auth.user.name }} <i class="ms-2 fa-solid fa-angle-down"></i>
                 </a>
                 <ul class="dropdown-menu">
                   <li>

@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import Archivos from "@/components/global/file_manager.vue";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import { useGenericStore, useClasificadorStore, useAuthStore } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,

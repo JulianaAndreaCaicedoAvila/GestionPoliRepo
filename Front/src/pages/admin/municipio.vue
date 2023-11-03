@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
 import {
-  useGeneralStore,
+  useGenericStore,
   useBancoStore,
   useAuthStore,
   useGeografiaStore,
@@ -97,11 +97,9 @@ let titulo = "Administración &raquo; Departamentos",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${
-        data.activo ? "desactivar" : "activar"
-      } el Municipio "<span class="font-weight-semibold">${
-        data.nombre
-      }</span>"?`,
+      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
+        } el Municipio "<span class="font-weight-semibold">${data.nombre
+        }</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -121,7 +119,7 @@ let titulo = "Administración &raquo; Departamentos",
           }
         );
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   },
   itemSelected = async (e) => {
@@ -278,23 +276,10 @@ onMounted(async () => {
           <div class="row">
             <div class="col-md-6 mb-1">
               <label class="tit">Departamento</label>
-              <DxSelectBox
-                id="departamentoId"
-                ref="departamentoIdTxtRef"
-                :data-source="departamentos"
-                :grouped="false"
-                :min-search-length="3"
-                :search-enabled="true"
-                v-model="item.departamentoId"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                @value-changed="itemSelected"
-                placeholder="Departamentos"
-                value-expr="id"
-                display-expr="nombre"
-                item-template="item"
-              >
+              <DxSelectBox id="departamentoId" ref="departamentoIdTxtRef" :data-source="departamentos" :grouped="false"
+                :min-search-length="3" :search-enabled="true" v-model="item.departamentoId" :show-clear-button="true"
+                :show-data-before-search="true" class="form-control" @value-changed="itemSelected"
+                placeholder="Departamentos" value-expr="id" display-expr="nombre" item-template="item">
                 <template #item="{ data }">
                   {{ data.nombre }}
                 </template>
@@ -305,14 +290,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-8 mb-2">
               <label class="tit">Nombre</label>
-              <DxTextBox
-                id="nombre"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                v-model="item.nombre"
-                class="form-control"
-                placeholder="Nombre"
-              >
+              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre"
+                class="form-control" placeholder="Nombre">
                 <DxValidator>
                   <DxRequiredRule />
                   <DxStringLengthRule :min="3" />
@@ -321,14 +300,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-4 mb-2">
               <label class="tit">DIVIPOLA</label>
-              <DxTextBox
-                id="codigo"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                v-model="item.codigo"
-                class="form-control"
-                placeholder="Codigo"
-              >
+              <DxTextBox id="codigo" value-change-event="keyup" :show-clear-button="true" v-model="item.codigo"
+                class="form-control" placeholder="Codigo">
                 <DxValidator>
                   <DxRequiredRule />
                   <DxStringLengthRule :min="3" />
@@ -341,12 +314,8 @@ onMounted(async () => {
 
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
-          <a class="btn btn-gray" @click.prevent="cancel"
-            ><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a
-          >
-          <a class="btn btn-main" @click.prevent="save"
-            >GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i
-          ></a>
+          <a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
+          <a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
         </div>
       </div>
     </div>
@@ -358,12 +327,7 @@ onMounted(async () => {
           <span v-html="titulo" />
         </span>
         <span>
-          <button
-            type="button"
-            class="btn btn-trans"
-            @click.prevent="start()"
-            title="Nuevo"
-          >
+          <button type="button" class="btn btn-trans" @click.prevent="start()" title="Nuevo">
             <i class="fa-solid fa-square-plus"></i>NUEVO
           </button>
         </span>
@@ -374,17 +338,9 @@ onMounted(async () => {
           <div class="col">
             <!-- <h2 class="font-weight-normal text-7 mb-1 color-main"><strong class="font-weight-semibold">Indicadores</strong> Principal o Interna</h2> -->
             <!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
-            <DxDataGrid
-              :customize-columns="customizeColumns"
-              :data-source="dxStore"
-              :hover-state-enabled="true"
-              :remote-operations="true"
-              :word-wrap-enabled="true"
-              :row-alternation-enabled="true"
-              :show-borders="false"
-              id="gridContainer"
-              @initialized="onInitialized"
-            >
+            <DxDataGrid :customize-columns="customizeColumns" :data-source="dxStore" :hover-state-enabled="true"
+              :remote-operations="true" :word-wrap-enabled="true" :row-alternation-enabled="true" :show-borders="false"
+              id="gridContainer" @initialized="onInitialized">
               <DxLoadPanel :enabled="false" />
               <DxFilterRow :visible="true" />
               <!-- <DxColumnChooser :enabled="true" mode="dragAndDrop" />
@@ -396,21 +352,11 @@ onMounted(async () => {
 							<DxSearchPanel :visible="false" :highlight-case-sensitive="false" /> -->
               <DxSorting mode="single" /><!-- single, multiple, none" -->
               <DxSummary>
-                <DxGroupItem
-                  summary-type="count"
-                  column="group_type_name"
-                  display-format="{0}"
-                />
+                <DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
               </DxSummary>
               <DxPaging :page-size="15" />
-              <DxPager
-                :visible="true"
-                :show-info="true"
-                :show-page-size-selector="false"
-                :show-navigation-buttons="true"
-                :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} Municipios (página {0} de {1})"
-              />
+              <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
+                :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} Municipios (página {0} de {1})" />
               <!-- <DxColumn
                 data-field="bancoId"
                 caption="Banco de programas"
@@ -423,91 +369,35 @@ onMounted(async () => {
                   display-expr="nombre"
                 />
               </DxColumn> -->
-              <DxColumn
-                data-field="id"
-                caption="Id"
-                :visible="false"
-                :width="80"
-                :allow-filtering="false"
-                :allow-sorting="true"
-                alignment="center"
-              />
-              <DxColumn
-                data-field="departamentoId"
-                caption="Departamentos"
-                :visible="true"
-                :allow-filtering="true"
-              >
-                <DxLookup
-                  :data-source="departamentos"
-                  value-expr="id"
-                  display-expr="nombre"
-                />
+              <DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
+                :allow-sorting="true" alignment="center" />
+              <DxColumn data-field="departamentoId" caption="Departamentos" :visible="true" :allow-filtering="true">
+                <DxLookup :data-source="departamentos" value-expr="id" display-expr="nombre" />
               </DxColumn>
-              <DxColumn
-                data-field="nombre"
-                caption="Municipios"
-                :visible="true"
-              />
-              <DxColumn
-                data-field="codigo"
-                caption="DIVIPOLA"
-                :visible="true"
-              />
+              <DxColumn data-field="nombre" caption="Municipios" :visible="true" />
+              <DxColumn data-field="codigo" caption="DIVIPOLA" :visible="true" />
               <DxColumn data-field="orden" caption="Orden" :visible="true" />
-              <DxColumn
-                :width="100"
-                data-field="activo"
-                caption="Activo"
-                alignment="center"
-                :visible="true"
-                cell-template="tpl1"
-              >
-                <DxLookup
-                  :data-source="$si_no"
-                  value-expr="value"
-                  display-expr="name"
-                />
+              <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+                cell-template="tpl1">
+                <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
               </DxColumn>
               <template #tpl1="{ data }">
                 <span v-if="data.data.activo">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn
-                :width="70"
-                alignment="center"
-                cell-template="tpl"
-                caption=""
-                name="cmds"
-                :fixed="true"
-                fixed-position="right"
-              />
+              <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
+                fixed-position="right" />
               <template #tpl="{ data }">
                 <span class="cmds">
-                  <a
-                    title="Editar"
-                    class="cmd-item color-main-600 me-2"
-                    @click.prevent="start(data.data)"
-                    href="#"
-                  >
+                  <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="start(data.data)" href="#">
                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                   </a>
-                  <a
-                    v-if="data.data.activo"
-                    title="Desactivar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, false)"
-                    href="#"
-                  >
+                  <a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
+                    @click.prevent="active(data.data, false)" href="#">
                     <i class="fa-regular fa-square-minus fa-lg"></i>
                   </a>
-                  <a
-                    v-else
-                    title="Activar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, true)"
-                    href="#"
-                  >
+                  <a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+                    href="#">
                     <i class="fa-regular fa-square-check fa-lg"></i>
                   </a>
                 </span>
@@ -521,9 +411,7 @@ onMounted(async () => {
     <div class="card mt-4" v-if="$conf.debug">
       <div class="card-body">
         <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-          class="font-weight-semibold"
-          >item_copy:</span
-        >
+          class="font-weight-semibold">item_copy:</span>
         {{ item_copy }}
       </div>
     </div>

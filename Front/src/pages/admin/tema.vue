@@ -4,7 +4,7 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useModuloStore, useAuthStore } from "@/stores";
+import { useGenericStore, useClasificadorStore, useModuloStore, useAuthStore } from "@/stores";
 import DxValidator, { DxRequiredRule, DxStringLengthRule } from "devextreme-vue/validator";
 import { DxSelectBox, DxTextBox, DxDateBox, DxValidationGroup } from "devextreme-vue";
 import {

@@ -851,6 +851,11 @@ $height: 45px;
 	// height: $height !important;
 	// min-height: $height !important;
 	// line-height: $height !important;
+	& nav > ul > li > a {
+		font-weight: 600 !important;
+		font-size: 1.06rem !important;
+		text-transform: none !important;
+	}
 }
 #header .header-nav {
 	height: $height !important;

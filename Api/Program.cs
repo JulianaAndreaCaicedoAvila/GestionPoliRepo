@@ -35,7 +35,11 @@ builder.Logging.ClearProviders();
 // 202201282046: Add services to the container -> https://stackoverflow.com/a/69722959
 // Migrate from ASP.NET Core 5.0 to 6.0 -> https://t.ly/oQGmj
 ConfigurationManager configuration = builder.Configuration;
-IWebHostEnvironment environment = builder.Environment;
+IWebHostEnvironment env = builder.Environment;
+configuration.SetBasePath(env.ContentRootPath)
+	.AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
+	.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+	.AddEnvironmentVariables().Build();
 var services = builder.Services;
 
 // 202206030515: Access appsettings.json values in controller classes https://stackoverflow.com/a/38359523

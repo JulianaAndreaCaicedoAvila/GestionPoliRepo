@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 import { useAuthStore } from "@/stores";
-const _int = ref(null),
+const un = ref(null),
   auth = useAuthStore(),
   logout = () => {
     msg.confirm({
@@ -34,6 +34,8 @@ onMounted(() => {
   // setShow();
   if (auth.user) {
     check();
+    un.value = auth.user.name.capitalizeAll();
+    console.log("UN =>", un.value);
     window._int = setInterval(function () {
       check();
     }, 10000);
@@ -202,8 +204,7 @@ onMounted(() => {
               </li>
               <li class="dropdown dropdown-reverse ms-lg-auto no-line-effect" v-if="auth.user">
                 <a class="dropdown-item dropdown-toggle" href="#">
-                  <i class="fa-solid fa-user me-2"></i> {{ auth.user.name }}
-                  <i class="ms-2 fa-solid fa-angle-down"></i>
+                  <i class="fa-solid fa-user me-2"></i> {{ un }} <i class="ms-2 fa-solid fa-angle-down"></i>
                 </a>
                 <ul class="dropdown-menu">
                   <li>

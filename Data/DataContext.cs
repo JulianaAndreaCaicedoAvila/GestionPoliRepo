@@ -17,12 +17,12 @@ namespace ESAP.Sirecec.Data
 	{
 		public DataContext() : base() { }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true).Build();
-			var conn = configuration.GetConnectionString("ConnStr");
-			optionsBuilder.UseOracle(conn);
-		}
+		// protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		// {
+		// 	var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true).Build();
+		// 	var conn = configuration.GetConnectionString("ConnStr");
+		// 	optionsBuilder.UseOracle(conn);
+		// }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 		public virtual DbSet<BancoPrograma>? BancoPrograma { get; set; } = null!;
 		public virtual DbSet<BancoProgramaNucleo>? BancoProgramaNucleo { get; set; } = null!;

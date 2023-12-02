@@ -1,4 +1,16 @@
+
+202312011530:
+https://dotnet.microsoft.com/es-es/download/visual-studio-sdks
+
+Install EF
+https://stackoverflow.com/a/57070108
+To install the dotnet-ef tool, run the following command:
+dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-ef --version 6.*
+
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
+
 202312011446:
 Gestor -> Territorial, Elaborado Por, Dependencia
 Asignar contraseña

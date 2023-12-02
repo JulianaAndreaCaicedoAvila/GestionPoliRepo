@@ -208,6 +208,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
         }
       );
     }
+  },
+  setCode = () => {
+    // 202312011657: https://stackoverflow.com/a/12502559
+    item.value.codigoVerificacion = Math.random().toString(36).slice(2).toUpperCase();
+    // item.value.codigoVerificacion = (Math.random() * 1e32).toString(36);
   };
 
 let divipola = (item) => {
@@ -310,8 +315,14 @@ onMounted(async () => {
           </div>
           <div class="col-md-3 mb-3">
             <label class="tit">Código de verificación</label>
-            <DxTextBox :read-only="readMode" value-change-event="keyup" :show-clear-button="true"
-              v-model="item.codigoVerificacion" class="form-control" placeholder="Código de verificación" />
+            <div class="input-group">
+              <DxTextBox :read-only="readMode" value-change-event="keyup" :show-clear-button="true"
+                v-model="item.codigoVerificacion" class="form-control" placeholder="Código de verificación" />
+              <div class="input-group-append">
+                <a class="btn btn-main" title="Generar código..." @click.prevent="setCode()"><i
+                    class="fa-solid fa-arrows-rotate"></i></a>
+              </div>
+            </div>
           </div>
           <div class="col-md-4 mb-1">
             <label class="tit">Dependencia</label>

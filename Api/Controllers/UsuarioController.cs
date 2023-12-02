@@ -224,6 +224,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 var newUser = new AuthUser();
                 newUser = (AuthUser)uReq.CopyTo(newUser);
                 newUser.UserName = newUser.Email.ToLower();
+                newUser.NormalizedEmail = newUser.Email.ToUpper();
                 newUser.NormalizedUserName = newUser.Email.ToUpper();
                 var identityResult = await _userManager.CreateAsync(newUser, uReq.Password);
                 if (identityResult.Succeeded)

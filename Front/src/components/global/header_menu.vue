@@ -98,12 +98,12 @@ onMounted(() => {
                     <a class="dropdown-item" href="#">Encuestas<i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                       <li>
-                        <router-link :to="{ path: '/admin/encuesta' }" class="dropdown-item">Banco de
-                          Encuestas</router-link>
-                      </li>
-                      <li>
                         <router-link :to="{ path: '/admin/pregunta' }" class="dropdown-item">Banco de
                           Preguntas</router-link>
+                      </li>
+                      <li>
+                        <router-link :to="{ path: '/admin/encuesta' }" class="dropdown-item">Banco de
+                          Encuestas</router-link>
                       </li>
                     </ul>
                   </li>

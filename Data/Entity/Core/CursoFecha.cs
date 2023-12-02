@@ -15,7 +15,7 @@ namespace ESAP.Sirecec.Data.Core
 
 		[ForeignKey("Curso")]
 		public int? CursoId { get; set; }
-		public DateTime? FechaClase = null;
+		public DateTime? FechaClase { get; set; }
 		public int? Ponderacion { get; set; }
 		public virtual Curso? Curso { get; set; }
 	}

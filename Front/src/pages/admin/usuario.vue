@@ -300,7 +300,7 @@ onMounted(async () => {
 
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-3 pb-4">
-					<!-- {{ item }} -->
+					{{ item }}
 					<div class="row">
 						<div class="col-md-5 mb-3">
 							<label class="tit">Entidad</label>

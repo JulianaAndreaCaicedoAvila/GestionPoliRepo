@@ -50,10 +50,11 @@ let itemId = ref(null),
 						.post(`cursoFecha/ed`, dto)
 						.then((r) => {
 							console.log("r =>", r);
-							cancel(function () {
-								panelData.unlock();
-								grid.refresh();
-							});
+							panelData.unlock();
+							// cancel(function () {
+							// 	panelData.unlock();
+							// 	grid.refresh();
+							// });
 						});
 				}
 			);

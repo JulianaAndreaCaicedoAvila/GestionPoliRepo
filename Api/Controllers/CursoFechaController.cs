@@ -31,6 +31,8 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		[HttpPost("ed")] // /api/curso/ed => CREATE - UPDATE
 		public ActionResult Edit(List<CursoFecha> items)
 		{
+			var res = new List<CursoFecha> { };
+
 			foreach (CursoFecha item in items)
 			{
 				// Registro nuevo: CREATE
@@ -41,6 +43,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 					obj.CreadoEl = DateTime.Now;
 					_db.CursoFecha.Add(obj);
 					_db.SaveChanges();
+					res.Add(obj);
 				}
 				else
 				{
@@ -52,11 +55,11 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 						final.EditadoPor = GetUserId();
 						final.EditadoEl = DateTime.Now;
 						_db.SaveChanges();
-						return Ok(final);
+						res.Add(final);
 					}
 				}
 			}
-			return Ok();
+			return Ok(res);
 		}
 
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 

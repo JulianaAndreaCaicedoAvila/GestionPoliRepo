@@ -39,10 +39,22 @@ export const router = createRouter({
 			component: () => import("@/pages/inicio.vue"),
 		},
 		{
-			name: "inicio-plano",
-			path: "/inicio-plano",
-			meta: { title: "Inicio Plano", requiresAuth: false },
-			component: () => import("@/pages/inicio-plano.vue"),
+			name: "certificados",
+			path: "/certificados",
+			meta: { title: "Certificados", requiresAuth: false },
+			component: () => import("@/pages/certificados.vue"),
+		},
+		{
+			name: "oferta",
+			path: "/oferta/:por?",
+			meta: { title: "Oferta académica", requiresAuth: false },
+			component: () => import("@/pages/oferta.vue"),
+		},
+		{
+			name: "tablero",
+			path: "/tablero",
+			meta: { title: "Inicio Plano", requiresAuth: true, roles: [1] },
+			component: () => import("@/pages/tablero.vue"),
 		},
 		{
 			name: "clasificador",
@@ -80,6 +92,12 @@ export const router = createRouter({
 			path: "/admin/curso/:id?",
 			meta: { title: "Curso", requiresAuth: true, roles: [] },
 			component: () => import("@/pages/admin/curso/tabs.vue"), // 202309071141: Lleva al Wizard
+		},
+		{
+			name: "inscripcion",
+			path: "/inscripcion/:id?",
+			meta: { title: "Inscripción", requiresAuth: false },
+			component: () => import("@/pages/inscripcion/tabs.vue"), // 202312060755: Lleva al Wizard
 		},
 		{
 			name: "cursos",

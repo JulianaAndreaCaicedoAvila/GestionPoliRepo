@@ -270,6 +270,39 @@ div.form-control {
 			color: #fff;
 		}
 	}
+
+	&.evento {
+		.card-title {
+			font-size: 1.12rem;
+			line-height: 1.3rem;
+			color: $main-color;
+			font-weight: 600;
+			text-align: left;
+		}
+		.card-text {
+			font-size: 1rem;
+			line-height: 1.4rem;
+			letter-spacing: -0.4px;
+			strong {
+				font-weight: 600;
+			}
+		}
+		.card-footer {
+			font-size: 1rem;
+			font-weight: 700;
+			.type {
+				&.virtual {
+					color: #bb2e91;
+				}
+				&.presencial {
+					color: #32a31b;
+				}
+			}
+			a {
+				letter-spacing: -0.4px;
+			}
+		}
+	}
 }
 
 input {
@@ -523,6 +556,10 @@ span.cmds {
 }
 
 .bb {
+	border-bottom: 1px solid #ccc;
+}
+
+.bbd {
 	border-bottom: 1px dotted #ccc;
 }
 
@@ -1002,4 +1039,74 @@ a.disabled {
 
 .font-size-sm {
 	font-size: 82%;
+}
+
+.dropdown-menu-right {
+	right: 0;
+	left: auto;
+}
+
+.h-6vw {
+	width: 100%;
+	height: 6vw;
+	object-fit: cover;
+}
+
+.h-5vw {
+	width: 100%;
+	height: 5vw;
+	object-fit: cover;
+}
+
+.h-4vw {
+	width: 100%;
+	height: 4vw;
+	object-fit: cover;
+}
+
+.h-3vw {
+	width: 100%;
+	height: 3vw;
+	object-fit: cover;
+}
+
+.pagination {
+	box-shadow: $shadow !important;
+	.page-item {
+		box-shadow: none !important;
+		.page-link {
+			cursor: pointer !important;
+			// border: 1px solid #ccc;
+			font-size: 1rem;
+			letter-spacing: -0.4px;
+			font-weight: 600;
+			padding: 0.5rem 1rem !important;
+			&:hover,
+			&:active,
+			&:focus {
+				text-decoration: none;
+				box-shadow: none;
+			}
+		}
+		&.disabled {
+			.page-link {
+				color: #ccc !important;
+			}
+		}
+		&.active {
+			.page-link {
+				color: #ffffff !important;
+				background-color: $main-color;
+				&:hover,
+				&:active,
+				&:focus {
+					background-color: $main-color;
+				}
+			}
+		}
+	}
+}
+
+.hand {
+	cursor: pointer !important;
 }

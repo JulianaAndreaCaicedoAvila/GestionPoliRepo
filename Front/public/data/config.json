@@ -3,19 +3,31 @@
 	"msalConfig": {
 		"enabled": true,
 		"auth": {
-			"clientId": "4765445b-32c6-49b0-83e6-1d93765276ca",
-			"authority1": "https://login.microsoftonline.com/33fa6907-21c6-4126-aa66-bcbed95361bb"
+			"clientId": "6c0f9105-044f-4992-8a31-6710244e9e34",
+			"authority": "https://login.microsoftonline.com/b24f0388-e61b-43e0-b9e7-baa5b0d5121e"
 		},
 		"cache": {
 			"cacheLocation": "localStorage"
 		}
 	},
-	"seguimiento": {
-		"anno_inicial": 2021,
-		"anno_final": 2031
+	"general": {
+		"entidad_esap_id": 358,
+		"territorial_direccion_nacional_id": 15,
+		"dependencia_capacitacion_id": 13,
+		"elaborado_por_convenio_na_id": 5
 	},
+	"roles": [
+		{ "id": 1, "name": "Administrador", "normalizedName": "ADMINISTRADOR", "concurrencyStamp": "C13D6F8AE8D54FAD8FDD3582CD1D64C4" },
+		{ "id": 2, "name": "Pedagógo Líder", "normalizedName": "PEDAGOGO_LIDER", "concurrencyStamp": "ABAC25611EBA4D14AD63A70E75FC4230" },
+		{ "id": 3, "name": "Pedagógo", "normalizedName": "PEDAGOGO", "concurrencyStamp": "4CF4EFF088C94C28AAE35B1BB3F2D331" },
+		{ "id": 4, "name": "Gestor Territorial", "normalizedName": "GESTOR_TERRITORIAL", "concurrencyStamp": "BC8B00AEC3064EA4B5B7A32D8F5A7E3F" },
+		{ "id": 5, "name": "Docente", "normalizedName": "DOCENTE", "concurrencyStamp": "9138F3013D36478C9DF2D2F781AC3AA0" },
+		{ "id": 6, "name": "Auditor", "normalizedName": "AUDITOR", "concurrencyStamp": "F7CE2AC16736431C879D81C33B9D96EC" },
+		{ "id": 7, "name": "Monitor", "normalizedName": "MONITOR", "concurrencyStamp": "57D0E028D2F344DB9CB8C9B297B485FE" },
+		{ "id": 8, "name": "Participante", "normalizedName": "PARTICIPANTE", "concurrencyStamp": "660DB5E0DF4C4FCB9AC11A5B58565FE0" }
+	],
 	"tipo_clasificador": [
-		{ "id": 1, "name": "departamento" },
+		{ "id": 1, "name": "elaborado_por" },
 		{ "id": 2, "name": "municipio" },
 		{ "id": 3, "name": "tipo_documento_identidad" },
 		{ "id": 4, "name": "genero" },
@@ -23,20 +35,30 @@
 		{ "id": 6, "name": "estado_civil" },
 		{ "id": 7, "name": "dependencia" },
 		{ "id": 8, "name": "territorial" },
-		{ "id": 11, "name": "programa" },
-		{ "id": 32, "name": "entidad" }
-	],
-	"tipo_acumulacion": [
-		{ "id": 1376, "name": "mantenimiento" },
-		{ "id": 1377, "name": "flujo" },
-		{ "id": 1378, "name": "acumulado" },
-		{ "id": 1379, "name": "capacidad" },
-		{ "id": 1380, "name": "reduccion" },
-		{ "id": 1381, "name": "reduccion_anual" }
-	],
-	"tipo_indicador": [
-		{ "id": 1343, "name": "general" },
-		{ "id": 1344, "name": "producto" },
-		{ "id": 1345, "name": "resultado_intermedio" }
+		{ "id": 9, "name": "programa" },
+		{ "id": 10, "name": "producto" },
+		{ "id": 11, "name": "indicador" },
+		{ "id": 12, "name": "nucleo" },
+		{ "id": 13, "name": "tema" },
+		{ "id": 14, "name": "tipo_curso" },
+		{ "id": 15, "name": "tipo_asistencia" },
+		{ "id": 16, "name": "clasificacion_documento" },
+		{ "id": 17, "name": "clasificacion_multimedia" },
+		{ "id": 18, "name": "grupo_documento" },
+		{ "id": 19, "name": "tipo_documento" },
+		{ "id": 20, "name": "objetivo_indicadores" },
+		{ "id": 21, "name": "caracteristica_esap" },
+		{ "id": 22, "name": "tipo_discapacidad" },
+		{ "id": 23, "name": "tipo_vulnerabilidad" },
+		{ "id": 24, "name": "cargo_actual" },
+		{ "id": 25, "name": "tipo_participante" },
+		{ "id": 26, "name": "tipo_servidor_publico" },
+		{ "id": 27, "name": "grupo_etnico" },
+		{ "id": 28, "name": "momento_encuesta" },
+		{ "id": 29, "name": "tipo_encuesta" },
+		{ "id": 30, "name": "certificado_etiqueta" },
+		{ "id": 31, "name": "estado_curso" },
+		{ "id": 32, "name": "entidad" },
+		{ "id": 33, "name": "cargo" }
 	]
 }

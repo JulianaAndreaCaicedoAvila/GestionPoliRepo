@@ -12,6 +12,7 @@ import {
 	DxScrolling,
 	DxFilterRow,
 	DxDataGrid,
+	DxLookup,
 	DxGrouping,
 	DxGroupItem,
 	DxGroupPanel,
@@ -22,22 +23,31 @@ import {
 	DxSorting,
 	DxSummary,
 } from "devextreme-vue/data-grid";
+const g = window._config.general; // Configuraciones generales
 const store = useClasificadorStore();
 const authStore = useAuthStore();
-let companyId = 1518,
-	entidades = ref([]),
+let entidades = ref([]),
+	editando = ref(false),
+	esExterno = ref(false),
 	dependencias = ref([]),
+	convenios = ref([]),
+	territoriales = ref([]),
 	item = ref({
-		id: 0,
-		roleId: null,
-		companyId: null,
-		email: null,
-		firstName: null,
-		lastName: null,
-		isActive: true,
-		password: null,
-		password1: null,
+		"id": 0,
+		"roleId": null, // 7 -> Docente
+		"companyId": g.entidad_esap_id,
+		"territorialId": g.territorial_direccion_nacional_id,
+		"dependenceId": g.dependencia_capacitacion_id,
+		"projectId": g.elaborado_por_convenio_na_id,
+		"email": "@esap.edu.co",
+		"firstName": null,
+		"lastName": null,
+		"password": null,
+		"password1": null,
+		"isActive": true,
+		"emailConfirmed": true,
 	}),
+	item2 = { "id": 2, "roleId": 5, "roleName": "Docente", "companyId": 357, "companyName": "Departamento Nacional de Planeación (DNP)", "dependenceId": 13, "dependenceName": "Capacitación", "territorialId": null, "territorialName": null, "projectId": null, "projectName": null, "name": "Jesús Emiliano Castañeda Palacios", "firstName": "Jesús Emiliano", "lastName": "Castañeda Palacios", "email": "donjesus2008@gmail.com", "userName": "donjesus2008@gmail.com", "emailConfirmed": false, "passwordHash": "AQAAAAEAACcQAAAAEDug0UNfxf4TbUjxdD81vXYSX+IPu8nYl01tbFRkS/g7/J9OfPsAShrVO+zjq78Jfg==", "securityStamp": "UW2VI74BNEGZIC2IGM5VGKMTXHFGLDV6", "phoneNumber": null, "phoneNumberConfirmed": false, "twoFactorEnabled": false, "lockoutEnd": null, "lockoutEnabled": true, "accessFailedCount": 0, "concurrencyStamp": "9bbee46f-518e-4559-933f-8669172a92f1", "normalizedEmail": "DONJESUS2008@GMAIL.COM", "normalizedUserName": "DONJESUS2008@GMAIL.COM", "isActive": true },
 	item_copy = Clone(item.value),
 	valGroup = ref(null),
 	panelData = null,
@@ -71,8 +81,8 @@ let companyId = 1518,
 		return item.value.password;
 	},
 	ansvEmailRule = (e) => {
-		if (item.value.companyId !== companyId) return true;
-		return e.value.contains("@esap.edu.co");
+		if (item.value.companyId !== g.entidad_esap_id) return true;
+		return e.value.toLowerCase().contains("@esap.edu.co");
 	},
 	grid = null,
 	onInitialized = (o) => {
@@ -128,6 +138,7 @@ let companyId = 1518,
 				console.log("item =>", item.value);
 				let dto = toRaw(item.value);
 				if (!dto.hasOwnProperty("password")) dto["password"] = null;
+				dto["emailConfirmed"] = true;
 				console.log("dto =>", dto);
 				await api()
 					.post(`usuario/ed`, dto)
@@ -145,34 +156,36 @@ let companyId = 1518,
 							panelData.unlock();
 							grid.refresh();
 						});
-						ç;
 					});
 			});
 		}
 	},
 	itemSelected = async (e) => {
-		// console.clear();
 		console.log(_sep);
-		// objetivosAsignados.value = [];
-		console.log("itemSelected =>", e);
-		let v = e.value;
 		let id = $(e.element).attr("id");
 		console.log("id =>", id);
-		item.value.padreId = null;
+		let v = e.value ? e.value : e.event ? e.event.target.value : null;
+		console.log("v =>", v);
 		if (v !== null && v !== undefined) {
-			let hijos = await store.porPadre(v);
-			if (id == "areaId") {
-				// objetivos.value = hijos;
-			} else if (id == "objetivoId") {
-				// especificos.value = hijos;
-			} else if (id == "sectorId") {
-				// entidades.value = hijos;
-			} else if (id == "companyId") {
-				dependencias.value = hijos;
+			if (id == "companyId") {
+				esExterno.value = v != g.entidad_esap_id;
+				if (!editando.value) item.value.email = v != g.entidad_esap_id ? null : "@esap.edu.co";
 			}
-		} else {
-			// objetivos.value = [];
-			// especificos.value = [];
+			// if (id == "roleId") {
+			// 	if (v >= 3 && v <= 5) {
+			// 		requiereDatos.value = true;
+			// 	} else {
+			// 		requiereDatos.value = false;
+			// 	}
+			// }
+			// if (id == "email") {
+			// 	if (v.includes("@esap.edu.co")) {
+			// 		item.companyId = companyId;
+			// 		esExterno.value = false;
+			// 	} else {
+			// 		esExterno.value = true;
+			// 	}
+			// }
 		}
 	},
 	active = (data) => {
@@ -182,8 +195,32 @@ let companyId = 1518,
 			// title: "otro",
 			textCancel: "CANCELAR",
 			textOk: data.isActive ? "DESACTIVAR" : "ACTIVAR",
-			text: `¿Realmente desea ${data.isActive ? "desactivar" : "activar"} al usuario ${data.name}?`,
-			onConfirm: () => { },
+			text: `¿Realmente desea ${data.isActive ? "desactivar" : "activar"} al usuario "<span class="font-weight-semibold">${data.name}</span>"?`,
+			onConfirm: () => {
+				panelGrid.lock(
+					`${data.activo ? "Desactivando" : "Activando"} usuario, un momento por favor`,
+					async function () {
+						data.isActive = !data.isActive;
+						console.log("dto =>", data);
+						await api()
+							.post(`usuario/ed`, data)
+							.then((r) => {
+								console.log("r =>", r);
+								addCancel(function () {
+									panelGrid.unlock();
+									grid.refresh();
+								});
+							})
+							.catch((r) => {
+								console.log("r =>", r);
+								addCancel(function () {
+									panelGrid.unlock();
+									grid.refresh();
+								});
+							});
+					}
+				);
+			},
 			onCancel: () => { },
 		});
 	},
@@ -194,9 +231,14 @@ let companyId = 1518,
 		console.log("data =>", data);
 		panelGrid.fadeOut("normal", function () {
 			console.log(typeof data);
-			if (typeof data !== "undefined") {
+			if (typeof data !== "undefined") { // Editando
+				editando.value = true;
 				item.value = Clone(data);
-			} else {
+				// if (data.email.contains("@esap.edu.co")) {
+
+				// }
+			} else { // Nuevo
+				editando.value = false;
 				item.value = Clone(item_copy);
 			}
 			panelData.fadeIn("normal", function () {
@@ -221,14 +263,18 @@ onMounted(async () => {
 	// console.clear();
 	console.log(_sep);
 	roles.value = await authStore.getRoles();
-	console.log("roles.value =>", roles.value);
+	console.log("roles =>", toRaw(roles.value));
 	let res = await store.porTipoNombre("entidad");
 	// res = res.filter((o) => o.hijos > 0);
 	entidades.value = res;
 	console.log("entidades =>", toRaw(entidades.value));
 	res = await store.porTipoNombre("dependencia");
 	dependencias.value = res;
-	console.log("dependencias =>", toRaw(dependencias));
+	convenios.value = await store.porTipoNombre("elaborado_por");
+	territoriales.value = await store.porTipoNombre("territorial");
+	console.log("dependencias =>", toRaw(dependencias.value));
+	console.log("territoriales =>", toRaw(territoriales.value));
+	console.log("convenios =>", toRaw(convenios.value));
 	console.log("valGroup =>", valGroup);
 	console.log("valGroup.value =>", valGroup.value);
 	// console.log($config);
@@ -254,100 +300,119 @@ onMounted(async () => {
 
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-3 pb-4">
+					{{ item }}
 					<div class="row">
-						<div class="col-md-6 mb-3">
+						<div class="col-md-5 mb-3">
 							<label class="tit">Entidad</label>
 							<DxSelectBox id="companyId" :data-source="entidades" :grouped="false" :min-search-length="3"
-								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-								v-model:value="item.companyId" @value-changed="itemSelected" class="form-control" display-expr="nombre"
-								placeholder="Entidad" value-expr="id">
-								<DxValidator>
-									<DxRequiredRule />
-								</DxValidator>
-							</DxSelectBox>
-						</div>
-						<div class="col-md-6 mb-3">
-							<label class="tit">Dependencia</label>
-							<DxSelectBox id="dependenceId" :data-source="dependencias" :disabled="dependencias.length <= 0"
-								:grouped="false" :min-search-length="3" :search-enabled="true" :show-clear-button="true"
-								:show-data-before-search="true" v-model:value="item.dependenceId" class="form-control"
-								display-expr="nombre" placeholder="Dependencia" value-expr="id">
+								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true" v-model="item.companyId"
+								@value-changed="itemSelected" class="form-control" display-expr="nombre" placeholder="Entidad"
+								:read-only="editando" value-expr="id">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
 							</DxSelectBox>
 						</div>
 						<div class="col-md-3 mb-3">
-							<label class="tit">Correo electrónico (usuario)</label>
-							<DxTextBox id="email" value-change-event="keyup" :show-clear-button="true" v-model:value="item.email"
-								class="form-control" placeholder="Correo electrónico">
+							<label class="tit">Rol</label>
+							<DxSelectBox id="roleId" :data-source="roles" :grouped="false" :min-search-length="3" :search-enabled="true"
+								:show-clear-button="true" :show-data-before-search="true" v-model="item.roleId" class="form-control"
+								display-expr="name" placeholder="Rol" value-expr="id" @value-changed="itemSelected">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox>
+						</div>
+						<div class="col-md-4 mb-3">
+							<label class="tit">Correo electrónico</label>
+							<DxTextBox id="email" value-change-event="keyup" :show-clear-button="true" v-model="item.email"
+								class="form-control" placeholder="Correo electrónico" :read-only="editando"
+								@focus-out="$lowerCase($event); itemSelected($event);">
 								<!-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/Validation/Overview/Vue/Light/ -->
 								<DxValidator>
 									<DxRequiredRule />
 									<DxEmailRule />
-									<DxCustomRule :validationCallback="ansvEmailRule" message="El correo debe ser de la ANSV" />
+									<DxCustomRule :validationCallback="ansvEmailRule"
+										message="El correo debe ser de la ESAP (@esap.edu.co)" />
 								</DxValidator>
 							</DxTextBox>
 						</div>
-						<div class="col-md-3 mb-3">
-							<label class="tit">Rol</label>
-							<DxSelectBox id="companyId" :data-source="roles" :grouped="false" :min-search-length="3"
+						<div class="col-md-4 mb-3">
+							<label class="tit">Territorial</label>
+							<DxSelectBox id="territorialId" :data-source="territoriales" :grouped="false" :min-search-length="3"
 								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-								v-model:value="item.roleId" class="form-control" display-expr="name" placeholder="Rol" value-expr="id">
+								@value-changed="itemSelected" v-model="item.territorialId" class="form-control" display-expr="nombre"
+								placeholder="Territorial" value-expr="id">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
 							</DxSelectBox>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-4 mb-3">
+							<label class="tit">Dependencia</label>
+							<DxSelectBox id="dependenceId" :data-source="dependencias" :disabled="dependencias.length <= 0"
+								:grouped="false" :min-search-length="3" :search-enabled="true" :show-clear-button="true"
+								:show-data-before-search="true" v-model="item.dependenceId" class="form-control" display-expr="nombre"
+								placeholder="Dependencia" value-expr="id">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox>
+						</div>
+						<div class="col-md-4 mb-3">
+							<label class="tit">Elaborado por (convenio)</label>
+							<DxSelectBox id="projectId" :data-source="convenios" :disabled="dependencias.length <= 0" :grouped="false"
+								:min-search-length="3" :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
+								v-model="item.projectId" class="form-control" display-expr="nombre" placeholder="Dependencia"
+								value-expr="id">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox>
+						</div>
+						<div class="col-md-12 text-center pt-2" v-if="!esExterno">
+							<span class="subtitle font-weight-semibold"><i class="fa-solid fa-circle-info fa-sm me-2"></i> El
+								usuario ingresa con credenciales ESAP</span>
+						</div>
+						<div class="col-md-3" v-if="esExterno">
 							<label class="tit">Nombre(s)</label>
-							<DxTextBox id="firstName" value-change-event="keyup" :show-clear-button="true"
-								v-model:value="item.firstName" class="form-control text-capitalize" placeholder="Nombre">
+							<DxTextBox id="firstName" value-change-event="keyup" :show-clear-button="true" v-model="item.firstName"
+								class="form-control text-capitalize" placeholder="Nombre" @focus-out="$capitalizeAll">
 								<DxValidator>
 									<DxRequiredRule />
 									<DxStringLengthRule :min="3" />
 								</DxValidator>
 							</DxTextBox>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3" v-if="esExterno">
 							<label class="tit">Apellido(s)</label>
-							<DxTextBox id="lastName" value-change-event="keyup" :show-clear-button="true" v-model:value="item.lastName"
-								class="form-control text-capitalize" placeholder="Apellido">
+							<DxTextBox id="lastName" value-change-event="keyup" :show-clear-button="true" v-model="item.lastName"
+								@focus-out="$capitalizeAll" class="form-control text-capitalize" placeholder="Apellido">
 								<DxValidator>
 									<DxRequiredRule />
 									<DxStringLengthRule :min="3" />
 								</DxValidator>
 							</DxTextBox>
 						</div>
-						<div class="col-md-12">
-							<div class="row" v-if="item.companyId === companyId">
-								<div class="col text-center pt-2">
-									<span class="subtitle font-weight-semibold"><i class="fa-solid fa-circle-info fa-sm me-2"></i> El
-										usuario ingresará con credenciales ESAP</span>
-								</div>
-							</div>
-							<div class="row" v-else>
-								<div class="col-md-3 offset-md-3">
-									<label class="tit" id="pwd">Contraseña</label>
-									<DxTextBox id="password" mode="password" value-change-event="keyup" :show-clear-button="true"
-										v-model:value="item.password" class="form-control" placeholder="Contraseña">
-										<DxValidator>
-											<!-- <DxRequiredRule />
+						<div class="col-md-3" v-if="esExterno">
+							<label class="tit" id="pwd">Contraseña</label>
+							<DxTextBox id="password" mode="password" value-change-event="keyup" :show-clear-button="true"
+								v-model="item.password" class="form-control" placeholder="Contraseña">
+								<DxValidator>
+									<!-- <DxRequiredRule />
 											<DxStringLengthRule :min="5" /> -->
-											<DxCustomRule :validationCallback="passwordRule" />
-										</DxValidator>
-									</DxTextBox>
-								</div>
-								<div class="col-md-3">
-									<label class="tit">Confirmar contraseña</label>
-									<DxTextBox id="password1" mode="password" value-change-event="keyup" :show-clear-button="true"
-										v-model:value="item.password1" class="form-control" placeholder="Confirmar contraseña">
-										<DxValidator>
-											<DxCompareRule :comparison-target="passwordComparison" message="Las contraseñas no coinciden" />
-										</DxValidator>
-									</DxTextBox>
-								</div>
-							</div>
+									<DxCustomRule :validationCallback="passwordRule" />
+								</DxValidator>
+							</DxTextBox>
+						</div>
+						<div class="col-md-3" v-if="esExterno">
+							<label class="tit">Confirmar contraseña</label>
+							<DxTextBox id="password1" mode="password" value-change-event="keyup" :show-clear-button="true"
+								v-model="item.password1" class="form-control" placeholder="Confirmar contraseña">
+								<DxValidator>
+									<DxCompareRule :comparison-target="passwordComparison" message="Las contraseñas no coinciden" />
+								</DxValidator>
+							</DxTextBox>
 						</div>
 					</div>
 				</div>
@@ -379,11 +444,12 @@ onMounted(async () => {
 						<!-- <h2 class="font-weight-normal text-7 mb-2 color-main"><strong class="font-weight-semibold">Usuarios</strong> Principal o Interna</h2> -->
 						<!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
 						<DxDataGrid witdh="100%" :customize-columns="customizeColumns" :data-source="dxStore"
-							:hover-state-enabled="true" :remote-operations="true" :row-alternation-enabled="true" :show-borders="false"
-							:word-wrap-enabled="false" id="gridContainer" @initialized="onInitialized">
+							:allow-column-reordering="true" :hover-state-enabled="true" :remote-operations="true"
+							:row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="false" id="gridContainer"
+							@initialized="onInitialized">
 							<DxColumnChooser :enabled="false" mode="dragAndDrop" />
 							<DxExport :enabled="false" />
-							<DxFilterRow :visible="false" />
+							<DxFilterRow :visible="true" />
 							<DxGrouping :auto-expand-all="true" />
 							<DxGroupPanel :visible="true" :allow-column-dragging="true" />
 							<DxLoadPanel :enabled="false" />
@@ -396,11 +462,26 @@ onMounted(async () => {
 							</DxSummary>
 							<DxPager :visible="true" :show-info="true" :show-page-size-selector="true" :show-navigation-buttons="true"
 								:allowed-page-sizes="[15, 30, 50, 'Todos']" info-text="{2} usuarios (página {0} de {1})" />
-							<DxColumn data-field="name" caption="Nombre" width="180" :sort-index="0" />
-							<DxColumn data-field="email" caption="Correo (usuario)" width="220" />
-							<DxColumn data-field="companyName" caption="Entidad" :group-index="0" />
-							<DxColumn data-field="dependenceName" caption="Dependencia" />
-							<DxColumn data-field="roleName" caption="Rol" width="120" :group-index="1" />
+							<DxColumn data-field="name" caption="Nombre" width="230" :sort-index="0" sort-order="asc" />
+							<DxColumn data-field="email" caption="Correo (usuario)" />
+							<DxColumn data-field="companyId" caption="Entidad" :visible="true">
+								<DxLookup :data-source="entidades" value-expr="id" display-expr="nombre" />
+							</DxColumn>
+							<!-- :group-index="0" -->
+							<DxColumn data-field="dependenceId" caption="Dependencia" width="120">
+								<DxLookup :data-source="dependencias" value-expr="id" display-expr="nombre" />
+							</DxColumn>
+							<DxColumn data-field="roleId" caption="Rol" width="120">
+								<DxLookup :data-source="roles" value-expr="id" display-expr="name" />
+							</DxColumn>
+							<DxColumn :width="100" data-field="isActive" caption="Activo" alignment="center" :visible="true"
+								cell-template="tpl1">
+								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
+							</DxColumn>
+							<template #tpl1="{ data }">
+								<span v-if="data.data.isActive">SI</span>
+								<span v-else>NO</span>
+							</template>
 							<DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
 								fixed-position="right" />
 							<template #tpl="{ data }">
@@ -413,8 +494,8 @@ onMounted(async () => {
 										@click.prevent="active(data.data, false)" href="#">
 										<i class="fa-regular fa-square-check fa-lg"></i>
 									</a>
-									<a v-else title="Activar Entidad..." class="cmd-item color-main-600"
-										@click.prevent="active(data.data, true)" href="#">
+									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+										href="#">
 										<i class="fa-regular fa-square-minus fa-lg"></i>
 									</a>
 									<!-- <a title="Eliminar..." class="cmd-item color-main-600 me-2" @click.prevent="remove(data.data)" href="#">

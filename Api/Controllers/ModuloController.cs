@@ -14,7 +14,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 {
 	[@Authorize]
 	[ApiController]
-	[Route("cursoModulo")]
+	[Route("modulo")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
 	public class ModuloController : BaseController
@@ -66,6 +66,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		{
 			var item = _db.Modulo.FirstOrDefault(o => o.Id == itemId);
 			return Ok(item);
+		}
+
+		[HttpGet("all")]
+		public ActionResult GetAll()
+		{
+			var items = _db.Modulo?.ToList();
+			return Ok(items);
 		}
 
 		[HttpPost("dx")] // /api/curso/dx => DevExtreme DataGrid Get

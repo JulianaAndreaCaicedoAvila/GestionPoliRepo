@@ -270,6 +270,39 @@ div.form-control {
 			color: #fff;
 		}
 	}
+
+	&.evento {
+		.card-title {
+			font-size: 1.12rem;
+			line-height: 1.3rem;
+			color: $main-color;
+			font-weight: 600;
+			text-align: left;
+		}
+		.card-text {
+			font-size: 1rem;
+			line-height: 1.4rem;
+			letter-spacing: -0.4px;
+			strong {
+				font-weight: 600;
+			}
+		}
+		.card-footer {
+			font-size: 1rem;
+			font-weight: 700;
+			.type {
+				&.virtual {
+					color: #bb2e91;
+				}
+				&.presencial {
+					color: #32a31b;
+				}
+			}
+			a {
+				letter-spacing: -0.4px;
+			}
+		}
+	}
 }
 
 input {
@@ -366,9 +399,9 @@ span.cmds {
 .card {
 	&.data {
 		label.tit {
-			font-weight: 500 !important;
-			font-size: 1.04rem !important;
-			letter-spacing: -0.8px;
+			font-weight: 600 !important;
+			font-size: 1.1rem !important;
+			letter-spacing: -0.6px;
 			color: $main-color;
 			&::after {
 				content: ":";
@@ -523,6 +556,10 @@ span.cmds {
 }
 
 .bb {
+	border-bottom: 1px solid #ccc;
+}
+
+.bbd {
 	border-bottom: 1px dotted #ccc;
 }
 
@@ -550,7 +587,7 @@ label.help {
 	.dx-popup-title {
 		.dx-item-content {
 			color: $main-color;
-			font-size: 1rem;
+			font-size: 1.1rem;
 			font-weight: 500;
 			letter-spacing: -1px;
 		}
@@ -558,9 +595,9 @@ label.help {
 	.dx-popup-content {
 		.dx-item-content {
 			// color: $main-color;
-			font-size: 0.96rem;
+			font-size: 1.06rem;
 			font-weight: 500;
-			letter-spacing: $letter-spacing * 2.5;
+			letter-spacing: $letter-spacing * 1.5;
 		}
 	}
 }
@@ -586,11 +623,6 @@ label.help {
 	}
 }
 
-.dx-popup-content {
-	.dx-item-content {
-		font-size: 1rem;
-	}
-}
 //  dx-list-item-content
 span.subtitle {
 	color: $main-color;
@@ -856,6 +888,11 @@ $height: 45px;
 	// height: $height !important;
 	// min-height: $height !important;
 	// line-height: $height !important;
+	& nav > ul > li > a {
+		font-weight: 600 !important;
+		font-size: 1.06rem !important;
+		text-transform: none !important;
+	}
 }
 #header .header-nav {
 	height: $height !important;
@@ -926,4 +963,150 @@ $height: 45px;
 
 .form-label {
 	margin-bottom: 0 !important;
+}
+
+.form-control {
+	&.no-border {
+		border: 1px solid transparent;
+	}
+}
+
+.dx-scrollable-wrapper {
+	margin: 0;
+	// padding: 7px 9px 8px;
+	background: rgba(0, 0, 0, 0);
+	color: #333;
+	font-size: 1em;
+	border-radius: 4px;
+	min-height: 34px;
+	border: 1px solid #ddd;
+}
+
+a.disabled {
+	pointer-events: none;
+	opacity: 0.2;
+}
+
+.bbd {
+	border-bottom: 1px dotted #ccc;
+}
+
+.dx-multiview-item-content {
+	min-height: 450px;
+	padding: 1rem;
+}
+
+.dx-tabs {
+	background-color: none !important;
+	.dx-tab {
+		padding: 0.6rem 1.4rem !important;
+
+		.dx-tab-text {
+			font-weight: 600;
+			font-size: 1.18rem;
+			color: #999 !important;
+		}
+		&.dx-tab-selected {
+			// border: 1px solid red;
+			.dx-tab-text {
+				color: $main-color !important;
+			}
+		}
+	}
+
+	.dx-state-focused {
+		border: none !important;
+	}
+}
+
+.dx-filemanager-thumbnails-item {
+	$size: 200px;
+	// width: $size;
+	// height: $size;
+	// width: $size;
+	// height: $size;
+	// font-size: $size;
+}
+
+.dx-state-readonly {
+	cursor: pointer !important;
+}
+.dx-dropdowneditor-icon {
+	&::before {
+		color: $main-color !important;
+	}
+}
+
+.font-size-sm {
+	font-size: 82%;
+}
+
+.dropdown-menu-right {
+	right: 0;
+	left: auto;
+}
+
+.h-6vw {
+	width: 100%;
+	height: 6vw;
+	object-fit: cover;
+}
+
+.h-5vw {
+	width: 100%;
+	height: 5vw;
+	object-fit: cover;
+}
+
+.h-4vw {
+	width: 100%;
+	height: 4vw;
+	object-fit: cover;
+}
+
+.h-3vw {
+	width: 100%;
+	height: 3vw;
+	object-fit: cover;
+}
+
+.pagination {
+	box-shadow: $shadow !important;
+	.page-item {
+		box-shadow: none !important;
+		.page-link {
+			cursor: pointer !important;
+			// border: 1px solid #ccc;
+			font-size: 1rem;
+			letter-spacing: -0.4px;
+			font-weight: 600;
+			padding: 0.5rem 1rem !important;
+			&:hover,
+			&:active,
+			&:focus {
+				text-decoration: none;
+				box-shadow: none;
+			}
+		}
+		&.disabled {
+			.page-link {
+				color: #ccc !important;
+			}
+		}
+		&.active {
+			.page-link {
+				color: #ffffff !important;
+				background-color: $main-color;
+				&:hover,
+				&:active,
+				&:focus {
+					background-color: $main-color;
+				}
+			}
+		}
+	}
+}
+
+.hand {
+	cursor: pointer !important;
 }

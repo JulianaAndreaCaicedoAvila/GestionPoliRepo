@@ -51,19 +51,27 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         public async Task<ActionResult> Authenticate(AuthenticateRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is null || !user.EmailConfirmed || !await _userManager.CheckPasswordAsync(user, request.Password))
+            if (user is null || !user.EmailConfirmed || !user.IsActive || !await _userManager.CheckPasswordAsync(user, request.Password))
                 return Forbid();
             return await GetUserResult(user);
         }
 
         [AllowAnonymous]
         [HttpPost("email")]
-        public async Task<ActionResult> ByEmail()
+        public async Task<ActionResult> ByEmail(AuthenticateRequest request)
         {
-            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            var email = reader.ReadToEndAsync().Result;
-            var user = await _userManager.FindByEmailAsync(email);
+            // StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            // var email = reader.ReadToEndAsync().Result;
+            var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null) return BadRequest($"El usuario con el correo {user.Email} no existe");
+            if (request.Email.Trim().ToLower().Contains("esap.edu.co") && user.FirstName + " " + user.LastName != request.Name)
+            {
+                var ns = request.Name.Trim().Split(" "); // Divide el nombre 'Sandra Reyes García'
+                var l = ns.Length;
+                user.FirstName = ns[0] + (l <= 3 ? "" : " " + ns[1]); // Nombres 'Sandra'
+                user.LastName = ns[l - 2] + " " + ns[l - 1]; // Apellidos 'Reyes García'
+                var identityResult = await _userManager.UpdateAsync(user);
+            }
             return await GetUserResult(user);
         }
 
@@ -80,7 +88,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = _configuration["BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
+                var callbackUrl = _configuration["Path:BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
                 _email.Send(user.Email, "RECUPERAR CONTRASEÑA", $"Hola {user.FirstName}, puede recuperar su contraseña haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
                 return Ok(user);
             }
@@ -89,7 +97,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("resetear")]
-        public async Task<ActionResult> Reset(UserRequest request)
+        public async Task<ActionResult> Reset(UserRequestModel request)
         {
             var email = request.Email.Trim().ToUpper();
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
@@ -105,7 +113,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("activar")]
-        public async Task<ActionResult> Activate(UserRequest request)
+        public async Task<ActionResult> Activate(UserRequestModel request)
         {
             var email = request.Email.Trim().ToUpper();
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
@@ -127,7 +135,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("registrar")]
-        public async Task<ActionResult> Register(UserRequest user)
+        public async Task<ActionResult> Register(UserRequestModel user)
         {
             var email = user.Email;
             var newUser = new AuthUser
@@ -151,7 +159,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 // _logger.LogInformation(LoggerEventIds.UserCreated, "User created a new account with password.");
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = _configuration["BasePath"] + "/activar?c=" + code + "&e=" + email.Trim().ToLower();
+                var callbackUrl = _configuration["Path:BasePath"] + "/activar?c=" + code + "&e=" + email.Trim().ToLower();
                 _email.Send(user.Email, "ACTIVAR CUENTA", $"Hola {user.FirstName}, por favor active su cuenta haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
                 return Ok(newUser);
             }
@@ -164,17 +172,18 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         {
             StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
             var str = reader.ReadToEndAsync().Result;
-            var uReq = JsonConvert.DeserializeObject<UserRequest>(str);
+            var uReq = JsonConvert.DeserializeObject<UserRequestModel>(str);
             if (uReq.Id != 0)
             {
                 // 202208170339: Actualizando usuario
                 var user = await _userManager.FindByEmailAsync(uReq.Email);
                 if (user != null)
                 {
-                    user.CompanyId = uReq.CompanyId;
-                    user.DependenceId = uReq.DependenceId;
-                    user.FirstName = uReq.FirstName;
-                    user.LastName = uReq.LastName;
+                    user = (AuthUser)uReq.CopyTo(user, true);
+                    // user.CompanyId = uReq.CompanyId;
+                    // user.DependenceId = uReq.DependenceId;
+                    // user.FirstName = uReq.FirstName;
+                    // user.LastName = uReq.LastName;
                     await _userManager.UpdateAsync(user);
                     var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
                     if (role != null)
@@ -212,19 +221,22 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                         uReq.LastName = "ESAP";
                     }
                 }
-                var newUser = new AuthUser
-                {
-                    CompanyId = uReq.CompanyId,
-                    DependenceId = uReq.DependenceId,
-                    Email = uReq.Email,
-                    UserName = uReq.Email,
-                    FirstName = uReq.FirstName,
-                    LastName = uReq.LastName
-                };
+                var newUser = new AuthUser();
+                newUser = (AuthUser)uReq.CopyTo(newUser);
+                newUser.UserName = newUser.Email.ToLower();
+                newUser.NormalizedEmail = newUser.Email.ToUpper();
+                newUser.NormalizedUserName = newUser.Email.ToUpper();
                 var identityResult = await _userManager.CreateAsync(newUser, uReq.Password);
-                var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
-                if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
-                return Ok(newUser);
+                if (identityResult.Succeeded)
+                {
+                    var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
+                    if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+                    return Ok(newUser);
+                }
+                else
+                {
+                    return BadRequest(identityResult.Errors.First());
+                }
             }
         }
 
@@ -236,6 +248,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
             var items = _context.Usuarios.ToList();
             var loadResult = DataSourceLoader.Load(items, opts);
             return Ok(loadResult);
+        }
+
+        [HttpPost("porRol")]
+        public async Task<ActionResult> AllUsersAsync([FromBody] string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+            var items = _context.Usuarios.Where(o => o.RoleId == role.Id).ToList();
+            return Ok(items);
         }
 
         private async Task<ActionResult> GetUserResult(AuthUser user)

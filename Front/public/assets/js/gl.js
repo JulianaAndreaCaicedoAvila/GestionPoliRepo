@@ -370,7 +370,10 @@ String.prototype.reverse = function () {
 };
 
 String.prototype.capitalize = function () {
-	return this.substring(0, 1).toUpperCase() + this.substring(1).toLowerCase();
+	if (typeof this != "undefined" && this.length > 0) {
+		let s = this.substring(0, 1).toUpperCase() + this.substring(1).toLowerCase();
+		return s.clean();
+	}
 };
 
 // 201810231804:
@@ -384,21 +387,22 @@ String.prototype.dateFromJson = function () {
 	return null;
 };
 
-// 201810231804:
-// Parse JSON to receive a Date object in JavaScript \/Date(1293034567877)\/
-// https://stackoverflow.com/a/14509447
-Date.prototype.dateFromJson = function () {
-	return this;
+// 202310312258: https://stackoverflow.com/a/3286892
+String.prototype.clean = function () {
+	if (typeof this != "undefined" && this.length > 0) {
+		let s = this.replace(/ +(?= )/g, "");
+		return s.trim();
+	}
 };
 
 String.prototype.replaceAll = function (buscar, reemplazar) {
-	return this.replace(new RegExp(buscar, "g"), reemplazar);
+	if (typeof this != "undefined" && this.length > 0) return this.replace(new RegExp(buscar, "g"), reemplazar);
 };
 
-String.prototype.capitalizeAll = function () {
-	var str = this.toLowerCase();
-	var len = str.length;
-	if (len > 0)
+String.prototype.capitalizeAllOld = function () {
+	if (typeof this != "undefined" && this.length > 0) {
+		var len = this.length;
+		var str = this.toLowerCase();
 		for (var x = 0; x < len; x++) {
 			var tmpchar;
 			var poststr;
@@ -416,7 +420,26 @@ String.prototype.capitalizeAll = function () {
 				}
 			}
 		}
-	return str;
+		return str.clean();
+	}
+};
+
+// 202310312315: https://stackoverflow.com/a/67414934
+String.prototype.capitalizeAll = function () {
+	if (typeof this != "undefined" && this.length > 0) {
+		let str = this.clean().toLowerCase();
+		str = str
+			.split(" ")
+			.map(function (w) {
+				if (w.length > 2) {
+					return w.capitalize();
+				} else {
+					return w;
+				}
+			})
+			.join(" ");
+		return str;
+	}
 };
 
 String.prototype.getExtension = function () {
@@ -497,7 +520,6 @@ String.prototype.d64 = function () {
 	dec = tmp_arr.join("");
 	return dec;
 };
-
 String.prototype.dc = function () {
 	return this.d64().d64().reverse();
 };
@@ -591,16 +613,55 @@ Number.prototype.sizeFormat = function () {
 
 /* Date extensions */
 
-// 201810221852: Obtiene la fecha en formato dd/mm/yyyy
-// https://stackoverflow.com/a/12409344
-Date.prototype.getFormatted = function (date) {
+// 201810231804:
+// Parse JSON to receive a Date object in JavaScript \/Date(1293034567877)\/
+// https://stackoverflow.com/a/14509447
+Date.prototype.dateFromJson = function () {
+	return this;
+};
+
+// 202311030549: https://stackoverflow.com/a/563442
+Date.prototype.addDays = function (days) {
+	var date = new Date(this.valueOf());
+	date.setDate(date.getDate() + days);
+	return date;
+};
+
+window.addDays = function (d, days) {
+	var date = new Date(d);
+	date.setDate(date.getDate() + days);
+	return date;
+};
+
+Date.prototype.formatDate = function (format = "dd/mm/yyyy") {
 	var date = this;
-	var dd = date.getDate();
-	var mm = date.getMonth() + 1; //January is 0!
-	var yyyy = date.getFullYear();
-	if (dd < 10) dd = "0" + dd;
-	if (mm < 10) mm = "0" + mm;
-	return dd + "/" + mm + "/" + yyyy;
+	// 201810221852: Obtiene la fecha en formato dd/mm/yyyy
+	// https://stackoverflow.com/a/12409344
+	if (format == "dd/mm/yyyy") {
+		var dd = date.getDate();
+		var mm = date.getMonth() + 1; //January is 0!
+		var yyyy = date.getFullYear();
+		if (dd < 10) dd = "0" + dd;
+		if (mm < 10) mm = "0" + mm;
+		return dd + "/" + mm + "/" + yyyy;
+	}
+
+	// 202311031005: Format a Date as YYYYMMDD using JavaScript
+	// https://bobbyhadz.com/blog/javascript-format-date-yyyymmdd#format-a-date-as-yyyymmdd-using-javascript
+	if ((format = "yyyymmdd")) {
+		const year = date.toLocaleString("default", { year: "numeric" });
+		const month = date.toLocaleString("default", {
+			month: "2-digit",
+		});
+		const day = date.toLocaleString("default", { day: "2-digit" });
+		return [year, month, day].join("");
+	}
+
+	return date;
+};
+
+window.formatDate = (date, format) => {
+	return date.formatDate(format);
 };
 
 // Funciones
@@ -620,7 +681,7 @@ Date.prototype.getHourAmPm = function (date) {
 // 202305302059
 Date.prototype.getDateTimeAmPm = function (date) {
 	var date = this;
-	return date.getFormatted() + " " + date.getHourAmPm();
+	return date.formatDate() + " " + date.getHourAmPm();
 };
 
 // 201612141726: Obtiene un Timestamp formato YYYYMMDDHHMMSS

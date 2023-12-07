@@ -68,6 +68,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(item);
 		}
 
+		[HttpGet("all")]
+		public ActionResult GetAll()
+		{
+			var items = _db.Nivel?.ToList();
+			return Ok(items);
+		}
+
 		[HttpPost("dx")] // /api/curso/dx => DevExtreme DataGrid Get
 		public ActionResult GetDx()
 		{

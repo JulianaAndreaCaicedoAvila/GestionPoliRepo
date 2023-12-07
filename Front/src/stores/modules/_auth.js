@@ -62,7 +62,7 @@ export const useAuthStore = defineStore("auth", {
 			// 202205291105: https://stackoverflow.com/a/28742860
 			// https://devblogs.microsoft.com/azure-sdk/vue-js-user-authentication/
 			// user["token_expired"] = state.user.exp < Date.now() / 1000;
-			return state.user.token.exp < Date.now() / 1000;
+			return state.user ? state.user.token.exp < Date.now() / 1000 : true;
 		},
 	},
 	watch: {
@@ -71,9 +71,14 @@ export const useAuthStore = defineStore("auth", {
 		},
 	},
 	actions: {
-		init() {
+		async init() {
 			// 202206080106: MSAL, en propiedad global -> http://t.ly/bu6L
-			this.msal = new PublicClientApplication(window._config.msalConfig);
+			// 202310030307: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md#uninitialized_public_client_application
+			const msalInstance = new PublicClientApplication(window._config.msalConfig);
+			await msalInstance.initialize();
+			await msalInstance.handleRedirectPromise();
+			msalInstance.acquireTokenSilent();
+			this.msal = msalInstance;
 		},
 		// checkExpired() {
 		// 	if (this.user) {
@@ -88,13 +93,20 @@ export const useAuthStore = defineStore("auth", {
 		// 		}, 2000);
 		// 	} else window.clearInterval(window._int);
 		// },
+		async porRol(rol) {
+			return await api()
+				.post(`usuario/porRol`, rol)
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async getRoles() {
 			console.log("Roles =>", this.roles);
 			if (this.roles.length > 0) return this.roles;
 			return await api()
 				.get(`usuario/roles`)
 				.then(async (r) => {
-					this.roles = r.data;
+					this.roles = r.data.sort((a, b) => a.name - b.name);
 					return this.roles;
 				});
 		},
@@ -114,7 +126,7 @@ export const useAuthStore = defineStore("auth", {
 			if (ep == "autenticar") data = { email, password };
 			else if (ep == "email") data = email;
 			console.log("data =>", data);
-			return await api({ hideErrors: true })
+			return await api({ hideErrors: import.meta.env.PROD })
 				.post(endPoint, data)
 				.then((r) => {
 					if (ep == "autenticar") {
@@ -126,13 +138,13 @@ export const useAuthStore = defineStore("auth", {
 					return r.data;
 				});
 		},
-		async loginAzureAd(email) {
+		async login(name, email) {
 			console.log(_sep);
 			console.log("loginAzureAd");
 			console.log("window._apiUrl =>", window._apiUrl);
 			console.log("email =>", email);
-			return await api({ hideErrors: true })
-				.post(`${window._apiUrl}/usuario/email`, email)
+			return await api({ hideErrors: import.meta.env.PROD })
+				.post(`${window._apiUrl}/usuario/email`, { name: name, email: email })
 				.then((r) => {
 					this.token = r.data.token;
 					let usr = makeUser(r, "azure");

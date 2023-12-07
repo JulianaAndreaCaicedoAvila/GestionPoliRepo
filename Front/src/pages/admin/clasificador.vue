@@ -145,7 +145,7 @@ let tipos = ref([]),
 						});
 				});
 			},
-			onCancel: () => {},
+			onCancel: () => { },
 		});
 	},
 	addStart = (data) => {
@@ -164,7 +164,7 @@ let tipos = ref([]),
 				item.value.tipoId = null;
 				item.value.descripcion = null;
 			}
-			panelData.fadeIn(function () {});
+			panelData.fadeIn(function () { });
 		});
 	},
 	addCancel = (cb) => {
@@ -227,7 +227,8 @@ onMounted(async () => {
 	<div class="container pt-2 pb-2 content">
 		<div class="card data hidden" id="data">
 			<div class="card-header main d-flex justify-content-between">
-				<span> <i class="fa-solid fa-gears"></i> Administración &raquo; Clasificadores &raquo; <span title="tit-action">Nuevo</span> </span>
+				<span> <i class="fa-solid fa-gears"></i> Administración &raquo; Clasificadores &raquo; <span
+						title="tit-action">Nuevo</span> </span>
 				<!-- <span>
 					<button type="button" class="btn btn-trans" @click.prevent="addStart"><i class="fa-solid fa-square-plus"></i>NUEVO USUARIO</button>
 				</span> -->
@@ -237,55 +238,23 @@ onMounted(async () => {
 					<div class="row">
 						<div class="col-md-3 mb-2">
 							<label class="tit">Tipo de clasificador padre</label>
-							<DxSelectBox
-								id="tipoPadreId"
-								:data-source="tipos"
-								:grouped="false"
-								:min-search-length="3"
-								:search-enabled="true"
-								:show-clear-button="true"
-								:show-data-before-search="true"
-								class="form-control"
-								display-expr="nombre"
-								v-model:value="item.padreTipoId"
-								placeholder="Tipo de clasificador padre"
-								value-expr="id"
-								@value-changed="valueChanged"
-							/>
+							<DxSelectBox id="tipoPadreId" :data-source="tipos" :grouped="false" :min-search-length="3"
+								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+								display-expr="nombre" v-model:value="item.padreTipoId" placeholder="Tipo de clasificador padre"
+								value-expr="id" @value-changed="valueChanged" />
 						</div>
 						<div class="col-md-9 mb-2">
 							<label class="tit">Clasificador padre</label>
-							<DxSelectBox
-								id="padreId"
-								:data-source="padres"
-								:grouped="false"
-								:min-search-length="3"
-								:search-enabled="true"
-								:show-clear-button="true"
-								:show-data-before-search="true"
-								v-model:value="item.padreId"
-								class="form-control"
-								display-expr="nombre"
-								placeholder="Clasificador padre"
-								value-expr="id"
-							/>
+							<DxSelectBox id="padreId" :data-source="padres" :grouped="false" :min-search-length="3"
+								:search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
+								v-model:value="item.padreId" class="form-control" display-expr="nombre" placeholder="Clasificador padre"
+								value-expr="id" />
 						</div>
 						<div class="col-md-3 mb-2">
 							<label class="tit">Tipo de clasificador</label>
-							<DxSelectBox
-								id="tipoId"
-								:data-source="tipos"
-								:grouped="false"
-								:min-search-length="3"
-								:search-enabled="true"
-								:show-clear-button="true"
-								:show-data-before-search="true"
-								v-model:value="item.tipoId"
-								class="form-control"
-								display-expr="nombre"
-								placeholder="Tipo de clasificador"
-								value-expr="id"
-							>
+							<DxSelectBox id="tipoId" :data-source="tipos" :grouped="false" :min-search-length="3" :search-enabled="true"
+								:show-clear-button="true" :show-data-before-search="true" v-model:value="item.tipoId" class="form-control"
+								display-expr="nombre" placeholder="Tipo de clasificador" value-expr="id">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -294,15 +263,8 @@ onMounted(async () => {
 						<div class="col-md-7 mb-2">
 							<label class="tit">Nombre</label>
 							<!-- <input class="form-control" type="text" placeholder="Nombre" id="nombre" name="nombre" v-model:value="item.nombre" /> -->
-							<DxTextBox
-								id="nombre"
-								value-change-event="keyup"
-								:show-clear-button="true"
-								v-model:value="item.nombre"
-								@value-changed="valueChanged"
-								class="form-control"
-								placeholder="Nombre"
-							>
+							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model:value="item.nombre"
+								@value-changed="valueChanged" class="form-control" placeholder="Nombre">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -311,17 +273,8 @@ onMounted(async () => {
 						<div class="col-md-2 pb-2">
 							<label class="tit">Orden</label>
 							<!-- <input class="form-control" type="text" placeholder="Nombre" id="nombre" name="nombre" v-model="item.nombre" /> -->
-							<DxNumberBox
-								id="orden"
-								:show-clear-button="true"
-								value-change-event="keyup"
-								v-model:value="item.orden"
-								:show-spin-buttons="true"
-								:step="1"
-								:min="0"
-								class="form-control"
-								placeholder="Orden"
-							>
+							<DxNumberBox id="orden" :show-clear-button="true" value-change-event="keyup" v-model:value="item.orden"
+								:show-spin-buttons="true" :step="1" :min="0" class="form-control" placeholder="Orden">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -330,15 +283,8 @@ onMounted(async () => {
 						<div class="col-md-12 pb-2">
 							<label class="tit">Descripción</label>
 							<!-- <input class="form-control" type="text" placeholder="Descripción" id="descripcion" name="descripcion" v-model="item.descripcion" nonrequired /> -->
-							<DxTextArea
-								id="nombre"
-								:show-clear-button="true"
-								value-change-event="keyup"
-								:height="100"
-								v-model:value="item.descripcion"
-								class="form-control"
-								placeholder="Descripción"
-							/>
+							<DxTextArea id="nombre" :show-clear-button="true" value-change-event="keyup" :height="100"
+								v-model:value="item.descripcion" class="form-control" placeholder="Descripción" />
 						</div>
 					</div>
 				</div>
@@ -346,7 +292,8 @@ onMounted(async () => {
 
 			<div class="card-footer">
 				<div class="d-flex justify-content-between align-items-center">
-					<a class="btn btn-gray" @click.prevent="addCancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
+					<a class="btn btn-gray" @click.prevent="addCancel"><i
+							class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
 					<a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
 				</div>
 			</div>
@@ -359,27 +306,18 @@ onMounted(async () => {
 					Administración &raquo; Clasificadores
 				</span>
 				<span>
-					<button type="button" class="btn btn-trans" title="Nuevo..." @click.prevent="addStart()"><i class="fa-solid fa-square-plus"></i>NUEVO</button>
+					<button type="button" class="btn btn-trans" title="Nuevo..." @click.prevent="addStart()"><i
+							class="fa-solid fa-square-plus"></i>NUEVO</button>
 				</span>
 			</div>
 			<div class="card-body pt-3 pb-4">
 				<div class="row">
 					<div class="col">
 						<!-- <h2 class="font-weight-normal text-7 mb-2 color-main"><strong class="font-weight-semibold">Usuarios</strong> Principal o Interna</h2> -->
-						<DxDataGrid
-							:allow-column-reordering="true"
-							:customize-columns="customizeColumns"
-							:column-auto-width="false"
-							:data-source="dxStore"
-							:hover-state-enabled="true"
-							:remote-operations="true"
-							:row-alternation-enabled="true"
-							:show-borders="false"
-							:word-wrap-enabled="false"
-							@initialized="onInitialized"
-							id="gridContainer"
-							width="100%"
-						>
+						<DxDataGrid :allow-column-reordering="true" :customize-columns="customizeColumns" :column-auto-width="false"
+							:data-source="dxStore" :hover-state-enabled="true" :remote-operations="true" :row-alternation-enabled="true"
+							:show-borders="false" :word-wrap-enabled="false" @initialized="onInitialized" id="gridContainer"
+							width="100%">
 							<DxColumnChooser :enabled="true" mode="dragAndDrop" title="Columnas" />
 							<DxExport :enabled="false" />
 							<DxFilterRow :visible="true" />
@@ -393,136 +331,56 @@ onMounted(async () => {
 								<DxGroupItem summary-type="count" column="group_type_name" display-format="{0} ítems" />
 							</DxSummary>
 							<DxPaging :page-size="15" />
-							<DxPager
-								:visible="true"
-								:show-info="true"
-								:show-page-size-selector="true"
-								:show-navigation-buttons="true"
-								:allowed-page-sizes="[15, 30, 50, 'Todos']"
-								info-text="{2} items (página {0} de {1})"
-							/>
-							<DxColumn
-								name="Abuelo Tipo"
-								:width="180"
-								:allow-filtering="true"
-								:allow-sorting="false"
-								:allow-editing="true"
-								:wrap-item-text="true"
-								sort-order="none"
-								alignment="left"
-								caption="Abuelo Tipo"
-								data-field="abueloTipoId"
-								data-type="int"
-								:visible="false"
-							>
+							<DxPager :visible="true" :show-info="true" :show-page-size-selector="true" :show-navigation-buttons="true"
+								:allowed-page-sizes="[15, 30, 50, 'Todos']" info-text="{2} items (página {0} de {1})" />
+							<DxColumn name="Abuelo Tipo" :width="180" :allow-filtering="true" :allow-sorting="true"
+								:allow-editing="true" :wrap-item-text="true" alignment="left" caption="Abuelo Tipo"
+								data-field="abueloTipoId" data-type="int" :visible="false">
 								<DxLookup :data-source="tipos" value-expr="id" display-expr="nombre" />
 							</DxColumn>
-							<DxColumn
-								alignment="center"
-								data-field="abueloId"
-								caption="Abuelo ID"
-								:allow-grouping="false"
-								:allow-filtering="false"
-								:allow-sorting="true"
-								width="85"
-								:visible="false"
-							/>
-							<DxColumn data-field="abueloNombre" caption="Abuelo" :allow-grouping="true" :allow-filtering="true" :allow-sorting="true" :visible="false" />
-							<DxColumn
-								name="Padre Tipo"
-								:width="120"
-								:allow-filtering="true"
-								:allow-sorting="false"
-								:visible="false"
-								:allow-editing="true"
-								:wrap-item-text="true"
-								sort-order="asc"
-								alignment="left"
-								caption="Padre Tipo"
-								data-field="padreTipoId"
-								data-type="int"
-							>
+							<DxColumn alignment="center" data-field="abueloId" caption="Abuelo ID" :allow-grouping="false"
+								:allow-filtering="false" :allow-sorting="true" width="85" :visible="false" />
+							<DxColumn data-field="abueloNombre" caption="Abuelo" :allow-grouping="true" :allow-filtering="true"
+								:allow-sorting="true" :visible="false" />
+							<DxColumn name="Padre Tipo" :width="120" :allow-filtering="true" :allow-sorting="true" :visible="false"
+								:allow-editing="true" :wrap-item-text="true" alignment="left" caption="Padre Tipo"
+								data-field="padreTipoId" data-type="int">
 								<DxLookup :data-source="tipos" value-expr="id" display-expr="nombre" />
 							</DxColumn>
-							<DxColumn
-								alignment="center"
-								data-field="padreId"
-								caption="Padre ID"
-								:width="80"
-								:allow-grouping="false"
-								:allow-filtering="false"
-								:allow-sorting="true"
-								width="85"
-								:visible="false"
-							/>
-							<DxColumn
-								data-field="padreNombre"
-								:width="250"
-								caption="Padre"
-								:allow-grouping="true"
-								:allow-filtering="true"
-								:allow-sorting="true"
-								:visible="false"
-							/>
-							<DxColumn
-								name="Tipo"
-								:width="180"
-								:allow-filtering="true"
-								:allow-sorting="false"
-								:visible="true"
-								:allow-editing="true"
-								:wrap-item-text="true"
-								sort-order="none"
-								alignment="left"
-								caption="Tipo"
-								data-field="tipoId"
-								:group-index="0"
-								data-type="int"
-							>
+							<DxColumn alignment="center" data-field="padreId" caption="Padre ID" :width="80" :allow-grouping="false"
+								:allow-filtering="false" :allow-sorting="true" width="85" :visible="false" />
+							<DxColumn data-field="padreNombre" :width="250" caption="Padre" :allow-grouping="true"
+								:allow-filtering="true" :allow-sorting="true" :visible="false" />
+							<DxColumn name="Tipo" sort-order="asc" :sort-index="0" :width="180" :allow-filtering="true"
+								:allow-sorting="true" :visible="true" :allow-editing="true" :wrap-item-text="true" alignment="left"
+								caption="Tipo" data-field="tipoId" data-type="int">
+								<!-- :group-index="null" -->
 								<DxLookup :data-source="tipos" value-expr="id" display-expr="nombre" />
 							</DxColumn>
-							<DxColumn
-								alignment="center"
-								data-field="id"
-								caption="ID"
-								:allow-grouping="false"
-								:allow-filtering="false"
-								:allow-sorting="true"
-								width="85"
-								:visible="true"
-							/>
-							<DxColumn
-								data-field="nombre"
-								caption="Nombre"
-								:sort-index="0"
-								sort-order="none"
-								:allow-grouping="false"
-								:allow-filtering="true"
-								:allow-sorting="true"
-							/>
-							<DxColumn
-								data-field="descripcion"
-								caption="Descripción"
-								:allow-grouping="false"
-								:allow-filtering="true"
-								:allow-sorting="true"
-								:visible="false"
-								width="55%"
-							/>
-							<DxColumn :width="120" data-field="orden" caption="Orden" alignment="center" :visible="true" sort-order="none" />
+							<DxColumn alignment="center" data-field="id" caption="ID" :allow-grouping="false" :allow-filtering="false"
+								:allow-sorting="true" width="85" :visible="true" />
+							<DxColumn data-field="nombre" caption="Nombre" :sort-index="0" :allow-grouping="false"
+								:allow-filtering="true" :allow-sorting="true" />
+							<DxColumn data-field="descripcion" caption="Descripción" :allow-grouping="false" :allow-filtering="true"
+								:allow-sorting="true" :visible="false" width="55%" />
+							<DxColumn :width="120" data-field="orden" caption="Orden" alignment="center" :visible="true" />
 							<DxColumn :width="120" data-field="activo" caption="Activo" alignment="center" :visible="true">
 								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
 							</DxColumn>
-							<DxColumn :width="80" alignment="center" cell-template="tpl" name="cmds" :fixed="true" fixed-position="right" />
+							<DxColumn :width="80" alignment="center" cell-template="tpl" name="cmds" :fixed="true"
+								fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">
-									<a title="Modificar..." class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
+									<a title="Modificar..." class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)"
+										href="#">
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
-									<a v-if="data.data.activo" title="Desactivar..." class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
+									<a v-if="data.data.activo" title="Desactivar..." class="cmd-item color-main-600"
+										@click.prevent="active(data.data, false)" href="#">
 										<i class="fa-solid fa-square-minus fa-lg"></i>
 									</a>
-									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
+									<a v-else title="Activar..." class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+										href="#">
 										<i class="fa-solid fa-square-check fa-lg"></i>
 									</a>
 								</span>

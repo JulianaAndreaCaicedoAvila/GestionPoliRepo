@@ -74,12 +74,13 @@ onMounted(() => {
                         class="fa-solid fa-arrow-up-right-from-square fa-sm ms-1"></i></a>
                   </li>
                   <li>
-                    <a href="https://sirecec2.esap.edu.co/admon" target="_blank" class="dropdown-item">2008 a 2018 <i
+                    <a href="https://sirecec2.esap.edu.co/admon" target="_blank" class="dropdown-item">2015 a 2018 <i
                         class="fa-solid fa-arrow-up-right-from-square fa-sm ms-1"></i></a>
                   </li>
                 </ul>
               </li>
-              <li class="dropdown" v-if="auth.user && auth.esAdmin">
+              <li class="dropdown">
+                <!-- <li class="dropdown" v-if="auth.user && auth.esAdmin"> -->
                 <router-link class="dropdown-item dropdown-toggle" :to="{ name: 'tablero' }"><i
                     class="fa-solid fa-chart-column me-2"></i>TABLERO</router-link>
               </li>

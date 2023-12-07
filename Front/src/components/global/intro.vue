@@ -106,7 +106,7 @@ onMounted(() => {
 										Sistema de Registro y Control de Eventos de Capacitación de la ESAP
 									</h2> -->
 									<p class="p-0">
-										EL <strong>Departamento de Capacitación de la ESAP</strong> pone a disposición de las entidades
+										La <strong>Dirección de Capacitación de la ESAP</strong> pone a disposición de las entidades
 										públicas y la ciudadaní­a en general su
 										oferta de capacitación en educación informal que responde a los lineamientos del Plan Nacional de
 										Desarrollo, Plan Nacional de Formación y

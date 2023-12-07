@@ -61,8 +61,8 @@ let itemSelected = async (e) => {
 onMounted(async () => {
 	por.value = route.params.por;
 	console.log("por =>", por.value);
-	asistencias.value = await store.porTipoNombre("tipo_asistencia");
-	territoriales.value = await store.porTipoNombre("territorial");
+	// asistencias.value = await store.porTipoNombre("tipo_asistencia");
+	// territoriales.value = await store.porTipoNombre("territorial");
 	// currentPage.value = store.pagina != null ? store.pagina : 1;
 	// D:\web\dnp\sinergia\app-dev\FrontEnd\demo\src\pages\evaluaciones\repositorio.vue
 	currentPage.value = 1;
@@ -75,7 +75,7 @@ onMounted(async () => {
 
 		<div class="row">
 			<div class="col">
-				{{ tipoAsistenciaId }} - {{ territorialId }} - {{ departamentoId }} - {{ municipioId }}
+
 				<div class="card data mb-4">
 					<div class="card-header main d-flex justify-content-between align-items-center">
 						<span v-if="por == 'capacitacion'">

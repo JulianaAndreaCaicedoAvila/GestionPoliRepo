@@ -53,7 +53,7 @@ export const router = createRouter({
 		{
 			name: "tablero",
 			path: "/tablero",
-			meta: { title: "Inicio Plano", requiresAuth: true, roles: [1] },
+			meta: { title: "Inicio Plano", requiresAuth: false },
 			component: () => import("@/pages/tablero.vue"),
 		},
 		{

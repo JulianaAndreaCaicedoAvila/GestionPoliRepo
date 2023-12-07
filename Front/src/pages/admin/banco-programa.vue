@@ -4,7 +4,7 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import { useGenericStore, useClasificadorStore, useAuthStore } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,
@@ -76,29 +76,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       $("#data").unlock();
     },
   }),
-  itemSelected = async (e) => {
-    // console.clear();
-    console.log(_sep);
-    console.log("itemSelected =>", e);
-    let v = e.value;
-    let id = $(e.element).attr("id");
-    console.log("id =>", id);
-    if (v !== null && v !== undefined) {
-      let hijos = await store.porPadre(v);
-      if (id == "dependenciaId") {
-        objetivos.value = hijos;
-      } else if (id == "objetivoId") {
-        especificos.value = hijos;
-      } else if (id == "sectorId") {
-        entidades.value = hijos;
-      } else if (id == "entidadId") {
-        dependencias.value = hijos;
-      }
-    } else {
-      objetivos.value = [];
-      especificos.value = [];
-    }
-  },
   date_focus_in = (e) => {
     // e.component.open();
   },
@@ -121,11 +98,9 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${
-        data.activo ? "desactivar" : "activar"
-      } el programa "<span class="font-weight-semibold">${
-        data.nombre
-      }</span>"?`,
+      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
+        } el programa "<span class="font-weight-semibold">${data.nombre
+        }</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid");
         panelGrid.lock(
@@ -146,7 +121,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Banco Programas",
           }
         );
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   },
   start = async (data) => {
@@ -250,7 +225,6 @@ onMounted(async () => {
   console.log(_sep);
   $("#grid").lock("Cargando");
   console.log("route.name =>", route.name);
-  dependencias.value = await store.porTipoNombre("dependencia");
 });
 </script>
 <template>
@@ -269,14 +243,8 @@ onMounted(async () => {
           <div class="row">
             <div class="col-md-9 mb-2">
               <label class="tit">Nombre del programa</label>
-              <DxTextBox
-                id="nombre"
-                value-change-event="keyup"
-                :show-clear-button="true"
-                v-model="item.nombre"
-                class="form-control"
-                placeholder="Nombre del programa"
-              >
+              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre"
+                class="form-control" placeholder="Nombre del programa">
                 <DxValidator>
                   <DxRequiredRule />
                   <DxStringLengthRule :min="3" />
@@ -285,15 +253,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-2">
               <label class="tit">Fecha de inicio</label>
-              <DxDateBox
-                id="fechaInicio"
-                @focus-in="date_focus_in"
-                @focus-out="date_focus_out"
-                class="form-control"
-                v-model="item.fechaInicio"
-                display-format="dd/MM/yyyy"
-                type="date"
-              >
+              <DxDateBox id="fechaInicio" @focus-in="date_focus_in" @focus-out="date_focus_out" class="form-control"
+                v-model="item.fechaInicio" display-format="dd/MM/yyyy" type="date">
                 <!-- :max="new Date()" -->
                 <!-- :calendar-options="{ maxZoomLevel: 'year', minZoomLevel: 'century' }" -->
                 <!-- display-format="monthAndYear" -->
@@ -308,12 +269,8 @@ onMounted(async () => {
 
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
-          <a class="btn btn-gray" @click.prevent="cancel"
-            ><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a
-          >
-          <a class="btn btn-main" @click.prevent="save"
-            >GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i
-          ></a>
+          <a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
+          <a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
         </div>
       </div>
     </div>
@@ -325,12 +282,7 @@ onMounted(async () => {
           <span v-html="titulo" />
         </span>
         <span>
-          <button
-            type="button"
-            class="btn btn-trans"
-            @click.prevent="start()"
-            title="Nuevo"
-          >
+          <button type="button" class="btn btn-trans" @click.prevent="start()" title="Nuevo">
             <i class="fa-solid fa-square-plus"></i>NUEVO
           </button>
         </span>
@@ -341,17 +293,9 @@ onMounted(async () => {
           <div class="col">
             <!-- <h2 class="font-weight-normal text-7 mb-1 color-main"><strong class="font-weight-semibold">Indicadores</strong> Principal o Interna</h2> -->
             <!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
-            <DxDataGrid
-              :customize-columns="customizeColumns"
-              :data-source="dxStore"
-              :hover-state-enabled="true"
-              :remote-operations="true"
-              :word-wrap-enabled="true"
-              :row-alternation-enabled="true"
-              :show-borders="false"
-              id="gridContainer"
-              @initialized="onInitialized"
-            >
+            <DxDataGrid :customize-columns="customizeColumns" :data-source="dxStore" :hover-state-enabled="true"
+              :remote-operations="true" :word-wrap-enabled="true" :row-alternation-enabled="true" :show-borders="false"
+              id="gridContainer" @initialized="onInitialized">
               <DxLoadPanel :enabled="false" />
               <DxFilterRow :visible="true" />
               <!-- <DxColumnChooser :enabled="true" mode="dragAndDrop" />
@@ -363,97 +307,37 @@ onMounted(async () => {
 							<DxSearchPanel :visible="false" :highlight-case-sensitive="false" /> -->
               <DxSorting mode="single" /><!-- single, multiple, none" -->
               <DxSummary>
-                <DxGroupItem
-                  summary-type="count"
-                  column="group_type_name"
-                  display-format="{0}"
-                />
+                <DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
               </DxSummary>
               <DxPaging :page-size="15" />
-              <DxPager
-                :visible="true"
-                :show-info="true"
-                :show-page-size-selector="false"
-                :show-navigation-buttons="true"
-                :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} programas (página {0} de {1})"
-              />
-              <DxColumn
-                data-field="id"
-                caption="Id"
-                :visible="true"
-                :width="80"
-                :allow-filtering="false"
-                :allow-sorting="true"
-                alignment="center"
-              />
-              <DxColumn
-                data-field="nombre"
-                caption="Nombre programa"
-                :visible="true"
-              />
-              <DxColumn
-                :width="150"
-                data-field="fechaInicio"
-                caption="Fecha de inicio"
-                :visible="true"
-                alignment="center"
-                data-type="date"
-                format="dd/MM/yyyy"
-              />
-              <DxColumn
-                :width="100"
-                data-field="activo"
-                caption="Activo"
-                alignment="center"
-                :visible="true"
-                cell-template="tpl1"
-              >
-                <DxLookup
-                  :data-source="$si_no"
-                  value-expr="value"
-                  display-expr="name"
-                />
+              <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
+                :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} programas (página {0} de {1})" />
+              <DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false"
+                :allow-sorting="true" alignment="center" />
+              <DxColumn data-field="nombre" caption="Nombre programa" :visible="true" />
+              <DxColumn :width="150" data-field="fechaInicio" caption="Fecha de inicio" :visible="true" alignment="center"
+                data-type="date" format="dd/MM/yyyy" />
+              <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+                cell-template="tpl1">
+                <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
               </DxColumn>
               <template #tpl1="{ data }">
                 <span v-if="data.data.activo">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn
-                :width="70"
-                alignment="center"
-                cell-template="tpl"
-                caption=""
-                name="cmds"
-                :fixed="true"
-                fixed-position="right"
-              />
+              <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
+                fixed-position="right" />
               <template #tpl="{ data }">
                 <span class="cmds">
-                  <a
-                    title="Editar"
-                    class="cmd-item color-main-600 me-2"
-                    @click.prevent="start(data.data)"
-                    href="#"
-                  >
+                  <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="start(data.data)" href="#">
                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                   </a>
-                  <a
-                    v-if="data.data.activo"
-                    title="Desactivar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, false)"
-                    href="#"
-                  >
+                  <a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
+                    @click.prevent="active(data.data, false)" href="#">
                     <i class="fa-regular fa-square-minus fa-lg"></i>
                   </a>
-                  <a
-                    v-else
-                    title="Activar"
-                    class="cmd-item color-main-600"
-                    @click.prevent="active(data.data, true)"
-                    href="#"
-                  >
+                  <a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+                    href="#">
                     <i class="fa-regular fa-square-check fa-lg"></i>
                   </a>
                 </span>
@@ -467,9 +351,7 @@ onMounted(async () => {
     <div class="card mt-4" v-if="$conf.debug">
       <div class="card-body">
         <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-          class="font-weight-semibold"
-          >item_copy:</span
-        >
+          class="font-weight-semibold">item_copy:</span>
         {{ item_copy }}
       </div>
     </div>

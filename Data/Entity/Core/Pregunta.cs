@@ -9,8 +9,8 @@ namespace ESAP.Sirecec.Data.Core
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public int? TipoEncuestaId { get; set; }
+		// public int? EncuestaId { get; set; }
 		public string? Titulo { get; set; }
-		public string? Descripcion { get; set; }
+		// public string? Descripcion { get; set; }
 	}
 }

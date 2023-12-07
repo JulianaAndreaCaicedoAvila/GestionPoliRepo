@@ -12,5 +12,7 @@ namespace ESAP.Sirecec.Data.Identity
 		public bool IsActive { get; set; } = true;
 		public int? CompanyId { get; set; } = default!;
 		public int? DependenceId { get; set; } = default!;
+		public int? TerritorialId { get; set; } = default!;
+		public int? ProjectId { get; set; } = default!;
 	}
 }

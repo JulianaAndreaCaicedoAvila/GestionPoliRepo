@@ -14,8 +14,12 @@ namespace ESAP.Sirecec.Data.Core
 		public int Id { get; set; }
 
 		[ForeignKey("Curso")]
-		public int CursoId { get; set; }
-		public int EncuestaId { get; set; }
+		public int? CursoId { get; set; }
+
+		[ForeignKey("Encuesta")]
+		public int? EncuestaId { get; set; }
+		public int? MomentoId { get; set; }
 		public virtual Curso? Curso { get; set; }
+		public virtual Encuesta? Encuesta { get; set; }
 	}
 }

@@ -10,6 +10,7 @@ namespace ESAP.Sirecec.Data
 		public static IServiceCollection ConfigureDataServices(this IServiceCollection services, IConfiguration configuration)
 		{
 			// 202202071041: Using a Separate Migrations Project http://t.ly/m3af
+			var connStr = configuration.GetConnectionString("ConnStr");
 			// services.AddDbContext<DataContext>(o => o.UseSqlServer(configuration.GetConnectionString("ConnStr"), o => o.MigrationsAssembly("WebApplication1.Migrations")));
 			// services.AddDbContext<DataContext>(o => o.UseSqlServer(configuration.GetConnectionString("ConnStr"), o => o.MigrationsAssembly("ESAP.Sirecec.API")));
 			// services.AddDbContext<DataContext>(o => o.UseOracle(configuration.GetConnectionString("ConnStr")));

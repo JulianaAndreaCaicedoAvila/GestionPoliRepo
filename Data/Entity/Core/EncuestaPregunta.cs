@@ -12,7 +12,7 @@ namespace ESAP.Sirecec.Data.Core
 		public int? EncuestaId { get; set; }
 		public int? PreguntaId { get; set; }
 		public virtual Encuesta? Encuesta { get; set; }
-		public virtual Pregunta? Curso { get; set; }
+		public virtual Pregunta? Pregunta { get; set; }
 
 	}
 }

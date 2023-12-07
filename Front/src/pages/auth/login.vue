@@ -64,19 +64,25 @@ let recoverBack = () => {
 };
 let login = async () => {
 	if (loginZone.isValid()) {
+		if (email.value.toLowerCase().contains("@esap.edu.co")) {
+			signin();
+			return false;
+		}
 		loginZone.find(".card").lock("Verificando credenciales,<br/>un momento por favor");
 		let res = await authStore.do(["autenticar", email.value, password.value]).catch((error) => {
+			// console.clear();
 			console.error("error =>", error);
 			let title = "Error de autenticación";
 			let text = "Verifique credenciales e inténtelo nuevamente";
-			if (error.response.status == 500) {
+			console.log("error =>",);
+			if (typeof (error.response) != "undefined" && error.response.status == 500) {
 				title = "Error: " + error.message;
 				text = error.response.data.message;
 			}
-			loginZone.find(".card").unlock();
 			msg.error(title, text, function (params) {
 				$("#txt-email").focus();
 			});
+			loginZone.find(".card").unlock();
 		});
 		if (typeof res != "undefined") {
 			console.log("res =>", res);
@@ -88,7 +94,7 @@ let login = async () => {
 	}
 };
 let signin = async () => {
-	loginZone.find(".card").lock("Ingresando con ANSV,<br/>esperando respuesta");
+	loginZone.find(".card").lock("Ingresando con ESAP,<br/>esperando respuesta");
 	mainZone.clear();
 	// https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/individual-accounts-in-web-api
 	// https://docs.microsoft.com/es-es/azure/active-directory/develop/scenario-spa-sign-in?tabs=javascript2#sign-in-with-redirect
@@ -107,8 +113,9 @@ let signin = async () => {
 				authStore.token = loginResponse.idToken;
 				// let firstName = account.idTokenClaims.name.split(" ")[0];
 				// 202208181954 Login
+				let name = account.name;
 				let email = account.username;
-				let res = await authStore.login(["email", email]).catch((error) => {
+				let res = await authStore.login(name, email).catch((error) => {
 					console.error("error =>", error);
 					loginZone.find(".card").unlock();
 					msg.error("Error de autenticación", "Verifique credenciales e inténtelo nuevamente", function (params) {
@@ -291,9 +298,8 @@ let reset = async (endPoint) => {
 				txt = endPoint == "activar" ? "Activando cuenta" : "Ingresando datos";
 				let text =
 					err.code == "InvalidToken"
-						? `El correo enviado para la ${
-								endPoint == "activar" ? `activación de<br>la cuenta` : `recuperación de<br>la contraseña`
-						  } ha caducado o ya fue utilizado.`
+						? `El correo enviado para la ${endPoint == "activar" ? `activación de<br>la cuenta` : `recuperación de<br>la contraseña`
+						} ha caducado o ya fue utilizado.`
 						: err.description;
 				msg.error(`Error al ${endPoint == "activar" ? `activar la cuenta` : `asignar la contraseña`}`, text, function (params) {
 					router.push("ingreso");
@@ -349,7 +355,7 @@ onMounted(() => {
 	}, 300);
 });
 
-$().ready(function () {});
+$().ready(function () { });
 </script>
 <template>
 	<div class="container py-4" id="main-zone">
@@ -357,40 +363,27 @@ $().ready(function () {});
 			<div class="col d-flex align-items-center justify-content-center">
 				<div class="card col-5">
 					<div class="card-header main"><i class="fa-solid fa-user-lock"></i> Ingresar al sistema</div>
-					<div class="card-body pt-3 pb-4">
+					<div class="card-body pt-3 pb-4" @keyup.enter="login">
 						<div class="row">
 							<div class="form-group">
-								<label class="form-label color-main font-weight-semibold">Correo electrónico: <span class="text-color-danger">*</span></label>
+								<label class="form-label color-main font-weight-semibold">Correo electrónico: <span
+										class="text-color-danger">*</span></label>
 								<div class="form-icon position-relative">
-									<i class="fa-solid fa-envelope text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-									<input
-										required
-										email
-										type="text"
-										v-model="email"
-										placeholder="Correo electrónico"
-										class="form-control form-control-lg text-4 has-icon"
-										id="txt-email"
-										name="txt-email"
-									/>
+									<i
+										class="fa-solid fa-envelope text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
+									<input required email type="text" v-model="email" placeholder="Correo electrónico"
+										class="form-control form-control-lg text-4 has-icon" id="txt-email" name="txt-email" />
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="form-group m-0">
-								<label class="form-label color-main font-weight-semibold">Contraseña: <span class="text-color-danger">*</span></label>
+								<label class="form-label color-main font-weight-semibold">Contraseña: <span
+										class="text-color-danger">*</span></label>
 								<div class="form-icon position-relative">
 									<i class="fa-solid fa-key text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-									<input
-										required
-										minlength="5"
-										type="password"
-										v-model="password"
-										placeholder="Contraseña"
-										class="form-control form-control-lg text-4 has-icon"
-										id="txt-password"
-										name="txt-password"
-									/>
+									<input required minlength="5" type="password" v-model="password" placeholder="Contraseña"
+										class="form-control form-control-lg text-4 has-icon" id="txt-password" name="txt-password" />
 								</div>
 							</div>
 						</div>
@@ -403,15 +396,16 @@ $().ready(function () {});
 								</button>
 							</span>
 							<span v-else>&nbsp;</span>
-							<button type="button" class="btn btn-main" @click.prevent="login" title="Ingresar">INGRESAR <i class="fa-solid fa-caret-right ms-1"></i></button>
+							<button type="button" class="btn btn-main" @click.prevent="login" title="Ingresar">INGRESAR <i
+									class="fa-solid fa-caret-right ms-1"></i></button>
 						</div>
-						<div class="bt mt-3 pt-3 pb-1 text-center font-weight-semibold text-size-md d-flex align-items-center justify-content-between">
+						<!-- <div class="bt mt-3 pt-3 pb-1 text-center font-weight-semibold text-size-md d-flex align-items-center justify-content-between">
 							<a href="#" @click.prevent="recoverDo('recover')" title="Recuperar contraseña..."
 								><i class="fa-solid fa-arrow-rotate-left me-1"></i> Recuperar contraseña</a
 							>
-							<!-- <a href="#" @click.prevent="dataSeed" title="Recuperar contraseña...">Seed</a> -->
+							<a href="#" @click.prevent="dataSeed" title="Recuperar contraseña...">Seed</a>
 							<a href="#" @click.prevent="recoverDo('register')" title="Registrarse...">Registrarse <i class="fa-solid fa-user-plus ms-1"></i></a>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -420,65 +414,51 @@ $().ready(function () {});
 		<div class="row hidden" id="recover-zone">
 			<div class="col d-flex align-items-center justify-content-center">
 				<div class="card col-5">
-					<div class="card-header main" v-if="action == 'recover'"><i class="fa-solid fa-arrow-rotate-left"></i> Recuperar contraseña</div>
-					<div class="card-header main" v-if="action == 'register'"><i class="fa-solid fa-user-plus"></i> Registrarse</div>
+					<div class="card-header main" v-if="action == 'recover'"><i class="fa-solid fa-arrow-rotate-left"></i> Recuperar
+						contraseña</div>
+					<div class="card-header main" v-if="action == 'register'"><i class="fa-solid fa-user-plus"></i> Registrarse
+					</div>
 					<div class="card-body pt-3 pb-2">
 						<div class="row" v-if="action == 'register'">
 							<div class="col">
 								<div class="form-group">
-									<label class="form-label color-main font-weight-semibold">Nombres: <span class="text-color-danger">*</span></label>
+									<label class="form-label color-main font-weight-semibold">Nombres: <span
+											class="text-color-danger">*</span></label>
 									<div class="form-icon">
-										<input
-											required
-											type="text"
-											v-model="firstName"
-											placeholder="Nombres"
-											class="form-control form-control-lg text-4"
-											id="firstName"
-											name="firstName"
-										/>
+										<input required type="text" v-model="firstName" placeholder="Nombres"
+											class="form-control form-control-lg text-4" id="firstName" name="firstName" />
 									</div>
 								</div>
 							</div>
 							<div class="col">
 								<div class="form-group">
-									<label class="form-label color-main font-weight-semibold">Apellidos: <span class="text-color-danger">*</span></label>
+									<label class="form-label color-main font-weight-semibold">Apellidos: <span
+											class="text-color-danger">*</span></label>
 									<div class="form-icon">
-										<input
-											required
-											type="text"
-											v-model="lastName"
-											placeholder="Apellidos"
-											class="form-control form-control-lg text-4"
-											id="lastName"
-											name="lastName"
-										/>
+										<input required type="text" v-model="lastName" placeholder="Apellidos"
+											class="form-control form-control-lg text-4" id="lastName" name="lastName" />
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="form-group">
-								<label class="form-label color-main font-weight-semibold">Correo electrónico: <span class="text-color-danger">*</span></label>
+								<label class="form-label color-main font-weight-semibold">Correo electrónico: <span
+										class="text-color-danger">*</span></label>
 								<div class="form-icon position-relative">
-									<i class="fa-solid fa-envelope text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-									<input
-										required
-										email
-										type="text"
-										v-model="email"
-										placeholder="Correo electrónico"
-										class="form-control form-control-lg text-4 has-icon"
-										id="txt-email-register"
-										name="txt-email-register"
-									/>
+									<i
+										class="fa-solid fa-envelope text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
+									<input required email type="text" v-model="email" placeholder="Correo electrónico"
+										class="form-control form-control-lg text-4 has-icon" id="txt-email-register"
+										name="txt-email-register" />
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="card-footer main">
 						<div class="d-flex justify-content-between">
-							<button type="button" class="btn btn-gray" @click.prevent="recoverBack"><i class="fa-solid fa-caret-left me-1"></i> INGRESAR AL SISTEMA</button>
+							<button type="button" class="btn btn-gray" @click.prevent="recoverBack"><i
+									class="fa-solid fa-caret-left me-1"></i> INGRESAR AL SISTEMA</button>
 							<button type="button" class="btn btn-main" @click.prevent="recover" v-if="action == 'recover'">
 								RECUPERAR<i class="fa-solid fa-caret-right ms-1"></i>
 							</button>
@@ -494,63 +474,42 @@ $().ready(function () {});
 		<div class="row hidden" id="reset-zone">
 			<div class="col d-flex align-items-center justify-content-center">
 				<div class="card col-5">
-					<div class="card-header main" v-if="action == 'activate'"><i class="fa-solid fa-user-plus"></i> Activar cuenta</div>
+					<div class="card-header main" v-if="action == 'activate'"><i class="fa-solid fa-user-plus"></i> Activar cuenta
+					</div>
 					<div class="card-header main" v-else><i class="fa-solid fa-user-lock"></i> Recuperar contraseña</div>
 					<div class="card-body pt-3 pb-4">
 						<div class="row">
 							<div class="form-group">
 								<label class="form-label color-main font-weight-semibold">Correo electrónico:</label>
 								<div class="form-icon position-relative">
-									<i class="fa-solid fa-envelope text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-									<input
-										required
-										email
-										disabled
-										type="text"
-										v-model="email"
-										placeholder="Correo electrónico"
-										class="form-control form-control-lg text-4 has-icon"
-										id="txt-email"
-										name="txt-email"
-									/>
+									<i
+										class="fa-solid fa-envelope text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
+									<input required email disabled type="text" v-model="email" placeholder="Correo electrónico"
+										class="form-control form-control-lg text-4 has-icon" id="txt-email" name="txt-email" />
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col">
 								<div class="form-group m-0">
-									<label class="form-label color-main font-weight-semibold">Nueva contraseña: <span class="text-color-danger">*</span></label>
+									<label class="form-label color-main font-weight-semibold">Nueva contraseña: <span
+											class="text-color-danger">*</span></label>
 									<div class="form-icon position-relative">
 										<i class="fa-solid fa-key text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-										<input
-											required
-											minlength="6"
-											type="password"
-											v-model="password"
-											placeholder="Contraseña"
-											class="form-control form-control-lg text-4 has-icon"
-											id="txt-password"
-											name="txt-password"
-										/>
+										<input required minlength="6" type="password" v-model="password" placeholder="Contraseña"
+											class="form-control form-control-lg text-4 has-icon" id="txt-password" name="txt-password" />
 									</div>
 								</div>
 							</div>
 							<div class="col">
 								<div class="form-group m-0">
-									<label class="form-label color-main font-weight-semibold">Confirmar contraseña: <span class="text-color-danger">*</span></label>
+									<label class="form-label color-main font-weight-semibold">Confirmar contraseña: <span
+											class="text-color-danger">*</span></label>
 									<div class="form-icon position-relative">
 										<i class="fa-solid fa-key text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-										<input
-											required
-											minlength="6"
-											type="password"
-											v-model="password1"
-											equalsTo="txt-password"
-											placeholder="Contraseña"
-											class="form-control form-control-lg text-4 has-icon"
-											id="txt-password-1"
-											name="txt-password-1"
-										/>
+										<input required minlength="6" type="password" v-model="password1" equalsTo="txt-password"
+											placeholder="Contraseña" class="form-control form-control-lg text-4 has-icon" id="txt-password-1"
+											name="txt-password-1" />
 									</div>
 								</div>
 							</div>

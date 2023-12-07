@@ -4,7 +4,7 @@ import DxStore from "@/utils/dx";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useGeneralStore, useClasificadorStore, useAuthStore } from "@/stores";
+import { useGenericStore, useClasificadorStore, useModuloStore, useAuthStore } from "@/stores";
 import DxValidator, { DxRequiredRule, DxStringLengthRule } from "devextreme-vue/validator";
 import { DxSelectBox, DxTextBox, DxDateBox, DxValidationGroup } from "devextreme-vue";
 import {
@@ -27,17 +27,20 @@ import {
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
 	store = useClasificadorStore(),
+	storeModulo = useModuloStore(),
 	auth = useAuthStore();
 let titulo = "Administración &raquo; Cursos &raquo; Temas",
 	dependenciaIdTxtRef = ref(null),
 	valGroup = ref(null),
 	entidades = ref([]),
+	modulos = ref([]),
 	dependencias = ref([]),
 	especificos = ref([]),
 	item = ref({
 		id: 0,
+		moduloId: null,
+		dependenciaId: null,
 		nombre: null,
-		fechaInicio: new Date(),
 		activo: true,
 		orden: 0,
 		creadoEl: null,
@@ -75,21 +78,6 @@ let titulo = "Administración &raquo; Cursos &raquo; Temas",
 		let v = e.value;
 		let id = $(e.element).attr("id");
 		console.log("id =>", id);
-		if (v !== null && v !== undefined) {
-			let hijos = await store.porPadre(v);
-			if (id == "dependenciaId") {
-				objetivos.value = hijos;
-			} else if (id == "objetivoId") {
-				especificos.value = hijos;
-			} else if (id == "sectorId") {
-				entidades.value = hijos;
-			} else if (id == "entidadId") {
-				dependencias.value = hijos;
-			}
-		} else {
-			objetivos.value = [];
-			especificos.value = [];
-		}
 	},
 	customizeColumns = () => {
 		// console.log("customizeColumns!");
@@ -125,7 +113,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Temas",
 						});
 				});
 			},
-			onCancel: () => {},
+			onCancel: () => { },
 		});
 	},
 	start = async (data) => {
@@ -222,9 +210,12 @@ let titulo = "Administración &raquo; Cursos &raquo; Temas",
 	};
 
 onMounted(async () => {
-	// console.clear();
 	console.log(_sep);
+	console.log("tema.vue MOUNTED!");
 	$("#grid").lock("Cargando");
+	dependencias.value = await store.porTipoNombre("dependencia");
+	modulos.value = await storeModulo.all();
+	console.log("modulos =>", toRaw(modulos.value));
 	console.log("route.name =>", route.name);
 });
 </script>
@@ -244,12 +235,33 @@ onMounted(async () => {
 					<div class="row">
 						<div class="col-md-12 mb-2">
 							<label class="tit">Nombre</label>
-							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre" class="form-control" placeholder="Nombre">
+							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.nombre"
+								class="form-control" placeholder="Nombre">
 								<DxValidator>
 									<DxRequiredRule />
 									<DxStringLengthRule :min="3" />
 								</DxValidator>
 							</DxTextBox>
+						</div>
+						<div class="col-md-9 mb-3">
+							<label class="tit">Módulo</label>
+							<DxSelectBox id="moduloId" :data-source="modulos" :min-search-length="2" :search-enabled="false"
+								:show-clear-button="true" class="form-control" display-expr="nombre" v-model="item.moduloId"
+								placeholder="Módulo" value-expr="id" @value-changed="itemSelected">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox>
+						</div>
+						<div class="col-md-3 mb-3">
+							<label class="tit">Dependencia</label>
+							<DxSelectBox id="dependenciaId" :data-source="dependencias" :min-search-length="2" :search-enabled="false"
+								:show-clear-button="true" class="form-control" display-expr="nombre" v-model="item.dependenciaId"
+								placeholder="Indicador" value-expr="id" @value-changed="itemSelected">
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox>
 						</div>
 					</div>
 				</div>
@@ -270,7 +282,8 @@ onMounted(async () => {
 					<span v-html="titulo" />
 				</span>
 				<span>
-					<button type="button" class="btn btn-trans" @click.prevent="start()" title="Nuevo"><i class="fa-solid fa-square-plus"></i>NUEVO</button>
+					<button type="button" class="btn btn-trans" @click.prevent="start()" title="Nuevo"><i
+							class="fa-solid fa-square-plus"></i>NUEVO</button>
 				</span>
 			</div>
 
@@ -279,17 +292,9 @@ onMounted(async () => {
 					<div class="col">
 						<!-- <h2 class="font-weight-normal text-7 mb-1 color-main"><strong class="font-weight-semibold">Indicadores</strong> Principal o Interna</h2> -->
 						<!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
-						<DxDataGrid
-							:customize-columns="customizeColumns"
-							:data-source="dxStore"
-							:hover-state-enabled="true"
-							:remote-operations="true"
-							:word-wrap-enabled="true"
-							:row-alternation-enabled="true"
-							:show-borders="false"
-							id="gridContainer"
-							@initialized="onInitialized"
-						>
+						<DxDataGrid :customize-columns="customizeColumns" :data-source="dxStore" :hover-state-enabled="true"
+							:remote-operations="true" :word-wrap-enabled="true" :row-alternation-enabled="true" :show-borders="false"
+							id="gridContainer" @initialized="onInitialized">
 							<DxLoadPanel :enabled="false" />
 							<DxFilterRow :visible="true" />
 							<!-- <DxColumnChooser :enabled="true" mode="dragAndDrop" />
@@ -304,33 +309,38 @@ onMounted(async () => {
 								<DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
 							</DxSummary>
 							<DxPaging :page-size="15" />
-							<DxPager
-								:visible="true"
-								:show-info="true"
-								:show-page-size-selector="false"
-								:show-navigation-buttons="true"
-								:allowed-page-sizes="[15, 50, 'Todos']"
-								info-text="{2} temas (página {0} de {1})"
-							/>
-							<DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false" :allow-sorting="true" alignment="center" />
+							<DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
+								:allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} temas (página {0} de {1})" />
+							<DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false"
+								:allow-sorting="true" alignment="center" />
 							<DxColumn data-field="nombre" caption="Tema" :visible="true" />
-							<DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true" cell-template="tpl1">
+							<DxColumn data-field="moduloId" caption="Módulo" :visible="true" width="300" alignment="center">
+								<DxLookup :data-source="modulos" value-expr="id" display-expr="nombre" />
+							</DxColumn>
+							<DxColumn data-field="dependenciaId" caption="Dependencia" :visible="true" width="150" alignment="center">
+								<DxLookup :data-source="dependencias" value-expr="id" display-expr="nombre" />
+							</DxColumn>
+							<DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+								cell-template="tpl1">
 								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
 							</DxColumn>
 							<template #tpl1="{ data }">
 								<span v-if="data.data.activo">SI</span>
 								<span v-else>NO</span>
 							</template>
-							<DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true" fixed-position="right" />
+							<DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
+								fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">
 									<a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="start(data.data)" href="#">
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>
-									<a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600" @click.prevent="active(data.data, false)" href="#">
+									<a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
+										@click.prevent="active(data.data, false)" href="#">
 										<i class="fa-regular fa-square-check fa-lg"></i>
 									</a>
-									<a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
+									<a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
+										href="#">
 										<i class="fa-regular fa-square-minus fa-lg"></i>
 									</a>
 								</span>
@@ -343,9 +353,11 @@ onMounted(async () => {
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">
-				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span class="font-weight-semibold">item_copy:</span>
+				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span
+					class="font-weight-semibold">item_copy:</span>
 				{{ item_copy }}
 			</div>
 		</div>
 	</div>
 </template>
+

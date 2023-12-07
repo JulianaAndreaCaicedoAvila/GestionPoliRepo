@@ -5,7 +5,7 @@ import { ref, onMounted, toRaw, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useClasificadorStore } from "@/stores";
 import DxValidator, { DxRequiredRule } from "devextreme-vue/validator";
-import { DxTextBox, DxNumberBox, DxTextArea, DxValidationGroup } from "devextreme-vue";
+import { DxTextBox, DxList, DxNumberBox, DxTextArea, DxValidationGroup } from "devextreme-vue";
 import {
 	DxColumn,
 	DxColumnChooser,

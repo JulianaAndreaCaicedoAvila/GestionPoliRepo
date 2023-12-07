@@ -63,7 +63,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		[HttpGet("all")] // /api/programa/all => Obtiene todos los items
 		public ActionResult GetAll()
 		{
-			var items = _db.BancoPrograma?.ToList();
+			var items = _db.Programa?.ToList();
 			return Ok(items);
 		}
 

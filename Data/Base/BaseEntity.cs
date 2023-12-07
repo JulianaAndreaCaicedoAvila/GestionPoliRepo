@@ -40,15 +40,6 @@ namespace ESAP.Sirecec.Data
 
 	public abstract class BaseEntity
 	{
-		// public int Id { get; set; }
-
-		// public DateTime CreadoEl { get; set; } = DateTime.Now;
-
-		// public int? CreadoPor { get; set; } = null;
-
-		// public DateTime? EditadoEl { get; set; } = null;
-
-		// public int? EditadoPor { get; set; } = null;
 
 		public DateTime? CreadoEl
 		{

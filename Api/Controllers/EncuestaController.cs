@@ -4,6 +4,7 @@ using ESAP.Sirecec.Data;
 using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Core;
+using ESAP.Sirecec.Data.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,38 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[HttpPost("by-encuesta-id")] // /api/geo/mun/by-dpto-id => Obtiene todos los items
+		public ActionResult ByEncuestaId([FromBody] int encuestaId)
+		{
+			var items = _db.EncuestaPregunta?.Where(o => o.EncuestaId == encuestaId).ToList();
+			return Ok(items);
+		}
+
+		[HttpPost("ed-pr")] // /api/curso/ed => CREATE - UPDATE
+		public ActionResult EditPreguntas(EncuestaModel encuesta)
+		{
+			var eId = encuesta.EncuestaId;
+			var preguntasActuales = _db.EncuestaPregunta.Where(o => o.EncuestaId == eId).ToList();
+			_db.EncuestaPregunta.RemoveRange(preguntasActuales);
+			_db.SaveChanges();
+			foreach (var item in encuesta.Preguntas)
+			{
+				var obj = (EncuestaPregunta)item.CopyTo(new EncuestaPregunta());
+				obj.CreadoPor = GetUserId();
+				obj.CreadoEl = DateTime.Now;
+				_db.EncuestaPregunta.Add(obj);
+				_db.SaveChanges();
+			}
+			return Ok();
+		}
+
+		[HttpGet("all")] // /api/encuesta/all => Obtiene todos los items
+		public ActionResult GetAll()
+		{
+			var items = _db.Encuesta?.ToList();
+			return Ok(items);
+		}
+
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 
 		[Authorization.AllowAnonymous]
 		public ActionResult Get(int? itemId = null)
@@ -75,7 +108,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
 			opts.PrimaryKey = new[] { "Id" };
-			var items = _db.Encuesta.OrderBy(o => o.Titulo).ToList();
+			var items = _db.Encuestas.OrderBy(o => o.Titulo).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

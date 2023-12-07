@@ -50,7 +50,7 @@ export default (args = {}) => {
 		axiosConfig.headers["Authorization"] = `${preffix}${args.token}`;
 	} else {
 		let token = useAuthStore().token;
-		console.log("token =>", token);
+		// console.log("token =>", token);
 		if (typeof token !== "undefined" && token !== null) {
 			axiosConfig.headers["Authorization"] = `${preffix}${token}`;
 		}
@@ -100,8 +100,9 @@ export default (args = {}) => {
 			if (typeof args.hideErrors === "undefined" || args.hideErrors === false) {
 				// show(`${error}`, msg);
 				console.log(_sep + "error =>", error);
-				let ex = error.response.data.exceptionDetails[0];
-				let ms = `${error.response.data.detail}<textarea rows="5" class="d-block form-control mt-2" readonly>${ex.raw}</textarea>`;
+				let d = error.response.data;
+				let ex = d.exceptionDetails ? d.exceptionDetails[0] : d.title;
+				let ms = d.exceptionDetails ? `${d.detail}<textarea rows="5" class="d-block form-control mt-2" readonly>${ex.raw}</textarea>` : "";
 				window.msg.error(`${error.message}`, ms, function () {
 					return Promise.reject(error);
 				});

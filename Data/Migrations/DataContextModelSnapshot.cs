@@ -31,29 +31,19 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("FechaInicio")
                         .HasColumnType("TIMESTAMP(7)");
@@ -69,6 +59,86 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("BancoPrograma");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.BancoProgramaNucleo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("BancoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("NucleoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BancoProgramaNucleo");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.BancoProgramasNucleos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("BancoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("BancoProgramaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("NucleoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NucleoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("BancoProgramasNucleos", (string)null);
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificador", b =>
                 {
                     b.Property<int>("Id")
@@ -78,32 +148,22 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -133,32 +193,22 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -238,9 +288,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int?>("CantidadAulas")
                         .HasColumnType("NUMBER(10)");
@@ -267,14 +315,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("CupoAula")
                         .HasColumnType("NUMBER(10)");
@@ -289,14 +333,13 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("ElaboradoPorId")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("EstadoCursoId")
                         .HasColumnType("NUMBER(10)");
@@ -349,9 +392,6 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("NucleoId")
-                        .HasColumnType("NUMBER(10)");
-
                     b.Property<int?>("NumeroDias")
                         .HasColumnType("NUMBER(10)");
 
@@ -362,9 +402,6 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("PorcentajeValidoAsistencia")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int?>("ProductoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("ProgramaId")
@@ -378,9 +415,6 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.Property<string>("TelefonoContacto")
                         .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<int?>("TerritorialId")
-                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("TipoAsistenciaId")
                         .HasColumnType("NUMBER(10)");
@@ -404,35 +438,25 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int>("AnexoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
@@ -442,9 +466,52 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("CursoAnexo");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoDocumento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("CursoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Peso")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("TipoDocumentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("CursoId");
 
-                    b.ToTable("CursoAnexo");
+                    b.ToTable("CursoDocumento");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoEncuesta", b =>
@@ -456,34 +523,27 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
-                    b.Property<int>("CursoId")
+                    b.Property<int?>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
-                    b.Property<int>("EncuestaId")
+                    b.Property<int?>("EncuestaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("MomentoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("Orden")
@@ -492,6 +552,8 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CursoId");
+
+                    b.HasIndex("EncuestaId");
 
                     b.ToTable("CursoEncuesta");
                 });
@@ -505,32 +567,25 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
-                    b.Property<int>("CursoId")
+                    b.Property<int?>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("FechaClase")
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
@@ -554,19 +609,13 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("CursoId")
                         .HasColumnType("NUMBER(10)");
@@ -578,14 +627,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("LugarRealizacion")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -605,6 +650,477 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("CursoTema");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Cursos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("BancoFechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("BancoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("BancoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("CantidadAulas")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("CertificadoCiudad")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("CertificadoEtiquetaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("CertificadoEtiquetaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("CertificadoFechaExpedicion")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<bool?>("CertificadoVerCiudad")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("CodigoVerificacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Contenidos")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("CorreoElectronico")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("CupoAula")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("CupoTotal")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DepartamentoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("DependenciaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DependenciaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("ElaboradoPorId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ElaboradoPorNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("EscuelaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("EscuelaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("EstadoCursoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("EstadoCursoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("FechaFinInscripcion")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("FechaInicioInscripcion")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<DateTime>("HoraInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("HorasTotales")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ImagenCertificado")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("ImagenCurso")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("IndicadorId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("IndicadorNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool?>("JornadaManana")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool?>("JornadaNoche")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool?>("JornadaTarde")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("LugarRealizacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("MunicipioId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("MunicipioNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("NivelId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NivelNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("NucleoFechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("NucleoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NucleoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("NumeroDias")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Objetivos")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("PaisId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PaisIso1")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PaisIso2")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("PorcentajeValidoAsistencia")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("ProductoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ProductoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime>("ProgramaFechaInicio")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("ProgramaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ProgramaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool?>("Publicado")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("Responsable")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("TelefonoContacto")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TerritorialId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TerritorialNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TipoAsistenciaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TipoAsistenciaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TipoCursoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TipoCursoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Cursos", (string)null);
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursosEncuestas", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("CursoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("CursoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("EncuestaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("MomentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("MomentoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Preguntas")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("CursosEncuestas", (string)null);
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursosTemas", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("CursoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("DependenciaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DependenciaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("DireccionRealizacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("DocenteCorreo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("DocenteId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DocenteNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("LugarRealizacion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("TemaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TemaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("CursosTemas", (string)null);
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Departamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("Codigo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("PaisId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("TerritorialId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaisId");
+
+                    b.ToTable("Departamento");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.DepartamentoMunicipio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("MunicipioId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DepartamentoMunicipio");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.DepartamentosMunicipios", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DepartamentoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("MunicipioId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("MunicipioNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("DepartamentosMunicipios", (string)null);
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Documento", b =>
                 {
                     b.Property<int>("Id")
@@ -614,9 +1130,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("Archivo")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -625,27 +1139,19 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("GrupoId")
                         .HasColumnType("NUMBER(10)");
@@ -673,37 +1179,24 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int?>("TipoEncuestaId")
+                    b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Titulo")
@@ -723,29 +1216,19 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("EncuestaId")
                         .HasColumnType("NUMBER(10)");
@@ -774,32 +1257,22 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -821,45 +1294,35 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("ObjetivoId")
+                    b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int?>("Orden")
+                    b.Property<int?>("ProductoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjetivoId");
+                    b.HasIndex("ProductoId");
 
                     b.ToTable("Indicador");
                 });
@@ -879,32 +1342,22 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Justificacion")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -926,6 +1379,93 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("Modulo");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Municipio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("Codigo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartamentoId");
+
+                    b.ToTable("Municipio");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Municipios", b =>
+                {
+                    b.Property<int>("MunicipioId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("DepartamentoCodigo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DepartamentoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("MunicipioCodigo")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("MunicipioNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("PaisId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("PaisIso1")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PaisIso2")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("PaisNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("MunicipioId");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Municipios", (string)null);
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>
                 {
                     b.Property<int>("Id")
@@ -935,32 +1475,22 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("EscuelaId")
                         .HasColumnType("NUMBER(10)");
@@ -987,38 +1517,25 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int>("BancoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<int?>("IndicadorId")
-                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -1030,9 +1547,130 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasIndex("BancoId");
 
-                    b.HasIndex("IndicadorId");
-
                     b.ToTable("Nucleo");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.NucleoPrograma", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("NucleoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("ProgramaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NucleoPrograma");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.NucleosProgramas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("NucleoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NucleoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("ProgramaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ProgramaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("NucleosProgramas", (string)null);
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Pais", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<int>("Codigo")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Iso1")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Iso2")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pais");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Participante", b =>
@@ -1044,9 +1682,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("Apellidos")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -1067,14 +1703,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Direccion")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -1086,14 +1718,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("EntidadId")
                         .HasColumnType("NUMBER(10)");
@@ -1154,37 +1782,21 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int?>("TipoEncuestaId")
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Titulo")
@@ -1204,19 +1816,13 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("DependenciaId")
                         .HasColumnType("NUMBER(10)");
@@ -1225,14 +1831,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -1243,6 +1845,43 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Producto");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.ProductoIndicador", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("IndicadorId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductoIndicador");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Productos", b =>
@@ -1288,6 +1927,49 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToView("Productos", (string)null);
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.ProductosIndicadores", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("IndicadorId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("IndicadorNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ProductoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("ProductosIndicadores", (string)null);
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Programa", b =>
                 {
                     b.Property<int>("Id")
@@ -1297,29 +1979,19 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("TIMESTAMP(7)");
@@ -1349,35 +2021,22 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
-
-                    b.Property<int?>("CursoId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("DependenciaId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("ModuloId")
                         .HasColumnType("NUMBER(10)");
@@ -1390,13 +2049,132 @@ namespace ESAP.Sirecec.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CursoId");
-
-                    b.HasIndex("DependenciaId");
-
-                    b.HasIndex("ModuloId");
-
                     b.ToTable("Tema");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Temas", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("DependenciaId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DependenciaNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("ModuloId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ModuloNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Temas", (string)null);
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.TerritorialDepartamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("TerritorialId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TerritorialDepartamento");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.TerritorialesDepartamentos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("DepartamentoId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("DepartamentoNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("TerritorialId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TerritorialNombre")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("TerritorialesDepartamentos", (string)null);
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.ValorGeneral", b =>
@@ -1408,32 +2186,22 @@ namespace ESAP.Sirecec.Data.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool?>("Activo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(1)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int>("Codigo")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("CreadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("CreadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<DateTime?>("EditadoEl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("EditadoPor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)")
-                        .HasDefaultValueSql("((1))");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -1541,8 +2309,14 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TerritorialId")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("NUMBER(1)");
@@ -1567,14 +2341,10 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Identity.Users", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("NUMBER(10)");
-
-                    b.Property<string>("CompanyAcronym")
-                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int?>("CompanyId")
                         .HasColumnType("NUMBER(10)");
@@ -1630,6 +2400,12 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("NVARCHAR2(2000)");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("NUMBER(10)");
 
@@ -1637,6 +2413,12 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int?>("TerritorialId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("TerritorialName")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -1755,6 +2537,18 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.ToTable("AuthUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Encuestas", b =>
+                {
+                    b.HasBaseType("ESAP.Sirecec.Data.Core.Encuesta");
+
+                    b.Property<int?>("Preguntas")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("Encuestas", (string)null);
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Clasificador", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.ClasificadorTipo", "ClasificadorTipo")
@@ -1773,19 +2567,10 @@ namespace ESAP.Sirecec.Data.Migrations
                         .HasForeignKey("NivelId");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoAnexo", b =>
-                {
-                    b.HasOne("ESAP.Sirecec.Data.Core.Curso", null)
-                        .WithMany("Anexos")
-                        .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoEncuesta", b =>
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoDocumento", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Curso", "Curso")
-                        .WithMany("Encuestas")
+                        .WithMany()
                         .HasForeignKey("CursoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1793,13 +2578,26 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("Curso");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoEncuesta", b =>
+                {
+                    b.HasOne("ESAP.Sirecec.Data.Core.Curso", "Curso")
+                        .WithMany()
+                        .HasForeignKey("CursoId");
+
+                    b.HasOne("ESAP.Sirecec.Data.Core.Encuesta", "Encuesta")
+                        .WithMany()
+                        .HasForeignKey("EncuestaId");
+
+                    b.Navigation("Curso");
+
+                    b.Navigation("Encuesta");
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.CursoFecha", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Curso", "Curso")
-                        .WithMany("Fechas")
-                        .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("CursoId");
 
                     b.Navigation("Curso");
                 });
@@ -1823,28 +2621,46 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("Tema");
                 });
 
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Departamento", b =>
+                {
+                    b.HasOne("ESAP.Sirecec.Data.Core.Pais", null)
+                        .WithMany("Departamentos")
+                        .HasForeignKey("PaisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.EncuestaPregunta", b =>
                 {
                     b.HasOne("ESAP.Sirecec.Data.Core.Encuesta", "Encuesta")
-                        .WithMany("Preguntas")
+                        .WithMany()
                         .HasForeignKey("EncuestaId");
 
-                    b.HasOne("ESAP.Sirecec.Data.Core.Pregunta", "Curso")
+                    b.HasOne("ESAP.Sirecec.Data.Core.Pregunta", "Pregunta")
                         .WithMany()
                         .HasForeignKey("PreguntaId");
 
-                    b.Navigation("Curso");
-
                     b.Navigation("Encuesta");
+
+                    b.Navigation("Pregunta");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
                 {
-                    b.HasOne("ESAP.Sirecec.Data.Core.Clasificador", "Objetivo")
+                    b.HasOne("ESAP.Sirecec.Data.Core.Producto", "Producto")
                         .WithMany()
-                        .HasForeignKey("ObjetivoId");
+                        .HasForeignKey("ProductoId");
 
-                    b.Navigation("Objetivo");
+                    b.Navigation("Producto");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Municipio", b =>
+                {
+                    b.HasOne("ESAP.Sirecec.Data.Core.Departamento", null)
+                        .WithMany("Municipios")
+                        .HasForeignKey("DepartamentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>
@@ -1864,10 +2680,6 @@ namespace ESAP.Sirecec.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ESAP.Sirecec.Data.Core.Indicador", null)
-                        .WithMany("Nucleos")
-                        .HasForeignKey("IndicadorId");
-
                     b.Navigation("BancoPrograma");
                 });
 
@@ -1880,25 +2692,6 @@ namespace ESAP.Sirecec.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Nucleo");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Tema", b =>
-                {
-                    b.HasOne("ESAP.Sirecec.Data.Core.Curso", null)
-                        .WithMany("Temas")
-                        .HasForeignKey("CursoId");
-
-                    b.HasOne("ESAP.Sirecec.Data.Core.Clasificador", "Dependencia")
-                        .WithMany()
-                        .HasForeignKey("DependenciaId");
-
-                    b.HasOne("ESAP.Sirecec.Data.Core.Modulo", "Modulo")
-                        .WithMany("Temas")
-                        .HasForeignKey("ModuloId");
-
-                    b.Navigation("Dependencia");
-
-                    b.Navigation("Modulo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1962,35 +2755,14 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Navigation("Clasificadores");
                 });
 
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Curso", b =>
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Departamento", b =>
                 {
-                    b.Navigation("Anexos");
-
-                    b.Navigation("Encuestas");
-
-                    b.Navigation("Fechas");
-
-                    b.Navigation("Temas");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Encuesta", b =>
-                {
-                    b.Navigation("Preguntas");
+                    b.Navigation("Municipios");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Escuela", b =>
                 {
                     b.Navigation("Niveles");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Indicador", b =>
-                {
-                    b.Navigation("Nucleos");
-                });
-
-            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Modulo", b =>
-                {
-                    b.Navigation("Temas");
                 });
 
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nivel", b =>
@@ -2001,6 +2773,11 @@ namespace ESAP.Sirecec.Data.Migrations
             modelBuilder.Entity("ESAP.Sirecec.Data.Core.Nucleo", b =>
                 {
                     b.Navigation("Programas");
+                });
+
+            modelBuilder.Entity("ESAP.Sirecec.Data.Core.Pais", b =>
+                {
+                    b.Navigation("Departamentos");
                 });
 #pragma warning restore 612, 618
         }

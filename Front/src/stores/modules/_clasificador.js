@@ -68,9 +68,9 @@ export const useClasificadorStore = defineStore({
 			return o;
 		},
 		async porTipoNombre(tipoNombre = null, active = true, sortByName = true) {
-			console.log("porTipo");
-			console.log("config =>", _config);
-			console.log("");
+			// console.log("porTipo");
+			// console.log("config =>", _config);
+			// console.log("");
 			let o = [];
 			let items = await this.cargar();
 			let tipo = _config.tipo_clasificador.find((o) => o.name == tipoNombre);

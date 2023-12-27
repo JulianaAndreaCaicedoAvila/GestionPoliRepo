@@ -114,6 +114,23 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 
+		[HttpGet("dep/{dependenciaId?}")] // /api/curso/dep/13 o 14
+		[Authorization.AllowAnonymous]
+		public ActionResult GetByDependenciaId(int? dependenciaId = null)
+		{
+			var items = _db.Cursos.Where(o => o.DependenciaId == dependenciaId);
+			return Ok(items);
+		}
+
+		[HttpGet("all")] // /api/curso/all
+		[Authorization.AllowAnonymous]
+		public ActionResult GetAll()
+		{
+			var items = _db.Cursos.ToList();
+			return Ok(items);
+		}
+
+
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 
 		[Authorization.AllowAnonymous]
 		public ActionResult Get(int? itemId = null)

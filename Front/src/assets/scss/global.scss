@@ -1110,3 +1110,107 @@ a.disabled {
 .hand {
 	cursor: pointer !important;
 }
+
+.file-selector {
+	.dx-fileuploader-wrapper,
+	.dx-fileuploader-input-wrapper {
+		width: 100%;
+		padding: 0;
+		border: none;
+		.dx-fileuploader-button {
+			border: none;
+			color: #ffffff;
+			font-size: 1.06rem;
+			font-weight: 500;
+			width: 100%;
+			letter-spacing: -0.6px;
+			background-color: $main-color;
+			.dx-button-text {
+				&::before {
+					display: inline-block;
+					margin-right: 0.6rem;
+					content: "\e178";
+					font-family: FontAwesome;
+				}
+			}
+		}
+	}
+	.dx-fileuploader-files-container,
+	.dx-fileuploader-file-container,
+	.dx-fileuploader-file {
+		padding: 0;
+		.dx-fileuploader-file-name {
+			font-size: 1.06rem;
+			letter-spacing: -1px;
+			padding-right: 0.2rem;
+			font-weight: 400;
+			&::before {
+				content: "Seleccionado: ";
+				font-weight: 500;
+			}
+		}
+		.dx-fileuploader-file-size {
+			vertical-align: middle;
+			font-size: 0.92rem;
+			&::before {
+				content: "(";
+			}
+			&::after {
+				content: ")";
+			}
+		}
+	}
+	.dx-fileuploader-file {
+		width: 100%;
+		.dx-fileuploader-file-info {
+			margin-top: 0.2rem;
+		}
+		.dx-fileuploader-file-status-message {
+			margin-top: 0.3rem;
+			font-weight: 500;
+			letter-spacing: -0.6px;
+			font-size: 0.9rem;
+			color: #46a046;
+			display: inline-block;
+			&::before {
+				color: #46a046;
+				// overflow: visible;
+				display: inline-block;
+				margin-right: 0.3rem;
+				content: "\e178";
+				// color: $main-color;
+				font-family: FontAwesome;
+			}
+		}
+	}
+	.dx-fileuploader-files-container {
+		padding-top: 0.3rem;
+	}
+
+	.dx-fileuploader-invalid {
+		.dx-fileuploader-file-status-message {
+			span {
+				font-weight: 500;
+				letter-spacing: -0.6px;
+				font-size: 0.9rem;
+				color: red;
+				display: inline-block;
+			}
+			&::before {
+				color: red;
+				// overflow: visible;
+				display: inline-block;
+				margin-right: 0.3rem;
+				content: "\e178";
+				// color: $main-color;
+				font-family: FontAwesome;
+			}
+		}
+	}
+}
+
+.cmd-item {
+	i {
+		font-size: 18px !important;
+	}
+}

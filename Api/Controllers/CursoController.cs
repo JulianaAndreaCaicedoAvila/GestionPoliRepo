@@ -22,12 +22,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	{
 		private readonly DataContext _db;
 		private readonly ILogger _logger;
+		private readonly IConfiguration _config;
 		private readonly IHttpContextAccessor _context;
 
-		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor, ILogger<CursoController> logger)
+		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor, ILogger<CursoController> logger, IConfiguration config)
 		{
 			_db = context;
 			_logger = logger;
+			_config = config;
 			_context = httpContextAccessor;
 		}
 
@@ -106,6 +108,52 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok();
 		}
 
+		[HttpPost("ed-archivo")] // /api/curso/ed-archivo
+		public ActionResult EditArchivo()
+		{
+			// Documento
+			var str = Request.Form["documento"];
+			var item = JsonConvert.DeserializeObject<CursoDocumento>(str);
+
+			// Archivo
+			var files = Request.Form.Files;
+			if (files.Count > 0)
+			{
+				var file = files[0];
+				var fileBase = _config["Path:FilesPath"];
+				// var uniqueFileName = file.FileName.GetUniqueFileName();
+				var ext = Path.GetExtension(Path.GetFileName(file.FileName)).ToLower();
+				var uniqueFileName = Guid.NewGuid().ToString().ToLower() + ext;
+				var uploadDir = Path.Combine(fileBase, ext == ".pdf" ? "doc" : "img");
+				var filePath = Path.Combine(uploadDir, uniqueFileName);
+				file.CopyTo(new FileStream(filePath, FileMode.Create));
+				item.ArchivoNombre = uniqueFileName;
+			}
+
+			if (item.Id == 0)
+			{
+				var obj = (CursoDocumento)item.CopyTo(new CursoDocumento());
+				obj.CreadoPor = GetUserId();
+				obj.CreadoEl = DateTime.Now;
+				_db.CursoDocumento.Add(obj);
+				_db.SaveChanges();
+				return Ok(obj);
+			}
+			else
+			{
+				var current = _db.CursoDocumento.First(o => o.Id == item.Id);
+				if (current != null)
+				{
+					var final = (CursoDocumento)item.CopyTo(current);
+					final.EditadoPor = GetUserId();
+					final.EditadoEl = DateTime.Now;
+					_db.SaveChanges();
+					return Ok(final);
+				}
+				return Ok(item);
+			}
+		}
+
 		[HttpGet("temas")]
 		public ActionResult CursosTemas()
 		{
@@ -146,7 +194,20 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(items);
 		}
 
-		[HttpPost("temas-dx")] // /api/curso/dx => DevExtreme DataGrid Get
+		[HttpPost("archivos-dx")] // /api/curso/archivos-dx
+		public ActionResult ArchivosDx()
+		{
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "Id" };
+			var data = JsonConvert.DeserializeObject<GenericModel>(opts.UserData);
+			var items = _db.CursosDocumentos.Where(o => o.CursoId == data.id).OrderBy(o => o.Nombre).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
+		}
+
+		[HttpPost("temas-dx")] // /api/curso/temas-dx
 		public ActionResult TemasDx()
 		{
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);

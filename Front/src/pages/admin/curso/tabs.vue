@@ -74,7 +74,7 @@ onMounted(async () => {
               <DxItem title="4. Días">
                 <Dias :item="curso" :item-id="cursoId" @on-cancel="cancel" />
               </DxItem>
-              <DxItem title="5. Documentos">
+              <DxItem title="5. Archivos">
                 <Archivos :item="curso" :item-id="cursoId" @on-cancel="cancel" />
               </DxItem>
             </DxTabPanel>

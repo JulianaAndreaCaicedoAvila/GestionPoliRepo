@@ -218,7 +218,7 @@ onMounted(async () => {
   console.log(_sep);
   console.log("curso-encuesta.vue MOUNTED!");
   encuestas.value = await encuestaStore.all();
-  momentos.value = await store.porTipoNombre("momento_encuesta")
+  momentos.value = await store.porTipoNombre("momento_encuesta");
   console.log("temasAll =>", encuestas.value);
   list1 = List.getInstance(document.getElementById("list1"));
   list2 = List.getInstance(document.getElementById("list2"));

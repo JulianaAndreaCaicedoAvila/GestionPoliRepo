@@ -5,7 +5,7 @@ import List from "devextreme/ui/list";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useTemaStore, useEncuestaStore, useAuthStore } from "@/stores";
+import { useClasificadorStore, useAuthStore } from "@/stores";
 import DxValidator, {
 	DxRequiredRule,
 	DxStringLengthRule,
@@ -21,6 +21,7 @@ import {
 	DxValidationGroup,
 	DxToolbar,
 	DxMediaResizing,
+	DxFileUploader,
 	DxImageUpload,
 	DxItem,
 } from "devextreme-vue";
@@ -43,31 +44,30 @@ import {
 	DxSummary,
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
-	temaStore = useTemaStore(),
-	encuestaStore = useEncuestaStore(),
+	store = useClasificadorStore(),
 	storeAuth = useAuthStore();
-let titulo = "Temas",
-	list1 = null,
-	list2 = null,
-	itemId = ref(null),
+let itemArchivoId = ref(null),
 	valGroup = ref(null),
 	dxStore = ref(null),
 	temasAll = ref([]),
-	docentes = ref([]),
-	temas = ref([]),
+	tiposArchivos = ref([]),
+	action = ref("Seleccionar archivo"),
 	temasFrom = ref([]),
+	hasErrors = ref(true),
+	fileUploader = null,
+	file = ref(null),
 	temasTo = ref([]),
 	fromData = ref([]),
 	toData = ref([]),
 	selRightClass = ref(""),
 	selLeftClass = ref(""),
-	item = ref({
+	itemArchivo = ref({
 		id: 0,
 		cursoId: props.itemId,
-		temaId: null,
-		docenteId: null,
-		lugarRealizacion: null,
-		direccionRealizacion: null,
+		tipoDocumentoId: null,
+		nombre: null,
+		archivoNombre: null,
+		archivoPeso: null,
 		activo: true,
 		creadoEl: null,
 		creadoPor: null,
@@ -75,7 +75,7 @@ let titulo = "Temas",
 		editadoPor: null,
 		orden: 0,
 	}),
-	item_copy = Clone(item.value),
+	itemArchivoCopy = Clone(itemArchivo.value),
 	panelData = null,
 	panelGrid = null,
 	customizeColumns = () => {
@@ -95,15 +95,21 @@ let titulo = "Temas",
 			textCancel: "CANCELAR",
 			textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
 			text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
-				} el tema "<span class="font-weight-semibold">${data.temaNombre}</span>"?`,
+				} el archivo "<span class="font-weight-semibold">${data.nombre}</span>"?`,
 			onConfirm: () => {
-				panelGrid = $("#grid-tema");
+				panelGrid = $("#grid-archivo");
 				panelGrid.lock(
 					`${data.activo ? "Desactivando" : "Activando"}, un momento por favor`,
 					async function () {
 						data.activo = data.activo ? false : true;
+						var fData = new FormData();
+						fData.append('documento', JSON.stringify(data));
 						await api()
-							.post(`cursoTema/ed`, JSON.stringify(data))
+							.post(`curso/ed-archivo`, fData, {
+								headers: {
+									'Content-Type': 'multipart/form-data'
+								}
+							})
 							.then((r) => {
 								console.log("r =>", r);
 								cancel(function () {
@@ -121,60 +127,49 @@ let titulo = "Temas",
 		console.clear();
 		valGroup.value.instance.reset();
 		console.log("data =>", data);
-		panelData = $("#data-tema");
-		panelGrid = $("#grid-tema");
+		panelData = $("#data-archivo");
+		panelGrid = $("#grid-archivo");
 		panelGrid.lock("Cargando");
 		// Editando
 		if (typeof data !== "undefined") {
-			$("#tit-action").text("Editar Tema");
-			item.value = Clone(data);
+			hasErrors.value = false;
+			action.value = "Cambiar archivo";
+			$("#tit-action").text("Editar archivo");
+			itemArchivo.value = Clone(data);
 		} else {
 			// Creando
-			$("#tit-action").text("Nuevo Tema");
-			item.value = Clone(item_copy);
+			action.value = "Seleccionar archivo";
+			$("#tit-action").text("Asociar archivo");
+			itemArchivo.value = Clone(itemArchivoCopy);
 		}
-		let ids = [];
-		let topics =
-			item.value.id == 0 ? [] : await temaStore.byCursoId(item.value.id);
-		topics.forEach((topics) => {
-			ids.push(topics.temaId);
-		});
-		console.log("topics =>", topics); // [{id: 5, encuestaId:8, preguntaId: 6},{id: 2, encuestaId:8, preguntaId: 6}]
-		console.log("ids =>", ids); // [2, 3, 5, 6]
 		panelGrid.fadeOut("normal", async function () {
 			console.log(typeof data);
-			// preguntasAll.value = await preguntaStore.all();
-			// preguntas.value = Object.assign([], preguntasAll.value).filter(
-			//   (o) => o.territorialId == null
-			// );
-			let q = Object.assign([], temasAll.value);
-			// preguntasFrom.value = q;
-			temasFrom.value = q.filter((o) => !ids.includes(o.id));
-			console.log("Temas =>", toRaw(temas.value));
-			// TODO: Asociar al store dptosTo.value = geoStore.dptosPorTerritorialId(data.id);
-			temasTo.value = q.filter((o) => ids.includes(o.id));
-			console.log("temasTo =>", toRaw(temasTo.value));
-			// updateButtons();
 			panelData.fadeIn(function () {
 				panelGrid.unlock();
 			});
 			panelData.fadeIn("normal", function () {
 				console.log(_sep);
-				console.log("item =>", item.value);
+				console.log("item =>", itemArchivo.value);
 				panelGrid.unlock();
 			});
 		});
 	},
+	getLink = (data) => {
+		console.clear();
+		console.log("data =>", data);
+		let nm = data.archivoNombre.toLowerCase();
+		return `/store/${nm.includes('.pdf') ? 'doc' : 'img'}/${nm}`;
+	},
 	cancel = (cb) => {
 		// console.clear();
-		panelData = $("#data-tema");
-		panelGrid = $("#grid-tema");
+		panelData = $("#data-archivo");
+		panelGrid = $("#grid-archivo");
 		console.log("CANCEL!");
 		panelData.fadeOut("normal", function () {
 			panelData.clear();
 			panelGrid.fadeIn("normal", function () {
-				item.value = Clone(item_copy);
-				console.log("item =>", item);
+				itemArchivo.value = Clone(itemArchivoCopy);
+				console.log("item =>", itemArchivo);
 				valGroup.value.instance.reset();
 				$(".nb.dx-numberbox").each(function () {
 					var el = $(this);
@@ -188,8 +183,8 @@ let titulo = "Temas",
 	},
 	save = async () => {
 		console.clear();
-		panelData = $("#data-tema");
-		panelGrid = $("#grid-tema");
+		panelData = $("#data-archivo");
+		panelGrid = $("#grid-archivo");
 		let result = valGroup.value.instance.validate();
 		if (!result.isValid) {
 			$.scrollTo($(".dx-invalid:first"), {
@@ -197,15 +192,19 @@ let titulo = "Temas",
 				offset: -110,
 			});
 		} else {
-			// CUandoes válido
 			panelData.lock(
-				`${item.id == 0 ? "Adicionando" : "Actualizando"} temas`,
+				`${itemArchivo.value.id == 0 ? "Asociando" : "Actualizando"} archivo`,
 				async function () {
-					let dto = toRaw(item.value);
-					console.log("dto =>", dto);
+					//202312270151: https://stackoverflow.com/a/40826943
+					var data = new FormData();
+					data.append('archivo', file.value);
+					data.append('documento', JSON.stringify(toRaw(itemArchivo.value)));
 					await api()
-						.post(`cursoTema/ed`, dto)
-						.then((r) => {
+						.post(`curso/ed-archivo`, data, {
+							headers: {
+								'Content-Type': 'multipart/form-data'
+							}
+						}).then((r) => {
 							console.log("r =>", r);
 							cancel(function () {
 								panelData.unlock();
@@ -216,21 +215,58 @@ let titulo = "Temas",
 			);
 		}
 	},
+	archivoSeleccionado = (e) => {
+		console.clear();
+		console.log("e =>", e);
+		fileUploader = e.component;
+		var f = e.value[0];
+		file.value = f;
+		console.log("f =>", f);
+		itemArchivo.value.archivoNombre = f.name;
+		itemArchivo.value.archivoPeso = f.size;
+		let errors = document.getElementsByClassName("dx-fileuploader-invalid");
+		hasErrors.value = file.value && errors.length > 0;
+		if (errors.length > 0) {
+			// uploadBtn.classList.add("hidden");
+		} else {
+			// uploadBtn.classList.remove("hidden");
+		}
+		console.log("errors.length =>", errors.length);
+	},
+	archivoSubido = () => {
+		console.clear();
+		fileUploader.reset();
+	},
+	archivoSubir = () => {
+		let pause = 2000;
+		loaderTitle.value = "Subiendo reporte";
+		loaderCtl.show();
+		// 202308171726: Simula proceso de subida
+		setTimeout(function () {
+			loaderTitle.value = "Procesando reporte";
+			loaderCtl.show();
+			setTimeout(() => {
+				messageTitle.value = "¡El reporte fue subido y procesado correctamente!";
+				loaderCtl.hide();
+				messageCtl.show();
+			}, pause);
+		}, pause);
+	},
 	getData = () => {
 		dxStore.value = DxStore({
 			key: ["id"],
-			endPoint: "curso/temas-dx",
+			endPoint: "curso/archivos-dx",
 			userData: JSON.stringify({ id: props.itemId }),
 			onLoading: function (loadOptions) {
-				$("#grid-tema").lock("Cargando");
+				$("#grid-archivo").lock("Cargando");
 				console.log("loadOptions =>", loadOptions);
 				console.log("onLoading");
 			},
 			onLoaded: function (results) {
 				console.log("results", results);
 				console.log("onLoaded!");
-				$("#grid-tema").unlock();
-				$("#data-tema").unlock();
+				$("#grid-archivo").unlock();
+				$("#data-archivo").unlock();
 			},
 		})
 	};
@@ -242,73 +278,62 @@ let props = defineProps({
 });
 
 onMounted(async () => {
-	$("#grid-tema").lock("Cargando");
+	$("#grid-archivo").lock("Cargando");
 	console.log(_sep);
-	console.log("curso-tema.vue MOUNTED!");
-	temasAll.value = await temaStore.all();
-	docentes.value = await storeAuth.porRol("DOCENTE");
-	console.log("temasAll =>", temasAll.value);
-	list1 = List.getInstance(document.getElementById("list1"));
-	list2 = List.getInstance(document.getElementById("list2"));
-	console.log("route.name =>", route.name);
-	itemId.value = props.itemId;
-	item.value = props.item;
+	tiposArchivos.value = await store.porTipoNombre("tipo_documento");
+	itemArchivoId.value = props.itemId;
+	itemArchivo.value = props.item;
 	getData();
 });
 </script>
 <template>
 	<div class="container content">
-		<div class="card data hidden" id="data-tema">
-			{{ item }}
-			<!-- <div class="card-header main d-flex justify-content-between">
-        <span>
-          <i class="fa-solid fa-gears"></i>
-          <span v-html="titulo" /> &raquo;
-          <span id="tit-action">Asociar Tema</span>
-        </span>
-      </div> -->
+		<div class="card data hidden mx-1 my-4" id="data-archivo">
+			<!-- {{ hasErrors }}<br />
+			{{ item }} -->
+			<div class="card-header main d-flex justify-content-between">
+				<span>
+					<i class="fa-solid fa-gears"></i>
+					<span id="tit-action"></span>
+				</span>
+			</div>
 
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-3 pb-4">
 					<div class="row">
-						<div class="col-md-12 mb-3">
-							<label class="tit">Tema</label>
-							<DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-								:search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-								class="form-control" placeholder="Tema" value-expr="id" display-expr="nombre">
-								<DxValidator>
-									<DxRequiredRule />
-								</DxValidator>
-							</DxSelectBox>
-						</div>
-						<div class="col-md-4 mb-3">
-							<label class="tit">Docente</label>
-							<DxSelectBox id="temaId" :data-source="docentes" :grouped="false" :min-search-length="2"
-								:search-enabled="true" v-model="item.docenteId" :show-clear-button="true" :show-data-before-search="true"
-								class="form-control" placeholder="Docente" value-expr="id" display-expr="name">
-								<DxValidator>
-									<DxRequiredRule />
-								</DxValidator>
-							</DxSelectBox>
-						</div>
-						<div class="col-md-4">
-							<label class="tit">Direccion de realización</label>
-							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true"
-								v-model="item.direccionRealizacion" class="form-control" placeholder="Nombre del curso"
-								@focus-out="$capitalizeAll">
+						<div class="col-md-6 mb-3">
+							<label class="tit">Nombre</label>
+							<DxTextBox id="nombre" v-model="itemArchivo.nombre" class="form-control" placeholder="Nombre">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
 							</DxTextBox>
 						</div>
-						<div class="col-md-4">
-							<label class="tit">Lugar de realización</label>
-							<DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.lugarRealizacion"
-								class="form-control" placeholder="Nombre del curso" @focus-out="$capitalizeAll">
-								<DxValidator>
-									<DxRequiredRule />
-								</DxValidator>
-							</DxTextBox>
+						<div class="col-md-6">
+							<div class="row">
+								<div class="col-md-5 mb-3">
+									<label class="tit">Tipo</label>
+									<DxSelectBox id="tipoDocumentoId" :data-source="tiposArchivos" :grouped="false" :min-search-length="2"
+										:search-enabled="true" v-model="itemArchivo.tipoDocumentoId" :show-clear-button="true"
+										:show-data-before-search="true" class="form-control" placeholder="Tipo de archivo" value-expr="id"
+										display-expr="nombre">
+										<DxValidator>
+											<DxRequiredRule />
+										</DxValidator>
+									</DxSelectBox>
+								</div>
+								<div class="col-md-7 mb-3">
+									<label class="tit">{{ action }}</label>
+									<div class="file-container d-flex align-content-between">
+										<div class="file-selector">
+											<DxFileUploader :title="action" accept="image/jpg,image/jpeg,image/png,application/pdf"
+												:select-button-text="action" @value-changed="archivoSeleccionado"
+												:allowed-file-extensions="['.pdf', '.jpeg', '.jpg', '.png']" :max-file-size="4000000"
+												upload-mode="useForm" />
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -317,41 +342,32 @@ onMounted(async () => {
 			<div class="card-footer">
 				<div class="d-flex justify-content-between align-items-center">
 					<a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
-					<a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
+					<a :class="'btn btn-main' + (hasErrors ? ' disabled' : '')" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i
+							class="fa-solid fa-floppy-disk"></i></a>
 				</div>
 			</div>
 		</div>
 
-		<div class="row" id="grid-tema">
+		<div class="row" id="grid-archivo">
 			<div class="col-md-12 text-end pb-2">
 				<a href="#" class="btn pe-0" @click.prevent="addStart()"><i class="fa-solid fa-square-plus me-1"></i>Asociar
-					tema</a>
+					archivo</a>
 			</div>
 			<div class="col-md-12">
 				<DxDataGrid :customize-columns="customizeColumns" :data-source="dxStore" :hover-state-enabled="true"
 					:remote-operations="true" :word-wrap-enabled="true" :row-alternation-enabled="true" :show-borders="false"
 					id="gridContainer" @initialized="onInitialized">
 					<DxLoadPanel :enabled="false" />
-					<DxFilterRow :visible="true" />
-					<!-- <DxColumnChooser :enabled="true" mode="dragAndDrop" />
-							<DxExport :enabled="true" />
-							
-							<DxGrouping :auto-expand-all="true" />
-							<DxGroupPanel :visible="true" :allow-column-dragging="true" />
-							<DxScrolling row-rendering-mode="virtual" />
-							<DxSearchPanel :visible="false" :highlight-case-sensitive="false" /> -->
-					<DxSorting mode="single" /><!-- single, multiple, none" -->
-					<DxSummary>
-						<DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
-					</DxSummary>
+					<DxFilterRow :visible="false" />
+					<DxSorting mode="single" />
 					<DxPaging :page-size="15" />
 					<DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
 						:allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} temas (página {0} de {1})" />
 					<DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
 						:allow-sorting="true" alignment="center" />
-					<DxColumn data-field="temaNombre" caption="Tema" :visible="true" />
-					<DxColumn data-field="docenteNombre" caption="Docente" :visible="true" />
-					<DxColumn data-field="dependenciaNombre" caption="Dependencia" :visible="true" width="150" />
+					<DxColumn data-field="nombre" caption="Nombre" :visible="true" />
+					<DxColumn data-field="tipoDocumentoNombre" caption="Tipo" width="150" :visible="true" />
+					<DxColumn data-field="archivoPeso" caption="Peso" :visible="true" width="150" :format="$formatSize" />
 					<DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
 						cell-template="tpl1">
 						<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
@@ -360,19 +376,22 @@ onMounted(async () => {
 						<span v-if="data.data.activo">SI</span>
 						<span v-else>NO</span>
 					</template>
-					<DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
+					<DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
 						fixed-position="right" />
 					<template #tpl="{ data }">
 						<span class="cmds">
+							<a title="Observar" class="cmd-item color-main-600 me-2" :href="getLink(data.data)" target="_blank">
+								<i class="fa-solid fa-arrow-up-right-from-square"></i>
+							</a>
 							<a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
-								<i class="fa-solid fa-pen-to-square fa-lg"></i>
+								<i class="fa-solid fa-pen-to-square"></i>
 							</a>
 							<a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
 								@click.prevent="active(data.data, false)" href="#">
-								<i class="fa-regular fa-square-minus fa-lg"></i>
+								<i class="fa-regular fa-square-minus"></i>
 							</a>
 							<a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
-								<i class="fa-regular fa-square-check fa-lg"></i>
+								<i class="fa-regular fa-square-check"></i>
 							</a>
 						</span>
 					</template>
@@ -383,9 +402,9 @@ onMounted(async () => {
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">
-				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span
+				<span class="font-weight-semibold">item:</span> {{ itemArchivo }}<br /><span
 					class="font-weight-semibold">item_copy:</span>
-				{{ item_copy }}
+				{{ itemArchivoCopy }}
 			</div>
 		</div>
 	</div>

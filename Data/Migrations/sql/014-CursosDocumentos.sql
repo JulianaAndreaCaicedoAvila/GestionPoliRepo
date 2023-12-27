@@ -1,20 +1,18 @@
 ﻿CREATE OR REPLACE VIEW "CursosDocumentos" AS
 SELECT
-CT."Id",
-CT."CursoId",
-CT."TemaId",
-T."Nombre" AS "TemaNombre",
-T."DependenciaId",
-D."Nombre" AS "DependenciaNombre",
-CT."DocenteId",
-U."FirstName" || ' ' || U."LastName" AS "DocenteNombre",
-U."Email" AS "DocenteCorreo",
-CT."LugarRealizacion",
-CT."DireccionRealizacion"
-FROM "CursoTema" CT
-LEFT OUTER JOIN "Tema" T
-ON CT."TemaId" = T."Id"
-LEFT OUTER JOIN "Clasificador" D
-ON T."DependenciaId" = D."Id"
-LEFT OUTER JOIN "AuthUsers" U
-ON CT."DocenteId" = U."Id"
+CD."Id",
+CD."CursoId",
+CD."TipoDocumentoId",
+CT."Nombre" AS "TipoDocumentoNombre",
+CD."Nombre",
+CD."ArchivoNombre",
+CD."ArchivoPeso",
+CD."CreadoEl",
+CD."EditadoEl",
+CD."Activo",
+CD."CreadoPor",
+CD."EditadoPor",
+CD."Orden"
+FROM "CursoDocumento" CD
+LEFT OUTER JOIN "Clasificador" CT
+ON CD."TipoDocumentoId" = CT."Id"

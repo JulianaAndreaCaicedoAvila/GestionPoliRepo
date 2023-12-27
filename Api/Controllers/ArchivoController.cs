@@ -30,7 +30,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			_db = context;
 			_config = config;
 			_context = httpContextAccessor;
-			_baseDir = _config["Path:FilesPath"] ?? @"D:\Web\esap\sirecec\v4\app\Front\public\store\";
+			_baseDir = _config["Path:FilesPath"];
 		}
 
 		[HttpGet("imagenes")] //archivo/imagen => CREATE - 

@@ -27,6 +27,15 @@ namespace ESAP.Sirecec.Data.Api.Utils
 	public static class Extensions
 	{
 
+		public static string GetUniqueFileName(this string fileName)
+		{
+			fileName = Path.GetFileName(fileName);
+			return Path.GetFileNameWithoutExtension(fileName)
+								+ "_"
+								+ Guid.NewGuid().ToString().Substring(0, 4)
+								+ Path.GetExtension(fileName);
+		}
+
 
 		public static string FirstLetterToUpper(this string str)
 		{

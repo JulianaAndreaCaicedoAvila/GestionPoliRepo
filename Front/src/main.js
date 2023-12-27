@@ -91,6 +91,10 @@ axios
 		props.$addDays = (date, days) => {
 			return window.addDays(date, days);
 		};
+		props.$formatSize = (data) => {
+			console.log("data =>", data);
+			return data.sizeFormat();
+		};
 	})
 	.catch((err) => {
 		console.log("ERROR", err);

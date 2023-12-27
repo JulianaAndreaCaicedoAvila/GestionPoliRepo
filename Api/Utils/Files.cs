@@ -21,6 +21,19 @@ namespace ESAP.Sirecec.Data.Api.Utils
 {
 	public class Files
 	{
+		internal static object GetFilePath(IFormFileCollection files, string? path)
+		{
+			string? filePath = null;
+			if (files.Count > 0)
+			{
+				var file = files[0];
+				var ext = Path.GetExtension(Path.GetFileName(file.FileName)).ToLower();
+				var uniqueFileName = Guid.NewGuid().ToString().ToLower() + ext;
+				var uploadDir = Path.Combine(path, ext == ".pdf" ? "doc" : "img");
+				filePath = Path.Combine(uploadDir, uniqueFileName);
+			}
+			return filePath;
+		}
 		public static string BytesToString(long byteCount)
 		{
 			string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB

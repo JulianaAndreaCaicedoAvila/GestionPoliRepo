@@ -39,6 +39,7 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<CursoFecha>? CursoFecha { get; set; } = null!;
 		public virtual DbSet<CursoTema>? CursoTema { get; set; } = null!;
 		public virtual DbSet<CursoDocumento>? CursoDocumento { get; set; } = null!;
+		public virtual DbSet<CursosDocumentos>? CursosDocumentos { get; set; } = null!;
 		public virtual DbSet<Departamento>? Departamento { get; set; } = null!;
 		public virtual DbSet<DepartamentoMunicipio>? DepartamentoMunicipio { get; set; } = null!;
 		public virtual DbSet<DepartamentosMunicipios>? DepartamentosMunicipios { get; set; } = null!;
@@ -88,20 +89,21 @@ namespace ESAP.Sirecec.Data
 			builder.Entity<IdentityUserToken<int>>().ToTable("AuthUserTokens");
 
 			// Vistas
-			builder.Entity<Users>(entity => { entity.ToView("Usuarios"); });
-			builder.Entity<Cursos>(entity => { entity.ToView("Cursos"); });
-			builder.Entity<CursosTemas>(entity => { entity.ToView("CursosTemas"); });
-			builder.Entity<CursosEncuestas>(entity => { entity.ToView("CursosEncuestas"); });
-			builder.Entity<Temas>(entity => { entity.ToView("Temas"); });
-			builder.Entity<Municipios>(entity => { entity.ToView("Municipios"); });
 			builder.Entity<BancoProgramasNucleos>(entity => { entity.ToView("BancoProgramasNucleos"); });
 			builder.Entity<Clasificadores>(entity => { entity.ToView("Clasificadores"); });
+			builder.Entity<Cursos>(entity => { entity.ToView("Cursos"); });
+			builder.Entity<CursosDocumentos>(entity => { entity.ToView("CursosDocumentos"); });
+			builder.Entity<CursosEncuestas>(entity => { entity.ToView("CursosEncuestas"); });
+			builder.Entity<CursosTemas>(entity => { entity.ToView("CursosTemas"); });
 			builder.Entity<DepartamentosMunicipios>(entity => { entity.ToView("DepartamentosMunicipios"); });
+			builder.Entity<Encuestas>(entity => { entity.ToView("Encuestas"); });
+			builder.Entity<Municipios>(entity => { entity.ToView("Municipios"); });
 			builder.Entity<NucleosProgramas>(entity => { entity.ToView("NucleosProgramas"); });
 			builder.Entity<Productos>(entity => { entity.ToView("Productos"); });
 			builder.Entity<ProductosIndicadores>(entity => { entity.ToView("ProductosIndicadores"); });
+			builder.Entity<Temas>(entity => { entity.ToView("Temas"); });
 			builder.Entity<TerritorialesDepartamentos>(entity => { entity.ToView("TerritorialesDepartamentos"); });
-			builder.Entity<Encuestas>(entity => { entity.ToView("Encuestas"); });
+			builder.Entity<Users>(entity => { entity.ToView("Usuarios"); });
 		}
 	}
 }

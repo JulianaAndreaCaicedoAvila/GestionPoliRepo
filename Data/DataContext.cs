@@ -1,42 +1,15 @@
 ﻿using ESAP.Sirecec.Data.Core;
 using ESAP.Sirecec.Data.Identity;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace ESAP.Sirecec.Data
 {
 	public partial class DataContext : IdentityDbContext<AuthUser, AuthRole, int>
 	{
 
-		public DataContext() : base()
-		{
-		}
-
-		// public DataContext(IConfiguration conf) : base()
-		// {
-		// 	_conf = conf;
-		// }
-
-		// public DataContext(IHostingEnvironment env = null, IConfiguration conf = null) : base()
-		// {
-		// 	_env = env;
-		// 	_conf = conf;
-		// }
-
-		// protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		// {
-		// configuration.SetBasePath(_env.ContentRootPath)
-		// .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
-		// .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-		// .AddEnvironmentVariables().Build();
-		// var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true, reloadOnChange: true).Build();
-		// var conn = _conf.GetConnectionString("ConnStr");
-		// optionsBuilder.UseOracle(conn);
-		// }
-
+		public DataContext() : base() { }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 		public virtual DbSet<BancoPrograma>? BancoPrograma { get; set; } = null!;
 		public virtual DbSet<BancoProgramaNucleo>? BancoProgramaNucleo { get; set; } = null!;
@@ -84,10 +57,6 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<TerritorialesDepartamentos>? TerritorialesDepartamentos { get; set; } = null!;
 		public virtual DbSet<Users> Usuarios { get; set; } = null!;
 		public virtual DbSet<ValorGeneral>? ValorGeneral { get; set; } = null!;
-		protected override void ConfigureConventions(ModelConfigurationBuilder confBuilder)
-		{
-			// confBuilder.Conventions.Add(new AttributeToColumnAnnotationConvention<SqlDefaultValueAttribute, string>("SqlDefaultValue", (p, attributes) => attributes.Single().DefaultValue));
-		}
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);

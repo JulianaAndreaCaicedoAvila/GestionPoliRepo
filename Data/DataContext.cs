@@ -1,28 +1,42 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Reflection;
-using ESAP.Sirecec.Data.Core;
+﻿using ESAP.Sirecec.Data.Core;
 using ESAP.Sirecec.Data.Identity;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace ESAP.Sirecec.Data
 {
 	public partial class DataContext : IdentityDbContext<AuthUser, AuthRole, int>
 	{
-		public DataContext() : base() { }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		public DataContext() : base()
 		{
-			var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true).Build();
-			var conn = configuration.GetConnectionString("ConnStr");
-			optionsBuilder.UseOracle(conn);
 		}
+
+		// public DataContext(IConfiguration conf) : base()
+		// {
+		// 	_conf = conf;
+		// }
+
+		// public DataContext(IHostingEnvironment env = null, IConfiguration conf = null) : base()
+		// {
+		// 	_env = env;
+		// 	_conf = conf;
+		// }
+
+		// protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		// {
+		// configuration.SetBasePath(_env.ContentRootPath)
+		// .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
+		// .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+		// .AddEnvironmentVariables().Build();
+		// var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").AddJsonFile($"appsettings.dev.json", optional: true, reloadOnChange: true).Build();
+		// var conn = _conf.GetConnectionString("ConnStr");
+		// optionsBuilder.UseOracle(conn);
+		// }
+
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 		public virtual DbSet<BancoPrograma>? BancoPrograma { get; set; } = null!;
 		public virtual DbSet<BancoProgramaNucleo>? BancoProgramaNucleo { get; set; } = null!;

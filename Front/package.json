@@ -6,9 +6,9 @@
 		"build": "vite build",
 		"build1": "vite build --emptyOutDir",
 		"dev": "vite",
-		"prebuild": "nvm install lts & nvm use lts",
-		"predev": "nvm install lts & nvm use lts",
-		"preinstall": "nvm install lts & nvm use lts",
+		"prebuild_": "nvm install lts & nvm use lts",
+		"predev_": "nvm install lts & nvm use lts",
+		"preinstall_": "nvm install lts & nvm use lts",
 		"preview": "vite preview",
 		"deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File ./deploy.ps1"
 	},

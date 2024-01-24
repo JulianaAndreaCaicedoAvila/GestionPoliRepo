@@ -20,6 +20,16 @@ export const useCursoStore = defineStore({
 					return this.items;
 				});
 		},
+		async allTemas() {
+			console.log("Curso temas =>", this.items);
+			if (this.items.length > 0) return this.items;
+			return await api()
+				.get(`curso/temas`)
+				.then(async (r) => {
+					this.items = r.data;
+					return this.items;
+				});
+		},
 		async getById(id) {
 			return await api()
 				.get(`curso/${id}`)
@@ -28,10 +38,23 @@ export const useCursoStore = defineStore({
 					return this.items;
 				});
 		},
+
+		async TemasPorCursoId(cursoId) {
+			let items = await this.allTemas();
+			return items.filter((o) => o.cursoId == cursoId);
+		},
+
 		async CursoPorNucleoId(nucleoId) {
 			let items = await this.all();
 			// console.log("departamentos =>", items);
 			return items.filter((o) => o.nucleoId == nucleoId);
 		},
+
+		async CursoPorDependenciaId(dependenciaId) {
+			let items = await this.all();
+			return items.filter((o) => o.dependenciaId == dependenciaId);
+		},
+
+		
 	},
 });

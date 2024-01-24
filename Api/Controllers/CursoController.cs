@@ -154,7 +154,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
-		[HttpGet("temas")]
+		[HttpGet("temas")]// api/curso/temas
 		public ActionResult CursosTemas()
 		{
 			var items = _db.CursosTemas?.ToList();

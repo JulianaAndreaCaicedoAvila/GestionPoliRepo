@@ -1,12 +1,11 @@
 <script setup>
-import { useAuthStore } from "@/stores";
+import { useAuthStore, useCursoStore } from "@/stores";
 import { eventos } from "@/assets/js/data";
 import Info from "@/pages/inscripcion/curso-info.vue";
 import Datos from "@/pages/inscripcion/curso-datos.vue";
 import Tipo from "@/pages/inscripcion/curso-tipo.vue";
 const un = ref(null),
   auth = useAuthStore();
-import { useCursoStore } from "@/stores";
 import { ref, onMounted, toRaw } from "vue";
 import { useRouter, useRoute } from "vue-router";
 // https://js.devexpress.com/Documentation/Guide/UI_Components/TabPanel/Getting_Started_with_TabPanel/
@@ -17,6 +16,7 @@ const router = useRouter(),
 let titulo = "Administración &raquo; Cursos",
   selectedIndex = ref(0),
   cursoId = ref(null),
+  cursos = ref([]),
   curso = ref(null);
 let cancel = () => {
   console.clear();
@@ -34,8 +34,12 @@ onMounted(async () => {
   console.log("id != null", id != null);
   console.log("id.length", id.length);
   if (id.length > 0) {
+    // dependenciaId.value = por.value == "capacitacion" ? 13 : 14;
+    // cursos.value= await cursoStore.CursoPorDependenciaId(dependenciaId.value);
+    // console.log("cursos =>", cursos.value);
+    cursos.value= await storeCursos.all();
     cursoId.value = id;
-    let ev = eventos.find((o) => o.id == id);
+    let ev = cursos.value.find((o) => o.id == id);
     curso.value = ev;
     console.log("ev =>", ev);
     // if (storeCursos.item != null && storeCursos.item.id == parseInt(id)) curso.value = storeCursos.item;

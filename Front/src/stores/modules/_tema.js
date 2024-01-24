@@ -20,16 +20,6 @@ export const useTemaStore = defineStore({
 					return this.items;
 				});
 		},
-		async all() {
-			console.log("Tema items =>", this.items);
-			if (this.items.length > 0) return this.items;
-			return await api()
-				.get(`tema/all`)
-				.then(async (r) => {
-					this.items = r.data;
-					return this.items;
-				});
-		},
 		async byCursoId(eId) {
 			return await api()
 				.post(`curso/by-curso-id`, eId)

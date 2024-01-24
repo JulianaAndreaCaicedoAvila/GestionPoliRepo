@@ -2,7 +2,11 @@
 import Pagination from "vuejs-paginate-next";
 import { ref, onMounted, toRaw, watch } from "vue";
 import { DxTextBox, DxSelectBox } from "devextreme-vue";
-import { useClasificadorStore, useGeografiaStore } from "@/stores";
+import {
+  useClasificadorStore,
+  useGeografiaStore,
+  useCursoStore,
+} from "@/stores";
 import { useRouter, useRoute } from "vue-router";
 import { eventos } from "@/assets/js/data";
 import DxValidator, {
@@ -13,11 +17,13 @@ import DxValidator, {
 const router = useRouter(),
   route = useRoute(),
   store = useClasificadorStore(),
-  geoStore = useGeografiaStore();
+  geoStore = useGeografiaStore(),
+  cursoStore = useCursoStore();
 let asistencias = ref([]),
   territoriales = ref([]),
   departamentos = ref([]),
   municipios = ref([]),
+  cursos = ref([]),
   por = ref(null),
   tipoAsistenciaId = ref(null),
   territorialId = ref(null),
@@ -35,14 +41,14 @@ let paginate = () => {
     currentPage.value + "=>" + pageSize.value
   );
   let items =
-    eventos.length <= pageSize.value
-      ? eventos
-      : eventos.slice(
+    cursos.value.length <= pageSize.value
+      ? cursos.value
+      : cursos.value.slice(
           (currentPage.value - 1) * pageSize.value,
           currentPage.value * pageSize.value
         );
-  console.log("items =>", items);
-  console.log("evaluaciones =>", toRaw(eventos));
+  console.log("items =>", cursos.value);
+  console.log("evaluaciones =>", toRaw(cursos.value));
   currentItems.value = items;
   store.pagina = currentPage;
 };
@@ -88,16 +94,20 @@ onMounted(async () => {
   por.value = route.params.por;
   console.log("por =>", por.value);
   dependenciaId.value = por.value == "capacitacion" ? 13 : 14;
+  // variable reactiva accedo con el .value.
+  cursos.value = await cursoStore.CursoPorDependenciaId(dependenciaId.value);
+  console.log("cursos =>", cursos.value);
   // eventos.value =
   // asistencias.value = await store.porTipoNombre("tipo_asistencia");
   // territoriales.value = await store.porTipoNombre("territorial");
   // currentPage.value = store.pagina != null ? store.pagina : 1;
   // D:\web\dnp\sinergia\app-dev\FrontEnd\demo\src\pages\evaluaciones\repositorio.vue
   currentPage.value = 1;
-  pageCount.value = Math.ceil(eventos.length / pageSize.value);
+  pageCount.value = Math.ceil(cursos.value.length / pageSize.value);
   paginate();
 });
 </script>
+
 <template>
   <div class="container pt-2 mb-3 content">
     {{ dependenciaId }}
@@ -297,8 +307,10 @@ onMounted(async () => {
                 <strong>Municipio / Ciudad:</strong> {{ item.municipioNombre
                 }}<br />
               </span>
-              <strong>Cierre inscripciones:</strong> 06/12/2023<br />
-              <strong>Fecha evento:</strong> 04/12/2023<br />
+              <strong>Cierre inscripciones:</strong>
+              {{ item.fechaFinInscripcion }}<br />
+              <strong>Fecha evento:</strong> {{ item.fechaInicioInscripcion
+              }}<br />
             </p>
           </div>
           <div class="card-footer d-flex justify-content-between">

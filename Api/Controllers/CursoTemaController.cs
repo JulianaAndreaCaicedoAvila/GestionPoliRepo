@@ -64,7 +64,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		[Authorization.AllowAnonymous]
 		public ActionResult Get(int? itemId = null)
 		{
-			var item = _db.CursoTema.FirstOrDefault(o => o.Id == itemId);
+			var item = _db.CursosTemas.FirstOrDefault(o => o.Id == itemId);
 			return Ok(item);
 		}
 

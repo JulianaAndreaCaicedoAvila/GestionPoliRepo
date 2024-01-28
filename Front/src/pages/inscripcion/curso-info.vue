@@ -11,53 +11,12 @@ const router = useRouter(),
 let cursoId = ref(null),
   cursos = ref([]),
   curso = ref(null),
-  temas = ref([]),
+  cursoTemas = ref(null),
+  cursoDocumentos = ref(null),
+  cursosPorTemas = ref([]),
+  cursosPorDocumentos = ref([]),
   itemId = ref(null),
   item = ref(null),
-  item_base = {
-    id: 0,
-    dependenciaId: null,
-    codigoVerificacion: null,
-    nombre: null,
-    descripcion: null,
-    creadoPor: null,
-    tipoCursoId: 285, // Curso
-    estadoCursoId: 359, // Sin aprobar
-    escuelaId: null,
-    bancoId: null,
-    nucleoId: null,
-    nivelId: null,
-    tipoAsistenciaId: null,
-    productoId: null,
-    indicadorId: null,
-    elaboradoPorId: 5, // No aplica
-    territorialId: null,
-    programaId: null,
-    departamentoId: null,
-    municipioId: null,
-    responsable: null,
-    correoElectronico: null,
-    telefonoContacto: 0,
-    programaCapacitacion: null,
-    horasTotales: 0,
-    numeroDias: 0,
-    publicado: false,
-    jornadaManana: false,
-    jornadaTarde: false,
-    jornadaNoche: false,
-    porcentajeValidoAsistencia: 80,
-    cantidadAulas: 1,
-    cupoAula: 10,
-    cupoTotal: 10,
-    lugarRealizacion: null,
-    fechaInicioInscripcion: new Date(),
-    fechaFinInscripcion: new Date(),
-    fechaInicio: new Date(),
-    fechaFin: new Date(),
-    horaInicio: null,
-    objetivos: null,
-    contenidos: null,
-  },
   cancel = (cb) => {
     router.push("/admin/cursos");
   };
@@ -82,12 +41,19 @@ onMounted(async () => {
   const id = route.params.id;
   if (id.length > 0) {
     cursos.value = await storeCursos.all();
+    cursosPorTemas.value = await storeCursos.allCursosTemas();
+    console.log("cursoTemas =>", toRaw(cursoTemas.value));
+    cursosPorDocumentos.value = await storeCursos.allCursosDocumentos();
     cursoId.value = id;
-    temas.value = await storeCursos.TemasPorCursoId(cursoId.value);
     let ev = cursos.value.find((o) => o.id == id);
+    let newEv = cursosPorTemas.value.find((o) => o.cursoId == id);
+    let reNewEv = cursosPorDocumentos.value.find((o) => o.id == id);
     curso.value = ev;
+    cursoTemas.value = newEv;
+    cursoDocumentos.value = reNewEv;
     console.log("ev =>", ev);
-    console.log("temas =>", toRaw(temas.value));
+    console.log("newEv =>", newEv);
+    console.log("cursoDocumentos =>", toRaw(cursoDocumentos.value));
     console.log("curso =>", toRaw(curso.value));
     console.log("CARGAR CURSO!!");
     cursoId.value = parseInt(id);
@@ -167,26 +133,14 @@ onMounted(async () => {
           <div class="col ps-5">
             <p class="m-0"><label class="tit">Temas</label></p>
             <ul class="px-3">
-              <li v-for="(item, index) in temas.temaNombre" :key="index">
-                {{ item }}
+              <li v-for="(item, index) in cursoTemas" :key="index">
+                {{ item.temaNombre }}
               </li>
             </ul>
           </div>
           <div class="col pe-5">
             <p class="m-0"><label class="tit">Objetivos</label></p>
-            <ul class="px-3">
-              <li>
-                Estudiar aprender y utilizar las diferentes tecnologicas en
-                función de administración pública.
-              </li>
-              <li>
-                Facilitar la incidencia de jóvenes pertenecientes a prácticas
-                organizativas, movimientos sociales o miembros de algún
-                ejercicio o práctica política con el Estado para causar mayor
-                impacto en el desarrollo de prácticas, procesos de gestión
-                juvenil.
-              </li>
-            </ul>
+            {{ curso.objetivos }}
           </div>
         </div>
         <div class="row p-3 pb-0 pt-4 bbd" v-if="item">

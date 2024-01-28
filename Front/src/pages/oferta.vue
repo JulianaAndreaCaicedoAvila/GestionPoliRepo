@@ -3,7 +3,14 @@ import Pagination from "vuejs-paginate-next";
 import { ref, onMounted, toRaw, watch } from "vue";
 import { DxTextBox, DxSelectBox } from "devextreme-vue";
 import {
+  useProductoStore,
+  useBancoStore,
+  useNucleoStore,
+  useIndicadorStore,
+  useProgramaStore,
   useClasificadorStore,
+  useEscuelaStore,
+  useNivelStore,
   useGeografiaStore,
   useCursoStore,
 } from "@/stores";
@@ -18,6 +25,13 @@ const router = useRouter(),
   route = useRoute(),
   store = useClasificadorStore(),
   geoStore = useGeografiaStore(),
+  storeProductos = useProductoStore(),
+  storeBancos = useBancoStore(),
+  storeNucleos = useNucleoStore(),
+  storeNiveles = useNivelStore(),
+  storeEscuelas = useEscuelaStore(),
+  storeIndicadores = useIndicadorStore(),
+  storeProgramas = useProgramaStore(),
   cursoStore = useCursoStore();
 let asistencias = ref([]),
   territoriales = ref([]),
@@ -25,13 +39,25 @@ let asistencias = ref([]),
   municipios = ref([]),
   cursos = ref([]),
   por = ref(null),
+  indicadores = ref([]),
+  dependencias = ref([]),
+  estados = ref([]),
+  tipoCurso = ref([]),
+  escuelas = ref([]),
+  creadoPor = ref([]),
+  productos = ref([]),
+  nucleos = ref([]),
+  niveles = ref([]),
+  bancos = ref([]),
+  programas = ref([]),
   tipoAsistenciaId = ref(null),
+  escuelaId = ref(null),
   territorialId = ref(null),
   dependenciaId = ref(null),
   departamentoId = ref(null),
   municipioId = ref(null);
 let currentPage = ref(1),
-  pageSize = ref(6),
+  pageSize = ref(2),
   pageCount = ref(0),
   currentItems = ref([]);
 // https://codesandbox.io/s/vue-paginate-vuejs-paginate-next-client-side-pagination-forked-h5dmk5
@@ -89,6 +115,43 @@ let itemSelected = async (e) => {
       municipios.value = await geoStore.municipiosPorDepartamentoId(v);
     console.log("municipios =>", toRaw(municipios.value));
   }
+  if (id == "escuelaId") {
+    niveles.value = [];
+    item.value.nivelId = null;
+    if (v !== null && v !== undefined)
+      niveles.value = await storeNiveles.nivelesPorEscuelaId(v);
+    console.log("niveles =>", toRaw(niveles.value));
+  }
+  if (id == "dependenciaId") {
+    productos.value = [];
+    item.value.productoId = null;
+    if (v !== null && v !== undefined)
+      productos.value = await storeProductos.productosPorDependenciaId(v);
+    console.log("productos =>", toRaw(productos.value));
+  }
+  if (id == "productoId") {
+    indicadores.value = [];
+    item.value.indicadorId = null;
+    if (v !== null && v !== undefined)
+      indicadores.value = await storeIndicadores.indicadorPorProductoId(v);
+    console.log("indicadores =>", toRaw(indicadores.value));
+  }
+  if (id == "bancoId") {
+    nucleos.value = [];
+    programas.value = [];
+    item.value.nucleoId = null;
+    item.value.programaId = null;
+    if (v !== null && v !== undefined)
+      nucleos.value = await storeNucleos.nucleosPorBancoProgramaId(v);
+    console.log("nucleos =>", toRaw(nucleos.value));
+  }
+  if (id == "nucleoId") {
+    programas.value = [];
+    item.value.programaId = null;
+    if (v !== null && v !== undefined)
+      programas.value = await storeProgramas.programaPorNucleoId(v);
+    console.log("programas =>", toRaw(programas.value));
+  }
 };
 onMounted(async () => {
   por.value = route.params.por;
@@ -96,10 +159,10 @@ onMounted(async () => {
   dependenciaId.value = por.value == "capacitacion" ? 13 : 14;
   // variable reactiva accedo con el .value.
   cursos.value = await cursoStore.CursoPorDependenciaId(dependenciaId.value);
+  escuelas.value = await storeEscuelas.all();
   console.log("cursos =>", cursos.value);
-  // eventos.value =
-  // asistencias.value = await store.porTipoNombre("tipo_asistencia");
-  // territoriales.value = await store.porTipoNombre("territorial");
+  asistencias.value = await store.porTipoNombre("tipo_asistencia");
+  territoriales.value = await store.porTipoNombre("territorial");
   // currentPage.value = store.pagina != null ? store.pagina : 1;
   // D:\web\dnp\sinergia\app-dev\FrontEnd\demo\src\pages\evaluaciones\repositorio.vue
   currentPage.value = 1;
@@ -160,8 +223,8 @@ onMounted(async () => {
                         :show-clear-button="true"
                         class="form-control"
                         display-expr="nombre"
-                        v-model="tipoAsistenciaId"
-                        placeholder="Tipo de asistencia"
+                        v-model="escuelaId"
+                        placeholder="Escuelas"
                         value-expr="id"
                         @value-changed="itemSelected"
                       >
@@ -236,6 +299,24 @@ onMounted(async () => {
                         </DxValidator>
                       </DxSelectBox>
                     </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="tit">Escuelas</label>
+                      <DxSelectBox
+                        id="escuelaId"
+                        :data-source="escuelas"
+                        :show-clear-button="true"
+                        class="form-control"
+                        display-expr="nombre"
+                        v-model="tipoAsistenciaId"
+                        placeholder="Tipo de asistencia"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                      >
+                        <DxValidator>
+                          <DxRequiredRule />
+                        </DxValidator>
+                      </DxSelectBox>
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col d-flex justify-content-between">
@@ -294,7 +375,7 @@ onMounted(async () => {
         <div class="card evento">
           <img
             class="card-img-top bb h-6vw"
-            :src="'/assets/img/' + item.imagen"
+            :src="'/assets/img/' + item.imagenCurso"
             alt="Card image cap"
           />
           <div class="card-body py-2 px-4">

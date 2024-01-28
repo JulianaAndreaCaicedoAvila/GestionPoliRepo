@@ -154,12 +154,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
-		[HttpGet("temas")]// api/curso/temas
-		public ActionResult CursosTemas()
-		{
-			var items = _db.CursosTemas?.ToList();
-			return Ok(items);
-		}
+
 
 
 		[HttpGet("dep/{dependenciaId?}")] // /api/curso/dep/13 o 14
@@ -175,6 +170,20 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		public ActionResult GetAll()
 		{
 			var items = _db.Cursos.ToList();
+			return Ok(items);
+		}
+
+		[HttpGet("cursos-temas")]// api/curso/temas
+		public ActionResult CursosTemas()
+		{
+			var items = _db.CursosTemas?.ToList();
+			return Ok(items);
+		}
+
+		[HttpGet("cursos-documentos")]// api/curso/temas
+		public ActionResult CursosDocumentos()
+		{
+			var items = _db.CursosDocumentos?.ToList();
 			return Ok(items);
 		}
 

@@ -17,8 +17,11 @@ let cursoId = ref(null),
   cursosPorDocumentos = ref([]),
   itemId = ref(null),
   item = ref(null),
+  next = (cb) => {
+    router.push("/inscripcion/curso-datos");
+  },
   cancel = (cb) => {
-    router.push("/admin/cursos");
+    router.push("/oferta");
   };
 
 // Se expone como evento en el componente
@@ -178,7 +181,7 @@ onMounted(async () => {
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
           <span
-            ><a class="btn btn-gray" @click.prevent="next"
+            ><a class="btn btn-gray" @click.prevent="cancel"
               ><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a
             ></span
           >

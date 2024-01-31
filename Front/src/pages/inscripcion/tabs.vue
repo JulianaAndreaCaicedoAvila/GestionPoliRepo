@@ -23,7 +23,7 @@ let cancel = () => {
   console.log(_sep);
   storeCursos.item = data;
   console.log("Cancel in tabs!");
-  router.push("/admin/cursos");
+  router.push("/oferta");
 };
 defineExpose({ cancel });
 onMounted(async () => {
@@ -37,7 +37,7 @@ onMounted(async () => {
     // dependenciaId.value = por.value == "capacitacion" ? 13 : 14;
     // cursos.value= await cursoStore.CursoPorDependenciaId(dependenciaId.value);
     // console.log("cursos =>", cursos.value);
-    cursos.value= await storeCursos.all();
+    cursos.value = await storeCursos.all();
     cursoId.value = id;
     let ev = cursos.value.find((o) => o.id == id);
     curso.value = ev;

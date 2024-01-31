@@ -55,7 +55,8 @@ let asistencias = ref([]),
   territorialId = ref(null),
   dependenciaId = ref(null),
   departamentoId = ref(null),
-  municipioId = ref(null);
+  municipioId = ref(null),
+  tipoCursoId = ref(null);
 let currentPage = ref(1),
   pageSize = ref(2),
   pageCount = ref(0),
@@ -117,52 +118,24 @@ let itemSelected = async (e) => {
   }
   if (id == "escuelaId") {
     niveles.value = [];
-    item.value.nivelId = null;
+    nivelId.value = null;
     if (v !== null && v !== undefined)
       niveles.value = await storeNiveles.nivelesPorEscuelaId(v);
     console.log("niveles =>", toRaw(niveles.value));
-  }
-  if (id == "dependenciaId") {
-    productos.value = [];
-    item.value.productoId = null;
-    if (v !== null && v !== undefined)
-      productos.value = await storeProductos.productosPorDependenciaId(v);
-    console.log("productos =>", toRaw(productos.value));
-  }
-  if (id == "productoId") {
-    indicadores.value = [];
-    item.value.indicadorId = null;
-    if (v !== null && v !== undefined)
-      indicadores.value = await storeIndicadores.indicadorPorProductoId(v);
-    console.log("indicadores =>", toRaw(indicadores.value));
-  }
-  if (id == "bancoId") {
-    nucleos.value = [];
-    programas.value = [];
-    item.value.nucleoId = null;
-    item.value.programaId = null;
-    if (v !== null && v !== undefined)
-      nucleos.value = await storeNucleos.nucleosPorBancoProgramaId(v);
-    console.log("nucleos =>", toRaw(nucleos.value));
-  }
-  if (id == "nucleoId") {
-    programas.value = [];
-    item.value.programaId = null;
-    if (v !== null && v !== undefined)
-      programas.value = await storeProgramas.programaPorNucleoId(v);
-    console.log("programas =>", toRaw(programas.value));
   }
 };
 onMounted(async () => {
   por.value = route.params.por;
   console.log("por =>", por.value);
   dependenciaId.value = por.value == "capacitacion" ? 13 : 14;
-  // variable reactiva accedo con el .value.
   cursos.value = await cursoStore.CursoPorDependenciaId(dependenciaId.value);
   escuelas.value = await storeEscuelas.all();
-  console.log("cursos =>", cursos.value);
   asistencias.value = await store.porTipoNombre("tipo_asistencia");
+  tipoCurso.value = await store.porTipoNombre("tipo_curso");
   territoriales.value = await store.porTipoNombre("territorial");
+  console.log("cursos =>", cursos.value);
+  console.log("asistencias =>", asistencias.value);
+  console.log("tipo curso =>", tipoCurso.value);
   // currentPage.value = store.pagina != null ? store.pagina : 1;
   // D:\web\dnp\sinergia\app-dev\FrontEnd\demo\src\pages\evaluaciones\repositorio.vue
   currentPage.value = 1;
@@ -223,8 +196,8 @@ onMounted(async () => {
                         :show-clear-button="true"
                         class="form-control"
                         display-expr="nombre"
-                        v-model="escuelaId"
-                        placeholder="Escuelas"
+                        v-model="tipoAsistenciaId"
+                        placeholder="asistencias"
                         value-expr="id"
                         @value-changed="itemSelected"
                       >
@@ -300,15 +273,65 @@ onMounted(async () => {
                       </DxSelectBox>
                     </div>
                     <div class="col-md-3 mb-3">
+                      <label class="tit">Tipo de Curso</label>
+                      <DxSelectBox
+                        id="tipoCursoId"
+                        :data-source="tipoCurso"
+                        :grouped="false"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        display-expr="nombre"
+                        class="form-control"
+                        v-model="tipoCursoId"
+                        placeholder="tipo de curso"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                        item-template="item"
+                      >
+                        <DxValidator>
+                          <DxRequiredRule />
+                        </DxValidator>
+                      </DxSelectBox>
+                    </div>
+                    <div class="col-md-3 mb-3">
                       <label class="tit">Escuelas</label>
                       <DxSelectBox
                         id="escuelaId"
+                        :grouped="false"
                         :data-source="escuelas"
+                        :min-search-length="2"
+                        :search-enabled="true"
                         :show-clear-button="true"
+                        :show-data-before-search="true"
                         class="form-control"
                         display-expr="nombre"
-                        v-model="tipoAsistenciaId"
+                        v-model="escuelaId"
                         placeholder="Tipo de asistencia"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                      >
+                        <DxValidator>
+                          <DxRequiredRule />
+                        </DxValidator>
+                      </DxSelectBox>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="tit">Niveles</label>
+                      <DxSelectBox
+                        id="nivelId"
+                        :grouped="false"
+                        :data-source="niveles"
+                        :disabled="niveles.length <= 0"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        class="form-control"
+                        display-expr="nombre"
+                        v-model="nivelId"
+                        placeholder="Niveles"
                         value-expr="id"
                         @value-changed="itemSelected"
                       >
@@ -375,7 +398,7 @@ onMounted(async () => {
         <div class="card evento">
           <img
             class="card-img-top bb h-6vw"
-            :src="'/assets/img/' + item.imagenCurso"
+            :src="'/store/img/' + item.imagenCurso"
             alt="Card image cap"
           />
           <div class="card-body py-2 px-4">

@@ -5,7 +5,13 @@ import List from "devextreme/ui/list";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useTemaStore, useEncuestaStore, useAuthStore } from "@/stores";
+import {
+  useTemaStore,
+  useEncuestaStore,
+  useAuthStore,
+  useClasificadorStore,
+  useGeografiaStore,
+} from "@/stores";
 import DxValidator, {
   DxRequiredRule,
   DxStringLengthRule,
@@ -44,17 +50,24 @@ import {
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
   temaStore = useTemaStore(),
-  encuestaStore = useEncuestaStore(),
+  store = useClasificadorStore(),
+  geoStore = useGeografiaStore(),
   storeAuth = useAuthStore();
 let titulo = "Temas",
+  tipoDocumento = ref([]),
+  departamentos = ref([]),
+  municipios = ref([]),
+  genero = ref([]),
+  nivelEscolar = ref([]),
+  estadoCivil = ref([]),
   list1 = null,
   list2 = null,
   itemId = ref(null),
   valGroup = ref(null),
   dxStore = ref(null),
-  temasAll = ref([]),
   docentes = ref([]),
   temas = ref([]),
+  entidad = ref([]),
   temasFrom = ref([]),
   temasTo = ref([]),
   fromData = ref([]),
@@ -64,16 +77,23 @@ let titulo = "Temas",
   item = ref({
     id: 0,
     cursoId: props.itemId,
-    temaId: null,
-    docenteId: null,
-    lugarRealizacion: null,
-    direccionRealizacion: null,
-    activo: true,
-    creadoEl: null,
-    creadoPor: null,
-    editadoEl: null,
-    editadoPor: null,
-    orden: 0,
+    tipoDocumentoId: null,
+    departamentoId: null,
+    municipioId: null,
+    entidad: null,
+    genero: null,
+    nivelEscolar: null,
+    estadoCivil: null,
+    cargoActual: null,
+    documentoIdentidad: null,
+    nombres: null,
+    apellidos: null,
+    fechaNacimiento: new Date(),
+    profesion: null,
+    teleno: null,
+    celular: null,
+    correo: null,
+    direccion: null,
   }),
   item_copy = Clone(item.value),
   panelData = null,
@@ -94,8 +114,11 @@ let titulo = "Temas",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
-        } el tema "<span class="font-weight-semibold">${data.temaNombre}</span>"?`,
+      text: `¿Realmente desea ${
+        data.activo ? "desactivar" : "activar"
+      } el tema "<span class="font-weight-semibold">${
+        data.temaNombre
+      }</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid-tema");
         panelGrid.lock(
@@ -114,7 +137,7 @@ let titulo = "Temas",
           }
         );
       },
-      onCancel: () => { },
+      onCancel: () => {},
     });
   },
   addStart = async (data) => {
@@ -215,30 +238,26 @@ let titulo = "Temas",
         }
       );
     }
-  },
-  getData = () => {
-    dxStore.value = DxStore({
-      key: ["id"],
-      endPoint: "curso/temas-dx",
-      userData: JSON.stringify({ id: props.itemId }),
-      onLoading: function (loadOptions) {
-        $("#grid-tema").lock("Cargando");
-        console.log("loadOptions =>", loadOptions);
-        console.log("onLoading");
-      },
-      onLoaded: function (results) {
-        console.log("results", results);
-        console.log("onLoaded!");
-        $("#grid-tema").unlock();
-        $("#data-tema").unlock();
-      },
-    })
   };
+let itemSelected = async (e) => {
+  console.log(_sep);
+  console.log("itemSelected =>", e);
+  let v = e.value;
+  let id = $(e.element).attr("id");
+  console.log("id =>", id);
+  console.log("v =>", v);
+  if (id == "departamentoId") {
+    municipios.value = [];
+    municipioId.value = null;
+    if (v !== null && v !== undefined)
+      municipios.value = await geoStore.municipiosPorDepartamentoId(v);
+  }
+};
 
 // Propiedades
 let props = defineProps({
   itemId: { type: Number, default: null, required: false },
-  item: { type: Object, default: null, required: false }
+  item: { type: Object, default: null, required: false },
 });
 
 onMounted(async () => {
@@ -250,7 +269,16 @@ onMounted(async () => {
   // console.log("temasAll =>", temasAll.value);
   // list1 = List.getInstance(document.getElementById("list1"));
   // list2 = List.getInstance(document.getElementById("list2"));
-  // console.log("route.name =>", route.name);
+  // // console.log("route.name =>", route.name);
+  tipoDocumento.value = await store.porTipoNombre("tipo_documento_identidad");
+  genero.value = await store.porTipoNombre("genero");
+  nivelEscolar.value = await store.porTipoNombre("nivel_escolar");
+  estadoCivil.value = await store.porTipoNombre("estado_civil");
+  entidad.value = await store.porTipoNombre("entidad");
+  departamentos.value = await geoStore.dptoAll();
+  console.log("nivel Escolar =>", nivelEscolar.value);
+  // console.log("tipo documentos =>", tipoDocumento.value);
+  console.log("genero =>", genero.value);
   itemId.value = props.itemId;
   item.value = props.item;
   // getData();
@@ -269,9 +297,20 @@ onMounted(async () => {
               <div class="row">
                 <div class="col-md-4 mb-3">
                   <label class="tit">Tipo de documento</label>
-                  <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                    :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                    class="form-control" placeholder="Tipo" value-expr="id" display-expr="nombre">
+                  <DxSelectBox
+                    id="tipoDocumentoId"
+                    :data-source="tipoDocumento"
+                    :grouped="false"
+                    :min-search-length="2"
+                    :search-enabled="true"
+                    v-model="item.tipoDocumentoId"
+                    :show-clear-button="true"
+                    :show-data-before-search="true"
+                    class="form-control"
+                    placeholder="Tipo"
+                    value-expr="id"
+                    display-expr="nombre"
+                  >
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -279,9 +318,15 @@ onMounted(async () => {
                 </div>
                 <div class="col-md-4 mb-3">
                   <label class="tit">Documento</label>
-                  <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true"
-                    v-model="item.direccionRealizacion" class="form-control" placeholder="Documento"
-                    @focus-out="$capitalizeAll">
+                  <DxTextBox
+                    id="documento"
+                    value-change-event="keyup"
+                    :show-clear-button="true"
+                    v-model="item.documentoIdentidad"
+                    class="form-control"
+                    placeholder="Documento"
+                    @focus-out="$capitalizeAll"
+                  >
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -289,9 +334,20 @@ onMounted(async () => {
                 </div>
                 <div class="col-md-4 mb-3">
                   <label class="tit">Género</label>
-                  <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                    :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                    class="form-control" placeholder="Género" value-expr="id" display-expr="nombre">
+                  <DxSelectBox
+                    id="genero"
+                    :data-source="genero"
+                    :grouped="false"
+                    :min-search-length="2"
+                    :search-enabled="true"
+                    v-model="item.genero"
+                    :show-clear-button="true"
+                    :show-data-before-search="true"
+                    class="form-control"
+                    placeholder="Género"
+                    value-expr="id"
+                    display-expr="nombre"
+                  >
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -301,8 +357,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Nombres</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                placeholder="Nombres" @focus-out="$capitalizeAll">
+              <DxTextBox
+                id="nombre"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                :v-model="item.nombres"
+                class="form-control"
+                placeholder="Nombres"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -310,8 +373,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Apellidos</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                placeholder="Apellidos" @focus-out="$capitalizeAll">
+              <DxTextBox
+                id="apellidos"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                :v-model="item.apellidos"
+                class="form-control"
+                placeholder="Apellidos"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -319,8 +389,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Fecha de nacimiento</label>
-              <DxDateBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                placeholder="Fecha" @focus-out="$capitalizeAll">
+              <DxDateBox
+                id="fechaNacimiento"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                :v-model="item.fechaNacimiento"
+                class="form-control"
+                placeholder="Fecha"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -328,8 +405,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Profesión</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                placeholder="Profesión" @focus-out="$capitalizeAll">
+              <DxTextBox
+                id="profesion"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                :v-model="item.profesion"
+                class="form-control"
+                placeholder="Profesión"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -337,9 +421,20 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Nivel escolar</label>
-              <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Nivel escolar" value-expr="id" display-expr="nombre">
+              <DxSelectBox
+                id="nivelEscolar"
+                :data-source="nivelEscolar"
+                :grouped="false"
+                :min-search-length="2"
+                :search-enabled="true"
+                :show-clear-button="true"
+                :show-data-before-search="true"
+                v-model="item.nivelEscolar"
+                class="form-control"
+                placeholder="Nivel escolar"
+                value-expr="id"
+                display-expr="nombre"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -347,9 +442,20 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Estado civil</label>
-              <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Estado civil" value-expr="id" display-expr="nombre">
+              <DxSelectBox
+                id="estadoCivil"
+                :data-source="estadoCivil"
+                :grouped="false"
+                :min-search-length="2"
+                :search-enabled="true"
+                :show-clear-button="true"
+                :show-data-before-search="true"
+                v-model="item.estadoCivil"
+                class="form-control"
+                placeholder="Estado civil"
+                value-expr="id"
+                display-expr="nombre"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -359,8 +465,15 @@ onMounted(async () => {
               <div class="row">
                 <div class="col-md-3 mb-3">
                   <label class="tit">Teléfono</label>
-                  <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                    placeholder="Teléfono" @focus-out="$capitalizeAll">
+                  <DxTextBox
+                    id="telefono"
+                    value-change-event="keyup"
+                    :show-clear-button="true"
+                    v-model="item.telefono"
+                    class="form-control"
+                    placeholder="Teléfono"
+                    @focus-out="$capitalizeAll"
+                  >
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -368,8 +481,15 @@ onMounted(async () => {
                 </div>
                 <div class="col-md-4 mb-3">
                   <label class="tit">Celular</label>
-                  <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                    placeholder="Celular" @focus-out="$capitalizeAll">
+                  <DxTextBox
+                    id="celular"
+                    value-change-event="keyup"
+                    :show-clear-button="true"
+                    v-model="item.celular"
+                    class="form-control"
+                    placeholder="Celular"
+                    @focus-out="$capitalizeAll"
+                  >
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -377,8 +497,15 @@ onMounted(async () => {
                 </div>
                 <div class="col-md-5 mb-3">
                   <label class="tit">Correo</label>
-                  <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                    placeholder="Correo" @focus-out="$capitalizeAll">
+                  <DxTextBox
+                    id="correo"
+                    value-change-event="keyup"
+                    :show-clear-button="true"
+                    v-model="item.correo"
+                    class="form-control"
+                    placeholder="Correo"
+                    @focus-out="$capitalizeAll"
+                  >
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -388,8 +515,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-5 mb-3">
               <label class="tit">Dirección</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                placeholder="Dirección" @focus-out="$capitalizeAll">
+              <DxTextBox
+                id="direccion"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.direccion"
+                class="form-control"
+                placeholder="Dirección"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -397,9 +531,21 @@ onMounted(async () => {
             </div>
             <div class="col-md-6 mb-3">
               <label class="tit">Departamento</label>
-              <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Departamento" value-expr="id" display-expr="nombre">
+              <DxSelectBox
+                id="departamentoId"
+                :data-source="departamentos"
+                :grouped="false"
+                :min-search-length="2"
+                :search-enabled="true"
+                @value-changed="itemSelected"
+                v-model="item.departamentoId"
+                :show-clear-button="true"
+                :show-data-before-search="true"
+                class="form-control"
+                placeholder="Departamento"
+                value-expr="id"
+                display-expr="nombre"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -407,9 +553,21 @@ onMounted(async () => {
             </div>
             <div class="col-md-6 mb-3">
               <label class="tit">Municipio</label>
-              <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Municipio" value-expr="id" display-expr="nombre">
+              <DxSelectBox
+                id="municipioId"
+                :data-source="municipios"
+                :disabled="municipios.length <= 0"
+                :grouped="false"
+                :min-search-length="2"
+                :search-enabled="true"
+                v-model="item.municipioId"
+                :show-clear-button="true"
+                :show-data-before-search="true"
+                class="form-control"
+                placeholder="Municipio"
+                value-expr="id"
+                display-expr="nombre"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -422,8 +580,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-6 mb-3">
               <label class="tit">Entidad donde trabaja</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                placeholder="Entidad donde trabaja" @focus-out="$capitalizeAll">
+              <DxTextBox
+                id="entidad"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                class="form-control"
+                placeholder="Entidad donde trabaja"
+                v-model="item.entidad"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -431,8 +596,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-6 mb-3">
               <label class="tit">Cargo actual</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                placeholder="Cargo actual" @focus-out="$capitalizeAll">
+              <DxTextBox
+                id="cargo"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                class="form-control"
+                v-model="item.cargoActual"
+                placeholder="Cargo actual"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -444,10 +616,16 @@ onMounted(async () => {
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
           <span>
-            <a class="btn btn-gray me-3" @click.prevent="next"><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a>
-            <a class="btn btn-main" @click.prevent="next"><i class="me-1 fa-solid fa-circle-left"></i> ANTERIOR</a>
+            <a class="btn btn-gray me-3" @click.prevent="next"
+              ><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a
+            >
+            <a class="btn btn-main" @click.prevent="next"
+              ><i class="me-1 fa-solid fa-circle-left"></i> ANTERIOR</a
+            >
           </span>
-          <a class="btn btn-main" @click.prevent="next">SIGUIENTE <i class="ms-1 fa-solid fa-circle-right"></i></a>
+          <a class="btn btn-main" @click.prevent="next"
+            >SIGUIENTE <i class="ms-1 fa-solid fa-circle-right"></i
+          ></a>
         </div>
       </div>
     </div>

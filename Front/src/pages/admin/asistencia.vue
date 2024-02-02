@@ -45,59 +45,26 @@ onMounted(async () => {
       <div class="card-header main d-flex justify-content-between">
         <span class=" d-flex justify-content-between">
           <i class="fa-solid fa-gears"></i>
-          <span v-if="cursoId == 0">Administración &raquo; Cursos &raquo; Nuevo</span>
-          <span v-else>
-            <span v-if="curso">Administración &raquo; Cursos<br>"{{ curso.nombre }}"</span>
-            <span v-else>Cargando curso...</span>
-          </span>
+          <span v-if="curso">Administración &raquo; Asistencia<br>"{{ curso.nombre }}"</span>
         </span>
         <span>
-          <router-link :to="{ path: '/admin/cursos' }" class="btn btn-trans">
+          <router-link :to="{ path: '/admin/participantes' }" class="btn btn-trans">
             <i class="fa-solid fa-circle-arrow-left"></i>VOLVER
           </router-link>
         </span>
       </div>
-      <div class="card-body" v-if="cursoId > 0">
+      <div class="card-body" v-if="curso">
         <div class="row" v-if="curso.id > 0">
           <div class="col-md-12 mb-2 d-flex justify-content-between">
             <p><i class="fa-solid fa-circle-info me-1 color-main"></i>
-              Debe completar toda la información del curso para
-              someterlo a revisión.</p>
-            <p> <b>Estado del curso:</b> {{ curso.estadoCursoNombre }}</p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p> <b>Participantes en el curso:</b> {{ curso.participantes }}</p>
           </div>
         </div>
         <div class="row" v-if="curso">
           <div class="col-md-12">
-            <DxTabPanel v-model:selected-index="selectedIndex" :loop="false" :scroll-by-content="true"
-              :show-nav-buttons="true" :swipe-enabled="false" :scrolling-enabled="true">
-              <DxItem title="1. Información">
-                <Datos :item="curso" :item-id="cursoId" @on-cancel="cancel" />
-              </DxItem>
-              <DxItem :title="'2. Temas (' + curso.temas + ')'">
-                <Temas :item="curso" :item-id="cursoId" @on-cancel="cancel" />
-              </DxItem>
-              <DxItem :title="'3. Encuestas (' + curso.encuestas + ')'">
-                <Encuestas :item="curso" :item-id="cursoId" @on-cancel="cancel" />
-              </DxItem>
-              <DxItem :title="'4. Fechas (' + curso.fechas + ')'">
-                <Dias :item="curso" :item-id="cursoId" @on-cancel="cancel" />
-              </DxItem>
-              <DxItem :title="'5. Archivos (' + curso.documentos + ')'">
-                <Archivos :item="curso" :item-id="cursoId" @on-cancel="cancel" />
-              </DxItem>
-            </DxTabPanel>
-          </div>
-        </div>
-      </div>
-      <div class="card-body" v-else>
-        <div class="row">
-          <div class="col-md-12">
-            <DxTabPanel :loop="false" :scroll-by-content="true" :show-nav-buttons="true" :swipe-enabled="false"
-              :scrolling-enabled="true">
-              <DxItem title="1. Información">
-                <Datos @on-cancel="cancel" />
-              </DxItem>
-            </DxTabPanel>
+            ACÁ VA LA GRILLA CON LOS PARTICIPANTES<br />
+            Meteremos dinámicamente las columnas de fechas y asistencia
           </div>
         </div>
       </div>

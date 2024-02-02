@@ -133,13 +133,14 @@ let titulo = "Administración &raquo; Participantes",
     });
   },
   edit = async (data) => {
+    console.clear();
     let id = "";
     if (typeof (data) != "undefined") {
       storeCursos.item = data;
       id = data.id;
       console.log("storeCursos.item =>", toRaw(storeCursos.item));
     }
-    router.push(`/admin/curso/${id}`);
+    router.push(`/admin/asistencia/${id}`);
   },
   cancel = (cb) => {
     // console.clear();
@@ -222,8 +223,6 @@ onMounted(async () => {
               <DxColumn data-field="nombre" caption="Curso" :visible="true" :fixed="false" fixed-position="left" />
               <DxColumn data-field="descripcion" caption="Descripción" :visible="false" />
               <DxColumn data-field="territorialNombre" caption="Territorial" :visible="true" :width="250" />
-              <DxColumn data-field="participantes" caption="Participantes" :visible="true" alignment="center"
-                :width="100" />
               <DxColumn data-field="porcentajeValidoAsistencia" caption="Asistencia" :visible="false" :width="100"
                 alignment="center" format="#'%'" />
               <!-- <DxColumn
@@ -250,14 +249,17 @@ onMounted(async () => {
                 <span v-if="data.data.activo">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false"
+              <DxColumn data-field="participantes" caption="Participantes" :visible="true" alignment="center"
+                :width="135" />
+              <DxColumn :width="50" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false"
                 fixed-position="right" />
               <template #tpl="{ data }">
                 <span class="cmds">
-                  <a title="Asistencia" class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)" href="#">
+                  <a title="Gestionar asistencia..." class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)"
+                    href="#">
                     <i class="fa-sharp fa-solid fa-screen-users fa-lg"></i>
                   </a>
-                  <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)" href="#">
+                  <!-- <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)" href="#">
                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                   </a>
                   <a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
@@ -267,7 +269,7 @@ onMounted(async () => {
                   <a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)"
                     href="#">
                     <i class="fa-regular fa-square-check fa-lg"></i>
-                  </a>
+                  </a> -->
                 </span>
               </template>
             </DxDataGrid>

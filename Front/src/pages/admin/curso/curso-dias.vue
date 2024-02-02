@@ -4,6 +4,7 @@ import NumberBox from "devextreme/ui/number_box";
 import { useRoute } from "vue-router";
 import { useGenericStore } from "@/stores";
 import { ref, toRaw, watch, onMounted } from "vue";
+import Cmds from "@/pages/admin/curso/_comandos.vue";
 import DxValidator, { DxRequiredRule, } from "devextreme-vue/validator";
 import { DxNumberBox, DxDateBox, DxValidationGroup } from "devextreme-vue";
 const store = useGenericStore();
@@ -97,6 +98,12 @@ let itemId = ref(null),
 		e.event.preventDefault();
 	};
 
+// Se expone como evento en el componente
+const emit = defineEmits(['onCancel'])
+const callOnCancel = () => {
+	emit('onCancel')
+}
+
 // Propiedades
 let props = defineProps({
 	itemId: { type: Number, default: null, required: false },
@@ -175,15 +182,18 @@ onMounted(async () => {
 					</div>
 				</div>
 			</DxValidationGroup>
-			<div class="card-footer">
+			<!-- <div class="card-footer">
 				<div class="d-flex justify-content-between align-items-center">
 					<span></span>
-					<!-- <a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a> -->
+					<a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
 					<a :class="'btn btn-main' + (porcentaje < 100 ? ' disabled' : '')" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i
 							class="fa-solid fa-floppy-disk"></i></a>
 				</div>
-			</div>
+			</div> -->
 		</div>
+
+		<Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" @on-save="save" :show-save="true" />
+
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">
 				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span

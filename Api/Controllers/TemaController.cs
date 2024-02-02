@@ -61,6 +61,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpGet("all")]
+		[Authorization.AllowAnonymous]
 		public ActionResult GetAll()
 		{
 			var items = _db.Temas?.ToList();

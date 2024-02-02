@@ -54,6 +54,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpGet("{itemId?}")] // /api/banco/5 => CREATE - 
 		public ActionResult Get(int? itemId = null)
 		{
@@ -61,6 +62,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(item);
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpGet("all")] // /api/banco/all => Obtiene todos los items
 		public ActionResult GetAll()
 		{

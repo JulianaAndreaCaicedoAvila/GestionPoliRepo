@@ -87,6 +87,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpGet("all")] // /api/encuesta/all => Obtiene todos los items
+		[Authorization.AllowAnonymous]
 		public ActionResult GetAll()
 		{
 			var items = _db.Encuesta?.ToList();

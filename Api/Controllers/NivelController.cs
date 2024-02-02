@@ -67,7 +67,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var item = _db.Nivel.FirstOrDefault(o => o.Id == itemId);
 			return Ok(item);
 		}
-
+		[Authorization.AllowAnonymous]
 		[HttpGet("all")]
 		public ActionResult GetAll()
 		{

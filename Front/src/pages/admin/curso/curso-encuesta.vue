@@ -4,6 +4,7 @@ import DxStore from "@/utils/dx";
 import List from "devextreme/ui/list";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
+import Cmds from "@/pages/admin/curso/_comandos.vue";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
 import { useClasificadorStore, useEncuestaStore, useAuthStore } from "@/stores";
 import DxValidator, {
@@ -46,7 +47,7 @@ const route = useRoute(),
   store = useClasificadorStore(),
   encuestaStore = useEncuestaStore(),
   storeAuth = useAuthStore();
-let titulo = "Temas",
+let titulo = "Encuestas",
   list1 = null,
   list2 = null,
   itemId = ref(null),
@@ -171,7 +172,7 @@ let titulo = "Temas",
     } else {
       // CUandoes válido
       panelData.lock(
-        `${item.id == 0 ? "Adicionando" : "Actualizando"} temas`,
+        `${item.id == 0 ? "Adicionando" : "Actualizando"} encuestas`,
         async function () {
           let dto = toRaw(item.value);
           console.log("dto =>", dto);
@@ -206,6 +207,12 @@ let titulo = "Temas",
       },
     })
   };
+
+// Se expone como evento en el componente
+const emit = defineEmits(['onCancel'])
+const callOnCancel = () => {
+  emit('onCancel')
+}
 
 // Propiedades
 let props = defineProps({
@@ -299,7 +306,7 @@ onMounted(async () => {
           </DxSummary>
           <DxPaging :page-size="15" />
           <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
-            :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} temas (página {0} de {1})" />
+            :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} encuestas (página {0} de {1})" />
           <DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
             :allow-sorting="true" alignment="center" />
           <DxColumn data-field="descripcion" caption="Encuesta" :visible="true" />
@@ -333,6 +340,9 @@ onMounted(async () => {
       </div>
     </div>
 
+    <!-- {{ item }} -->
+
+    <Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" />
 
     <div class="card mt-4" v-if="$conf.debug">
       <div class="card-body">

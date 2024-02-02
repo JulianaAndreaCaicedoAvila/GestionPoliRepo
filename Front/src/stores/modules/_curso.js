@@ -5,10 +5,12 @@ export const useCursoStore = defineStore({
 	state: () => ({
 		item: null,
 		items: [],
+		itemsPublicados: [],
 	}),
 	actions: {
 		limpiar() {
 			this.items = [];
+			this.itemsPublicados = [];
 		},
 		async all() {
 			console.log("Curso items =>", this.items);
@@ -18,6 +20,16 @@ export const useCursoStore = defineStore({
 				.then(async (r) => {
 					this.items = r.data;
 					return this.items;
+				});
+		},
+		async publicados() {
+			console.log("Cursos publicados =>", this.itemsPublicados);
+			if (this.itemsPublicados.length > 0) return this.itemsPublicados;
+			return await api()
+				.get(`curso/published`)
+				.then(async (r) => {
+					this.itemsPublicados = r.data;
+					return this.itemsPublicados;
 				});
 		},
 		async allCursosTemas() {
@@ -40,7 +52,6 @@ export const useCursoStore = defineStore({
 					return this.items;
 				});
 		},
-		
 		async getById(id) {
 			return await api()
 				.get(`curso/${id}`)
@@ -49,25 +60,22 @@ export const useCursoStore = defineStore({
 					return this.items;
 				});
 		},
-
-		
-
 		async CursoTemasbyId(cursoId) {
 			let items = await this.getByIdCursoTemas();
 			return items.filter((o) => o.cursoId == cursoId);
 		},
-
 		async CursoPorNucleoId(nucleoId) {
 			let items = await this.all();
 			// console.log("departamentos =>", items);
 			return items.filter((o) => o.nucleoId == nucleoId);
 		},
-
 		async CursoPorDependenciaId(dependenciaId) {
 			let items = await this.all();
 			return items.filter((o) => o.dependenciaId == dependenciaId);
 		},
-
-		
+		async PublicadosPorDependenciaId(dependenciaId) {
+			let items = await this.publicados();
+			return items.filter((o) => o.dependenciaId == dependenciaId);
+		},
 	},
 });

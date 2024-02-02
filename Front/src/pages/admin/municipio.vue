@@ -371,18 +371,18 @@ onMounted(async () => {
               </DxColumn> -->
               <DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
                 :allow-sorting="true" alignment="center" />
-              <DxColumn data-field="departamentoId" caption="Departamentos" :visible="true" :allow-filtering="true">
+              <DxColumn data-field="departamentoId" caption="Departamento" :visible="true" :allow-filtering="true">
                 <DxLookup :data-source="departamentos" value-expr="id" display-expr="nombre" />
               </DxColumn>
-              <DxColumn data-field="nombre" caption="Municipios" :visible="true" />
-              <DxColumn data-field="codigo" caption="DIVIPOLA" :visible="true" />
-              <DxColumn data-field="orden" caption="Orden" :visible="true" />
-              <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+              <DxColumn data-field="municipioNombre" caption="Municipios" :visible="true" />
+              <DxColumn data-field="municipioCodigo" caption="DIVIPOLA" :visible="true" />
+              <DxColumn data-field="orden" caption="Orden" :visible="false" />
+              <DxColumn :width="100" data-field="municipioActivo" caption="Activo" alignment="center" :visible="true"
                 cell-template="tpl1">
                 <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
               </DxColumn>
               <template #tpl1="{ data }">
-                <span v-if="data.data.activo">SI</span>
+                <span v-if="data.data.municipioActivo">SI</span>
                 <span v-else>NO</span>
               </template>
               <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"

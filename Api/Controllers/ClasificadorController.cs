@@ -26,6 +26,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return items;
 		}
 
+		[AllowAnonymous]
 		[HttpPost("tipos")]
 		public List<ClasificadorTipo> Tipos()
 		{

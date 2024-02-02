@@ -4,6 +4,7 @@ import DxStore from "@/utils/dx";
 import List from "devextreme/ui/list";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
+import Cmds from "@/pages/admin/curso/_comandos.vue";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
 import { useClasificadorStore, useAuthStore } from "@/stores";
 import DxValidator, {
@@ -271,6 +272,12 @@ let itemArchivoId = ref(null),
 		})
 	};
 
+// Se expone como evento en el componente
+const emit = defineEmits(['onCancel'])
+const callOnCancel = () => {
+	emit('onCancel')
+}
+
 // Propiedades
 let props = defineProps({
 	itemId: { type: Number, default: null, required: false },
@@ -399,6 +406,7 @@ onMounted(async () => {
 			</div>
 		</div>
 
+		<Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" />
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">

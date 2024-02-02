@@ -173,6 +173,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(items);
 		}
 
+		[HttpGet("published")] // /api/curso/published
+		[Authorization.AllowAnonymous]
+		public ActionResult GetPublished()
+		{
+			var items = _db.Cursos.Where(o => o.Publicado == true).ToList();
+			return Ok(items);
+		}
+
 		[HttpGet("cursos-temas")]// api/curso/temas
 		public ActionResult CursosTemas()
 		{

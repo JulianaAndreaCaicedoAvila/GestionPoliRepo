@@ -20,6 +20,6 @@ namespace ESAP.Sirecec.Data.Core
 		public int MunicipioId { get; set; }
 		public string? MunicipioNombre { get; set; }
 		public string? MunicipioCodigo { get; set; }
-		public bool? Activo { get; set; }
+		public bool? MunicipioActivo { get; set; }
 	}
 }

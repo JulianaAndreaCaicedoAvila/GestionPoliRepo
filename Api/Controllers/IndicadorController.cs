@@ -60,7 +60,8 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
-		[HttpGet("all")] 
+		[Authorization.AllowAnonymous]
+		[HttpGet("all")]
 		public ActionResult GetAll()
 		{
 			var items = _db.Indicador?.ToList();

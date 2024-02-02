@@ -54,6 +54,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpGet("pais/all")] // /api/banco/all => Obtiene todos los items
 		public ActionResult PaisGetAll()
 		{
@@ -111,6 +112,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok();
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpGet("dpto/all")] // /api/banco/all => Obtiene todos los items
 		public ActionResult DptoGetAll()
 		{
@@ -118,6 +120,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(items);
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpPost("dpto/by-pais-id")] // /api/geo/mun/by-dpto-id => Obtiene todos los items
 		public ActionResult ByPaisId(int paisId)
 		{
@@ -157,6 +160,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpGet("mun/all")] // /api/banco/all => Obtiene todos los items
 		public ActionResult MunGetAll()
 		{
@@ -164,6 +168,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(items);
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpPost("mun/by-dpto-id")] // /api/geo/mun/by-dpto-id => Obtiene todos los items
 		public ActionResult ByDptoId(int dptoId)
 		{
@@ -171,6 +176,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(items);
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpPost("dx-dpto")] // /api/banco/dx => DevExtreme DataGrid Get
 		public ActionResult GetDxDpto()
 		{
@@ -183,6 +189,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(loadResult);
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpPost("dx-mun")] // /api/banco/dx => DevExtreme DataGrid Get
 		public ActionResult GetDxMun()
 		{

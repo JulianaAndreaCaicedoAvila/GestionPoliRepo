@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import Header from "./components/global/header.vue";
 import Footer from "./components/global/footer.vue";
-// import Login from "./components/global/login.vue";
+import Loader from "@/components/global/loader.vue";
 onMounted(() => {
 	console.log("MAIN ONMOUNTED");
 });
@@ -19,4 +19,5 @@ onMounted(() => {
 		</router-view>
 	</div>
 	<Footer />
+	<Loader />
 </template>

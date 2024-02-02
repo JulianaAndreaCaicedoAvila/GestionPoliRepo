@@ -344,11 +344,15 @@ onMounted(() => {
 		// 202306020122: Si esta recuperando la contraseña
 		if (route.query.c) {
 			console.log("c =>", route.query.c);
-			email.value = route.query.e;
-			code.value = route.query.c;
 			resetZone.fadeIn();
 			console.log("routeName =>", routeName);
-			if (routeName == "activar") action.value = "activate";
+			if (routeName == "activar") {
+				email.value = route.query.e.d64();
+				code.value = route.query.c.d64();
+				action.value = "activate";
+				console.log("email =>", email.value);
+				console.log("code =>", code.value);
+			}
 		} else {
 			loginZone.fadeIn();
 		}

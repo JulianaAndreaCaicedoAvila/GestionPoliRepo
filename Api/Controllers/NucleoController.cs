@@ -60,6 +60,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			}
 		}
 
+		[Authorization.AllowAnonymous]
 		[HttpGet("all")] // /api/cursoNucleo/all => Obtiene todos los items
 		public ActionResult GetAll()
 		{

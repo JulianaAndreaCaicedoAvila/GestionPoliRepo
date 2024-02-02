@@ -4,6 +4,7 @@ import DxStore from "@/utils/dx";
 import List from "devextreme/ui/list";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
+import Cmds from "@/pages/admin/curso/_comandos.vue";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
 import { useTemaStore, useEncuestaStore, useAuthStore } from "@/stores";
 import DxValidator, {
@@ -235,6 +236,12 @@ let titulo = "Temas",
     })
   };
 
+// Se expone como evento en el componente
+const emit = defineEmits(['onCancel'])
+const callOnCancel = () => {
+  emit('onCancel')
+}
+
 // Propiedades
 let props = defineProps({
   itemId: { type: Number, default: null, required: false },
@@ -382,13 +389,6 @@ onMounted(async () => {
       </div>
     </div>
 
-
-    <div class="card mt-4" v-if="$conf.debug">
-      <div class="card-body">
-        <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-          class="font-weight-semibold">item_copy:</span>
-        {{ item_copy }}
-      </div>
-    </div>
+    <Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" />
   </div>
 </template>

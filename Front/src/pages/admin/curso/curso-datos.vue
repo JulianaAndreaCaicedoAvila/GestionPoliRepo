@@ -4,6 +4,7 @@ import DxStore from "@/utils/dx";
 import { useRouter, useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
+import Cmds from "@/pages/admin/curso/_comandos.vue";
 import {
   useProductoStore,
   useBancoStore,
@@ -49,7 +50,8 @@ const router = useRouter(), route = useRoute(),
 let titulo = "Administración &raquo; Cursos &raquo; Módulos",
   dependenciaIdTxtRef = ref(null),
   // asistencia = ["Presencial", "Virtual"],
-  readMode = ref(false),
+  readOnly = ref(false),
+  readOnlyEstado = ref(true),
   valGroup = ref(null),
   entidades = ref([]),
   asistencias = ref([]),
@@ -78,7 +80,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     descripcion: null,
     creadoPor: null,
     tipoCursoId: 285, // Curso
-    estadoCursoId: 359, // Sin aprobar
+    estadoCursoId: 421, // Borrador
     escuelaId: null,
     bancoId: null,
     nucleoId: null,
@@ -96,7 +98,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     telefonoContacto: 0,
     programaCapacitacion: null,
     horasTotales: 0,
-    numeroDias: 0,
+    numeroDias: 1,
     publicado: false,
     jornadaManana: false,
     jornadaTarde: false,
@@ -113,17 +115,26 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
     horaInicio: null,
     objetivos: null,
     contenidos: null,
+    activo: true
   },
   panelData = null,
   panelGrid = null,
   grid = null,
   itemSelected = async (e) => {
-    // console.clear();
+    console.clear();
     console.log(_sep);
     console.log("itemSelected =>", e);
     let v = e.value;
     let id = $(e.element).attr("id");
     console.log("id =>", id);
+    if (id == "fechaInicio" || id == "fechaFin") {
+      const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+      let d1 = Date.parse(item.value.fechaInicio);
+      let d2 = Date.parse(item.value.fechaFin);
+      let days = Math.round(Math.abs((d1 - d2) / oneDay));
+      item.value.numeroDias = days + 1;
+      console.log("numeroDias =>", item.value.numeroDias);
+    }
     if (id == "territorialId") {
       departamentos.value = [];
       municipios.value = [];
@@ -198,8 +209,10 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
           await api({ hideErrors: true })
             .post("curso/ed", dto)
             .then((r) => {
+              console.clear();
               console.log("r =>", r);
-              router.push("/admin/curso/" + r.id);
+              router.push("/admin/curso/" + r.data.id);
+              // router.go();
               cancel(function () {
                 // panelData.unlock();
                 grid.refresh();
@@ -233,7 +246,7 @@ let props = defineProps({
 });
 
 onMounted(async () => {
-  // console.clear();
+  console.clear();
   console.log(_sep);
   console.log("curso-datos.vue MOUNTED!");
   territoriales.value = await store.porTipoNombre("territorial");
@@ -254,11 +267,11 @@ onMounted(async () => {
     productos.value = await storeProductos.all();
     programas.value = await storeProgramas.all();
     item.value = props.item;
-    console.log("item =>", toRaw(item.value));
   } else {
-    readMode.value = false;
+    readOnly.value = false;
     item.value = toRaw(item_base);
   };
+  console.log("item =>", toRaw(item.value));
 });
 //----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
@@ -286,7 +299,7 @@ onMounted(async () => {
         <div class="row">
           <div class="col-md-9">
             <label class="tit">Nombre del curso</label>
-            <DxTextBox :read-only="readMode" id="nombre" value-change-event="keyup" :show-clear-button="true"
+            <DxTextBox :read-only="readOnly" id="nombre" value-change-event="keyup" :show-clear-button="true"
               v-model="item.nombre" class="form-control" placeholder="Nombre del curso" @focus-out="$capitalizeAll">
               <DxValidator>
                 <DxRequiredRule />
@@ -295,7 +308,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-3 mb-3">
             <label class="tit">Estado del curso</label>
-            <DxSelectBox :read-only="readMode" id="estadoCursoId" :data-source="estados" :grouped="false"
+            <DxSelectBox :read-only="readOnlyEstado" id="estadoCursoId" :data-source="estados" :grouped="false"
               :min-search-length="2" :search-enabled="true" v-model="item.estadoCursoId" :show-clear-button="true"
               :disabled="item.id == 0" :show-data-before-search="true" class="form-control" @value-changed="itemSelected"
               placeholder="Estado del curso" value-expr="id" display-expr="nombre" item-template="item">
@@ -306,7 +319,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-9 mb-3">
             <label class="tit">Descripción</label>
-            <DxTextArea :read-only="readMode" :height="80" value-change-event="keyup" :show-clear-button="true"
+            <DxTextArea :read-only="readOnly" :height="80" value-change-event="keyup" :show-clear-button="true"
               v-model="item.descripcion" class="form-control" placeholder="Descripcion" @focus-out="$capitalize">
               <DxValidator>
                 <DxRequiredRule />
@@ -316,7 +329,7 @@ onMounted(async () => {
           <div class="col-md-3 mb-3">
             <label class="tit">Código de verificación</label>
             <div class="input-group">
-              <DxTextBox :read-only="readMode" value-change-event="keyup" :show-clear-button="true"
+              <DxTextBox :read-only="readOnly" value-change-event="keyup" :show-clear-button="true"
                 v-model="item.codigoVerificacion" class="form-control" placeholder="Código de verificación" />
               <div class="input-group-append">
                 <a class="btn btn-main" title="Generar código..." @click.prevent="setCode()"><i
@@ -326,7 +339,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-1">
             <label class="tit">Dependencia</label>
-            <DxSelectBox :read-only="readMode" id="dependenciaId" ref="dependenciaIdTxtRef" :data-source="dependencias"
+            <DxSelectBox :read-only="readOnly" id="dependenciaId" ref="dependenciaIdTxtRef" :data-source="dependencias"
               :grouped="false" :min-search-length="2" :search-enabled="true" v-model="item.dependenciaId"
               :show-clear-button="true" :show-data-before-search="true" class="form-control" @value-changed="itemSelected"
               placeholder="Dependencia" value-expr="id" display-expr="nombre" item-template="item">
@@ -340,7 +353,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Elaborado por (convenio)</label>
-            <DxSelectBox :read-only="readMode" id="tipo_de_curso" :data-source="creadoPor" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="tipo_de_curso" :data-source="creadoPor" :grouped="false"
               :min-search-length="2" :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
               class="form-control" display-expr="nombre" v-model="item.elaboradoPorId" placeholder="Elaborado por"
               value-expr="id" @value-changed="itemSelected">
@@ -351,7 +364,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Tipo de curso</label>
-            <DxSelectBox :read-only="readMode" id="creadoPor" :data-source="tipoCurso" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="creadoPor" :data-source="tipoCurso" :grouped="false"
               :min-search-length="2" :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
               class="form-control" display-expr="nombre" v-model="item.tipoCursoId" placeholder="Tipo de curso"
               value-expr="id" @value-changed="itemSelected">
@@ -362,7 +375,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Asistencia</label>
-            <DxSelectBox :read-only="readMode" id="asistencia" :data-source="asistencias" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="asistencia" :data-source="asistencias" :grouped="false"
               :min-search-length="2" :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
               class="form-control" display-expr="nombre" v-model="item.tipoAsistenciaId" placeholder="Tipo de asistencia"
               value-expr="id" @value-changed="itemSelected">
@@ -373,21 +386,21 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Escuela</label>
-            <DxSelectBox :read-only="readMode" id="escuelaId" :data-source="escuelas" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="escuelaId" :data-source="escuelas" :grouped="false"
               :min-search-length="2" :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
               class="form-control" display-expr="nombre" v-model="item.escuelaId" placeholder="Escuela" value-expr="id"
               @value-changed="itemSelected" />
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Nivel</label>
-            <DxSelectBox :read-only="readMode" id="nivel" :data-source="niveles" :grouped="false" :min-search-length="2"
+            <DxSelectBox :read-only="readOnly" id="nivel" :data-source="niveles" :grouped="false" :min-search-length="2"
               :search-enabled="true" :disabled="item.escuelaId == null" :show-clear-button="true"
               :show-data-before-search="true" class="form-control" display-expr="nombre" v-model="item.nivelId"
               placeholder="Nivel" value-expr="id" @value-changed="itemSelected" />
           </div>
           <div class="col-md-12 mb-3">
             <label class="tit">Producto</label>
-            <DxSelectBox :read-only="readMode" id="productoId" :data-source="productos" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="productoId" :data-source="productos" :grouped="false"
               :min-search-length="2" :disabled="productos.length <= 0" :search-enabled="true" :show-clear-button="true"
               :show-data-before-search="true" class="form-control" display-expr="nombre" v-model="item.productoId"
               placeholder="Producto" value-expr="id" @value-changed="itemSelected">
@@ -398,7 +411,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-12 mb-3">
             <label class="tit">Indicador</label>
-            <DxSelectBox :read-only="readMode" id="indicadorId" :data-source="indicadores" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="indicadorId" :data-source="indicadores" :grouped="false"
               :min-search-length="2" :disabled="indicadores.length <= 0" :search-enabled="true" :show-clear-button="true"
               :show-data-before-search="true" class="form-control" display-expr="nombre" v-model="item.indicadorId"
               placeholder="Indicador" value-expr="id" @value-changed="itemSelected">
@@ -409,7 +422,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Territorial</label>
-            <DxSelectBox :read-only="readMode" id="territorialId" :data-source="territoriales" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="territorialId" :data-source="territoriales" :grouped="false"
               :min-search-length="2" :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
               class="form-control" display-expr="nombre" v-model="item.territorialId" placeholder="Territoriales"
               value-expr="id" @value-changed="itemSelected">
@@ -420,7 +433,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Departamento</label>
-            <DxSelectBox :read-only="readMode" id="departamentoId" :data-source="departamentos" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="departamentoId" :data-source="departamentos" :grouped="false"
               :disabled="departamentos.length <= 0" :min-search-length="2" :search-enabled="true"
               :show-clear-button="true" :show-data-before-search="true" class="form-control" :display-expr="divipola"
               v-model="item.departamentoId" placeholder="Departamentos" value-expr="id" @value-changed="itemSelected">
@@ -431,7 +444,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Municipio</label>
-            <DxSelectBox :read-only="readMode" id="municipioId" :data-source="municipios" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="municipioId" :data-source="municipios" :grouped="false"
               :disabled="municipios.length <= 0" :min-search-length="2" :search-enabled="true" :show-clear-button="true"
               :show-data-before-search="true" class="form-control" :display-expr="divipola" v-model="item.municipioId"
               placeholder="Municipios" value-expr="id" @value-changed="itemSelected" item-template="item">
@@ -446,7 +459,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-6 mb-3">
             <label class="tit">Banco de programas</label>
-            <DxSelectBox :read-only="readMode" id="bancoId" :data-source="bancos" :grouped="false" :min-search-length="2"
+            <DxSelectBox :read-only="readOnly" id="bancoId" :data-source="bancos" :grouped="false" :min-search-length="2"
               :search-enabled="true" :show-clear-button="true" :show-data-before-search="true" class="form-control"
               display-expr="nombre" v-model="item.bancoId" placeholder="Banco de programas" value-expr="id"
               @value-changed="itemSelected">
@@ -457,7 +470,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-6 mb-3">
             <label class="tit">Núcleo</label>
-            <DxSelectBox :read-only="readMode" id="nucleoId" :data-source="nucleos" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="nucleoId" :data-source="nucleos" :grouped="false"
               :min-search-length="2" :disabled="nucleos.length <= 0" :search-enabled="true" :show-clear-button="true"
               :show-data-before-search="true" class="form-control" display-expr="nombre" v-model="item.nucleoId"
               placeholder="Nucleo" value-expr="id" @value-changed="itemSelected">
@@ -468,7 +481,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-12 mb-3">
             <label class="tit">Programa</label>
-            <DxSelectBox :read-only="readMode" id="programaId" :data-source="programas" :grouped="false"
+            <DxSelectBox :read-only="readOnly" id="programaId" :data-source="programas" :grouped="false"
               :min-search-length="2" :disabled="programas.length <= 0" :search-enabled="true" :show-clear-button="true"
               :show-data-before-search="true" class="form-control" display-expr="nombre" v-model="item.programaId"
               placeholder="Programa" value-expr="id" @value-changed="itemSelected">
@@ -479,7 +492,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-3 mb-3">
             <label class="tit">Responsable</label>
-            <DxTextBox :read-only="readMode" value-change-event="keyup" :show-clear-button="true"
+            <DxTextBox :read-only="readOnly" value-change-event="keyup" :show-clear-button="true"
               v-model="item.responsable" class="form-control" placeholder="Nombre Responsable"
               @focus-out="$capitalizeAll">
               <DxValidator>
@@ -489,7 +502,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-3 mb-3">
             <label class="tit">Correo Electrónico</label>
-            <DxTextBox :read-only="readMode" value-change-event="keyup" :show-clear-button="true"
+            <DxTextBox :read-only="readOnly" value-change-event="keyup" :show-clear-button="true"
               v-model="item.correoElectronico" class="form-control" placeholder="Correo" @focus-out="$lowerCase">
               <DxValidator>
                 <DxRequiredRule />
@@ -499,7 +512,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-2 mb-3">
             <label class="tit">Teléfono</label>
-            <DxTextBox :read-only="readMode" value-change-event="keyup" :show-clear-button="true"
+            <DxTextBox :read-only="readOnly" value-change-event="keyup" :show-clear-button="true"
               v-model="item.telefonoContacto" class="form-control" placeholder="Teléfono">
               <DxValidator>
                 <DxRequiredRule />
@@ -508,18 +521,72 @@ onMounted(async () => {
           </div>
           <div class="col-md-4 mb-3">
             <label class="tit">Lugar de realización</label>
-            <DxTextBox :read-only="readMode" value-change-event="keyup" :show-clear-button="true"
+            <DxTextBox :read-only="readOnly" value-change-event="keyup" :show-clear-button="true"
               v-model="item.lugarRealizacion" class="form-control" placeholder="Lugar de realización">
               <DxValidator>
                 <DxRequiredRule />
               </DxValidator>
             </DxTextBox>
           </div>
+
+          <div class="col-md-10">
+            <div class="row">
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha inicio inscripciones</label>
+                <DxDateBox :read-only="readOnly" id="fechaInicioInscripciones" class="form-control"
+                  v-model="item.fechaInicioInscripcion" display-format="dd/MM/yyyy" type="date">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha fin inscripciones</label>
+                <DxDateBox :read-only="readOnly" id="fechaFinInscripciones" class="form-control"
+                  v-model="item.fechaFinInscripcion" display-format="dd/MM/yyyy" type="date"
+                  :min="item.fechaInicioInscripcion">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha inicio curso</label>
+                <DxDateBox :read-only="readOnly" id="fechaInicio" class="form-control" v-model="item.fechaInicio"
+                  display-format="dd/MM/yyyy" type="date" :min="item.fechaFinInscripcion">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="tit">Fecha fin curso</label>
+                <DxDateBox :read-only="readOnly" id="fechaFin" class="form-control" v-model="item.fechaFin"
+                  display-format="dd/MM/yyyy" type="date" :min="item.fechaInicio" @value-changed="itemSelected">
+                  <DxValidator>
+                    <DxRequiredRule />
+                  </DxValidator>
+                </DxDateBox>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label class="tit">Hora inicio</label>
+            <DxDateBox :read-only="readOnly" id="horaInicio" class="form-control" v-model="item.horaInicio" type="time"
+              :display-format="{ hour: 'numeric', minute: 'numeric', hour12: true }"
+              :input-attr="{ 'aria-label': 'Time' }">
+              <DxValidator>
+                <DxRequiredRule />
+              </DxValidator>
+            </DxDateBox>
+            <!-- {{ item.horaInicio }} -->
+          </div>
+
           <div class="col-md-6">
             <div class="row">
               <div class="col-md-4 mb-3">
                 <label class="tit">Cantidad de aulas</label>
-                <DxNumberBox :read-only="readMode" value-change-event="keyup" :show-spin-buttons="true" :min="1"
+                <DxNumberBox :read-only="readOnly" value-change-event="keyup" :show-spin-buttons="true" :min="1"
                   :max="100" :show-clear-button="false" v-model="item.cantidadAulas" class="form-control"
                   placeholder="Cantidad de aulas" @value-changed="itemSelected" id="cantidadAulas">
                   <DxValidator>
@@ -529,7 +596,7 @@ onMounted(async () => {
               </div>
               <div class="col-md-4 mb-3">
                 <label class="tit">Cupo por aula</label>
-                <DxNumberBox :read-only="readMode" value-change-event="keyup" :show-spin-buttons="true" :min="1"
+                <DxNumberBox :read-only="readOnly" value-change-event="keyup" :show-spin-buttons="true" :min="1"
                   :show-clear-button="false" v-model="item.cupoAula" class="form-control" placeholder="Numero de cupos"
                   @value-changed="itemSelected" id="cupoAula">
                   <DxValidator>
@@ -551,7 +618,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-2 mb-3">
             <label class="tit">Total de horas</label>
-            <DxNumberBox :read-only="readMode" value-change-event="keyup" :show-spin-buttons="true" :min="0"
+            <DxNumberBox :read-only="readOnly" value-change-event="keyup" :show-spin-buttons="true" :min="1"
               :show-clear-button="false" v-model="item.horasTotales" class="form-control" placeholder="Total horas"
               @value-changed="itemSelected">
               <DxValidator>
@@ -561,7 +628,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-2 mb-3">
             <label class="tit">Número de días</label>
-            <DxNumberBox :read-only="readMode" value-change-event="keyup" :show-spin-buttons="true" :min="0"
+            <DxNumberBox :read-only="readOnly" value-change-event="keyup" :show-spin-buttons="true" :min="1"
               :show-clear-button="false" v-model="item.numeroDias" class="form-control" placeholder="Número de días"
               @value-changed="itemSelected">
               <DxValidator>
@@ -571,7 +638,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-2 mb-3">
             <label class="tit">Porcentaje asistencia</label>
-            <DxNumberBox :read-only="readMode" value-change-event="keyup" :show-spin-buttons="true" :min="50" :max="100"
+            <DxNumberBox :read-only="readOnly" value-change-event="keyup" :show-spin-buttons="true" :min="50" :max="100"
               :show-clear-button="false" v-model="item.porcentajeValidoAsistencia" class="form-control"
               placeholder="Porcentaje válido asistencia" @value-changed="itemSelected">
               <DxValidator>
@@ -579,78 +646,26 @@ onMounted(async () => {
               </DxValidator>
             </DxNumberBox>
           </div>
-          <div class="col-md-10">
-            <div class="row">
-              <div class="col-md-3 mb-3">
-                <label class="tit">Fecha inicio inscripciones</label>
-                <DxDateBox :read-only="readMode" id="fechaInicioInscripciones" class="form-control"
-                  v-model="item.fechaInicioInscripcion" display-format="dd/MM/yyyy" type="date">
-                  <DxValidator>
-                    <DxRequiredRule />
-                  </DxValidator>
-                </DxDateBox>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label class="tit">Fecha fin inscripciones</label>
-                <DxDateBox :read-only="readMode" id="fechaFinInscripciones" class="form-control"
-                  v-model="item.fechaFinInscripcion" display-format="dd/MM/yyyy" type="date"
-                  :min="item.fechaInicioInscripcion">
-                  <DxValidator>
-                    <DxRequiredRule />
-                  </DxValidator>
-                </DxDateBox>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label class="tit">Fecha inicio curso</label>
-                <DxDateBox :read-only="readMode" id="fechaInicio" class="form-control" v-model="item.fechaInicio"
-                  display-format="dd/MM/yyyy" type="date" :min="item.fechaFinInscripcion">
-                  <DxValidator>
-                    <DxRequiredRule />
-                  </DxValidator>
-                </DxDateBox>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label class="tit">Fecha fin curso</label>
-                <DxDateBox :read-only="readMode" id="fechaFin" class="form-control" v-model="item.fechaFin"
-                  display-format="dd/MM/yyyy" type="date" :min="item.fechaInicio">
-                  <DxValidator>
-                    <DxRequiredRule />
-                  </DxValidator>
-                </DxDateBox>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 mb-3">
-            <label class="tit">Hora inicio</label>
-            <DxDateBox :read-only="readMode" id="horaInicio" class="form-control" v-model="item.horaInicio" type="time"
-              :display-format="{ hour: 'numeric', minute: 'numeric', hour12: true }"
-              :input-attr="{ 'aria-label': 'Time' }">
-              <DxValidator>
-                <DxRequiredRule />
-              </DxValidator>
-            </DxDateBox>
-            <!-- {{ item.horaInicio }} -->
-          </div>
 
           <div class="col-md-3 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2" for="">Publicado</label>
-            <DxCheckBox :read-only="readMode" v-model="item.publicado" />
+            <DxCheckBox :read-only="readOnly" v-model="item.publicado" />
           </div>
           <div class="col-md-3 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2">Jornada mañana</label>
-            <DxCheckBox :read-only="readMode" v-model="item.jornadaManana" />
+            <DxCheckBox :read-only="readOnly" v-model="item.jornadaManana" />
           </div>
           <div class="col-md-3 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2">Jornada tarde</label>
-            <DxCheckBox :read-only="readMode" v-model="item.jornadaTarde" />
+            <DxCheckBox :read-only="readOnly" v-model="item.jornadaTarde" />
           </div>
           <div class="col-md-3 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2">Jornada noche</label>
-            <DxCheckBox :read-only="readMode" v-model="item.jornadaNoche" />
+            <DxCheckBox :read-only="readOnly" v-model="item.jornadaNoche" />
           </div>
           <div class="col-md-12 mb-3">
             <label class="tit">Objetivos</label>
-            <DxTextArea :read-only="readMode" :height="110" value-change-event="keyup" :show-clear-button="true"
+            <DxTextArea :read-only="readOnly" :height="110" value-change-event="keyup" :show-clear-button="true"
               id="objetivos" v-model="item.objetivos" class="form-control" placeholder="Objetivos">
               <DxValidator>
                 <DxRequiredRule />
@@ -659,7 +674,7 @@ onMounted(async () => {
           </div>
           <div class="col-md-12 mb-3">
             <label class="tit">Contenidos</label>
-            <DxTextArea :read-only="readMode" :height="110" value-change-event="keyup" :show-clear-button="true"
+            <DxTextArea :read-only="readOnly" :height="110" value-change-event="keyup" :show-clear-button="true"
               id="descripcion" v-model="item.contenidos" class="form-control" placeholder="Contenidos">
               <DxValidator>
                 <DxRequiredRule />
@@ -668,14 +683,7 @@ onMounted(async () => {
           </div>
         </div>
       </DxValidationGroup>
-      <!-- {{ item }} -->
-      <div class="row">
-        <div class="col pt-2 d-flex justify-content-between align-items-center">
-          <a class="btn btn-gray" @click.prevent="callOnCancel"><i
-              class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
-          <a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
-        </div>
-      </div>
+      <Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" @on-save="save" :show-save="true" />
     </div>
   </div>
 </template>

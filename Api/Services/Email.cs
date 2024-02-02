@@ -12,32 +12,33 @@ public interface IEmailService
 public class EmailService : IEmailService
 {
 
-	private readonly IConfiguration _configuration;
+	private readonly IConfiguration _conf;
 
 	public EmailService(IConfiguration configuration)
 	{
-		_configuration = configuration;
+		_conf = configuration;
 	}
 
 	public void Send(string to, string subject, string body)
 	{
+		// 202402020448: Template
+		string html = File.ReadAllText(Path.Combine(_conf["Path:FilesPath"], "tpl/mail.min.html"));
+		html = html.Replace("{BasePath}", _conf["Path:BasePath"]);
+		html = html.Replace("{Year}", DateTime.Now.Year.ToString());
+		html = html.Replace("{Body}", body);
+
 		// Create message
 		var email = new MimeMessage();
-		var fromAddress = new MailboxAddress(_configuration["Email:From"], _configuration["Email:SmtpUser"]);
+		var fromAddress = new MailboxAddress(_conf["Email:From"], _conf["Email:SmtpUser"]);
 		email.From.Add(fromAddress);
 		email.To.Add(MailboxAddress.Parse(to));
 		email.Subject = subject;
-		email.Body = new TextPart(TextFormat.Html) { Text = body };
-
-		// // 202208141548: Template
-		// using (StreamReader SourceReader = System.IO.File.OpenText(path to your file)) {
-		// 	builder.HtmlBody = SourceReader.ReadToEnd();
-		// }
+		email.Body = new TextPart(TextFormat.Html) { Text = html };
 
 		// Send email
 		using var smtp = new SmtpClient();
-		smtp.Connect(_configuration["Email:SmtpHost"], int.Parse(_configuration["Email:SmtpPort"]), SecureSocketOptions.StartTls);
-		smtp.Authenticate(_configuration["Email:SmtpUser"], _configuration["Email:SmtpPassword"]);
+		smtp.Connect(_conf["Email:SmtpHost"], int.Parse(_conf["Email:SmtpPort"]), SecureSocketOptions.StartTls);
+		smtp.Authenticate(_conf["Email:SmtpUser"], _conf["Email:SmtpPassword"]);
 		smtp.Send(email);
 		smtp.Disconnect(true);
 

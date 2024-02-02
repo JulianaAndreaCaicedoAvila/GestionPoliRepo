@@ -11,11 +11,11 @@ namespace ESAP.Sirecec.Data.Core
 		public int? CursoEstadoId { get; set; }
 		public string? CursoEstadoNombre { get; set; }
 		public bool? CursoPublicado { get; set; }
-		public string? CursoImagenCertificado { get; set; }
+		public string? CursoImagenCert { get; set; }
 		public string? CursoImagen { get; set; }
-		public string? CursoCertificadoCiudad { get; set; }
-		public bool? CursoCertificadoCiudadVer { get; set; }
-		public string? CursoCertificadoFechaExpedicion { get; set; }
+		public string? CertCiudad { get; set; }
+		public bool? CertCiudadVer { get; set; }
+		public string? CertFechaExpedicion { get; set; }
 		public int UsuarioId { get; set; }
 		public string? Name { get; set; }
 		public string? FirstName { get; set; }

@@ -50,7 +50,7 @@ const router = useRouter(),
   storeProgramas = useProgramaStore(),
   auth = useAuthStore();
 
-let titulo = "Administración &raquo; Cursos",
+let titulo = "Administración &raquo; Participantes",
   dependenciaIdTxtRef = ref(null),
   valGroup = ref(null),
   entidades = ref([]),
@@ -185,15 +185,15 @@ onMounted(async () => {
           <i class="fa-solid fa-gears"></i>
           <span v-html="titulo" />
         </span>
-        <span>
+        <!-- <span>
           <router-link :to="{ path: '/admin/curso' }" class="btn btn-trans" @click.prevent="edit()"
             title="Crear nuevo curso..."><i class="fa-solid fa-square-plus"></i>NUEVO CURSO</router-link>
-        </span>
+        </span> -->
       </div>
 
       <div class="card-body pt-3 pb-4">
         <div class="row">
-          <div class="col">
+          <div class="col-md-12">
             <DxDataGrid :column-auto-width="false" :customize-columns="customizeColumns" :data-source="dxStore"
               :hover-state-enabled="true" :remote-operations="false" :repaint-changes-only="true"
               :row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="true"
@@ -212,18 +212,19 @@ onMounted(async () => {
               <DxSummary>
                 <DxGroupItem summary-type="count" column="group_type_name" display-format="{0} ítems" />
               </DxSummary>
-              <DxPaging :page-size="5" />
+              <DxPaging :page-size="10" />
               <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
                 :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} cursos (página {0} de {1})" />
-              <DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false"
+              <DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
                 :allow-sorting="true" alignment="center" sort-order="desc" />
               <DxColumn :width="80" data-field="codigoVerificacion" caption="Código" alignment="center"
                 :visible="false" />
-              <DxColumn data-field="nombre" caption="Nombre" :visible="true" :fixed="false" fixed-position="left"
-                width="180" />
-              <DxColumn data-field="descripcion" caption="Descripción" :visible="true" />
-              <DxColumn data-field="territorialNombre" caption="Territorial" :visible="true" :width="130" />
-              <DxColumn data-field="porcentajeValidoAsistencia" caption="Asistencia" :visible="true" :width="100"
+              <DxColumn data-field="nombre" caption="Curso" :visible="true" :fixed="false" fixed-position="left" />
+              <DxColumn data-field="descripcion" caption="Descripción" :visible="false" />
+              <DxColumn data-field="territorialNombre" caption="Territorial" :visible="true" :width="250" />
+              <DxColumn data-field="participantes" caption="Participantes" :visible="true" alignment="center"
+                :width="100" />
+              <DxColumn data-field="porcentajeValidoAsistencia" caption="Asistencia" :visible="false" :width="100"
                 alignment="center" format="#'%'" />
               <!-- <DxColumn
                 data-field="objetivos"
@@ -249,10 +250,13 @@ onMounted(async () => {
                 <span v-if="data.data.activo">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false"
+              <DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false"
                 fixed-position="right" />
               <template #tpl="{ data }">
                 <span class="cmds">
+                  <a title="Asistencia" class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)" href="#">
+                    <i class="fa-sharp fa-solid fa-screen-users fa-lg"></i>
+                  </a>
                   <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)" href="#">
                     <i class="fa-solid fa-pen-to-square fa-lg"></i>
                   </a>

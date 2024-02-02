@@ -1,16 +1,13 @@
 <script setup>
-import { onMounted, ref } from "vue";
-let bUrl = window._baseUrl;
-let count = ref(0),
-	props = defineProps({
-		showInfo: { type: Boolean, default: true, required: false },
-		description: { type: String, default: "Something", required: false },
-	}),
-	getClass = () => {
-		return props.showInfo ? "justify-content-between" : "justify-content-center";
-	};
-onMounted(() => {
-	console.log("props =>", props);
+import { onMounted, ref, toRaw } from "vue";
+import { useCursoStore } from "@/stores";
+const cursoStore = useCursoStore();
+let cursosAltoGobierno = ref([]), cursosCapacitacion = ref([]);
+onMounted(async () => {
+	cursosCapacitacion.value = await cursoStore.PublicadosPorDependenciaId(13);
+	cursosAltoGobierno.value = await cursoStore.PublicadosPorDependenciaId(14);
+	console.log("cursosCapacitacion =>", cursosCapacitacion.value);
+	console.log("cursosAltoGobierno =>", cursosAltoGobierno.value);
 });
 </script>
 <template>
@@ -80,10 +77,10 @@ onMounted(() => {
 						</div>
 					</div>
 				</div>
-				<div class="card-footer text-center">
+				<div class="card-footer text-center" v-if="cursosAltoGobierno.length > 0">
 					<p class="p-0 m-0 mt-1 mb-1 text-center">
 						<router-link :to="{ name: 'oferta', params: { por: 'alto-gobierno' } }"
-							title="Ver la oferta académica para 'Alto gobierno'..."><strong>VER OFERTA ACADÉMICA <i
+							title="Ver la oferta académica para 'Alto Gobierno'..."><strong>VER OFERTA ACADÉMICA <i
 									class="fa-solid fa-circle-arrow-right ms-1"></i></strong></router-link>
 					</p>
 				</div>
@@ -120,7 +117,7 @@ onMounted(() => {
 						</div>
 					</div>
 				</div>
-				<div class="card-footer text-center">
+				<div class="card-footer text-center" v-if="cursosCapacitacion.length > 0">
 					<p class="p-0 m-0 mt-1 mb-1 text-center">
 						<router-link :to="{ name: 'oferta', params: { por: 'capacitacion' } }"
 							title="Ver la oferta académica para 'Capacitación'..."><strong>VER OFERTA ACADÉMICA <i

@@ -33,11 +33,10 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + user.Email.Trim().ToLower();
-            string html = File.ReadAllText(Path.Combine(_conf["Path:FilesPath"], "tpl/"))
-
-
-            _email.Send(user.Email, "ACTIVAR CUENTA", $"Hola {user.FirstName}, por favor active su cuenta haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
+            var email = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(user.Email.Trim().ToLower()));
+            var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + email;
+            string body = $"Hola {user.FirstName}!<br/><br/>Para activar su cuenta en SIRECEC 4.0 por favor haga clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.<br/><br/>Muchas gracias!";
+            _email.Send(user.Email, "SIRECEC 4.0 - ACTIVAR CUENTA", body);
             return true;
         }
 
@@ -67,6 +66,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is null || !user.EmailConfirmed || !user.IsActive || !await _userManager.CheckPasswordAsync(user, request.Password))
                 return Forbid();
+            // var res = await SendConfirmationAsync(user); // Prueba
             return await GetUserResult(user);
         }
 
@@ -238,7 +238,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                     }
                     if (uReq.GenerateConfirmation)
                     {
-                        var res = SendConfirmationAsync(user);
+                        var res = await SendConfirmationAsync(user);
                     }
                     return Ok(user);
                 }
@@ -274,6 +274,10 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 {
                     var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
                     if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+                    if (uReq.GenerateConfirmation)
+                    {
+                        var res = await SendConfirmationAsync(newUser);
+                    }
                     return Ok(newUser);
                 }
                 else

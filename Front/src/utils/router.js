@@ -94,6 +94,18 @@ export const router = createRouter({
 			component: () => import("@/pages/admin/curso/tabs.vue"), // 202309071141: Lleva al Wizard
 		},
 		{
+			name: "asistenciaParticipantes",
+			path: "/admin/participante/asistenciaParticipantes",
+			meta: { title: "Asistencia de los Participantes", requiresAuth: true, roles: [] },
+			component: () => import("@/pages/admin/participante/asistenciaParticipantes.vue"), 
+		},
+		{
+			name: "cursosParticipantes",
+			path: "/admin/participante/cursosParticipantes",
+			meta: { title: "Cursos de los Participantes", requiresAuth: true, roles: [] },
+			component: () => import("@/pages/admin/participante/cursosParticipantes.vue"), 
+		},
+		{
 			name: "inscripcion",
 			path: "/inscripcion/:id?",
 			meta: { title: "Inscripción", requiresAuth: false },

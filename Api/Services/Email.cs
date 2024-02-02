@@ -29,7 +29,7 @@ public class EmailService : IEmailService
 		email.Subject = subject;
 		email.Body = new TextPart(TextFormat.Html) { Text = body };
 
-		// 202208141548: Template
+		// // 202208141548: Template
 		// using (StreamReader SourceReader = System.IO.File.OpenText(path to your file)) {
 		// 	builder.HtmlBody = SourceReader.ReadToEnd();
 		// }
@@ -40,5 +40,6 @@ public class EmailService : IEmailService
 		smtp.Authenticate(_configuration["Email:SmtpUser"], _configuration["Email:SmtpPassword"]);
 		smtp.Send(email);
 		smtp.Disconnect(true);
+
 	}
 }

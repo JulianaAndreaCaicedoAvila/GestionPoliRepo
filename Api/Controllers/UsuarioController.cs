@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
+// 202402020231: Account confirmation and password recovery in ASP.NET Core
+// https://learn.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-6.0&tabs=visual-studio
 namespace ESAP.Sirecec.Data.Api.Controllers
 {
     [@Authorize]
@@ -21,17 +23,29 @@ namespace ESAP.Sirecec.Data.Api.Controllers
     [Route("usuario")]
     public class UsuarioController : BaseController
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _conf;
         private readonly IEmailService _email;
         private readonly IAzureAdService _ad;
         private readonly Data.DataContext _context;
         private readonly UserManager<Data.Identity.AuthUser> _userManager;
         private readonly RoleManager<AuthRole> _roleManager;
+        private async Task<bool> SendConfirmationAsync(AuthUser user)
+        {
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + user.Email.Trim().ToLower();
+            string html = File.ReadAllText(Path.Combine(_conf["Path:FilesPath"], "tpl/"))
+
+
+            _email.Send(user.Email, "ACTIVAR CUENTA", $"Hola {user.FirstName}, por favor active su cuenta haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
+            return true;
+        }
+
         public UsuarioController(IConfiguration configuration, IAzureAdService ad, UserManager<AuthUser> userManager,
             RoleManager<AuthRole> roleManager, IEmailService email, Data.DataContext context)
         {
             _ad = ad;
-            _configuration = configuration;
+            _conf = configuration;
             _context = context;
             _email = email;
             _userManager = userManager;
@@ -88,7 +102,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = _configuration["Path:BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
+                var callbackUrl = _conf["Path:BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
                 _email.Send(user.Email, "RECUPERAR CONTRASEÑA", $"Hola {user.FirstName}, puede recuperar su contraseña haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
                 return Ok(user);
             }
@@ -112,14 +126,36 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("activar")]
-        public async Task<ActionResult> Activate(UserRequestModel request)
+        [HttpPost("confirmar")]
+        public async Task<ActionResult> Confirm(UserRequestModel request)
         {
             var email = request.Email.Trim().ToUpper();
-            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
+                var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+                var result = await _userManager.ConfirmEmailAsync(user, code);
+                if (result.Succeeded)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    result = await _userManager.ResetPasswordAsync(user, token, request.Password);
+                    if (result.Succeeded) return Ok(new { result, user });
+                    else return BadRequest(new { result, user });
+                }
+                else return BadRequest(new { result, user });
+            }
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("confirmar1")]
+        public async Task<ActionResult> Confirm1(UserRequestModel request)
+        {
+            var email = request.Email.Trim().ToUpper();
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
                 var result = await _userManager.ConfirmEmailAsync(user, code);
                 if (result.Succeeded)
                 {
@@ -157,10 +193,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 var role = await _roleManager.FindByIdAsync(user.RoleId.ToString());
                 if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
                 // _logger.LogInformation(LoggerEventIds.UserCreated, "User created a new account with password.");
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = _configuration["Path:BasePath"] + "/activar?c=" + code + "&e=" + email.Trim().ToLower();
-                _email.Send(user.Email, "ACTIVAR CUENTA", $"Hola {user.FirstName}, por favor active su cuenta haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
+                if (user.GenerateConfirmation)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + email.Trim().ToLower();
+                    _email.Send(user.Email, "ACTIVAR CUENTA", $"Hola {user.FirstName}, por favor active su cuenta haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
+                }
                 return Ok(newUser);
             }
             return BadRequest(new { result, user });
@@ -196,6 +235,10 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                     {
                         await _userManager.RemovePasswordAsync(user);
                         await _userManager.AddPasswordAsync(user, uReq.Password);
+                    }
+                    if (uReq.GenerateConfirmation)
+                    {
+                        var res = SendConfirmationAsync(user);
                     }
                     return Ok(user);
                 }
@@ -263,7 +306,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
             var roleName = (await _userManager.GetRolesAsync(user)).First();
             // var role = await _roleManager.FindByNameAsync(roleName);
             var usuario = _context.Usuarios.First(o => o.Email.Trim().ToLower() == user.Email.Trim().ToLower());
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.Sid, user.Id.ToString()),
@@ -272,10 +315,10 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 new Claim(ClaimTypes.Role, roleName)
             };
             var tokenDescriptor = new JwtSecurityToken(
-                    issuer: _configuration["Jwt:Issuer"],
-                    audience: _configuration["Jwt:Audience"],
+                    issuer: _conf["Jwt:Issuer"],
+                    audience: _conf["Jwt:Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(int.Parse(_configuration["Jwt:Expires"])),
+                    expires: DateTime.Now.AddMinutes(int.Parse(_conf["Jwt:Expires"])),
                     signingCredentials: credentials);
             var jwt = new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
             return Ok(new

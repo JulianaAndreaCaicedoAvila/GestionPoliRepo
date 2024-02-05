@@ -95,8 +95,11 @@ let titulo = "Temas",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
-        } el tema "<span class="font-weight-semibold">${data.temaNombre}</span>"?`,
+      text: `¿Realmente desea ${
+        data.activo ? "desactivar" : "activar"
+      } el tema "<span class="font-weight-semibold">${
+        data.temaNombre
+      }</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid-tema");
         panelGrid.lock(
@@ -115,7 +118,7 @@ let titulo = "Temas",
           }
         );
       },
-      onCancel: () => { },
+      onCancel: () => {},
     });
   },
   addStart = async (data) => {
@@ -233,19 +236,19 @@ let titulo = "Temas",
         $("#grid-tema").unlock();
         $("#data-tema").unlock();
       },
-    })
+    });
   };
 
 // Se expone como evento en el componente
-const emit = defineEmits(['onCancel'])
+const emit = defineEmits(["onCancel"]);
 const callOnCancel = () => {
-  emit('onCancel')
-}
+  emit("onCancel");
+};
 
 // Propiedades
 let props = defineProps({
   itemId: { type: Number, default: null, required: false },
-  item: { type: Object, default: null, required: false }
+  item: { type: Object, default: null, required: false },
 });
 
 onMounted(async () => {
@@ -280,9 +283,20 @@ onMounted(async () => {
           <div class="row">
             <div class="col-md-12 mb-3">
               <label class="tit">Tema</label>
-              <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Tema" value-expr="id" display-expr="nombre">
+              <DxSelectBox
+                id="temaId"
+                :data-source="temasAll"
+                :grouped="false"
+                :min-search-length="2"
+                :search-enabled="true"
+                v-model="item.temaId"
+                :show-clear-button="true"
+                :show-data-before-search="true"
+                class="form-control"
+                placeholder="Tema"
+                value-expr="id"
+                display-expr="nombre"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -290,19 +304,36 @@ onMounted(async () => {
             </div>
             <div class="col-md-4 mb-3">
               <label class="tit">Docente</label>
-              <DxSelectBox id="temaId" :data-source="docentes" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.docenteId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Docente" value-expr="id" display-expr="name">
+              <DxSelectBox
+                id="temaId"
+                :data-source="docentes"
+                :grouped="false"
+                :min-search-length="2"
+                :search-enabled="true"
+                v-model="item.docenteId"
+                :show-clear-button="true"
+                :show-data-before-search="true"
+                class="form-control"
+                placeholder="Docente"
+                value-expr="id"
+                display-expr="name"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
               </DxSelectBox>
             </div>
             <div class="col-md-4">
-              <label class="tit">Direccion de realización</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true"
-                v-model="item.direccionRealizacion" class="form-control" placeholder="Nombre del curso"
-                @focus-out="$capitalizeAll">
+              <label class="tit">Dirección de realización</label>
+              <DxTextBox
+                id="nombre"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.direccionRealizacion"
+                class="form-control"
+                placeholder="Dirección"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -310,8 +341,15 @@ onMounted(async () => {
             </div>
             <div class="col-md-4">
               <label class="tit">Lugar de realización</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.lugarRealizacion"
-                class="form-control" placeholder="Nombre del curso" @focus-out="$capitalizeAll">
+              <DxTextBox
+                id="nombre"
+                value-change-event="keyup"
+                :show-clear-button="true"
+                v-model="item.lugarRealizacion"
+                class="form-control"
+                placeholder="Lugar realización"
+                @focus-out="$capitalizeAll"
+              >
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -323,21 +361,34 @@ onMounted(async () => {
 
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
-          <a class="btn btn-gray" @click.prevent="cancel"><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a>
-          <a class="btn btn-main" @click.prevent="save">GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i></a>
+          <a class="btn btn-gray" @click.prevent="cancel"
+            ><i class="fa-solid fa-circle-xmark"></i>&nbsp;&nbsp;CANCELAR</a
+          >
+          <a class="btn btn-main" @click.prevent="save"
+            >GUARDAR&nbsp;&nbsp;<i class="fa-solid fa-floppy-disk"></i
+          ></a>
         </div>
       </div>
     </div>
 
     <div class="row" id="grid-tema">
       <div class="col-md-12 text-end pb-2">
-        <a href="#" class="btn pe-0" @click.prevent="addStart()"><i class="fa-solid fa-square-plus me-1"></i>Asociar
-          tema</a>
+        <a href="#" class="btn pe-0" @click.prevent="addStart()"
+          ><i class="fa-solid fa-square-plus me-1"></i>Asociar tema</a
+        >
       </div>
       <div class="col-md-12">
-        <DxDataGrid :customize-columns="customizeColumns" :data-source="dxStore" :hover-state-enabled="true"
-          :remote-operations="true" :word-wrap-enabled="true" :row-alternation-enabled="true" :show-borders="false"
-          id="gridContainer" @initialized="onInitialized">
+        <DxDataGrid
+          :customize-columns="customizeColumns"
+          :data-source="dxStore"
+          :hover-state-enabled="true"
+          :remote-operations="true"
+          :word-wrap-enabled="true"
+          :row-alternation-enabled="true"
+          :show-borders="false"
+          id="gridContainer"
+          @initialized="onInitialized"
+        >
           <DxLoadPanel :enabled="false" />
           <DxFilterRow :visible="true" />
           <!-- <DxColumnChooser :enabled="true" mode="dragAndDrop" />
@@ -349,38 +400,107 @@ onMounted(async () => {
 							<DxSearchPanel :visible="false" :highlight-case-sensitive="false" /> -->
           <DxSorting mode="single" /><!-- single, multiple, none" -->
           <DxSummary>
-            <DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
+            <DxGroupItem
+              summary-type="count"
+              column="group_type_name"
+              display-format="{0}"
+            />
           </DxSummary>
           <DxPaging :page-size="15" />
-          <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
-            :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} temas (página {0} de {1})" />
-          <DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
-            :allow-sorting="true" alignment="center" />
+          <DxPager
+            :visible="true"
+            :show-info="true"
+            :show-page-size-selector="false"
+            :show-navigation-buttons="true"
+            :allowed-page-sizes="[15, 50, 'Todos']"
+            info-text="{2} temas (página {0} de {1})"
+          />
+          <DxColumn
+            data-field="id"
+            caption="Id"
+            :visible="false"
+            :width="80"
+            :allow-filtering="false"
+            :allow-sorting="true"
+            alignment="center"
+          />
           <DxColumn data-field="temaNombre" caption="Tema" :visible="true" />
-          <DxColumn data-field="dependenciaNombre" caption="Dependencia" :visible="true" width="120" />
-          <DxColumn data-field="docenteNombre" caption="Docente" :visible="true" />
-          <DxColumn data-field="lugarRealizacion" caption="Lugar" :visible="true" width="120" />
-          <DxColumn data-field="direccionRealizacion" caption="Dirección" :visible="true" width="120" />
-          <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
-            cell-template="tpl1">
-            <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
+          <DxColumn
+            data-field="dependenciaNombre"
+            caption="Dependencia"
+            :visible="true"
+            width="120"
+          />
+          <DxColumn
+            data-field="docenteNombre"
+            caption="Docente"
+            :visible="true"
+          />
+          <DxColumn
+            data-field="lugarRealizacion"
+            caption="Lugar"
+            :visible="true"
+            width="120"
+          />
+          <DxColumn
+            data-field="direccionRealizacion"
+            caption="Dirección"
+            :visible="true"
+            width="120"
+          />
+          <DxColumn
+            :width="100"
+            data-field="activo"
+            caption="Activo"
+            alignment="center"
+            :visible="true"
+            cell-template="tpl1"
+          >
+            <DxLookup
+              :data-source="$si_no"
+              value-expr="value"
+              display-expr="name"
+            />
           </DxColumn>
           <template #tpl1="{ data }">
             <span v-if="data.data.activo">SI</span>
             <span v-else>NO</span>
           </template>
-          <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
-            fixed-position="right" />
+          <DxColumn
+            :width="70"
+            alignment="center"
+            cell-template="tpl"
+            caption=""
+            name="cmds"
+            :fixed="true"
+            fixed-position="right"
+          />
           <template #tpl="{ data }">
             <span class="cmds">
-              <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
+              <a
+                title="Editar"
+                class="cmd-item color-main-600 me-2"
+                @click.prevent="addStart(data.data)"
+                href="#"
+              >
                 <i class="fa-solid fa-pen-to-square fa-lg"></i>
               </a>
-              <a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
-                @click.prevent="active(data.data, false)" href="#">
+              <a
+                v-if="data.data.activo"
+                title="Desactivar"
+                class="cmd-item color-main-600"
+                @click.prevent="active(data.data, false)"
+                href="#"
+              >
                 <i class="fa-regular fa-square-minus fa-lg"></i>
               </a>
-              <a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
+              <a
+                v-else
+                title="Activar"
+                class="cmd-item color-main-600"
+                @click.prevent="active(data.data, true)"
+                href="#"
+              >
                 <i class="fa-regular fa-square-check fa-lg"></i>
               </a>
             </span>
@@ -389,6 +509,11 @@ onMounted(async () => {
       </div>
     </div>
 
-    <Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" />
+    <Cmds
+      v-if="item"
+      :item="item"
+      :item-id="item.id"
+      @on-cancel="callOnCancel"
+    />
   </div>
 </template>

@@ -72,6 +72,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(items);
 		}
 
+		[HttpPost("by-curso-id-participantes")]
+		public ActionResult ByCursoIdParticipantes([FromBody] int cursoId)
+		{
+			var items = _db.CursoUsuario?.Where(o => o.CursoId == cursoId).ToList();
+			return Ok(items);
+		}
+
 		[HttpPost("ed-tema")] // /api/curso/ed => CREATE - UPDATE
 		public ActionResult EditTemas(CursoTemaModel curso)
 		{
@@ -233,6 +240,19 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			opts.PrimaryKey = new[] { "Id" };
 			var data = JsonConvert.DeserializeObject<GenericModel>(opts.UserData);
 			var items = _db.CursosTemas.Where(o => o.CursoId == data.id).OrderBy(o => o.TemaNombre).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
+		}
+
+		[HttpPost("participantes-dx")] // /api/curso/temas-dx
+		public ActionResult ParticipantesDx()
+		{
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "Id" };
+			var data = JsonConvert.DeserializeObject<GenericModel>(opts.UserData);
+			var items = _db.CursosUsuarios.Where(o => o.CursoId == data.id).OrderBy(o => o.Name).ToList();
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

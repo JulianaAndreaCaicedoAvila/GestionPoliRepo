@@ -71,9 +71,9 @@ let paginate = () => {
     cursos.value.length <= pageSize.value
       ? cursos.value
       : cursos.value.slice(
-        (currentPage.value - 1) * pageSize.value,
-        currentPage.value * pageSize.value
-      );
+          (currentPage.value - 1) * pageSize.value,
+          currentPage.value * pageSize.value
+        );
   console.log("items =>", cursos.value);
   console.log("evaluaciones =>", toRaw(cursos.value));
   currentItems.value = items;
@@ -124,11 +124,14 @@ let itemSelected = async (e) => {
     console.log("niveles =>", toRaw(niveles.value));
   }
 };
+
 onMounted(async () => {
   por.value = route.params.por;
   console.log("por =>", por.value);
   dependenciaId.value = por.value == "capacitacion" ? 13 : 14;
-  cursos.value = await cursoStore.PublicadosPorDependenciaId(dependenciaId.value);
+  cursos.value = await cursoStore.PublicadosPorDependenciaId(
+    dependenciaId.value
+  );
   escuelas.value = await storeEscuelas.all();
   asistencias.value = await store.porTipoNombre("tipo_asistencia");
   tipoCurso.value = await store.porTipoNombre("tipo_curso");
@@ -150,7 +153,9 @@ onMounted(async () => {
     <div class="row">
       <div class="col">
         <div class="card data mb-4">
-          <div class="card-header main d-flex justify-content-between align-items-center">
+          <div
+            class="card-header main d-flex justify-content-between align-items-center"
+          >
             <span v-if="por == 'capacitacion'">
               <i class="fa-solid fa-people-group"></i>
               Oferta Académica de Capacitación
@@ -165,8 +170,18 @@ onMounted(async () => {
               </router-link>
             </span>
           </div>
-          <img class="card-img-top h-6vw" src="/assets/img/banner-03.jpg" alt="Card Image" v-if="por == 'capacitacion'" />
-          <img class="card-img-top h-6vw" src="/assets/img/banner-04.jpg" alt="Card Image" v-else />
+          <img
+            class="card-img-top h-6vw"
+            src="/assets/img/banner-03.jpg"
+            alt="Card Image"
+            v-if="por == 'capacitacion'"
+          />
+          <img
+            class="card-img-top h-6vw"
+            src="/assets/img/banner-04.jpg"
+            alt="Card Image"
+            v-else
+          />
           <div class="card-body pt-3 pb-0" id="panel-buscar">
             <div class="row mb-4">
               <div class="col-md-12 fs">
@@ -177,30 +192,58 @@ onMounted(async () => {
                   </legend>
                   <div class="row">
                     <div class="col-md-3 mb-3">
-                      <label class="tit">Tipo de asistencia</label>
-                      <DxSelectBox id="asistenciaId" :data-source="asistencias" :show-clear-button="true"
-                        class="form-control" display-expr="nombre" v-model="tipoAsistenciaId" placeholder="asistencias"
-                        value-expr="id" @value-changed="itemSelected">
+                      <label class="tit">Busqueda Nombre</label>
+                      <DxTextBox
+                        id="nombreCurso"
+                        value-change-event="keyup"
+                        :show-clear-button="true"
+                        v-model="item"
+                        class="form-control"
+                        placeholder="Nombre del curso"
+                        @focus-out="$capitalizeAll"
+                      >
                         <DxValidator>
                           <DxRequiredRule />
                         </DxValidator>
-                      </DxSelectBox>
+                      </DxTextBox>
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="tit">Territorial</label>
-                      <DxSelectBox id="territorialId" :data-source="territoriales" :grouped="false" :min-search-length="2"
-                        :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-                        class="form-control" display-expr="nombre" v-model="territorialId" placeholder="Territoriales"
-                        value-expr="id" @value-changed="itemSelected">
+                      <DxSelectBox
+                        id="territorialId"
+                        :data-source="territoriales"
+                        :grouped="false"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        class="form-control"
+                        display-expr="nombre"
+                        v-model="territorialId"
+                        placeholder="Territoriales"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                      >
                       </DxSelectBox>
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="tit">Departamento</label>
-                      <DxSelectBox id="departamentoId" :data-source="departamentos" :grouped="false"
-                        :disabled="departamentos.length <= 0" :min-search-length="2" :search-enabled="true"
-                        :show-clear-button="true" :show-data-before-search="true" class="form-control"
-                        :display-expr="divipola" v-model="departamentoId" placeholder="Departamento" value-expr="id"
-                        @value-changed="itemSelected">
+                      <DxSelectBox
+                        id="departamentoId"
+                        :data-source="departamentos"
+                        :grouped="false"
+                        :disabled="departamentos.length <= 0"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        class="form-control"
+                        :display-expr="divipola"
+                        v-model="departamentoId"
+                        placeholder="Departamento"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                      >
                         <DxValidator>
                           <DxRequiredRule />
                         </DxValidator>
@@ -208,11 +251,41 @@ onMounted(async () => {
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="tit">Municipio</label>
-                      <DxSelectBox id="municipioId" :data-source="municipios" :grouped="false"
-                        :disabled="municipios.length <= 0" :min-search-length="2" :search-enabled="true"
-                        :show-clear-button="true" :show-data-before-search="true" class="form-control"
-                        :display-expr="divipola" v-model="municipioId" placeholder="Municipio" value-expr="id"
-                        @value-changed="itemSelected" item-template="item">
+                      <DxSelectBox
+                        id="municipioId"
+                        :data-source="municipios"
+                        :grouped="false"
+                        :disabled="municipios.length <= 0"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        class="form-control"
+                        :display-expr="divipola"
+                        v-model="municipioId"
+                        placeholder="Municipio"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                        item-template="item"
+                      >
+                        <DxValidator>
+                          <DxRequiredRule />
+                        </DxValidator>
+                      </DxSelectBox>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label class="tit">Tipo de asistencia</label>
+                      <DxSelectBox
+                        id="asistenciaId"
+                        :data-source="asistencias"
+                        :show-clear-button="true"
+                        class="form-control"
+                        display-expr="nombre"
+                        v-model="tipoAsistenciaId"
+                        placeholder="tipo de asistencia"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                      >
                         <DxValidator>
                           <DxRequiredRule />
                         </DxValidator>
@@ -220,10 +293,22 @@ onMounted(async () => {
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="tit">Tipo de Curso</label>
-                      <DxSelectBox id="tipoCursoId" :data-source="tipoCurso" :grouped="false" :min-search-length="2"
-                        :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-                        display-expr="nombre" class="form-control" v-model="tipoCursoId" placeholder="tipo de curso"
-                        value-expr="id" @value-changed="itemSelected" item-template="item">
+                      <DxSelectBox
+                        id="tipoCursoId"
+                        :data-source="tipoCurso"
+                        :grouped="false"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        display-expr="nombre"
+                        class="form-control"
+                        v-model="tipoCursoId"
+                        placeholder="tipo de curso"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                        item-template="item"
+                      >
                         <DxValidator>
                           <DxRequiredRule />
                         </DxValidator>
@@ -231,10 +316,21 @@ onMounted(async () => {
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="tit">Escuelas</label>
-                      <DxSelectBox id="escuelaId" :grouped="false" :data-source="escuelas" :min-search-length="2"
-                        :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-                        class="form-control" display-expr="nombre" v-model="escuelaId" placeholder="Tipo de asistencia"
-                        value-expr="id" @value-changed="itemSelected">
+                      <DxSelectBox
+                        id="escuelaId"
+                        :grouped="false"
+                        :data-source="escuelas"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        class="form-control"
+                        display-expr="nombre"
+                        v-model="escuelaId"
+                        placeholder="Tipo de asistencia"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                      >
                         <DxValidator>
                           <DxRequiredRule />
                         </DxValidator>
@@ -242,10 +338,22 @@ onMounted(async () => {
                     </div>
                     <div class="col-md-3 mb-3">
                       <label class="tit">Niveles</label>
-                      <DxSelectBox id="nivelId" :grouped="false" :data-source="niveles" :disabled="niveles.length <= 0"
-                        :min-search-length="2" :search-enabled="true" :show-clear-button="true"
-                        :show-data-before-search="true" class="form-control" display-expr="nombre" v-model="nivelId"
-                        placeholder="Niveles" value-expr="id" @value-changed="itemSelected">
+                      <DxSelectBox
+                        id="nivelId"
+                        :grouped="false"
+                        :data-source="niveles"
+                        :disabled="niveles.length <= 0"
+                        :min-search-length="2"
+                        :search-enabled="true"
+                        :show-clear-button="true"
+                        :show-data-before-search="true"
+                        class="form-control"
+                        display-expr="nombre"
+                        v-model="nivelId"
+                        placeholder="Niveles"
+                        value-expr="id"
+                        @value-changed="itemSelected"
+                      >
                         <DxValidator>
                           <DxRequiredRule />
                         </DxValidator>
@@ -254,10 +362,19 @@ onMounted(async () => {
                   </div>
                   <div class="row">
                     <div class="col d-flex justify-content-between">
-                      <span><a href="#" class="btn btn-gray d-inline-block"><i
-                            class="fa-regular fa-eraser me-2"></i><span>Limpiar búsqueda</span></a></span>
+                      <span
+                        ><a href="#" class="btn btn-gray d-inline-block"
+                          ><i class="fa-regular fa-eraser me-2"></i
+                          ><span>Limpiar búsqueda</span></a
+                        ></span
+                      >
                       <span>
-                        <button type="button" class="btn btn-main" title="Consultar" @click.prevent="buscarEventos()">
+                        <button
+                          type="button"
+                          class="btn btn-main"
+                          title="Consultar"
+                          @click.prevent="buscarEventos()"
+                        >
                           Buscar eventos
                           <i class="fa-solid fa-magnifying-glass ms-1"></i>
                         </button>
@@ -273,17 +390,36 @@ onMounted(async () => {
     </div>
 
     <div class="row pt-0 mb-2">
-      <div class="col-md-12 content d-flex justify-content-center align-items-center">
-        <Pagination v-model="currentPage" :page-count="pageCount" :click-handler="onPaging" :margin-pages="3"
-          :page-range="3" :first-last-button="true" prev-text="Anteriores" next-text="Siguientes"
-          first-button-text="Iniciales" last-button-text="Finales" />
+      <div
+        class="col-md-12 content d-flex justify-content-center align-items-center"
+      >
+        <Pagination
+          v-model="currentPage"
+          :page-count="pageCount"
+          :click-handler="onPaging"
+          :margin-pages="3"
+          :page-range="3"
+          :first-last-button="true"
+          prev-text="Anteriores"
+          next-text="Siguientes"
+          first-button-text="Iniciales"
+          last-button-text="Finales"
+        />
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-4 mb-4" v-for="(item, index) in currentItems" :key="index">
+      <div
+        class="col-md-4 mb-4"
+        v-for="(item, index) in currentItems"
+        :key="index"
+      >
         <div class="card evento">
-          <img class="card-img-top bb h-6vw" :src="'/store/img/' + item.imagenCurso" alt="Card image cap" />
+          <img
+            class="card-img-top bb h-6vw"
+            :src="'/store/img/' + item.imagenCurso"
+            alt="Card image cap"
+          />
           <div class="card-body py-2 px-4">
             <p class="card-title mb-2 mt-2">{{ item.nombre }}</p>
             <p class="card-text">
@@ -301,11 +437,19 @@ onMounted(async () => {
             </p>
           </div>
           <div class="card-footer d-flex justify-content-between">
-            <span class="type presencial ms-2" v-if="item.tipoAsistenciaId == 299">
+            <span
+              class="type presencial ms-2"
+              v-if="item.tipoAsistenciaId == 299"
+            >
               <i class="fa fa-users me-1"></i> EVENTO PRESENCIAL
             </span>
-            <span class="type virtual ms-2" v-else><i class="fa fa-desktop me-1"></i> EVENTO VIRTUAL</span>
-            <router-link :to="{ name: 'inscripcion', params: { id: item.id } }" title="Inscribirse...">
+            <span class="type virtual ms-2" v-else
+              ><i class="fa fa-desktop me-1"></i> EVENTO VIRTUAL</span
+            >
+            <router-link
+              :to="{ name: 'inscripcion', params: { id: item.id } }"
+              title="Inscribirse..."
+            >
               INSCRIBIRSE <i class="fa fa-pencil ms-1"></i>
             </router-link>
           </div>
@@ -314,10 +458,21 @@ onMounted(async () => {
     </div>
 
     <div class="row pt-3 mb-2">
-      <div class="col-md-12 content d-flex justify-content-center align-items-center">
-        <Pagination v-model="currentPage" :page-count="pageCount" :click-handler="onPaging" :margin-pages="3"
-          :page-range="3" :first-last-button="true" prev-text="Anteriores" next-text="Siguientes"
-          first-button-text="Iniciales" last-button-text="Finales" />
+      <div
+        class="col-md-12 content d-flex justify-content-center align-items-center"
+      >
+        <Pagination
+          v-model="currentPage"
+          :page-count="pageCount"
+          :click-handler="onPaging"
+          :margin-pages="3"
+          :page-range="3"
+          :first-last-button="true"
+          prev-text="Anteriores"
+          next-text="Siguientes"
+          first-button-text="Iniciales"
+          last-button-text="Finales"
+        />
       </div>
     </div>
   </div>

@@ -1,3 +1,10 @@
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+202402060144:
+Inclusión de https://vueuse.org/guide/
+https://stephanlangeveld.medium.com/simple-local-storage-implementation-using-vue-3-vueuse-and-pinia-with-zero-extra-lines-of-code-cb9ed2cce42a
+
+---------------------------------------------------------------------------------------------------------------------------------------------
 
 202312011530:
 https://dotnet.microsoft.com/es-es/download/visual-studio-sdks
@@ -7,7 +14,6 @@ https://stackoverflow.com/a/57070108
 To install the dotnet-ef tool, run the following command:
 dotnet tool install --global dotnet-ef
 dotnet tool install --global dotnet-ef --version 6.*
-
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 

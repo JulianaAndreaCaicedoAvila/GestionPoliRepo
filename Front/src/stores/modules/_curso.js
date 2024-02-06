@@ -1,11 +1,16 @@
+// 202402060148: imple Local Storage implementation using Vue 3, Vueuse and Pinia with zero extra lines of code
+// https://stephanlangeveld.medium.com/simple-local-storage-implementation-using-vue-3-vueuse-and-pinia-with-zero-extra-lines-of-code-cb9ed2cce42a
+// https://vueuse.org/core/useStorage/#usestorage
+
 import api from "@/utils/api";
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 export const useCursoStore = defineStore({
 	id: "Curso",
 	state: () => ({
 		item: null,
-		items: [],
-		itemsPublicados: [],
+		items: useStorage("cursos", []),
+		itemsPublicados: useStorage("cursosPublicados", []),
 	}),
 	actions: {
 		limpiar() {

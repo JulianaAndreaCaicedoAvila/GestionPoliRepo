@@ -1,10 +1,11 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 export const useArchivoStore = defineStore({
 	id: "Archivo",
 	state: () => ({
-		imagenes: [],
-		documentos: [],
+		imagenes: useStorage("imagenes", []),
+		documentos: useStorage("documentos", []),
 	}),
 	actions: {
 		limpiar() {

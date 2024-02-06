@@ -1,11 +1,11 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 export const useClasificadorStore = defineStore({
 	id: "clasificador",
 	state: () => ({
-		items: [],
-		itemsTipos: [],
-		acciones: [],
+		items: useStorage("clasificadores", []),
+		itemsTipos: useStorage("clasificadoresTipos", []),
 	}),
 	getters: {
 		count(state) {
@@ -21,15 +21,11 @@ export const useClasificadorStore = defineStore({
 		especificos(state) {
 			return state.items.filter((o) => o.tipoId == 8 && o.activo);
 		},
-		acciones_a(state) {
-			return state.acciones.filter((o) => o.activo);
-		},
 	},
 	actions: {
 		limpiar() {
 			this.items = [];
 			this.itemsTipos = [];
-			this.acciones = [];
 		},
 		async tipos() {
 			console.log("store.tipos!");

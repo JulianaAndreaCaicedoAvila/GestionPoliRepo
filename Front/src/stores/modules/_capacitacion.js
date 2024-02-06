@@ -1,5 +1,6 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 export const useCapacitacionStore = defineStore({
 	id: "Capacitacion",
 	state: () => ({
@@ -293,6 +294,5 @@ export const useCapacitacionStore = defineStore({
 			let items = await this.all();
 			return items.filter((o) => o.dependenciaId == dependenciaId);
 		},
-		
 	},
 });

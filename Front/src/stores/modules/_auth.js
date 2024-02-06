@@ -2,6 +2,7 @@ import { toRaw } from "vue";
 import api from "@/utils/api";
 import { router } from "@/utils";
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 import { PublicClientApplication } from "@azure/msal-browser";
 
 const tokenVariableName = "user_token",
@@ -38,9 +39,9 @@ const tokenVariableName = "user_token",
 export const useAuthStore = defineStore("auth", {
 	id: "auth",
 	state: () => ({
-		roles: [],
 		msal: null,
 		returnUrl: null,
+		roles: useStorage("authRoles", []),
 		token: localStorage.getItem(tokenVariableName),
 		tokenDecrypted: null,
 		user: localStorage.getItem(userVariableName),

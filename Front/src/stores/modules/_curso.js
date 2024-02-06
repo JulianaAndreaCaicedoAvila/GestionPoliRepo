@@ -65,6 +65,10 @@ export const useCursoStore = defineStore({
 					return this.items;
 				});
 		},
+		async CursoPorId(cursoId) {
+			let items = await this.all();
+			return items.filter((o) => o.cursoId == cursoId);
+		},
 		async CursoTemasbyId(cursoId) {
 			let items = await this.getByIdCursoTemas();
 			return items.filter((o) => o.cursoId == cursoId);

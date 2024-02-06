@@ -1,5 +1,6 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 export const useGenericStore = defineStore({
 	id: "generico",
 	state: () => ({

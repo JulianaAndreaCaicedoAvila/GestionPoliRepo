@@ -1,9 +1,10 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
+import { useStorage } from "@vueuse/core";
 export const useModuloStore = defineStore({
 	id: "Modulo",
 	state: () => ({
-		items: [],
+		items: useStorage("modulos", []),
 	}),
 	actions: {
 		limpiar() {

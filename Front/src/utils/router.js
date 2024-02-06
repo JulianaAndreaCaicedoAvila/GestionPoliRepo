@@ -21,6 +21,18 @@ export const router = createRouter({
 			component: () => import("@/pages/auth/login.vue"),
 		},
 		{
+			name: "registro",
+			path: "/registro",
+			meta: { title: "Registrarse", requiresAuth: false },
+			component: () => import("@/pages/auth/perfil.vue"),
+		},
+		{
+			name: "perfil",
+			path: "/perfil",
+			meta: { title: "Perfil de usuario", requiresAuth: true, roles: "*" },
+			component: () => import("@/pages/auth/perfil.vue"),
+		},
+		{
 			name: "activar",
 			path: "/activar",
 			meta: { title: "Activar cuenta", requiresAuth: false },
@@ -121,7 +133,7 @@ export const router = createRouter({
 			name: "inscripcion",
 			path: "/inscripcion/:id?",
 			meta: { title: "Inscripción", requiresAuth: false },
-			component: () => import("@/pages/inscripcion/tabs.vue"), // 202312060755: Lleva al Wizard
+			component: () => import("@/pages/inscripcion.vue"), // 202312060755: Lleva al Wizard
 		},
 		{
 			name: "cursos",
@@ -228,7 +240,7 @@ router.beforeEach((to, from, next) => {
 		console.log("roleId =>");
 		// User is authenticated
 		if (auth.user) {
-			if (to.meta.roles.length == 0 || to.meta.roles.includes(auth.user.roleId)) next();
+			if (to.meta.roles.length == 0 || to.meta.roles == "*" || to.meta.roles.includes(auth.user.roleId)) next();
 			else {
 				next({ name: DEFAULT_ROUTE });
 			}

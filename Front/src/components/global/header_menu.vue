@@ -58,7 +58,7 @@ onMounted(() => {
                 <router-link class="dropdown-item dropdown-toggle" :to="{ name: 'inicio' }"><i
                     class="fa-solid fa-home"></i>&nbsp;&nbsp;INICIO</router-link>
               </li>
-              <li class="dropdown">
+              <li class="dropdown ms-lg-auto">
                 <a class="dropdown-item dropdown-toggle" href="#">
                   <i class="fa-sharp fa-solid fa-file-certificate me-2"></i>
                   CERTIFICADOS
@@ -80,7 +80,7 @@ onMounted(() => {
                   </li>
                 </ul>
               </li>
-              <li class="dropdown" v-if="auth.user && auth.esAdmin">
+              <li class="dropdown ms-lg-auto" v-if="auth.user && auth.esAdmin">
                 <a class="dropdown-item dropdown-toggle" href="#">
                   <i class="fa fa-gear me-2"></i>ADMINISTRACIÓN<i class="ms-2 fa-solid fa-angle-down"></i></a>
                 <ul class="dropdown-menu">
@@ -177,21 +177,6 @@ onMounted(() => {
                       </li>
                     </ul>
                   </li>
-                  <!-- <li class="dropdown-submenu">
-                    <a class="dropdown-item" href="#">Participantes<i class="fas fa-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                      <li>
-                        <router-link :to="{
-                          name: 'asistenciaParticipantes',
-                        }" class="dropdown-item">Asistencia de Participantes</router-link>
-                      </li>
-                      <li>
-                        <router-link :to="{
-                          name: 'cursosParticipantes',
-                        }" class="dropdown-item">Cursos de Participantes</router-link>
-                      </li>
-                    </ul>
-                  </li> -->
                   <li class="dropdown-submenu">
                     <a class="dropdown-item" href="#">Catálogo<i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
@@ -216,32 +201,37 @@ onMounted(() => {
                       </li>
                     </ul>
                   </li>
+                  <!-- <li>
+                    <router-link :to="{ name: 'tablero' }" class="dropdown-item"><i
+                        class="fa-solid fa-chart-column me-2"></i>Tablero</router-link>
+                  </li> -->
                 </ul>
               </li>
-              <li class="dropdown" v-if="auth.user && auth.esAdmin">
-                <router-link class="dropdown-item dropdown-toggle" :to="{ name: 'tablero' }"><i
-                    class="fa-solid fa-chart-column me-2"></i>TABLERO</router-link>
+              <li class="dropdown ms-lg-auto" v-if="!auth.user">
+                <router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'registro' }">
+                  <i class="fa-solid fa-user-pen me-2"></i>REGISTRARSE</router-link>
               </li>
-              <li class="dropdown dropdown-menu-end ms-lg-auto no-line-effect" v-if="!auth.user">
+              <li class="dropdown ms-lg-auto" v-if="!auth.user">
                 <router-link class="dropdown-item dropdown-toggle pe-0 ps-2" :to="{ name: 'ingreso' }">
                   <i class="fa-solid fa-user-lock me-2"></i>INGRESAR</router-link>
               </li>
-              <li class="dropdown dropdown-menu-end dropdown-reverse ms-lg-auto no-line-effect" v-if="auth.user">
-                <a class="dropdown-item dropdown-toggle" href="#">
-                  <i class="fa-solid fa-user me-2"></i> {{ auth.user.name }}
+              <li class="dropdown ms-lg-auto dropdown-menu-end dropdown-reverse" v-if="auth.user">
+                <a class="dropdown-item dropdown-toggle" href="#" v-if="auth.user.name">
+                  <i class="fa-solid fa-user me-2"></i> {{ auth.user.name.toUpperCase() }}
                   <i class="ms-2 fa-solid fa-angle-down"></i>
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Mi
-                      información</router-link>
+                    <router-link :to="{ name: 'perfil' }" class="dropdown-item">
+                      <!-- <i class="fa-regular fa-address-card me-2"></i> -->
+                      Perfil de usuario</router-link>
                   </li>
-                  <li>
+                  <!-- <li>
                     <router-link :to="{ name: 'admin-clasificador-tipo' }" class="dropdown-item">Mis eventos</router-link>
-                  </li>
+                  </li> -->
                   <li>
-                    <a href="#" @click.prevent="logout" class="dropdown-item"><i
-                        class="fa-solid fa-right-from-bracket me-1"></i>
+                    <a href="#" @click.prevent="logout" class="dropdown-item">
+                      <!-- <i class="fa-solid fa-right-from-bracket me-1"></i> -->
                       Cerrar Sesión</a>
                   </li>
                 </ul>

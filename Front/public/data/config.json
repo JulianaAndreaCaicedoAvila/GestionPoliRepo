@@ -7,7 +7,7 @@
 			"authority": "https://login.microsoftonline.com/b24f0388-e61b-43e0-b9e7-baa5b0d5121e"
 		},
 		"cache": {
-			"cacheLocation": "localStorage"
+			"cacheLocation": "sessionStorage"
 		}
 	},
 	"general": {

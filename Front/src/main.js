@@ -10,6 +10,7 @@ locale("es");
 import { router } from "./utils";
 import "./assets/scss/global.scss";
 import { useAuthStore } from "@/stores";
+import { useDateFormat } from "@vueuse/core";
 window.$ = window.jQuery;
 console.log("window.address =>", window.address);
 window._basePath = window.address.origin;
@@ -94,6 +95,10 @@ axios
 		props.$formatSize = (data) => {
 			console.log("data =>", data);
 			return data.sizeFormat();
+		};
+		// 202402060911: https://vueuse.org/shared/useDateFormat/
+		props.$formatDate = (data, format = "DD/MM/YYYY") => {
+			return useDateFormat(data, format).value;
 		};
 	})
 	.catch((err) => {

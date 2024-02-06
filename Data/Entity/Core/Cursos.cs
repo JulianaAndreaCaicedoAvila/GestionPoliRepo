@@ -81,6 +81,7 @@ namespace ESAP.Sirecec.Data.Core
 		public bool? CertificadoVerCiudad { get; set; }
 		public DateTime CertificadoFechaExpedicion { get; set; }
 		public int Documentos { get; set; }
+		public int Imagenes { get; set; }
 		public int Encuestas { get; set; }
 		public int Fechas { get; set; }
 		public int Temas { get; set; }

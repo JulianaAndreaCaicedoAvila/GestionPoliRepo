@@ -1,10 +1,10 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
-import { useStorage } from "@vueuse/core";
+import { useSessionStorage } from "@vueuse/core";
 export const useIndicadorStore = defineStore({
 	id: "Indicador",
 	state: () => ({
-		items: useStorage("indicadores", []),
+		items: useSessionStorage("indicadores", []),
 	}),
 	actions: {
 		limpiar() {

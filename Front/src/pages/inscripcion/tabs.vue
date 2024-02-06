@@ -33,7 +33,7 @@ onMounted(async () => {
   console.log("id.length", id.length);
   if (id.length > 0) {
     cursoId.value = id;
-    curso.value = await store.CursoPorId(id);
+    curso.value = await store.cursoPorId(id);
     console.log("curso =>", toRaw(curso.value));
     console.log("CARGAR CURSO!!");
     cursoId.value = parseInt(id);
@@ -95,5 +95,6 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+    {{ curso }}
   </div>
 </template>

@@ -563,6 +563,10 @@ span.cmds {
 	border-bottom: 1px dotted #ccc;
 }
 
+.btd {
+	border-top: 1px dotted #ccc;
+}
+
 .bt {
 	border-top: 1px dotted #ccc;
 }
@@ -1214,3 +1218,8 @@ a.disabled {
 		font-size: 18px !important;
 	}
 }
+
+// .nav {
+// 	display: flex;
+// 	flex-direction: row;
+// }

@@ -189,6 +189,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpGet("cursos-temas")]// api/curso/temas
+		[Authorization.AllowAnonymous]
 		public ActionResult CursosTemas()
 		{
 			var items = _db.CursosTemas?.ToList();
@@ -196,6 +197,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpGet("cursos-documentos")]// api/curso/temas
+		[Authorization.AllowAnonymous]
 		public ActionResult CursosDocumentos()
 		{
 			var items = _db.CursosDocumentos?.ToList();
@@ -212,6 +214,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("fechas")] // /curso/fechas
+		[Authorization.AllowAnonymous]
 		public ActionResult TemasDx([FromBody] int cursoId)
 		{
 			var items = _db.CursoFecha?.Where(o => o.CursoId == cursoId).ToList();

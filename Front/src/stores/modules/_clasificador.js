@@ -1,11 +1,11 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
-import { useStorage } from "@vueuse/core";
+import { useSessionStorage } from "@vueuse/core";
 export const useClasificadorStore = defineStore({
 	id: "clasificador",
 	state: () => ({
-		items: useStorage("clasificadores", []),
-		itemsTipos: useStorage("clasificadoresTipos", []),
+		items: useSessionStorage("clasificadores", []),
+		itemsTipos: useSessionStorage("clasificadoresTipos", []),
 	}),
 	getters: {
 		count(state) {

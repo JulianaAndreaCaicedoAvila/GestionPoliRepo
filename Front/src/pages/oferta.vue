@@ -21,6 +21,7 @@ import DxValidator, {
   DxEmailRule,
   DxStringLengthRule,
 } from "devextreme-vue/validator";
+const baseUrl = import.meta.env.BASE_URL;
 const router = useRouter(),
   route = useRoute(),
   store = useClasificadorStore(),
@@ -295,7 +296,7 @@ onMounted(async () => {
     <div class="row">
       <div class="col-md-4 mb-4" v-for="(item, index) in currentItems" :key="index">
         <div class="card evento">
-          <img class="card-img-top bb h-6vw" :src="'/store/img/' + item.imagenCurso" alt="Card image cap" />
+          <img class="card-img-top bb h-6vw" :src="baseUrl + 'store/img/' + item.imagenCurso" alt="Card image cap" />
           <div class="card-body py-2 px-4">
             <p class="card-title mb-2 mt-2">{{ item.nombre }}</p>
             <p class="card-text">

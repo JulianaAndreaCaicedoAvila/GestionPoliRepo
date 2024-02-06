@@ -297,6 +297,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
             return Ok(loadResult);
         }
 
+        [AllowAnonymous]
+        [HttpPost("porEmail")]
+        public async Task<ActionResult> ByEmail([FromBody] string email)
+        {
+            var usr = await _userManager.FindByEmailAsync(email);
+            return Ok(usr);
+        }
+
         [HttpPost("porRol")]
         public async Task<ActionResult> AllUsersAsync([FromBody] string roleName)
         {

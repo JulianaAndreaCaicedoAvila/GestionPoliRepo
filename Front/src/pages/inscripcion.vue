@@ -2,6 +2,7 @@
 import { useRouter, useRoute } from "vue-router";
 import { ref, toRaw, onMounted } from "vue";
 import { useCursoStore, useAuthStore } from "@/stores";
+const baseUrl = import.meta.env.BASE_URL;
 const router = useRouter(), route = useRoute(), storeCursos = useCursoStore(), auth = useAuthStore();
 let curso = ref(null), back = ref(null), temas = ref([]);
 onMounted(async () => {
@@ -50,7 +51,7 @@ onMounted(async () => {
                   <p>{{ curso.descripcion }}</p>
                 </div>
                 <div class="col-md-3">
-                  <img class="img-fluid" :src="'/store/img/' + curso.imagenCurso" alt="Card image cap" />
+                  <img class="img-fluid" :src="baseUrl + 'store/img/' + curso.imagenCurso" alt="Card image cap" />
                 </div>
               </div>
               <div class="row p-3 pb-0 pt-4 bbd">

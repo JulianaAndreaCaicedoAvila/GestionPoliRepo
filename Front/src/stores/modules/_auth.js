@@ -101,6 +101,13 @@ export const useAuthStore = defineStore("auth", {
 					return r.data;
 				});
 		},
+		async porEmail(email) {
+			return await api()
+				.post(`usuario/porEmail`, email)
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async getRoles() {
 			console.log("Roles =>", this.roles);
 			if (this.roles.length > 0) return this.roles;

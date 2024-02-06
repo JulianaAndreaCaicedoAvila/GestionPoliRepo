@@ -13,7 +13,10 @@ import {
   useGeografiaStore,
 } from "@/stores";
 import DxValidator, {
+  DxAsyncRule,
   DxRequiredRule,
+  DxEmailRule,
+  DxCompareRule,
   DxStringLengthRule,
 } from "devextreme-vue/validator";
 import {
@@ -52,8 +55,13 @@ const router = useRouter(), route = useRoute(),
   temaStore = useTemaStore(),
   store = useClasificadorStore(),
   geoStore = useGeografiaStore(),
-  storeAuth = useAuthStore();
-let titulo = "Temas",
+  auth = useAuthStore();
+let now = new Date(), titulo = "Temas",
+  tipoParticipante = ref([]),
+  tipoServidorPublico = ref([]),
+  situacionEconomica = ref([]),
+  tipoDiscapacidad = ref([]),
+  grupoEtnico = ref([]),
   tipoDocumento = ref([]),
   departamentos = ref([]),
   municipios = ref([]),
@@ -76,10 +84,10 @@ let titulo = "Temas",
   selLeftClass = ref(""),
   item = ref({
     id: 0,
-    cursoId: props.itemId,
-    tipoDocumentoId: null,
-    departamentoId: null,
-    municipioId: null,
+    cursoId: 0,
+    tipoDocumentoId: 0,
+    departamentoId: 0,
+    municipioId: 0,
     entidad: null,
     genero: null,
     nivelEscolar: null,
@@ -88,7 +96,7 @@ let titulo = "Temas",
     documentoIdentidad: null,
     nombres: null,
     apellidos: null,
-    fechaNacimiento: new Date(),
+    fechaNacimiento: now,
     profesion: null,
     teleno: null,
     celular: null,
@@ -168,7 +176,7 @@ let titulo = "Temas",
       // preguntas.value = Object.assign([], preguntasAll.value).filter(
       //   (o) => o.territorialId == null
       // );
-      let q = Object.assign([], temasAll.value);
+      // let q = Object.assign([], temasAll.value);
       // preguntasFrom.value = q;
       temasFrom.value = q.filter((o) => !ids.includes(o.id));
       console.log("Temas =>", toRaw(temas.value));
@@ -206,37 +214,50 @@ let titulo = "Temas",
         if (typeof cb === "function") cb();
       });
     });
-  },
-  save = async () => {
-    console.clear();
-    panelData = $("#data-tema");
-    panelGrid = $("#grid-tema");
-    let result = valGroup.value.instance.validate();
-    if (!result.isValid) {
-      $.scrollTo($(".dx-invalid:first"), {
-        duration: 600,
-        offset: -110,
-      });
-    } else {
-      // CUandoes válido
-      panelData.lock(
-        `${item.id == 0 ? "Adicionando" : "Actualizando"} temas`,
-        async function () {
-          let dto = toRaw(item.value);
-          console.log("dto =>", dto);
-          await api()
-            .post(`cursoTema/ed`, dto)
-            .then((r) => {
-              console.log("r =>", r);
-              cancel(function () {
-                panelData.unlock();
-                grid.refresh();
-              });
-            });
-        }
-      );
-    }
   };
+
+let save = async () => {
+  console.clear();
+  panelData = $("#data-tema");
+  panelGrid = $("#grid-tema");
+  let result = valGroup.value.instance.validate();
+  if (!result.isValid) {
+    $.scrollTo($(".dx-invalid:first"), {
+      duration: 600,
+      offset: -110,
+    });
+  } else {
+    // CUandoes válido
+    panelData.lock(
+      `${item.id == 0 ? "Adicionando" : "Actualizando"} temas`,
+      async function () {
+        let dto = toRaw(item.value);
+        console.log("dto =>", dto);
+        await api()
+          .post(`cursoTema/ed`, dto)
+          .then((r) => {
+            console.log("r =>", r);
+            cancel(function () {
+              panelData.unlock();
+              grid.refresh();
+            });
+          });
+      }
+    );
+  }
+};
+
+let passwordComparison = () => {
+  return item.value.correo;
+};
+
+let checkEmail = async (params) => {
+  console.clear();
+  let usr = await auth.porEmail(params.value);
+  console.log("usr =>", usr);
+  return typeof usr.firstName === "undefined";
+};
+
 let itemSelected = async (e) => {
   console.log(_sep);
   console.log("itemSelected =>", e);
@@ -252,23 +273,13 @@ let itemSelected = async (e) => {
   }
 };
 
-// Propiedades
-let props = defineProps({
-  itemId: { type: Number, default: null, required: false },
-  item: { type: Object, default: null, required: false },
-});
-
 onMounted(async () => {
   console.log("route.name =>", route.name);
-  // $("#grid-tema").lock("Cargando");
-  // console.log(_sep);
-  // console.log("curso-tema.vue MOUNTED!");
-  // temasAll.value = await temaStore.all();
-  // docentes.value = await storeAuth.porRol("DOCENTE");
-  // console.log("temasAll =>", temasAll.value);
-  // list1 = List.getInstance(document.getElementById("list1"));
-  // list2 = List.getInstance(document.getElementById("list2"));
-  // // console.log("route.name =>", route.name);
+  tipoParticipante.value = await store.porTipoNombre("tipo_participante");
+  situacionEconomica.value = await store.porTipoNombre("tipo_vulnerabilidad");
+  tipoDiscapacidad.value = await store.porTipoNombre("tipo_discapacidad");
+  grupoEtnico.value = await store.porTipoNombre("grupo_etnico");
+  tipoServidorPublico.value = await store.porTipoNombre("tipo_servidor_publico");
   tipoDocumento.value = await store.porTipoNombre("tipo_documento_identidad");
   genero.value = await store.porTipoNombre("genero");
   nivelEscolar.value = await store.porTipoNombre("nivel_escolar");
@@ -278,13 +289,14 @@ onMounted(async () => {
   console.log("nivel Escolar =>", nivelEscolar.value);
   // console.log("tipo documentos =>", tipoDocumento.value);
   console.log("genero =>", genero.value);
-  itemId.value = props.itemId;
-  item.value = props.item;
+  // itemId.value = props.itemId;
+  // item.value = props.item;
   // getData();
 });
 </script>
 <template>
   <div class="container content">
+
     <div class="card data mb-5 pb-5" id="data-datos">
       <div class="card-header main d-flex justify-content-between align-items-center">
         <span v-if="route.name == 'registro'">
@@ -306,15 +318,11 @@ onMounted(async () => {
       </div>
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
-          <div class="row bb mb-4 pb-2">
-            <div class="col-md-12">
-              <p class="font-weight-semibold m-0 text-center"><i class="fa-solid fa-circle-info me-1 color-main"></i>
-                Todos los campos son requeridos</p>
-            </div>
-          </div>
           <div class="row mb-4">
-            <div class="col-md-12">
+            <div class="col-md-12 d-flex justify-content-between align-items-center">
               <h4 class="mb-3 pb-2 bbd">1. Información personal</h4>
+              <p class="font-weight-semibold text-center"><i class="fa-solid fa-circle-info me-1 color-main"></i>
+                Todos los campos son requeridos</p>
             </div>
             <div class="col-md-6">
               <div class="row">
@@ -368,16 +376,16 @@ onMounted(async () => {
                 </DxValidator>
               </DxTextBox>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-2 mb-3">
               <label class="tit">Fecha de nacimiento</label>
-              <DxDateBox id="fechaNacimiento" value-change-event="keyup" :show-clear-button="true"
-                :v-model="item.fechaNacimiento" class="form-control" placeholder="Fecha">
+              <DxDateBox id="fechaNacimiento" value-change-event="keyup" :max="now" :show-clear-button="true"
+                :v-model="item.fechaNacimiento" class="form-control" placeholder="Fecha" display-format="dd/MM/yyyy">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
               </DxDateBox>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="tit">Profesión</label>
               <DxTextBox id="profesion" value-change-event="keyup" :show-clear-button="true" :v-model="item.profesion"
                 class="form-control" placeholder="Profesión">
@@ -408,38 +416,51 @@ onMounted(async () => {
                 </DxValidator>
               </DxSelectBox>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-12">
               <div class="row">
-                <div class="col-md-3 mb-3">
-                  <label class="tit">Teléfono</label>
-                  <DxNumberBox id="telefono" value-change-event="keyup" :show-clear-button="true" v-model="item.telefono"
-                    class="form-control" placeholder="Teléfono">
-                    <DxValidator>
-                      <DxRequiredRule />
-                    </DxValidator>
-                  </DxNumberBox>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="tit">Celular</label>
+                      <DxTextBox id="celular" :min-length="10" value-change-event="keyup" :show-clear-button="true"
+                        mask="(300) 000-0000" v-model="item.celular" class="form-control" placeholder="Celular">
+                        <DxValidator>
+                          <DxRequiredRule />
+                        </DxValidator>
+                      </DxTextBox>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="tit">Teléfono</label>
+                      <DxTextBox id="telefono" value-change-event="keyup" :show-clear-button="true"
+                        v-model="item.telefono" class="form-control" placeholder="Teléfono" mask="6\0 (0) 000-0000">
+                      </DxTextBox>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                  <label class="tit">Celular</label>
-                  <DxNumberBox id="celular" value-change-event="keyup" :show-clear-button="true" v-model="item.celular"
-                    class="form-control" placeholder="Celular" @focus-out="$capitalizeAll">
-                    <DxValidator>
-                      <DxRequiredRule />
-                    </DxValidator>
-                  </DxNumberBox>
-                </div>
-                <div class="col-md-5 mb-3">
-                  <label class="tit">Correo</label>
+                  <label class="tit">Correo electrónico</label>
                   <DxTextBox id="correo" value-change-event="keyup" :show-clear-button="true" v-model="item.correo"
-                    class="form-control" placeholder="Correo" @focus-out="$capitalizeAll">
+                    class="form-control" placeholder="Correo" @focus-out="$lowerCase">
+                    <DxValidator>
+                      <DxEmailRule />
+                      <DxRequiredRule />
+                      <DxAsyncRule :validation-callback="checkEmail" message="El correo ya se encuentra registrado" />
+                    </DxValidator>
+                  </DxTextBox>
+                </div>
+                <div class="col-md-4 mb-3" v-if="route.name == 'registro'">
+                  <label class="tit">Confirmar correo electrónico</label>
+                  <DxTextBox id="correo1" value-change-event="keyup" :show-clear-button="true" class="form-control"
+                    placeholder="Correo" @focus-out="$lowerCase">
                     <DxValidator>
                       <DxRequiredRule />
+                      <DxCompareRule :comparison-target="passwordComparison" message="Los correos no coinciden" />
                     </DxValidator>
                   </DxTextBox>
                 </div>
               </div>
             </div>
-            <div class="col-md-5 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="tit">Dirección</label>
               <DxTextBox id="direccion" value-change-event="keyup" :show-clear-button="true" v-model="item.direccion"
                 class="form-control" placeholder="Dirección" @focus-out="$capitalizeAll">
@@ -448,7 +469,7 @@ onMounted(async () => {
                 </DxValidator>
               </DxTextBox>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="tit">Departamento</label>
               <DxSelectBox id="departamentoId" :data-source="departamentos" :grouped="false" :min-search-length="2"
                 :search-enabled="true" @value-changed="itemSelected" v-model="item.departamentoId"
@@ -459,7 +480,7 @@ onMounted(async () => {
                 </DxValidator>
               </DxSelectBox>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="tit">Municipio</label>
               <DxSelectBox id="municipioId" :data-source="municipios" :disabled="municipios.length <= 0" :grouped="false"
                 :min-search-length="2" :search-enabled="true" v-model="item.municipioId" :show-clear-button="true"
@@ -529,7 +550,7 @@ onMounted(async () => {
             <div class="col-md-12">
               <h4 class="mb-3 pb-2 bbd">4. Caracterización</h4>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="tit">Se encuentra en</label>
               <DxSelectBox id="vulnerabilidad" :data-source="situacionEconomica" :grouped="false" :min-search-length="2"
                 :search-enabled="true" v-model="item.situacionEconomica" :show-clear-button="true"
@@ -540,7 +561,7 @@ onMounted(async () => {
                 </DxValidator>
               </DxSelectBox>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="tit">Tipo de discapacidad</label>
               <DxSelectBox id="discapacidad" :data-source="tipoDiscapacidad" :grouped="false" :min-search-length="2"
                 :search-enabled="true" v-model="item.tipoDiscapacidad" :show-clear-button="true"
@@ -551,7 +572,7 @@ onMounted(async () => {
                 </DxValidator>
               </DxSelectBox>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
               <label class="tit">Grupo étnico</label>
               <DxSelectBox id="grupoEtnico" :data-source="grupoEtnico" :grouped="false" :min-search-length="2"
                 :search-enabled="true" v-model="item.grupoEtnico" :show-clear-button="true"
@@ -562,7 +583,7 @@ onMounted(async () => {
                 </DxValidator>
               </DxSelectBox>
             </div>
-            <div class="col-md-3 mb-3">
+            <!-- <div class="col-md-3 mb-3">
               <label class="tit">Participantes</label>
               <DxSelectBox id="participantes" :data-source="temasAll" :grouped="false" :min-search-length="2"
                 :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
@@ -571,7 +592,7 @@ onMounted(async () => {
                   <DxRequiredRule />
                 </DxValidator>
               </DxSelectBox>
-            </div>
+            </div> -->
             <div class="col-md-12 mt-3 mb-3 text-center">
               <label class="tit me-2 color-text" for="habeas">Al hacer clic en la "casilla", acepta nuestros Términos y
                 condiciones así como la ley 1581 de tratamiento de datos
@@ -584,12 +605,19 @@ onMounted(async () => {
       <div class="card-footer">
         <div class="p-3 d-flex justify-content-between align-items-center">
           <span>
-            <a class="btn btn-gray me-3" @click.prevent="next"><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a>
-            <a class="btn btn-main" @click.prevent="next"><i class="me-1 fa-solid fa-circle-left"></i> ANTERIOR</a>
+            <!-- <a class="btn btn-gray me-3" @click.prevent="next"><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a> -->
+            <a class="btn btn-main" @click.prevent="router.back(-1)"><i class="me-1 fa-solid fa-circle-left"></i>
+              ANTERIOR</a>
           </span>
-          <a class="btn btn-main" @click.prevent="next">SIGUIENTE <i class="ms-1 fa-solid fa-circle-right"></i></a>
+          <a class="btn btn-main" @click.prevent="save" v-if="route.name == 'registro'">
+            REGISTRARSE <i class="fa-solid fa-user-pen ms-2"></i>
+          </a>
+          <a class="btn btn-main" @click.prevent="save" v-else>
+            GUARDAR <i class="fa-solid fa-floppy-disk ms-2"></i>
+          </a>
         </div>
       </div>
     </div>
+
   </div>
 </template>

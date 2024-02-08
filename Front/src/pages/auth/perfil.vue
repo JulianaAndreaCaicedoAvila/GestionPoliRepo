@@ -52,22 +52,22 @@ import {
   DxSummary,
 } from "devextreme-vue/data-grid";
 const router = useRouter(), route = useRoute(),
-  temaStore = useTemaStore(),
+  temaStore = useTemaStore(), habeasClass = ref(""),
   store = useClasificadorStore(),
   geoStore = useGeografiaStore(),
   auth = useAuthStore();
 let now = new Date(), titulo = "Temas",
-  tipoParticipante = ref([]),
-  tipoServidorPublico = ref([]),
-  situacionEconomica = ref([]),
-  tipoDiscapacidad = ref([]),
-  grupoEtnico = ref([]),
-  tipoDocumento = ref([]),
+  tiposParticipantes = ref([]),
+  tiposServidoresPublicos = ref([]),
+  situacionesEconomicas = ref([]),
+  tiposDiscapacidades = ref([]),
+  gruposEtnicos = ref([]),
+  tiposDocumento = ref([]),
   departamentos = ref([]),
   municipios = ref([]),
-  genero = ref([]),
-  nivelEscolar = ref([]),
-  estadoCivil = ref([]),
+  generos = ref([]),
+  nivelesEscolares = ref([]),
+  estadosCiviles = ref([]),
   list1 = null,
   list2 = null,
   itemId = ref(null),
@@ -82,26 +82,67 @@ let now = new Date(), titulo = "Temas",
   toData = ref([]),
   selRightClass = ref(""),
   selLeftClass = ref(""),
-  item = ref({
+  user = { // Entidad 'UserRequestModel' en DataContext
+    accessFailedCount: 0,
+    code: null,
+    companyId: null,
+    concurrencyStamp: null,
+    dependenceId: null,
+    email: null,
+    emailConfirmed: false,
+    firstName: null,
+    generateConfirmation: false,
     id: 0,
-    cursoId: 0,
-    tipoDocumentoId: 0,
-    departamentoId: 0,
-    municipioId: 0,
-    entidad: null,
-    genero: null,
-    nivelEscolar: null,
-    estadoCivil: null,
-    cargoActual: null,
-    documentoIdentidad: null,
+    isActive: true,
+    lastName: null,
+    lockoutEnabled: false,
+    lockoutEnd: null,
+    normalizedEmail: null,
+    normalizedUserName: null,
+    password: null,
+    passwordHash: null,
+    phoneNumber: null,
+    phoneNumberConfirmed: false,
+    projectId: null,
+    roleId: 8, // Participante
+    securityStamp: null,
+    territorialId: null,
+    twoFactorEnabled: false,
+    userName: null,
+    generateConfirmation: true
+  },
+  item1 = ref({ "id": 0, "usuarioId": 0, "tipoDocumentoId": 361, "municipioId": 149, "nivelEscolarId": 407, "estadoCivilId": 401, "entidadId": null, "generoId": 403, "vulnerabilidadId": 314, "discapacidadId": 308, "caracteristicaEsapId": null, "cargoId": null, "grupoEtnicoId": 354, "tipoServidorPublicoId": 347, "tipoParticipanteId": 340, "documentoNumero": 1007529842, "nombres": "Adriana María", "apellidos": "Pérez Gonzalez", "fechaNacimiento": "1998-09-24T05:00:00.000Z", "profesion": "Ingeniera en Informática", "telefono": "17185698", "celular": "3005263654", "correo": "aperez@nemedi.com", "direccion": "Cl. 121 # 35A-19", "contratista": true, "habeasData": true, "departamentoId": 6, "correo1": "aperez@nemedi.com", "entidad": "Panadería", "cargoActual": "Panadero" }),
+  item = ref({ // Entidad 'Participante' en DataContext
+    id: 0,
+    usuarioId: 0,
+    tipoDocumentoId: null,
+    municipioId: null,
+    nivelEscolarId: null,
+    estadoCivilId: null,
+    entidadId: null,
+    generoId: null,
+    vulnerabilidadId: null,
+    discapacidadId: null,
+    caracteristicaEsapId: null,
+    cargoId: null,
+    grupoEtnicoId: null,
+    tipoServidorPublicoId: null,
+    tipoParticipanteId: null,
+    documentoNumero: null,
     nombres: null,
     apellidos: null,
-    fechaNacimiento: now,
+    fechaNacimiento: null,
     profesion: null,
-    teleno: null,
+    telefono: null,
     celular: null,
     correo: null,
     direccion: null,
+    contratista: false,
+    habeasData: false,
+    correo1: null, // Local
+    departamentoId: 6, // Local
+    entidad: "Panadería", // Local
+    cargoActual: "Panadero" // Local
   }),
   item_copy = Clone(item.value),
   panelData = null,
@@ -218,30 +259,53 @@ let now = new Date(), titulo = "Temas",
 
 let save = async () => {
   console.clear();
-  panelData = $("#data-tema");
+  habeasClass.value = "";
+  panelData = $("#data-datos");
   panelGrid = $("#grid-tema");
-  let result = valGroup.value.instance.validate();
+  var v = valGroup.value.instance;
+  console.log("v =>", v);
+  let result = v.validate();
+  console.log("result =>", result);
   if (!result.isValid) {
+    // Hace scroll hasta el primer elemento con error
     $.scrollTo($(".dx-invalid:first"), {
       duration: 600,
       offset: -110,
     });
+    // 202402071737: Verifica si "habeas" esá entre los errores y cambia la clase para que se vea en rojo el mensaje
+    result.brokenRules.forEach(element => {
+      let elementId = element.validator._$element[0].id;
+      console.log("elementId =>", elementId);
+      if (elementId == "habeas") habeasClass.value = "error";
+    });
   } else {
-    // CUandoes válido
+    // Cuando es válido
     panelData.lock(
-      `${item.id == 0 ? "Adicionando" : "Actualizando"} temas`,
+      `Registrando usuario<br>un momento por favor`,
       async function () {
-        let dto = toRaw(item.value);
+        let p = toRaw(item.value);
+        user.email = p.correo;
+        user.firstName = p.nombres;
+        user.lastName = p.apellidos;
+        user.phoneNumber = p.celular;
+        let dto = {
+          usuario: user,
+          participante: p
+        };
         console.log("dto =>", dto);
-        await api()
-          .post(`cursoTema/ed`, dto)
-          .then((r) => {
-            console.log("r =>", r);
-            cancel(function () {
-              panelData.unlock();
-              grid.refresh();
+        try {
+          let res = await auth.registrarParticipante(dto);
+          console.log("res =>", dto);
+          setTimeout(function () {
+            panelData.unlock();
+            msg.success("¡Registro exitoso!", `<span class="font-weight-semibold">${p.nombres}</span>, hemos enviado un correo electrónico a la dirección <span class="font-weight-semibold">"${p.correo}</span>" para que realice la activación de su cuenta en el sistema.`, function () {
+              router.go(-1);
             });
-          });
+          }, 1000);
+        } catch (error) {
+          console.log("error =>", error);
+          panelData.unlock();
+        }
       }
     );
   }
@@ -251,11 +315,22 @@ let passwordComparison = () => {
   return item.value.correo;
 };
 
+var emailTmp = null;
 let checkEmail = async (params) => {
-  console.clear();
-  let usr = await auth.porEmail(params.value);
-  console.log("usr =>", usr);
-  return typeof usr.firstName === "undefined";
+  // console.clear();
+  console.log(_sep);
+  let e = params.value;
+  console.log("e =>", e);
+  console.log("item.value.correo =>", item.value.correo);
+  // Solo valida si el email cambia con base en 'emailTmp'
+  if (e !== emailTmp) {
+    let usr = await auth.porEmail(e);
+    console.log("usr =>", usr);
+    let notExists = typeof usr.firstName === "undefined";
+    if (notExists) emailTmp = e;
+    return notExists;
+  }
+  return true;
 };
 
 let itemSelected = async (e) => {
@@ -275,20 +350,20 @@ let itemSelected = async (e) => {
 
 onMounted(async () => {
   console.log("route.name =>", route.name);
-  tipoParticipante.value = await store.porTipoNombre("tipo_participante");
-  situacionEconomica.value = await store.porTipoNombre("tipo_vulnerabilidad");
-  tipoDiscapacidad.value = await store.porTipoNombre("tipo_discapacidad");
-  grupoEtnico.value = await store.porTipoNombre("grupo_etnico");
-  tipoServidorPublico.value = await store.porTipoNombre("tipo_servidor_publico");
-  tipoDocumento.value = await store.porTipoNombre("tipo_documento_identidad");
-  genero.value = await store.porTipoNombre("genero");
-  nivelEscolar.value = await store.porTipoNombre("nivel_escolar");
-  estadoCivil.value = await store.porTipoNombre("estado_civil");
+  tiposParticipantes.value = await store.porTipoNombre("tipo_participante");
+  situacionesEconomicas.value = await store.porTipoNombre("tipo_vulnerabilidad");
+  tiposDiscapacidades.value = await store.porTipoNombre("tipo_discapacidad");
+  gruposEtnicos.value = await store.porTipoNombre("grupo_etnico");
+  tiposServidoresPublicos.value = await store.porTipoNombre("tipo_servidor_publico");
+  tiposDocumento.value = await store.porTipoNombre("tipo_documento_identidad");
+  generos.value = await store.porTipoNombre("genero");
+  nivelesEscolares.value = await store.porTipoNombre("nivel_escolar");
+  estadosCiviles.value = await store.porTipoNombre("estado_civil");
   entidad.value = await store.porTipoNombre("entidad");
   departamentos.value = await geoStore.dptoAll();
-  console.log("nivel Escolar =>", nivelEscolar.value);
+  console.log("nivel Escolar =>", nivelesEscolares.value);
   // console.log("tipo documentos =>", tipoDocumento.value);
-  console.log("genero =>", genero.value);
+  console.log("genero =>", generos.value);
   // itemId.value = props.itemId;
   // item.value = props.item;
   // getData();
@@ -318,20 +393,29 @@ onMounted(async () => {
       </div>
       <DxValidationGroup ref="valGroup">
         <div class="card-body pt-3 pb-4">
-          <div class="row mb-4">
-            <div class="col-md-12 d-flex justify-content-between align-items-center">
-              <h4 class="mb-3 pb-2 bbd">1. Información personal</h4>
-              <p class="font-weight-semibold text-center"><i class="fa-solid fa-circle-info me-1 color-main"></i>
-                Todos los campos son requeridos</p>
+          <!-- {{ item }} <hr /> {{ user }} <hr /> -->
+          <div class="row">
+            <div class="col-md-12 bb mt-2 mb-4">
+              <p><i class="fa-solid fa-circle-info me-1 color-main"></i>
+                Para iniciar su registro en el sistema debe diligenciar la información solicitada
+                <span class="font-weight-semibold">(todos los campos son requeridos)</span>.
+                Una vez haga clic en el botón "Registrarse" se le enviará un correo electrónico de activación a la
+                dirección proporcionada para que asigne su contraseña y finalice de manera exitosa el registro en la
+                plataforma.
+              </p>
             </div>
-            <div class="col-md-6">
+          </div>
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <h4 class="mb-3 pb-2 bbd">1. Información personal</h4>
+            </div>
+            <div class="col-md-7">
               <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-5 mb-3">
                   <label class="tit">Tipo de documento</label>
-                  <DxSelectBox id="tipoDocumentoId" :data-source="tipoDocumento" :grouped="false" :min-search-length="2"
-                    :search-enabled="true" v-model="item.tipoDocumentoId" :show-clear-button="true"
-                    :show-data-before-search="true" class="form-control" placeholder="Tipo" value-expr="id"
-                    display-expr="nombre">
+                  <DxSelectBox id="tipoDocumentoId" :data-source="tiposDocumento" :grouped="false"
+                    @value-changed="itemSelected" v-model="item.tipoDocumentoId" :show-clear-button="true"
+                    class="form-control" placeholder="Tipo" value-expr="id" display-expr="nombre">
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -340,17 +424,18 @@ onMounted(async () => {
                 <div class="col-md-4 mb-3">
                   <label class="tit">Documento</label>
                   <DxNumberBox id="documento" value-change-event="keyup" :show-clear-button="true"
-                    v-model="item.documentoIdentidad" class="form-control" placeholder="Documento">
+                    v-model="item.documentoNumero" class="form-control" placeholder="Documento">
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
                   </DxNumberBox>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                   <label class="tit">Género</label>
-                  <DxSelectBox id="genero" :data-source="genero" :grouped="false" :min-search-length="2"
-                    :search-enabled="true" v-model="item.genero" :show-clear-button="true" :show-data-before-search="true"
-                    class="form-control" placeholder="Género" value-expr="id" display-expr="nombre">
+                  <DxSelectBox id="generoId" :data-source="generos" :grouped="false" :min-search-length="2"
+                    :search-enabled="true" v-model="item.generoId" :show-clear-button="true"
+                    :show-data-before-search="true" class="form-control" placeholder="Género" value-expr="id"
+                    display-expr="nombre">
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -358,28 +443,32 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-            <div class="col-md-3 mb-3">
-              <label class="tit">Nombres</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" :v-model="item.nombres"
-                class="form-control" placeholder="Nombres" @focus-out="$capitalizeAll">
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxTextBox>
-            </div>
-            <div class="col-md-3 mb-3">
-              <label class="tit">Apellidos</label>
-              <DxTextBox id="apellidos" value-change-event="keyup" :show-clear-button="true" :v-model="item.apellidos"
-                class="form-control" placeholder="Apellidos" @focus-out="$capitalizeAll">
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxTextBox>
+            <div class="col-md-5">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="tit">Nombres</label>
+                  <DxTextBox id="nombres" value-change-event="keyup" :show-clear-button="true" v-model="item.nombres"
+                    class="form-control" placeholder="Nombres" @focus-out="$capitalizeAll">
+                    <DxValidator>
+                      <DxRequiredRule />
+                    </DxValidator>
+                  </DxTextBox>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="tit">Apellidos</label>
+                  <DxTextBox id="apellidos" value-change-event="keyup" :show-clear-button="true" v-model="item.apellidos"
+                    class="form-control" placeholder="Apellidos" @focus-out="$capitalizeAll">
+                    <DxValidator>
+                      <DxRequiredRule />
+                    </DxValidator>
+                  </DxTextBox>
+                </div>
+              </div>
             </div>
             <div class="col-md-2 mb-3">
               <label class="tit">Fecha de nacimiento</label>
               <DxDateBox id="fechaNacimiento" value-change-event="keyup" :max="now" :show-clear-button="true"
-                :v-model="item.fechaNacimiento" class="form-control" placeholder="Fecha" display-format="dd/MM/yyyy">
+                v-model="item.fechaNacimiento" class="form-control" placeholder="Fecha" display-format="dd/MM/yyyy">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -387,8 +476,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-4 mb-3">
               <label class="tit">Profesión</label>
-              <DxTextBox id="profesion" value-change-event="keyup" :show-clear-button="true" :v-model="item.profesion"
-                class="form-control" placeholder="Profesión">
+              <DxTextBox id="profesion" value-change-event="keyup" :show-clear-button="true" v-model="item.profesion"
+                class="form-control" placeholder="Profesión" @focus-out="$capitalizeAll">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -396,9 +485,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Nivel escolar</label>
-              <DxSelectBox id="nivelEscolar" :data-source="nivelEscolar" :grouped="false" :min-search-length="2"
-                :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-                v-model="item.nivelEscolar" class="form-control" placeholder="Nivel escolar" value-expr="id"
+              <DxSelectBox id="nivelEscolarId" :data-source="nivelesEscolares" :show-clear-button="true"
+                v-model="item.nivelEscolarId" class="form-control" placeholder="Nivel escolar" value-expr="id"
                 display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
@@ -407,9 +495,9 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Estado civil</label>
-              <DxSelectBox id="estadoCivil" :data-source="estadoCivil" :grouped="false" :min-search-length="2"
+              <DxSelectBox id="estadoCivilId" :data-source="estadosCiviles" :grouped="false" :min-search-length="2"
                 :search-enabled="true" :show-clear-button="true" :show-data-before-search="true"
-                v-model="item.estadoCivil" class="form-control" placeholder="Estado civil" value-expr="id"
+                v-model="item.estadoCivilId" class="form-control" placeholder="Estado civil" value-expr="id"
                 display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
@@ -423,7 +511,7 @@ onMounted(async () => {
                     <div class="col-md-6 mb-3">
                       <label class="tit">Celular</label>
                       <DxTextBox id="celular" :min-length="10" value-change-event="keyup" :show-clear-button="true"
-                        mask="(300) 000-0000" v-model="item.celular" class="form-control" placeholder="Celular">
+                        mask="(000) 000-0000" v-model="item.celular" class="form-control" placeholder="Celular">
                         <DxValidator>
                           <DxRequiredRule />
                         </DxValidator>
@@ -450,8 +538,8 @@ onMounted(async () => {
                 </div>
                 <div class="col-md-4 mb-3" v-if="route.name == 'registro'">
                   <label class="tit">Confirmar correo electrónico</label>
-                  <DxTextBox id="correo1" value-change-event="keyup" :show-clear-button="true" class="form-control"
-                    placeholder="Correo" @focus-out="$lowerCase">
+                  <DxTextBox id="correo1" value-change-event="keyup" :show-clear-button="true" v-model="item.correo1"
+                    class="form-control" placeholder="Correo" @focus-out="$lowerCase">
                     <DxValidator>
                       <DxRequiredRule />
                       <DxCompareRule :comparison-target="passwordComparison" message="Los correos no coinciden" />
@@ -463,7 +551,7 @@ onMounted(async () => {
             <div class="col-md-4 mb-3">
               <label class="tit">Dirección</label>
               <DxTextBox id="direccion" value-change-event="keyup" :show-clear-button="true" v-model="item.direccion"
-                class="form-control" placeholder="Dirección" @focus-out="$capitalizeAll">
+                class="form-control" placeholder="Dirección">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -521,8 +609,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-5 mb-3">
               <label class="tit">Tipo de participante</label>
-              <DxSelectBox id="tipoParticipante" :data-source="tipoParticipante" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.tipoParticipante" :show-clear-button="true"
+              <DxSelectBox id="tipoParticipanteId" :data-source="tiposParticipantes" :grouped="false"
+                :min-search-length="2" :search-enabled="true" v-model="item.tipoParticipanteId" :show-clear-button="true"
                 :show-data-before-search="true" class="form-control" placeholder="Tipo de participante" value-expr="id"
                 display-expr="nombre">
                 <DxValidator>
@@ -532,10 +620,10 @@ onMounted(async () => {
             </div>
             <div class="col-md-5 mb-3">
               <label class="tit">Tipo de servidor público</label>
-              <DxSelectBox id="tipoServidorPublico" :data-source="tipoServidorPublico" :grouped="false"
-                :min-search-length="2" :search-enabled="true" v-model="item.tipoServidorPublico" :show-clear-button="true"
-                :show-data-before-search="true" class="form-control" placeholder="Tipo de servidor público"
-                value-expr="id" display-expr="nombre">
+              <DxSelectBox id="tipoServidorPublicoId" :data-source="tiposServidoresPublicos" :grouped="false"
+                :min-search-length="2" :search-enabled="true" v-model="item.tipoServidorPublicoId"
+                :show-clear-button="true" :show-data-before-search="true" class="form-control"
+                placeholder="Tipo de servidor público" value-expr="id" display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -543,7 +631,7 @@ onMounted(async () => {
             </div>
             <div class="col-md-2 mt-2 mb-3 text-center">
               <label class="tit" for="">Contratista del estado</label>
-              <DxCheckBox />
+              <DxCheckBox v-model="item.contratista" />
             </div>
           </div>
           <div class="row">
@@ -552,8 +640,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-4 mb-3">
               <label class="tit">Se encuentra en</label>
-              <DxSelectBox id="vulnerabilidad" :data-source="situacionEconomica" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.situacionEconomica" :show-clear-button="true"
+              <DxSelectBox id="vulnerabilidadId" :data-source="situacionesEconomicas" :grouped="false"
+                :min-search-length="2" :search-enabled="true" v-model="item.vulnerabilidadId" :show-clear-button="true"
                 :show-data-before-search="true" class="form-control" placeholder="Situación" value-expr="id"
                 display-expr="nombre">
                 <DxValidator>
@@ -563,8 +651,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-4 mb-3">
               <label class="tit">Tipo de discapacidad</label>
-              <DxSelectBox id="discapacidad" :data-source="tipoDiscapacidad" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.tipoDiscapacidad" :show-clear-button="true"
+              <DxSelectBox id="discapacidadId" :data-source="tiposDiscapacidades" :grouped="false" :min-search-length="2"
+                :search-enabled="true" v-model="item.discapacidadId" :show-clear-button="true"
                 :show-data-before-search="true" class="form-control" placeholder="Tipo de discapacidad" value-expr="id"
                 display-expr="nombre">
                 <DxValidator>
@@ -574,8 +662,8 @@ onMounted(async () => {
             </div>
             <div class="col-md-4 mb-3">
               <label class="tit">Grupo étnico</label>
-              <DxSelectBox id="grupoEtnico" :data-source="grupoEtnico" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.grupoEtnico" :show-clear-button="true"
+              <DxSelectBox id="grupoEtnicoId" :data-source="gruposEtnicos" :grouped="false" :min-search-length="2"
+                :search-enabled="true" v-model="item.grupoEtnicoId" :show-clear-button="true"
                 :show-data-before-search="true" class="form-control" placeholder="Grupo étnico" value-expr="id"
                 display-expr="nombre">
                 <DxValidator>
@@ -594,10 +682,15 @@ onMounted(async () => {
               </DxSelectBox>
             </div> -->
             <div class="col-md-12 mt-3 mb-3 text-center">
-              <label class="tit me-2 color-text" for="habeas">Al hacer clic en la "casilla", acepta nuestros Términos y
+              <label :class="'tit me-2 color-text ' + habeasClass" for="habeas">Al hacer clic en la "casilla", acepta
+                nuestros Términos y
                 condiciones así como la ley 1581 de tratamiento de datos
                 personales Habeas data</label>
-              <DxCheckBox id="habeas" />
+              <DxCheckBox id="habeas" v-model="item.habeasData">
+                <DxValidator>
+                  <DxRequiredRule />
+                </DxValidator>
+              </DxCheckBox>
             </div>
           </div>
         </div>

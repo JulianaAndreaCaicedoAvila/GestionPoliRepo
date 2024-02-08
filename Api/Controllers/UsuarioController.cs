@@ -6,6 +6,7 @@ using DevExtreme.AspNet.Data;
 using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Services;
 using ESAP.Sirecec.Data.Api.Utils;
+using ESAP.Sirecec.Data.Core;
 using ESAP.Sirecec.Data.Identity;
 using ESAP.Sirecec.Data.Model;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +24,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
     [Route("usuario")]
     public class UsuarioController : BaseController
     {
+        private readonly DataContext _db;
         private readonly IConfiguration _conf;
         private readonly IEmailService _email;
         private readonly IAzureAdService _ad;
@@ -41,9 +43,10 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         }
 
         public UsuarioController(IConfiguration configuration, IAzureAdService ad, UserManager<AuthUser> userManager,
-            RoleManager<AuthRole> roleManager, IEmailService email, Data.DataContext context)
+            RoleManager<AuthRole> roleManager, IEmailService email, DataContext context)
         {
             _ad = ad;
+            _db = context;
             _conf = configuration;
             _context = context;
             _email = email;
@@ -61,8 +64,11 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("autenticar")]
-        public async Task<ActionResult> Authenticate(AuthenticateRequest request)
+        public async Task<ActionResult> Authenticate()
         {
+            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            var str = reader.ReadToEndAsync().Result;
+            var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is null || !user.EmailConfirmed || !user.IsActive || !await _userManager.CheckPasswordAsync(user, request.Password))
                 return Forbid();
@@ -111,8 +117,11 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("resetear")]
-        public async Task<ActionResult> Reset(UserRequestModel request)
+        public async Task<ActionResult> Reset()
         {
+            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            var str = reader.ReadToEndAsync().Result;
+            var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
             var email = request.Email.Trim().ToUpper();
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
             var user = await _userManager.FindByEmailAsync(email);
@@ -126,20 +135,38 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("confirmar")]
-        public async Task<ActionResult> Confirm(UserRequestModel request)
+        [HttpPost("activar")]
+        public async Task<ActionResult> Activate()
         {
-            var email = request.Email.Trim().ToUpper();
+            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            var str = reader.ReadToEndAsync().Result.Replace("\u0000", "");
+            var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
+            var email = request.Email.Trim().ToUpper().Replace("\0", "");
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
-                var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
-                var result = await _userManager.ConfirmEmailAsync(user, code);
-                if (result.Succeeded)
+                var c = request.Code.Replace("\0", "");
+                // var bc = WebEncoders.Base64UrlDecode(c);
+                // var code = Encoding.UTF8.GetString(bc);
+                // var result = await _userManager.ConfirmEmailAsync(user, c);
+                var result = string.Equals(user.SecurityStamp, c);
+                if (result)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    result = await _userManager.ResetPasswordAsync(user, token, request.Password);
-                    if (result.Succeeded) return Ok(new { result, user });
+                    var result1 = await _userManager.ResetPasswordAsync(user, token, request.Password);
+                    if (result1.Succeeded)
+                    {
+                        user.IsActive = true;
+                        user.EmailConfirmed = true;
+                        var identityResult = await _userManager.UpdateAsync(user);
+                        if (identityResult.Succeeded)
+                        {
+                            var usr = _db.Participante.FirstOrDefault(o => o.Correo == email.ToLower());
+                            usr.Activo = true;
+                            _db.SaveChanges();
+                            return Ok(new { result, user });
+                        }
+                    }
                     else return BadRequest(new { result, user });
                 }
                 else return BadRequest(new { result, user });
@@ -171,6 +198,78 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("registrar")]
+        public async Task<ActionResult> Register()
+        {
+            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            var str = reader.ReadToEndAsync().Result;
+            var ur = JsonConvert.DeserializeObject<UserRegisterModel>(str);
+            var modelUser = ur.usuario;
+            var modelParticipant = ur.participante;
+            var email = modelParticipant.Correo;
+            if (!string.IsNullOrEmpty(email))
+            {
+                // Crea el usuario
+                var emailNorm = email.Trim().Normalize().ToUpperInvariant(); // Normalizado
+                var newUser = new AuthUser
+                {
+                    UserName = email.Trim(),
+                    Email = email.Trim(),
+                    FirstName = modelParticipant.Nombres,
+                    LastName = modelParticipant.Apellidos,
+                    NormalizedEmail = emailNorm,
+                    NormalizedUserName = emailNorm,
+                    EmailConfirmed = false, // 202402071752: Debe confirmarse el correo!
+                    LockoutEnabled = false,
+                    PhoneNumber = modelParticipant.Celular,
+                    PhoneNumberConfirmed = false,
+                    CompanyId = 357,
+                    DependenceId = 13,
+                    TerritorialId = 15,
+                    ProjectId = 5,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    ConcurrencyStamp = Guid.NewGuid().ToString(),
+                    IsActive = false
+                };
+                var result = await _userManager.CreateAsync(newUser, "Acceso*" + DateTime.Now.Year);
+
+                // Si se creó el usuario
+                if (result.Succeeded)
+                {
+                    // Lo agrega al rol
+                    var role = await _roleManager.FindByIdAsync(modelUser.RoleId.ToString());
+                    if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+
+                    // Crea el participante
+                    var newPart = new Participante();
+                    newPart = (Participante)modelParticipant.CopyTo(newPart);
+                    newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
+                    newPart.CreadoPor = 1;
+                    newPart.CreadoEl = DateTime.Now;
+                    newPart.Activo = false;
+                    _db.Participante.Add(newPart);
+                    _db.SaveChanges();
+
+                    // Envía el correo
+                    if (modelUser.GenerateConfirmation)
+                    {
+                        var code = newUser.SecurityStamp;
+                        // var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        var em = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(newUser.Email.Trim().ToLower()));
+                        var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + em;
+                        string body = $"Hola {newUser.FirstName}!<br/><br/>Para activar su cuenta en SIRECEC 4.0 por favor haga clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.<br/><br/>Muchas gracias!";
+                        _email.Send(modelUser.Email, "SIRECEC 4.0 - ACTIVAR CUENTA", body);
+                    }
+
+                    return Ok(newUser);
+                }
+                return BadRequest(new { result, ur });
+            }
+            return Ok();
+        }
+
+        // [AllowAnonymous]
+        [HttpPost("registrar1")]
         public async Task<ActionResult> Register(UserRequestModel user)
         {
             var email = user.Email;

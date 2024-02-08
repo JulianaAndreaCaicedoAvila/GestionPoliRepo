@@ -5,6 +5,14 @@ import { useCursoStore, useAuthStore } from "@/stores";
 const baseUrl = import.meta.env.BASE_URL;
 const router = useRouter(), route = useRoute(), storeCursos = useCursoStore(), auth = useAuthStore();
 let curso = ref(null), back = ref(null), temas = ref([]);
+
+let inscribirse = () => {
+  let pd = $("#data");
+  pd.lock(`Inscribiendo curso,<br>un momento por favor`);
+  setTimeout(function () {
+    pd.unlock();
+  }, 3000);
+}
 onMounted(async () => {
   console.log(_sep);
   console.log("inscripcion.vue mounted!");
@@ -126,7 +134,7 @@ onMounted(async () => {
                   </ul>
                 </div>
               </div>
-              <div class="row m-0 p-0 mt-1 pt-4 btd">
+              <div class="row m-0 p-0 mt-1 pt-4 btd" v-if="!auth.user">
                 <div class="col-md-12">
                   <p class="m-0 p-0 text-center font-weight-semibold"><i
                       class="fa-solid fa-circle-info me-1 color-main"></i>
@@ -146,7 +154,7 @@ onMounted(async () => {
               </router-link>
             </span>
             <span v-if="auth.user">
-              <a class="btn btn-main" @click.prevent="next">INSCRIBIRSE AL CURSO <i
+              <a class="btn btn-main" @click.prevent="inscribirse()">INSCRIBIRSE AL CURSO <i
                   class="ms-1 fa-solid fa-circle-right"></i></a>
             </span>
             <span v-else>

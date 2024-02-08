@@ -1687,7 +1687,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     b.Property<string>("Apellidos")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<int?>("CaracterísticaEsapId")
+                    b.Property<int?>("CaracteristicaEsapId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int?>("CargoId")

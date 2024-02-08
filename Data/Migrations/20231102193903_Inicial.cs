@@ -305,7 +305,7 @@ namespace ESAP.Sirecec.Data.Migrations
                     GeneroId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     VulnerabilidadId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     DiscapacidadId = table.Column<int>(type: "NUMBER(10)", nullable: true),
-                    CaracterísticaEsapId = table.Column<int>(type: "NUMBER(10)", nullable: true),
+                    CaracteristicaEsapId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     CargoId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     GrupoEtnicoId = table.Column<int>(type: "NUMBER(10)", nullable: true),
                     TipoServidorPublicoId = table.Column<int>(type: "NUMBER(10)", nullable: true),

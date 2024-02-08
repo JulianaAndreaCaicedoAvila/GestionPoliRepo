@@ -12,6 +12,9 @@ namespace ESAP.Sirecec.Data.Core
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
+
+		[ForeignKey("AuthUsers")]
+		public int UsuarioId { get; set; }
 		public int? TipoDocumentoId { get; set; }
 		public int? MunicipioId { get; set; }
 		public int? NivelEscolarId { get; set; }
@@ -20,7 +23,7 @@ namespace ESAP.Sirecec.Data.Core
 		public int? GeneroId { get; set; }
 		public int? VulnerabilidadId { get; set; }
 		public int? DiscapacidadId { get; set; }
-		public int? CaracterísticaEsapId { get; set; }
+		public int? CaracteristicaEsapId { get; set; }
 		public int? CargoId { get; set; }
 		public int? GrupoEtnicoId { get; set; }
 		public int? TipoServidorPublicoId { get; set; }
@@ -35,6 +38,7 @@ namespace ESAP.Sirecec.Data.Core
 		public string? Correo { get; set; }
 		public string? Direccion { get; set; }
 		public bool? Contratista { get; set; }
+		public bool? HabeasData { get; set; }
 
 	}
 }

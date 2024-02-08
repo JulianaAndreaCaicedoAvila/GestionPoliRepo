@@ -88,6 +88,17 @@ let divipola = (item) => {
   console.log("item =>", item);
   if (item != null) return `${item.nombre} (${item.codigo})`;
 };
+let setBuscar = async () => {
+  let b = $("#btn-buscar");
+  let p = $("#panel-buscar");
+  if (p.is(":visible")) {
+    b.fadeIn();
+    p.slideUp();
+  } else {
+    b.fadeOut();
+    p.slideDown();
+  }
+};
 let buscarEventos = async () => {
   $("#panel-buscar").lock(`Buscando eventos de capacitación`);
   setTimeout(function () {
@@ -164,14 +175,19 @@ onMounted(async () => {
               Oferta Académica de Alto Gobierno
             </span>
             <span>
-              <router-link :to="{ path: '/' }" class="btn btn-trans">
-                <i class="fa-solid fa-circle-arrow-left"></i>VOLVER
+              <button type="button" id="btn-buscar" class="btn btn-main me-2" title="Buscar eventos de capacitación"
+                @click.prevent="setBuscar()">
+                BUSCAR EVENTOS
+                <i class="fa-solid fa-magnifying-glass ms-1"></i>
+              </button>
+              <router-link :to="{ path: '/' }" class="btn btn-main" title="Volver">
+                <i class="fa-solid fa-arrow-left"></i>VOLVER
               </router-link>
             </span>
           </div>
           <img class="card-img-top h-6vw" src="/assets/img/banner-03.jpg" alt="Card Image" v-if="por == 'capacitacion'" />
           <img class="card-img-top h-6vw" src="/assets/img/banner-04.jpg" alt="Card Image" v-else />
-          <div class="card-body pt-3 pb-0" id="panel-buscar">
+          <div class="card-body pt-3 pb-0 hidden" id="panel-buscar">
             <div class="row mb-4">
               <div class="col-md-12 fs">
                 <fieldset>
@@ -267,11 +283,14 @@ onMounted(async () => {
                   </div>
                   <div class="row">
                     <div class="col d-flex justify-content-between">
-                      <span><a href="#" class="btn btn-gray d-inline-block"><i
-                            class="fa-regular fa-eraser me-2"></i><span>Limpiar búsqueda</span></a></span>
+                      <span>
+                        <a href="#" @click.prevent="setBuscar()" class="btn btn-gray d-inline-block me-3"><i
+                            class="fa-solid fa-xmark me-2"></i><span>CERRAR</span></a>
+                        <a href="#" class="btn btn-gray d-inline-block"><i
+                            class="fa-regular fa-eraser me-2"></i><span>LIMPIAR</span></a></span>
                       <span>
                         <button type="button" class="btn btn-main" title="Consultar" @click.prevent="buscarEventos()">
-                          Buscar eventos
+                          BUSCAR
                           <i class="fa-solid fa-magnifying-glass ms-1"></i>
                         </button>
                       </span>
@@ -285,7 +304,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="row pt-0 mb-2">
+    <div class="row pt-0 mb-2" v-if="pageCount > 1">
       <div class="col-md-12 content d-flex justify-content-center align-items-center">
         <Pagination v-model="currentPage" :page-count="pageCount" :click-handler="onPaging" :margin-pages="3"
           :page-range="3" :first-last-button="true" prev-text="Anteriores" next-text="Siguientes"
@@ -326,7 +345,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="row pt-3 mb-2">
+    <div class="row pt-3 mb-2" v-if="pageCount > 1">
       <div class="col-md-12 content d-flex justify-content-center align-items-center">
         <Pagination v-model="currentPage" :page-count="pageCount" :click-handler="onPaging" :margin-pages="3"
           :page-range="3" :first-last-button="true" prev-text="Anteriores" next-text="Siguientes"

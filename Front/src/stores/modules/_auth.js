@@ -81,19 +81,14 @@ export const useAuthStore = defineStore("auth", {
 			msalInstance.acquireTokenSilent();
 			this.msal = msalInstance;
 		},
-		// checkExpired() {
-		// 	if (this.user) {
-		// 		window._int = setInterval(function () {
-		// 			console.log(this);
-		// 			console.log("this.user =>", this.user);
-		// 			console.log("isTokenExpired =>", this.isTokenExpired);
-		// 			if (this.isTokenExpired) {
-		// 				window.clearInterval(_int);
-		// 				this.logout();
-		// 			}
-		// 		}, 2000);
-		// 	} else window.clearInterval(window._int);
-		// },
+		async registrarParticipante(u) {
+			console.log("registrarParticipante =>", u);
+			return await api()
+				.post(`usuario/registrar`, JSON.stringify(u))
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async porRol(rol) {
 			return await api()
 				.post(`usuario/porRol`, rol)
@@ -146,6 +141,16 @@ export const useAuthStore = defineStore("auth", {
 					return r.data;
 				});
 		},
+		// 202402080138: Activar cuenta
+		async activar(data) {
+			console.log(_sep);
+			console.log("activar data =>", data);
+			return await api({ hideErrors: import.meta.env.PROD })
+				.post(`usuario/activar`, data)
+				.then((r) => {
+					return r.data;
+				});
+		},
 		async login(name, email) {
 			console.log(_sep);
 			console.log("loginAzureAd");
@@ -191,6 +196,19 @@ export const useAuthStore = defineStore("auth", {
 			sessionStorage.clear();
 			cb();
 		},
+		// checkExpired() {
+		// 	if (this.user) {
+		// 		window._int = setInterval(function () {
+		// 			console.log(this);
+		// 			console.log("this.user =>", this.user);
+		// 			console.log("isTokenExpired =>", this.isTokenExpired);
+		// 			if (this.isTokenExpired) {
+		// 				window.clearInterval(_int);
+		// 				this.logout();
+		// 			}
+		// 		}, 2000);
+		// 	} else window.clearInterval(window._int);
+		// },
 	},
 });
 // // 202206091517: Events

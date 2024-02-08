@@ -1219,7 +1219,13 @@ a.disabled {
 	}
 }
 
-// .nav {
-// 	display: flex;
-// 	flex-direction: row;
-// }
+label {
+	&.error {
+		color: #c10000 !important;
+		&::before {
+			font-family: "FontAwesome";
+			content: "\f071";
+			margin-right: 0.5rem;
+		}
+	}
+}

@@ -50,7 +50,7 @@
 		{ "id": 21, "name": "caracteristica_esap" },
 		{ "id": 22, "name": "tipo_discapacidad" },
 		{ "id": 23, "name": "tipo_vulnerabilidad" },
-		{ "id": 24, "name": "cargo_actual" },
+		{ "id": 24, "name": "cargo" },
 		{ "id": 25, "name": "tipo_participante" },
 		{ "id": 26, "name": "tipo_servidor_publico" },
 		{ "id": 27, "name": "grupo_etnico" },

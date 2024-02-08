@@ -1886,7 +1886,7 @@ CREATE TABLE "Participante" (
   "GeneroId"              NUMBER(10, 0),
   "VulnerabilidadId"      NUMBER(10, 0),
   "DiscapacidadId"        NUMBER(10, 0),
-  "CaracterísticaEsapId"  NUMBER(10, 0),
+  "CaracteristicaEsapId"  NUMBER(10, 0),
   "CargoId"               NUMBER(10, 0),
   "GrupoEtnicoId"         NUMBER(10, 0),
   "TipoServidorPublicoId" NUMBER(10, 0),

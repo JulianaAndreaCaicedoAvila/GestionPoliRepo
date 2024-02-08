@@ -8,10 +8,10 @@ const route = useRoute();
 const app = getCurrentInstance();
 const routeName = router.currentRoute.value.name;
 let props = app.appContext.config.globalProperties,
-	action = ref("recover"),
+	action = ref("login"),
 	recoverZone = null,
 	loginZone = null,
-	resetZone = null,
+	activateZone = null,
 	mainZone = null,
 	firstName = ref(null),
 	lastName = ref(null),
@@ -53,7 +53,7 @@ let recoverBack = () => {
 	password.value = null;
 	password1.value = null;
 	let originZone = null;
-	if (resetZone.is(":visible")) originZone = resetZone;
+	if (activateZone.is(":visible")) originZone = activateZone;
 	if (recoverZone.is(":visible")) originZone = recoverZone;
 	// if (signupZone.is(":visible")) originZone = signupZone;
 	if (originZone != null)
@@ -279,21 +279,21 @@ let confirm = async () => {
 	}
 };
 let reset = async (endPoint) => {
-	if (resetZone.isValid()) {
+	if (activateZone.isValid()) {
 		let txt = endPoint == "activar" ? "Activando cuenta" : "Ingresando datos";
-		resetZone.find(".card").lock(`${txt},<br/>un momento por favor`);
-		let res = await authStore
-			.do([
-				endPoint,
-				{
-					Email: email.value,
-					Password: password.value,
-					Code: code.value,
-				},
-			])
+		activateZone.find(".card").lock(`${txt},<br/>un momento por favor`);
+		var dto = {
+			email: email.value,
+			password: password.value,
+			code: code.value,
+			firstName: null,
+			lastName: null,
+		};
+		console.log("dto =>", dto);
+		let res = await authStore.activar(JSON.stringify(dto))
 			.catch((error) => {
 				console.error("error =>", error);
-				resetZone.find(".card").unlock();
+				activateZone.find(".card").unlock();
 				let err = error.response.data.result.errors[0];
 				txt = endPoint == "activar" ? "Activando cuenta" : "Ingresando datos";
 				let text =
@@ -309,7 +309,6 @@ let reset = async (endPoint) => {
 			console.log("res =>", res);
 			let txt = endPoint == "activar" ? "Cuenta activada!" : "Contraseña asignada!";
 			msg.success(txt, null, function () {
-				// recoverBack();
 				router.push("ingreso");
 			});
 		}
@@ -317,9 +316,9 @@ let reset = async (endPoint) => {
 };
 
 onMounted(() => {
-	// console.clear();
+	console.clear();
 	console.log("MOUNTED!!");
-	console.log("route.query =>"), route.query;
+	console.log("route.query =>", route.query);
 	console.log("config =>", window._config);
 	console.log("getCurrentInstance =>", app);
 	console.log("globalProperties =>", props);
@@ -336,26 +335,30 @@ onMounted(() => {
 		mainZone = $("#main-zone");
 		loginZone = $("#login-zone");
 		recoverZone = $("#recover-zone");
-		resetZone = $("#reset-zone");
-		$("#txt-email").focus();
-		console.log("loginZone =>", loginZone);
-		console.log("recoverZone =>", recoverZone);
+		activateZone = $("#activate-zone");
 
 		// 202306020122: Si esta recuperando la contraseña
 		if (route.query.c) {
 			console.log("c =>", route.query.c);
-			resetZone.fadeIn();
 			console.log("routeName =>", routeName);
 			if (routeName == "activar") {
+				// email.value = route.query.e;
 				email.value = route.query.e.d64();
+				// code.value = route.query.c;
 				code.value = route.query.c.d64();
-				action.value = "activate";
 				console.log("email =>", email.value);
 				console.log("code =>", code.value);
+				$("#txt-email").focus();
+				action.value = "activate";
+				activateZone.fadeIn();
 			}
 		} else {
 			loginZone.fadeIn();
 		}
+
+		console.log("loginZone =>", loginZone);
+		console.log("recoverZone =>", recoverZone);
+		console.log("activateZone =>", activateZone);
 	}, 300);
 });
 
@@ -363,6 +366,7 @@ $().ready(function () { });
 </script>
 <template>
 	<div class="container py-4" id="main-zone">
+
 		<div class="row hidden" id="login-zone">
 			<div class="col d-flex align-items-center justify-content-center">
 				<div class="card col-5">
@@ -418,10 +422,8 @@ $().ready(function () { });
 		<div class="row hidden" id="recover-zone">
 			<div class="col d-flex align-items-center justify-content-center">
 				<div class="card col-5">
-					<div class="card-header main" v-if="action == 'recover'"><i class="fa-solid fa-arrow-rotate-left"></i> Recuperar
+					<div class="card-header main"><i class="fa-solid fa-arrow-rotate-left"></i> Recuperar
 						contraseña</div>
-					<div class="card-header main" v-if="action == 'register'"><i class="fa-solid fa-user-plus"></i> Registrarse
-					</div>
 					<div class="card-body pt-3 pb-2">
 						<div class="row" v-if="action == 'register'">
 							<div class="col">
@@ -475,12 +477,11 @@ $().ready(function () { });
 			</div>
 		</div>
 
-		<div class="row hidden" id="reset-zone">
+		<div class="row hidden" id="activate-zone">
 			<div class="col d-flex align-items-center justify-content-center">
 				<div class="card col-5">
-					<div class="card-header main" v-if="action == 'activate'"><i class="fa-solid fa-user-plus"></i> Activar cuenta
+					<div class="card-header main"><i class="fa-solid fa-user-plus"></i> Activar cuenta
 					</div>
-					<div class="card-header main" v-else><i class="fa-solid fa-user-lock"></i> Recuperar contraseña</div>
 					<div class="card-body pt-3 pb-4">
 						<div class="row">
 							<div class="form-group">
@@ -532,5 +533,6 @@ $().ready(function () { });
 				</div>
 			</div>
 		</div>
+
 	</div>
 </template>

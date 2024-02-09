@@ -1,10 +1,10 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
-import { useSessionStorage } from "@vueuse/core";
+import { useLocalStorage } from "@vueuse/core";
 export const useEncuestaStore = defineStore({
 	id: "Encuesta",
 	state: () => ({
-		items: useSessionStorage("encuestas", []),
+		items: useLocalStorage("encuestas", []),
 	}),
 	actions: {
 		limpiar() {

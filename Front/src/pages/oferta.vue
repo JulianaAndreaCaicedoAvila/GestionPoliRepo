@@ -1,56 +1,33 @@
 <script setup>
 import Pagination from "vuejs-paginate-next";
-import { ref, onMounted, toRaw, watch } from "vue";
+import { ref, onMounted, toRaw } from "vue";
 import { DxTextBox, DxSelectBox } from "devextreme-vue";
 import {
-  useProductoStore,
-  useBancoStore,
-  useNucleoStore,
-  useIndicadorStore,
-  useProgramaStore,
   useClasificadorStore,
-  useEscuelaStore,
-  useNivelStore,
-  useGeografiaStore,
   useCursoStore,
+  useEscuelaStore,
+  useGeografiaStore,
+  useNivelStore,
 } from "@/stores";
-import { useRouter, useRoute } from "vue-router";
-import { eventos } from "@/assets/js/data";
-import DxValidator, {
-  DxRequiredRule,
-  DxEmailRule,
-  DxStringLengthRule,
-} from "devextreme-vue/validator";
+import { useRoute } from "vue-router";
+import DxValidator, { DxRequiredRule, } from "devextreme-vue/validator";
 const baseUrl = import.meta.env.BASE_URL;
-const router = useRouter(),
-  route = useRoute(),
+const route = useRoute(),
   store = useClasificadorStore(),
   geoStore = useGeografiaStore(),
-  storeProductos = useProductoStore(),
-  storeBancos = useBancoStore(),
-  storeNucleos = useNucleoStore(),
   storeNiveles = useNivelStore(),
   storeEscuelas = useEscuelaStore(),
-  storeIndicadores = useIndicadorStore(),
-  storeProgramas = useProgramaStore(),
   cursoStore = useCursoStore();
-let asistencias = ref([]),
+let item = ref({}), asistencias = ref([]),
   territoriales = ref([]),
   departamentos = ref([]),
   municipios = ref([]),
   cursos = ref([]),
   por = ref(null),
-  indicadores = ref([]),
-  dependencias = ref([]),
-  estados = ref([]),
+  nivelId = ref(null),
   tipoCurso = ref([]),
   escuelas = ref([]),
-  creadoPor = ref([]),
-  productos = ref([]),
-  nucleos = ref([]),
   niveles = ref([]),
-  bancos = ref([]),
-  programas = ref([]),
   tipoAsistenciaId = ref(null),
   escuelaId = ref(null),
   territorialId = ref(null),
@@ -59,7 +36,7 @@ let asistencias = ref([]),
   municipioId = ref(null),
   tipoCursoId = ref(null);
 let currentPage = ref(1),
-  pageSize = ref(2),
+  pageSize = ref(6),
   pageCount = ref(0),
   currentItems = ref([]);
 // https://codesandbox.io/s/vue-paginate-vuejs-paginate-next-client-side-pagination-forked-h5dmk5
@@ -80,7 +57,7 @@ let paginate = () => {
   currentItems.value = items;
   store.pagina = currentPage;
 };
-let onPaging = (parameters) => {
+let onPaging = () => {
   paginate();
   // window.scrollToSmoothly(300);
 };
@@ -136,7 +113,6 @@ let itemSelected = async (e) => {
     console.log("niveles =>", toRaw(niveles.value));
   }
 };
-
 onMounted(async () => {
   por.value = route.params.por;
   console.log("por =>", por.value);
@@ -156,6 +132,7 @@ onMounted(async () => {
   currentPage.value = 1;
   pageCount.value = Math.ceil(cursos.value.length / pageSize.value);
   paginate();
+
 });
 </script>
 

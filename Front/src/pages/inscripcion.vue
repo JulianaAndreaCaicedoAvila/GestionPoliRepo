@@ -3,35 +3,53 @@ import { useRouter, useRoute } from "vue-router";
 import { ref, toRaw, onMounted } from "vue";
 import { useCursoStore, useAuthStore } from "@/stores";
 const baseUrl = import.meta.env.BASE_URL;
-const router = useRouter(), route = useRoute(), storeCursos = useCursoStore(), auth = useAuthStore();
-let curso = ref(null), back = ref(null), temas = ref([]);
+const router = useRouter(), route = useRoute(), storeCurso = useCursoStore(), authStore = useAuthStore();
+let curso = ref(null), back = ref(null), temas = ref([]), cursosUsuario = ref([]), cursoInscrito = ref(false);
 
-let inscribirse = () => {
+let inscribirse = async () => {
   let pd = $("#data");
-  pd.lock(`Inscribiendo curso,<br>un momento por favor`);
-  setTimeout(function () {
-    pd.unlock();
-  }, 3000);
+  msg.confirm({
+    // title: "otro",
+    textCancel: "CANCELAR",
+    textOk: "INSCRIBIR",
+    text: `¿Realmente desea inscribirse al curso <span class="font-weight-semibold">"${curso.value.nombre}"</span>?`,
+    onConfirm: async () => {
+      pd.lock(`Realizando inscripción,<br>un momento por favor`);
+      let res = await storeCurso.inscribir({ cursoId: curso.value.id, usuarioId: authStore.user.id });
+      storeCurso.cursosUsuario = []; // Limpia los cursos del usuario
+      console.log("res =>", res);
+      setTimeout(function () {
+        pd.unlock();
+        msg.success("¡Inscripción exitosa!", `<span class="font-weight-semibold d-inline-block mt-2">${authStore.user.firstName}</span>, acabamos de enviar un correo a la dirección <span class="font-weight-semibold">"${authStore.user.email}</span>" con la información de su inscripción al curso <span class="font-weight-semibold">"${curso.value.nombre}"</span>.`, function () {
+          router.back();
+        });
+      }, 1000);
+    },
+    onCancel: () => { },
+  });
 }
+
 onMounted(async () => {
   console.log(_sep);
   console.log("inscripcion.vue mounted!");
   const id = route.params.id;
   if (id.length > 0) {
-    curso.value = await storeCursos.cursoPorId(id);
-    storeCursos.curso = toRaw(curso.value);
-    temas.value = await storeCursos.temasPorCursoId(id);
+    cursoInscrito.value = await storeCurso.cursoInscrito(id);
+    curso.value = await storeCurso.cursoPorId(id);
+    storeCurso.curso = toRaw(curso.value);
+    temas.value = await storeCurso.temasPorCursoId(id);
     back.value = curso.value.dependenciaId == 14 ? "alto-gobierno" : "capacitacion";
     console.log("curso =>", toRaw(curso.value));
     console.log("temas =>", toRaw(temas.value));
-    console.log("storeCursos.curso =>", storeCursos.curso);
+    console.log("storeCursos.curso =>", storeCurso.curso);
+    $("#data").fadeIn();
   }
 });
 </script>
 <template>
   <div class="container content">
     <div class="container content">
-      <div class="card data" id="data">
+      <div class="card data hidden" id="data">
         <div class="card-header main d-flex justify-content-between">
           <span class="d-flex justify-content-between">
             <span>
@@ -65,7 +83,7 @@ onMounted(async () => {
               <div class="row p-3 pb-0 pt-4 bbd">
                 <div class="col">
                   <p class="text-center">
-                    <label class="tit">Asistencia</label>
+                    <label class="tit">Tipo de asistencia</label>
                     {{ curso.tipoAsistenciaNombre }}<br />
                     <label class="tit">Departamento</label>
                     {{ curso.departamentoNombre }}<br />
@@ -134,12 +152,12 @@ onMounted(async () => {
                   </ul>
                 </div>
               </div>
-              <div class="row m-0 p-0 mt-1 pt-4 btd" v-if="!auth.user">
+              <div class="row m-0 p-0 mt-1 pt-4 btd" v-if="!authStore.user">
                 <div class="col-md-12">
                   <p class="m-0 p-0 text-center font-weight-semibold"><i
                       class="fa-solid fa-circle-info me-1 color-main"></i>
-                    Debe encontrarse registrad@ y autenticad@ en el sistema para completar la inscripción al curso. <i
-                      class="fa-solid fa-arrow-down-right color-main"></i></p>
+                    El usuario debe encontrarse registrado y autenticado en el sistema para completar la inscripción al
+                    curso. <i class="fa-solid fa-arrow-down-right color-main"></i></p>
                 </div>
               </div>
             </div>
@@ -153,9 +171,13 @@ onMounted(async () => {
                 VOLVER
               </router-link>
             </span>
-            <span v-if="auth.user">
-              <a class="btn btn-main" @click.prevent="inscribirse()">INSCRIBIRSE AL CURSO <i
-                  class="ms-1 fa-solid fa-circle-right"></i></a>
+            <span v-if="authStore.user">
+              <p v-if="cursoInscrito" class="m-0 font-weight-semibold me-5"><i
+                  class="fa-solid fa-circle-info me-1 color-main"></i>{{ authStore.user.firstName }}, usted ya se
+                hace parte de este curso.</p>
+              <a class="btn btn-main" @click.prevent="inscribirse()" v-else>
+                INSCRIBIRSE AL CURSO <i class="ms-1 fa-solid fa-circle-right"></i>
+              </a>
             </span>
             <span v-else>
               <router-link class="btn btn-main me-4" :to="{ name: 'registro' }">REGISTRARSE <i

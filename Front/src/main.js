@@ -11,11 +11,23 @@ import { router } from "./utils";
 import "./assets/scss/global.scss";
 import { useAuthStore } from "@/stores";
 import { useDateFormat } from "@vueuse/core";
+
+// Variables
+window._env = import.meta.env.MODE;
 window.$ = window.jQuery;
-console.log("window.address =>", window.address);
 window._basePath = window.address.origin;
 window._baseUrl = import.meta.env.BASE_URL;
-window._env = import.meta.env.MODE;
+
+// 201911251050: Desabilita salidas en producción para el host 'esap.edu.co'
+if (window._env !== "development" && window.address.host.toLowerCase().includes("esap.edu.co")) {
+	window.console.log = function () {};
+	window.console.info = function () {};
+	window.console.warn = function () {};
+	window.console.clear = function () {};
+}
+
+console.log("window.address =>", window.address);
+
 // 202211230055: https://vitejs.dev/guide/env-and-mode.html
 console.log("window._env =>", window._env);
 window._apiUrl = window._basePath + window._baseUrl + "api";
@@ -24,7 +36,13 @@ console.log("window._apiUrl =>", window._apiUrl);
 
 const capitalize = (str, lower = true) => (lower ? str.toLowerCase() : str).replace(/(?:^|\s|["'([{])+\S/g, (match) => match.toUpperCase());
 
-$().ready(function () {});
+$().ready(function () {
+	// 202402081705: Limpia el almacenamiento local al cerrar el navegador
+	// window.onbeforeunload = function () {
+	// 	window.localStorage.clear();
+	// 	alert("window.localStorage.clear()!");
+	// };
+});
 
 // Global
 import axios from "axios";

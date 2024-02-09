@@ -300,7 +300,7 @@ onMounted(async () => {
 
 			<DxValidationGroup ref="valGroup">
 				<div class="card-body pt-3 pb-4">
-					{{ item }}
+					<!-- {{ item }} -->
 					<div class="row">
 						<div class="col-md-5 mb-3">
 							<label class="tit">Entidad</label>
@@ -445,7 +445,7 @@ onMounted(async () => {
 						<!-- <DxDataGrid id="gridContainer" :customize-columns="customizeColumns" :data-source="dxStore" key-expr="id" :show-borders="true"></DxDataGrid> -->
 						<DxDataGrid witdh="100%" :customize-columns="customizeColumns" :data-source="dxStore"
 							:allow-column-reordering="true" :hover-state-enabled="true" :remote-operations="true"
-							:row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="false" id="gridContainer"
+							:row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="true" id="gridContainer"
 							@initialized="onInitialized">
 							<DxColumnChooser :enabled="false" mode="dragAndDrop" />
 							<DxExport :enabled="false" />
@@ -462,8 +462,8 @@ onMounted(async () => {
 							</DxSummary>
 							<DxPager :visible="true" :show-info="true" :show-page-size-selector="true" :show-navigation-buttons="true"
 								:allowed-page-sizes="[15, 30, 50, 'Todos']" info-text="{2} usuarios (página {0} de {1})" />
-							<DxColumn data-field="name" caption="Nombre" width="230" :sort-index="0" sort-order="asc" />
-							<DxColumn data-field="email" caption="Correo (usuario)" />
+							<DxColumn data-field="name" caption="Nombre" width="200" :sort-index="0" sort-order="asc" />
+							<DxColumn data-field="email" caption="Correo (usuario)" width="200" />
 							<DxColumn data-field="companyId" caption="Entidad" :visible="true">
 								<DxLookup :data-source="entidades" value-expr="id" display-expr="nombre" />
 							</DxColumn>
@@ -476,6 +476,10 @@ onMounted(async () => {
 							</DxColumn>
 							<DxColumn :width="100" data-field="isActive" caption="Activo" alignment="center" :visible="true"
 								cell-template="tpl1">
+								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
+							</DxColumn>
+							<DxColumn :width="100" data-field="emailConfirmed" caption="Correo confirmado" alignment="center"
+								:visible="true" cell-template="tpl1">
 								<DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
 							</DxColumn>
 							<template #tpl1="{ data }">

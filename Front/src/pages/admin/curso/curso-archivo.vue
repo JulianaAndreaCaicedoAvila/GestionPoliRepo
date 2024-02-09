@@ -46,7 +46,7 @@ import {
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
 	store = useClasificadorStore(),
-	storeAuth = useAuthStore();
+	authStore = useAuthStore();
 let itemArchivoId = ref(null),
 	valGroup = ref(null),
 	dxStore = ref(null),

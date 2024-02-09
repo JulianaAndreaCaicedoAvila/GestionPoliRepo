@@ -24,19 +24,7 @@ const un = ref(null),
     }
   };
 
-// watch(auth.user, async (newUsr, oldUsr) => {
-//   console.log("WATCH =>", auth.user);
-//   un.value = auth.user.name;
-// });
-
 onMounted(() => {
-  // console.clear();
-  // console.log("---------");
-  // console.log("Mounted header menu!!");
-  // console.log("auth.usuario =>", auth.usuario);
-  // console.log("auth.user =>", auth.user);
-  // console.log(typeof auth.user);
-  // setShow();
   if (auth.user) {
     check();
     un.value = auth.user.name.capitalizeAll();

@@ -845,7 +845,7 @@ window.themeInit = () => {
 						var n = e(this).data("base-path"),
 							o = e(this).data("skin-src"),
 							a = document.createElement("script");
-						a.src = n + "master/style-switcher/style.switcher.sessionStorage.js";
+						a.src = n + "master/style-switcher/style.switcher.localStorage.js";
 						var s = document.createElement("script");
 						(s.src = n + "master/style-switcher/style.switcher.js"),
 							(s.id = "styleSwitcherScript"),

@@ -18,7 +18,7 @@ import {
 	useCursoStore,
 } from "@/stores";
 const storeClas = useClasificadorStore(),
-	storeAuth = useAuthStore(),
+	authStore = useAuthStore(),
 	storeEncuesta = useEncuestaStore(),
 	storePregunta = usePreguntaStore(),
 	storeModulo = useModuloStore(),
@@ -35,7 +35,7 @@ const storeClas = useClasificadorStore(),
 onMounted(async () => {
 	let items = await storeClas.cargar();
 	items = await storeClas.tipos();
-	items = await storeAuth.getRoles();
+	items = await authStore.getRoles();
 	items = await storeGeo.dptoAll();
 	items = await storeGeo.munAll();
 	items = await storeProductos.all();

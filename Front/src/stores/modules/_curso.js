@@ -1,18 +1,19 @@
 // 202402060148: imple Local Storage implementation using Vue 3, Vueuse and Pinia with zero extra lines of code
 // https://stephanlangeveld.medium.com/simple-local-storage-implementation-using-vue-3-vueuse-and-pinia-with-zero-extra-lines-of-code-cb9ed2cce42a
-// https://vueuse.org/core/useSessionStorage/#useSessionStorage
-
+// https://vueuse.org/core/useLocalStorage/#useLocalStorage
 import api from "@/utils/api";
 import { defineStore } from "pinia";
-import { useSessionStorage } from "@vueuse/core";
+import { useAuthStore } from "@/stores";
+import { useLocalStorage } from "@vueuse/core";
 export const useCursoStore = defineStore({
 	id: "Curso",
 	state: () => ({
 		item: null,
-		curso: useSessionStorage("curso", null),
-		cursos: useSessionStorage("cursos", []),
-		cursosTemas: useSessionStorage("cursosTemas", []),
-		cursosPublicados: useSessionStorage("cursosPublicados", []),
+		curso: useLocalStorage("curso", null),
+		cursos: useLocalStorage("cursos", []),
+		cursosTemas: useLocalStorage("cursosTemas", []),
+		cursosUsuario: useLocalStorage("cursosUsuario", []),
+		cursosPublicados: useLocalStorage("cursosPublicados", []),
 	}),
 	actions: {
 		limpiar() {
@@ -37,6 +38,33 @@ export const useCursoStore = defineStore({
 				.then(async (r) => {
 					this.cursosPublicados = r.data;
 					return this.cursosPublicados;
+				});
+		},
+		async allCursosTemas() {
+			console.log("CursoTemas items =>", this.cursosTemas);
+			if (this.cursosTemas.length > 0) return this.cursosTemas;
+			return await api()
+				.get(`curso/cursos-temas`)
+				.then(async (r) => {
+					this.cursosTemas = r.data;
+					return this.cursosTemas;
+				});
+		},
+		async porUsuarioId(usuarioId) {
+			if (this.cursosUsuario.length > 0) return this.cursosUsuario;
+			console.log(`porUsuarioId(${usuarioId})`);
+			return await api()
+				.get(`curso/cursos-por-usuario/${usuarioId}`)
+				.then(async (r) => {
+					this.cursosUsuario = r.data;
+					return this.cursosUsuario;
+				});
+		},
+		async inscribir(data) {
+			return await api()
+				.post(`curso/inscribir`, data) // { cursoId:0, usuarioId:0 }
+				.then(async (r) => {
+					return r.data;
 				});
 		},
 		async allCursosTemas() {
@@ -75,6 +103,14 @@ export const useCursoStore = defineStore({
 		async temasPorCursoId(cursoId) {
 			let items = await this.allCursosTemas();
 			return items.filter((o) => o.cursoId == cursoId);
+		},
+		async cursoInscrito(cursoId) {
+			const authStore = useAuthStore();
+			if (authStore.user) {
+				let items = await this.porUsuarioId(authStore.user.id);
+				if (items.length > 0) return items.filter((o) => o.id == cursoId).length > 0;
+			}
+			return false;
 		},
 		async CursoPorNucleoId(nucleoId) {
 			let items = await this.all();

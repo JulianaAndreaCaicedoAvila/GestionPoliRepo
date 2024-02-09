@@ -2,6 +2,7 @@ using System.Text;
 using DevExtreme.AspNet.Data;
 using ESAP.Sirecec.Data;
 using ESAP.Sirecec.Data.Api.Authorization;
+using ESAP.Sirecec.Data.Api.Services;
 using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Core;
 using ESAP.Sirecec.Data.Model;
@@ -22,14 +23,17 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 	{
 		private readonly DataContext _db;
 		private readonly ILogger _logger;
+		private readonly IEmailService _email;
 		private readonly IConfiguration _config;
 		private readonly IHttpContextAccessor _context;
 
-		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor, ILogger<CursoController> logger, IConfiguration config)
+		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor,
+			ILogger<CursoController> logger, IConfiguration config, IEmailService email)
 		{
 			_db = context;
 			_logger = logger;
 			_config = config;
+			_email = email;
 			_context = httpContextAccessor;
 		}
 
@@ -77,6 +81,62 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		{
 			var items = _db.CursoUsuario?.Where(o => o.CursoId == cursoId).ToList();
 			return Ok(items);
+		}
+
+		[HttpPost("inscribir")] // /api/curso/inscribir
+		public ActionResult Inscribir(CursoInscripcionModel item)
+		{
+			// 202402090054: Crea el registro
+			var obj = new CursoUsuario
+			{
+				CursoId = item.CursoId,
+				UsuarioId = item.UsuarioId,
+				CreadoPor = GetUserId(),
+				CreadoEl = DateTime.Now,
+			};
+			_db.CursoUsuario.Add(obj);
+			_db.SaveChanges();
+
+			// 202402090040: Envía el correo
+			var curso = _db.Cursos.FirstOrDefault(o => o.Id == item.CursoId);
+			if (curso != null)
+			{
+				var usuario = _db.Usuarios.FirstOrDefault(o => o.Id == item.UsuarioId);
+				if (usuario != null)
+				{
+					string body = @$"Hola {usuario.FirstName}!<br/><br/>
+						Usted acaba de inscribirse al curso <b>{curso.Nombre}</b>.<br/><br/>
+						Esta es la información que debe tener en cuenta:<br /><br />
+						<b>Tipo de curso:</b> {curso.TipoCursoNombre.Capitalize()}<br />
+						<b>Tipo de asistencia:</b> {curso.TipoAsistenciaNombre}<br />
+						<b>Lugar de realización:</b> {curso.LugarRealizacion}<br />
+						<b>Municipio:</b> {curso.MunicipioNombre}<br />
+						<b>Departamento:</b> {curso.DepartamentoNombre}<br />
+						<b>Inicio del curso:</b> {curso.FechaInicio:dd/MM/yyyy} {curso.HoraInicio:h:mm tt}<br />
+						<b>Fin del curso:</b> {curso.FechaFin:dd/MM/yyyy}<br />
+						<b>Responsable:</b> {curso.Responsable}<br />
+						<b>Correo electrónico:</b> {curso.CorreoElectronico}<br />
+						<br/>Muchas gracias!";
+					_email.Send(usuario.Email, "SIRECEC 4.0 - INSCRIPCIÓN EXITOSA", body);
+				}
+			}
+
+			// Finaliza
+			return Ok(obj);
+		}
+
+		[HttpGet("cursos-por-usuario/{usuarioId}")] // /api/curso/por-usuario
+		public ActionResult CursosPorUsuarioId(int usuarioId)
+		{
+			List<int> ids = new List<int>();
+			var items = _db.CursoUsuario.Where(o => o.UsuarioId == usuarioId).ToList();
+			if (items.Any())
+			{
+				foreach (CursoUsuario item in items) ids.Add(item.CursoId);
+				var res = _db.Cursos.Where(o => ids.Contains(o.Id)).ToList();
+				return Ok(res);
+			}
+			return Ok(new List<CursoUsuario>());
 		}
 
 		[HttpPost("ed-tema")] // /api/curso/ed => CREATE - UPDATE
@@ -160,9 +220,6 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				return Ok(item);
 			}
 		}
-
-
-
 
 		[HttpGet("dep/{dependenciaId?}")] // /api/curso/dep/13 o 14
 		[Authorization.AllowAnonymous]

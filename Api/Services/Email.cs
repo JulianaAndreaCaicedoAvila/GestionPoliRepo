@@ -23,7 +23,10 @@ public class EmailService : IEmailService
 	{
 		// 202402020448: Template
 		string html = File.ReadAllText(Path.Combine(_conf["Path:FilesPath"], "tpl/mail.min.html"));
-		html = html.Replace("{BasePath}", _conf["Path:BasePath"]);
+		var bp = _conf["Path:BasePath"];
+		var bpt = "https://media.nemedi.com/sirecec4";
+		html = html.Replace("{BasePath}", bp.Contains("esap.edu.co") ? bp : bpt);
+		// html = html.Replace("{BasePath}", bp);
 		html = html.Replace("{Year}", DateTime.Now.Year.ToString());
 		html = html.Replace("{Body}", body);
 

@@ -78,6 +78,7 @@ namespace ESAP.Sirecec.Data.Migrations
             EXECUTE IMMEDIATE 'DROP VIEW ""Encuestas""';
             EXECUTE IMMEDIATE 'DROP VIEW ""CursosEncuestas""';
             EXECUTE IMMEDIATE 'DROP VIEW ""Temas""';
+            EXECUTE IMMEDIATE 'DROP VIEW ""CursosUsuarios""';
             END;");
         }
     }

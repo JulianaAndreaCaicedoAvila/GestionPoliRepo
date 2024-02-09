@@ -2,7 +2,7 @@ import { toRaw } from "vue";
 import api from "@/utils/api";
 import { router } from "@/utils";
 import { defineStore } from "pinia";
-import { useSessionStorage } from "@vueuse/core";
+import { useLocalStorage } from "@vueuse/core";
 import { PublicClientApplication } from "@azure/msal-browser";
 
 const tokenVariableName = "user_token",
@@ -31,8 +31,8 @@ const tokenVariableName = "user_token",
 		let usr = r.data.usuario;
 		usr["origin"] = origin;
 		usr["token"] = decryptToken(r.data.token);
-		sessionStorage.setItem(tokenVariableName, r.data.token);
-		sessionStorage.setItem(userVariableName, JSON.stringify(usr));
+		localStorage.setItem(tokenVariableName, r.data.token);
+		localStorage.setItem(userVariableName, JSON.stringify(usr));
 		return usr;
 	};
 
@@ -41,12 +41,12 @@ export const useAuthStore = defineStore("auth", {
 	state: () => ({
 		msal: null,
 		returnUrl: null,
-		roles: useSessionStorage("authRoles", []),
-		token: sessionStorage.getItem(tokenVariableName),
+		roles: useLocalStorage("authRoles", []),
+		token: localStorage.getItem(tokenVariableName),
 		tokenDecrypted: null,
-		user: sessionStorage.getItem(userVariableName),
+		user: localStorage.getItem(userVariableName),
 		userX: function () {
-			let u = sessionStorage.getItem(userVariableName);
+			let u = localStorage.getItem(userVariableName);
 			return u != null ? JSON.parse(u) : null;
 		},
 	}),
@@ -193,7 +193,7 @@ export const useAuthStore = defineStore("auth", {
 			this.returnUrl = null;
 			this.user = null;
 			this.token = null;
-			sessionStorage.clear();
+			localStorage.clear();
 			cb();
 		},
 		// checkExpired() {

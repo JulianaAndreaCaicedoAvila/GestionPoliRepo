@@ -1,12 +1,12 @@
 import api from "@/utils/api";
 import { defineStore } from "pinia";
-import { useSessionStorage } from "@vueuse/core";
+import { useLocalStorage } from "@vueuse/core";
 export const useGeografiaStore = defineStore({
 	id: "Geografia",
 	state: () => ({
-		paises: useSessionStorage("paises", []),
-		municipios: useSessionStorage("municipios", []),
-		departamentos: useSessionStorage("departamentos", []),
+		paises: useLocalStorage("paises", []),
+		municipios: useLocalStorage("municipios", []),
+		departamentos: useLocalStorage("departamentos", []),
 	}),
 	actions: {
 		limpiar() {

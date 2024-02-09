@@ -140,9 +140,9 @@ let now = new Date(), titulo = "Temas",
     contratista: false,
     habeasData: false,
     correo1: null, // Local
-    departamentoId: 6, // Local
-    entidad: "Panadería", // Local
-    cargoActual: "Panadero" // Local
+    departamentoId: null, // Local
+    entidad: null, // Local
+    cargoActual: null // Local
   }),
   item_copy = Clone(item.value),
   panelData = null,
@@ -298,8 +298,8 @@ let save = async () => {
           console.log("res =>", dto);
           setTimeout(function () {
             panelData.unlock();
-            msg.success("¡Registro exitoso!", `<span class="font-weight-semibold">${p.nombres}</span>, hemos enviado un correo electrónico a la dirección <span class="font-weight-semibold">"${p.correo}</span>" para que realice la activación de su cuenta en el sistema.`, function () {
-              router.go(-1);
+            msg.success("¡Registro exitoso!", `<span class="font-weight-semibold d-inline-block mt-2">${p.nombres}</span>, acabamos de enviar un correo a la dirección <span class="font-weight-semibold">"${p.correo}</span>" para que realice la activación de su cuenta en el sistema.`, function () {
+              router.back();
             });
           }, 1000);
         } catch (error) {
@@ -396,12 +396,12 @@ onMounted(async () => {
           <!-- {{ item }} <hr /> {{ user }} <hr /> -->
           <div class="row">
             <div class="col-md-12 bb mt-2 mb-4">
-              <p><i class="fa-solid fa-circle-info me-1 color-main"></i>
-                Para iniciar su registro en el sistema debe diligenciar la información solicitada
-                <span class="font-weight-semibold">(todos los campos son requeridos)</span>.
-                Una vez haga clic en el botón "Registrarse" se le enviará un correo electrónico de activación a la
-                dirección proporcionada para que asigne su contraseña y finalice de manera exitosa el registro en la
-                plataforma.
+              <p class="font-weight-semibold"><i class="fa-solid fa-circle-info me-1 color-main"></i>
+                Para realizar su registro en el sistema debe diligenciar la información solicitada
+                (todos los campos son requeridos).
+                Una vez haga clic en el botón <span class="font-weight-semibold">"Registrarse"</span> se le enviará un
+                correo electrónico de activación a la
+                dirección proporcionada para que asigne su contraseña y finalice de manera exitosa el proceso.
               </p>
             </div>
           </div>
@@ -682,10 +682,13 @@ onMounted(async () => {
               </DxSelectBox>
             </div> -->
             <div class="col-md-12 mt-3 mb-3 text-center">
-              <label :class="'tit me-2 color-text ' + habeasClass" for="habeas">Al hacer clic en la "casilla", acepta
-                nuestros Términos y
-                condiciones así como la ley 1581 de tratamiento de datos
-                personales Habeas data</label>
+              <label :class="'tit me-2 color-text ' + habeasClass" for="habeas">Acepta la <a class="a-ul"
+                  href="https://www.esap.edu.co/portal/index.php/Descargas/228/politica-proteccion-datos-personales/48412/politica-de-proteccion-de-datos-personales.pdf"
+                  target="_blank" title="Leer documento de la política...">"Política de protección de datos de la
+                  ESAP"</a> como
+                también la <a class="a-ul" href="http://www.secretariasenado.gov.co/senado/basedoc/ley_1581_2012.html"
+                  target="_blank" title="Leer el texto de la ley...">"Ley 1581 para la protección de datos
+                  personales"</a></label>
               <DxCheckBox id="habeas" v-model="item.habeasData">
                 <DxValidator>
                   <DxRequiredRule />
@@ -700,7 +703,7 @@ onMounted(async () => {
           <span>
             <!-- <a class="btn btn-gray me-3" @click.prevent="next"><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a> -->
             <a class="btn btn-main" @click.prevent="router.back(-1)"><i class="me-1 fa-solid fa-circle-left"></i>
-              ANTERIOR</a>
+              VOLVER</a>
           </span>
           <a class="btn btn-main" @click.prevent="save" v-if="route.name == 'registro'">
             REGISTRARSE <i class="fa-solid fa-user-pen ms-2"></i>

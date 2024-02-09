@@ -1,11 +1,10 @@
 <script setup>
-import api from "@/utils/api";
-import { router } from "@/utils";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores";
 import { ref, watch, onMounted, getCurrentInstance } from "vue";
-const route = useRoute();
+const route = useRoute(), router = useRouter();
 const app = getCurrentInstance();
+const baseUrl = import.meta.env.BASE_URL;
 const routeName = router.currentRoute.value.name;
 let props = app.appContext.config.globalProperties,
 	action = ref("login"),
@@ -45,7 +44,7 @@ let recoverDo = (what) => {
 		});
 	});
 };
-let recoverBack = () => {
+let returnUrl = null, recoverBack = () => {
 	email.value = null;
 	password.value = null;
 	firstName.value = null;
@@ -88,7 +87,7 @@ let login = async () => {
 			console.log("res =>", res);
 			loginZone.find(".card").lock(`Hola ${res.firstName}, ingresando!<br/>Un momento por favor`);
 			setTimeout(function () {
-				router.push(this.returnUrl || "/inicio");
+				router.push(returnUrl);
 			}, 1000);
 		}
 	}
@@ -126,7 +125,7 @@ let signin = async () => {
 					console.log("res =>", res);
 					loginZone.find(".card").lock(`Hola ${res.firstName}, ingresando!<br/>Un momento por favor`);
 					setTimeout(function () {
-						router.push(this.returnUrl || "/inicio");
+						router.push(returnUrl);
 					}, 1000);
 				}
 				// await api({ hideErrors: true })
@@ -316,9 +315,13 @@ let reset = async (endPoint) => {
 };
 
 onMounted(() => {
-	console.clear();
-	console.log("MOUNTED!!");
+	// console.clear();
+	console.log(_sep);
+	console.log("login.vue mounted!!");
 	console.log("route.query =>", route.query);
+	console.log("router =>", router);
+	console.log("router.options.history.state =>", router.options.history.state);
+	// console.log("route.options.history.state =>", route.options.history.state);
 	console.log("config =>", window._config);
 	console.log("getCurrentInstance =>", app);
 	console.log("globalProperties =>", props);
@@ -329,6 +332,13 @@ onMounted(() => {
 	// accounts = props.$msal.getAllAccounts();
 	// console.log("accounts =>", accounts);
 	// if (accounts.length > 0) account = accounts[0];
+
+	// 202402081717: Check if history
+	if (window.history.state.back === null) {
+		returnUrl = baseUrl;
+	} else {
+		returnUrl = router.options.history.state.back;
+	}
 
 	console.log("props.$msal =>", props.msal);
 	setTimeout(function () {

@@ -46,7 +46,7 @@ import {
 const route = useRoute(),
   store = useClasificadorStore(),
   encuestaStore = useEncuestaStore(),
-  storeAuth = useAuthStore();
+  authStore = useAuthStore();
 let titulo = "Encuestas",
   list1 = null,
   list2 = null,

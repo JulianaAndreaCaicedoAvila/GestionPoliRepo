@@ -196,6 +196,21 @@ input {
 			background-color: darken($color: #aaa, $amount: 30);
 		}
 	}
+	&.btn-green {
+		background-color: #19ad68;
+		color: #fff !important;
+		// background-color: #aaa;
+		&:hover {
+			background-color: darken($color: #19ad68, $amount: 10);
+		}
+	}
+	&.btn-red {
+		background-color: #db2929 !important;
+		color: #fff !important;
+		&:hover {
+			background-color: darken($color: #db2929, $amount: 10) !important;
+		}
+	}
 
 	&.btn-trans {
 		padding: 0;
@@ -1241,6 +1256,19 @@ a {
 		&:focus {
 			text-decoration: none;
 			border-bottom: none;
+		}
+	}
+}
+
+.dx-scrollable-scroll-content {
+	background-color: $main-color !important;
+}
+
+.dx-button-content {
+	.dx-icon {
+		color: $main-color !important;
+		&::before {
+			top: -20px !important;
 		}
 	}
 }

@@ -73,6 +73,10 @@ axios
 			{ name: "SI", value: true },
 			{ name: "NO", value: false },
 		];
+		props.$si_no_int = [
+			{ name: "SI", value: 1 },
+			{ name: "NO", value: 0 },
+		];
 		props.$meses = [
 			{ value: 1, name: "enero" },
 			{ value: 2, name: "febrero" },
@@ -86,10 +90,6 @@ axios
 			{ value: 10, name: "octubre" },
 			{ value: 11, name: "noviembre" },
 			{ value: 12, name: "diciembre" },
-		];
-		props.$si_no_int = [
-			{ name: "SI", value: 1 },
-			{ name: "NO", value: 0 },
 		];
 		props.$clean = (e) => {
 			let v = e.component.option("value");

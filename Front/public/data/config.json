@@ -16,6 +16,12 @@
 		"dependencia_capacitacion_id": 13,
 		"elaborado_por_convenio_na_id": 5
 	},
+	"estado_curso": {
+		"borrador": 421,
+		"revision": 422,
+		"aprobado": 423,
+		"rechazado": 424
+	},
 	"roles": [
 		{ "id": 1, "name": "Administrador", "normalizedName": "ADMINISTRADOR", "concurrencyStamp": "C13D6F8AE8D54FAD8FDD3582CD1D64C4" },
 		{ "id": 2, "name": "Pedagógo Líder", "normalizedName": "PEDAGOGO_LIDER", "concurrencyStamp": "ABAC25611EBA4D14AD63A70E75FC4230" },

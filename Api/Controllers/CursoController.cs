@@ -5,6 +5,7 @@ using ESAP.Sirecec.Data.Api.Authorization;
 using ESAP.Sirecec.Data.Api.Services;
 using ESAP.Sirecec.Data.Api.Utils;
 using ESAP.Sirecec.Data.Core;
+using ESAP.Sirecec.Data.Enum;
 using ESAP.Sirecec.Data.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -123,6 +124,23 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 			// Finaliza
 			return Ok(obj);
+		}
+
+		// En json: Front\public\data\config.json
+		[HttpGet("estado/{cursoId}/{estadoId}")] // /api/curso/estado/15/423
+		public ActionResult CursoEstado(int cursoId, int estadoId)
+		{
+			var obj = _db.Curso.FirstOrDefault(o => o.Id == cursoId);
+			if (obj != null)
+			{
+				obj.EstadoCursoId = estadoId;
+				obj.Publicado = estadoId == (int)EstadoCurso.Aprobado;
+				obj.EditadoPor = GetUserId();
+				obj.EditadoEl = DateTime.Now;
+				_db.SaveChanges();
+				return Ok(obj);
+			}
+			return Ok();
 		}
 
 		[HttpGet("cursos-por-usuario/{usuarioId}")] // /api/curso/por-usuario

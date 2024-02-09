@@ -67,6 +67,13 @@ export const useCursoStore = defineStore({
 					return r.data;
 				});
 		},
+		async estado(cursoId, estadoId) {
+			return await api()
+				.get(`curso/estado/${cursoId}/${estadoId}`)
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async allCursosTemas() {
 			console.log("CursoTemas items =>", this.cursosTemas);
 			if (this.cursosTemas.length > 0) return this.cursosTemas;

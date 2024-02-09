@@ -40,7 +40,7 @@ let itemId = ref(null),
 		} else {
 			// Cuando es válido
 			panelData.lock(
-				`"Actualizando días`,
+				`"Actualizando fechas`,
 				async function () {
 					let dto = JSON.stringify(items.value);
 					// dto.forEach(element => {
@@ -50,6 +50,7 @@ let itemId = ref(null),
 					await api()
 						.post(`cursoFecha/ed`, dto)
 						.then((r) => {
+							emit('onRefresh');
 							console.log("r =>", r);
 							panelData.unlock();
 							// cancel(function () {
@@ -99,15 +100,17 @@ let itemId = ref(null),
 	};
 
 // Se expone como evento en el componente
-const emit = defineEmits(['onCancel'])
+const emit = defineEmits(['onCancel', 'onRefresh']);
 const callOnCancel = () => {
-	emit('onCancel')
+	emit('onCancel');
 }
 
 // Propiedades
 let props = defineProps({
 	itemId: { type: Number, default: null, required: false },
-	item: { type: Object, default: null, required: false }
+	item: { type: Object, default: null, required: false },
+	showRevision: { type: Boolean, default: false, required: false },
+	showAprove: { type: Boolean, default: false, required: false }
 });
 
 // watch(
@@ -120,7 +123,7 @@ let props = defineProps({
 onMounted(async () => {
 	$("#grid-dias").lock("Cargando");
 	console.log(_sep);
-	console.log("curso-dias.vue MOUNTED!");
+	console.log("curso-fechas.vue MOUNTED!");
 	console.log("route.name =>", route.name);
 	itemId.value = props.itemId;
 	item.value = props.item;
@@ -153,25 +156,28 @@ onMounted(async () => {
 					<!-- {{ items }}<br><br> -->
 					<div class="row">
 						<div class="col text-center mb-4 bb d-flex justify-content-between align-items-end">
-							<h4 class="mb-2">Número de días en el curso: {{ item.numeroDias }}</h4>
+							<h4 class="mb-2">Número de fechas en el curso: {{ item.numeroDias }}</h4>
 							<h4 class="mb-2">Porcentaje total: {{ porcentaje }}%</h4>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-4 mb-2 text-center" v-for="(el, x) in  items ">
-							<label class="tit mb-1" style="line-height: 1.2rem;">Día {{ x + 1 }}<br><span class="font-size-sm">(Fecha |
+							<label class="tit mb-1" style="line-height: 1.2rem;">Fecha {{ x + 1 }}<br><span class="font-size-sm">(Fecha
+									|
 									Ponderación)</span></label>
 							<div class="input-group mb-3">
-								<DxDateBox :id="'fecha-' + (x + 1)" class="form-control" style="width:8%" :value="el.fechaClase"
-									v-model="el.fechaClase" display-format="dd/MM/yyyy" type="date" :min="item.fechaInicio"
-									:max="item.fechaFin" @value-changed="itemSelected" @key-down="prevent" @key-up="prevent">
+								<DxDateBox :read-only="props.showAprove" :id="'fecha-' + (x + 1)" class="form-control" style="width:8%"
+									:value="el.fechaClase" v-model="el.fechaClase" display-format="dd/MM/yyyy" type="date"
+									:min="item.fechaInicio" :max="item.fechaFin" @value-changed="itemSelected" @key-down="prevent"
+									@key-up="prevent">
 									<DxValidator>
 										<DxRequiredRule />
 									</DxValidator>
 								</DxDateBox>
-								<DxNumberBox :show-spin-buttons="true" :step="5" :id="'pond-' + (x + 1)" :min="5" :value="el.ponderacion"
-									:max="100" :show-clear-button="false" class="form-control" placeholder="Ponderación"
-									v-model="el.ponderacion" @value-changed="itemSelected" @key-down="prevent" @key-up="prevent">
+								<DxNumberBox :read-only="props.showAprove" :show-spin-buttons="true" :step="5" :id="'pond-' + (x + 1)"
+									:min="5" :value="el.ponderacion" :max="100" :show-clear-button="false" class="form-control"
+									placeholder="Ponderación" v-model="el.ponderacion" @value-changed="itemSelected" @key-down="prevent"
+									@key-up="prevent">
 									<DxValidator>
 										<DxRequiredRule />
 									</DxValidator>
@@ -192,7 +198,8 @@ onMounted(async () => {
 			</div> -->
 		</div>
 
-		<Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" @on-save="save" :show-save="true" />
+		<Cmds :show-revision="showRevision" :show-aprove="showAprove" v-if="item" :item="item" :item-id="item.id"
+			@on-cancel="callOnCancel" @on-save="save" :show-save="!props.showAprove" />
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">

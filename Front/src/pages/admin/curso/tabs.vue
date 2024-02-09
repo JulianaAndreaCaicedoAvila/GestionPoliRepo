@@ -1,24 +1,40 @@
 <script setup>
 import Datos from "@/pages/admin/curso/curso-datos.vue";
-import Temas from "@/pages/admin/curso/curso-tema.vue";
-import Archivos from "@/pages/admin/curso/curso-archivo.vue";
-import Dias from "@/pages/admin/curso/curso-dias.vue";
-import Encuestas from "@/pages/admin/curso/curso-encuesta.vue";
+import Temas from "@/pages/admin/curso/curso-temas.vue";
+import Archivos from "@/pages/admin/curso/curso-archivos.vue";
+import Dias from "@/pages/admin/curso/curso-fechas.vue";
+import Encuestas from "@/pages/admin/curso/curso-encuestas.vue";
 import { useCursoStore } from "@/stores";
 import { ref, onMounted, toRaw } from "vue";
 import { useRouter, useRoute } from "vue-router";
 // https://js.devexpress.com/Documentation/Guide/UI_Components/TabPanel/Getting_Started_with_TabPanel/
 import DxTabPanel, { DxItem } from "devextreme-vue/tab-panel";
+const estados = window._config.estado_curso;
 const router = useRouter(), route = useRoute(), storeCursos = useCursoStore();
-let titulo = "Administración &raquo; Cursos", selectedIndex = ref(0), cursoId = ref(null), curso = ref(null);
+let selectedIndex = ref(0), cursoId = ref(null), curso = ref(null), showRevision = ref(false), showAprove = ref(false);
 let cancel = () => {
-  console.clear();
+  // console.clear();
   console.log(_sep);
-  storeCursos.item = data;
+  // storeCursos.item = data;
   console.log("Cancel in tabs!");
   router.push("/admin/cursos");
 };
-defineExpose({ cancel });
+let getShowRevision = () => {
+  if (showAprove.value == true) return false;
+  return curso.value.temas > 0 && curso.value.encuestas > 0
+    && curso.value.fechas > 0
+    && (curso.value.documentos + curso.value.imagenes) > 0;
+}
+let getShowAprove = () => {
+  let eId = curso.value.estadoCursoId;
+  return eId == estados.revision;
+}
+let refresh = async () => {
+  curso.value = await storeCursos.getById(cursoId.value);
+  showAprove.value = getShowAprove();
+  showRevision.value = getShowRevision();
+}
+defineExpose({ cancel, refresh });
 onMounted(async () => {
   console.log(_sep);
   console.log("tabs.vue MOUNTED!");
@@ -27,12 +43,15 @@ onMounted(async () => {
   console.log("id != null", id != null);
   console.log("id.length", id.length);
   if (id.length > 0) {
-    cursoId.value = 1;
     if (storeCursos.item != null && storeCursos.item.id == parseInt(id)) curso.value = storeCursos.item;
     else curso.value = await storeCursos.getById(id);
     console.log("curso =>", toRaw(curso.value));
     console.log("CARGAR CURSO!!");
     cursoId.value = parseInt(id);
+    showAprove.value = getShowAprove();
+    console.log("showAprove =>", showAprove.value);
+    showRevision.value = getShowRevision();
+    console.log("showRevision =>", showRevision.value);
   } else {
     cursoId.value = 0;
   };
@@ -41,7 +60,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="container content">
-    <div class="card data" id="data">
+    <div class="card data" id="data-curso-tabs">
       <div class="card-header main d-flex justify-content-between">
         <span class=" d-flex justify-content-between">
           <i class="fa-solid fa-gears"></i>
@@ -60,10 +79,10 @@ onMounted(async () => {
       <div class="card-body" v-if="cursoId > 0">
         <div class="row" v-if="curso.id > 0">
           <div class="col-md-12 mb-2 d-flex justify-content-between">
-            <p><i class="fa-solid fa-circle-info me-1 color-main"></i>
+            <p class="font-weight-semibold"><i class="fa-solid fa-circle-info me-1 color-main"></i>
               Debe completar toda la información del curso para
               someterlo a revisión.</p>
-            <p> <b>Estado del curso:</b> {{ curso.estadoCursoNombre }}</p>
+            <p><b class="font-weight-semibold color-main">Estado del curso:</b> {{ curso.estadoCursoNombre }}</p>
           </div>
         </div>
         <div class="row" v-if="curso">
@@ -71,19 +90,24 @@ onMounted(async () => {
             <DxTabPanel v-model:selected-index="selectedIndex" :loop="false" :scroll-by-content="true"
               :show-nav-buttons="true" :swipe-enabled="false" :scrolling-enabled="true">
               <DxItem title="1. Información">
-                <Datos :item="curso" :item-id="cursoId" @on-cancel="cancel" />
+                <Datos :item="curso" :item-id="cursoId" @on-cancel="cancel" @on-refresh="refresh"
+                  :show-revision="showRevision" :show-aprove="showAprove" />
               </DxItem>
               <DxItem :title="'2. Temas (' + curso.temas + ')'">
-                <Temas :item="curso" :item-id="cursoId" @on-cancel="cancel" />
+                <Temas :item="curso" :item-id="cursoId" @on-cancel="cancel" @on-refresh="refresh"
+                  :show-revision="showRevision" :show-aprove="showAprove" />
               </DxItem>
               <DxItem :title="'3. Encuestas (' + curso.encuestas + ')'">
-                <Encuestas :item="curso" :item-id="cursoId" @on-cancel="cancel" />
+                <Encuestas :item="curso" :item-id="cursoId" @on-cancel="cancel" @on-refresh="refresh"
+                  :show-revision="showRevision" :show-aprove="showAprove" />
               </DxItem>
               <DxItem :title="'4. Fechas (' + curso.fechas + ')'">
-                <Dias :item="curso" :item-id="cursoId" @on-cancel="cancel" />
+                <Dias :item="curso" :item-id="cursoId" @on-cancel="cancel" @on-refresh="refresh"
+                  :show-revision="showRevision" :show-aprove="showAprove" />
               </DxItem>
-              <DxItem :title="'5. Archivos (' + curso.documentos + ')'">
-                <Archivos :item="curso" :item-id="cursoId" @on-cancel="cancel" />
+              <DxItem :title="'5. Archivos (' + (curso.documentos + curso.imagenes) + ')'">
+                <Archivos :item="curso" :item-id="cursoId" @on-cancel="cancel" @on-refresh="refresh"
+                  :show-revision="showRevision" :show-aprove="showAprove" />
               </DxItem>
             </DxTabPanel>
           </div>
@@ -95,7 +119,7 @@ onMounted(async () => {
             <DxTabPanel :loop="false" :scroll-by-content="true" :show-nav-buttons="true" :swipe-enabled="false"
               :scrolling-enabled="true">
               <DxItem title="1. Información">
-                <Datos @on-cancel="cancel" />
+                <Datos @on-cancel="cancel" @on-refresh="refresh" />
               </DxItem>
             </DxTabPanel>
           </div>

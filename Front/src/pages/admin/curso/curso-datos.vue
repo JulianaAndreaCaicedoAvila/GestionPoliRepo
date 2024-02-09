@@ -6,16 +6,17 @@ import NumberBox from "devextreme/ui/number_box";
 import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
 import Cmds from "@/pages/admin/curso/_comandos.vue";
 import {
-  useProductoStore,
-  useBancoStore,
-  useNucleoStore,
-  useIndicadorStore,
-  useProgramaStore,
-  useClasificadorStore,
-  useEscuelaStore,
-  useNivelStore,
   useAuthStore,
+  useBancoStore,
+  useClasificadorStore,
+  useCursoStore,
+  useEscuelaStore,
   useGeografiaStore,
+  useIndicadorStore,
+  useNivelStore,
+  useNucleoStore,
+  useProductoStore,
+  useProgramaStore,
 } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
@@ -36,9 +37,11 @@ import {
   DxImageUpload,
   DxItem,
 } from "devextreme-vue";
+const estadosGlobales = window._config.estado_curso;
 const router = useRouter(), route = useRoute(),
   store = useClasificadorStore(),
   storeProductos = useProductoStore(),
+  storeCursos = useCursoStore(),
   storeBancos = useBancoStore(),
   storeNucleos = useNucleoStore(),
   storeNiveles = useNivelStore(),
@@ -211,10 +214,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Módulos",
             .then((r) => {
               console.clear();
               console.log("r =>", r);
+              storeCursos.cursos = [];
+              storeCursos.cursosPublicados = [];
               router.push("/admin/curso/" + r.data.id);
               // router.go();
               cancel(function () {
-                // panelData.unlock();
                 grid.refresh();
               });
             });
@@ -234,19 +238,20 @@ let divipola = (item) => {
 }
 
 // Se expone como evento en el componente
-const emit = defineEmits(['onCancel'])
+const emit = defineEmits(['onCancel', 'onRefresh']);
 const callOnCancel = () => {
-  emit('onCancel')
+  emit('onCancel');
 }
 
 // Propiedades
 let props = defineProps({
   itemId: { type: Number, default: null, required: false },
-  item: { type: Object, default: null, required: false }
+  item: { type: Object, default: null, required: false },
+  showRevision: { type: Boolean, default: false, required: false },
+  showAprove: { type: Boolean, default: false, required: false }
 });
 
 onMounted(async () => {
-  console.clear();
   console.log(_sep);
   console.log("curso-datos.vue MOUNTED!");
   territoriales.value = await store.porTipoNombre("territorial");
@@ -268,10 +273,13 @@ onMounted(async () => {
     programas.value = await storeProgramas.all();
     item.value = props.item;
   } else {
-    readOnly.value = false;
     item.value = toRaw(item_base);
   };
   console.log("item =>", toRaw(item.value));
+  // Estado
+  let eId = item.value.estadoCursoId;
+  readOnly.value = eId == estadosGlobales.revision || eId == estadosGlobales.aprobado;
+  readOnlyEstado.value = !readOnly.value;
 });
 //----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
@@ -647,19 +655,19 @@ onMounted(async () => {
             </DxNumberBox>
           </div>
 
-          <div class="col-md-3 mt-2 mb-3 text-center">
+          <!-- <div class="col-md-3 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2" for="">Publicado</label>
             <DxCheckBox :read-only="readOnly" v-model="item.publicado" />
-          </div>
-          <div class="col-md-3 mt-2 mb-3 text-center">
+          </div> -->
+          <div class="col-md-2 offset-md-3 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2">Jornada mañana</label>
             <DxCheckBox :read-only="readOnly" v-model="item.jornadaManana" />
           </div>
-          <div class="col-md-3 mt-2 mb-3 text-center">
+          <div class="col-md-2 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2">Jornada tarde</label>
             <DxCheckBox :read-only="readOnly" v-model="item.jornadaTarde" />
           </div>
-          <div class="col-md-3 mt-2 mb-3 text-center">
+          <div class="col-md-2 mt-2 mb-3 text-center">
             <label class="tit d-inline-block me-2">Jornada noche</label>
             <DxCheckBox :read-only="readOnly" v-model="item.jornadaNoche" />
           </div>
@@ -683,7 +691,8 @@ onMounted(async () => {
           </div>
         </div>
       </DxValidationGroup>
-      <Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" @on-save="save" :show-save="true" />
+      <Cmds :show-revision="showRevision" :show-aprove="showAprove" v-if="item" :item="item" :item-id="item.id"
+        @on-cancel="callOnCancel" @on-save="save" :show-save="!props.showAprove" />
     </div>
   </div>
 </template>

@@ -208,6 +208,7 @@ let itemArchivoId = ref(null),
 						}).then((r) => {
 							console.log("r =>", r);
 							cancel(function () {
+								emit('onRefresh');
 								panelData.unlock();
 								grid.refresh();
 							});
@@ -273,18 +274,22 @@ let itemArchivoId = ref(null),
 	};
 
 // Se expone como evento en el componente
-const emit = defineEmits(['onCancel'])
+const emit = defineEmits(['onCancel', 'onRefresh']);
 const callOnCancel = () => {
-	emit('onCancel')
+	emit('onCancel');
 }
 
 // Propiedades
 let props = defineProps({
 	itemId: { type: Number, default: null, required: false },
-	item: { type: Object, default: null, required: false }
+	item: { type: Object, default: null, required: false },
+	showRevision: { type: Boolean, default: false, required: false },
+	showAprove: { type: Boolean, default: false, required: false }
 });
 
 onMounted(async () => {
+	console.log(_sep);
+	console.log("curso-archivos.vue MOUNTED!");
 	$("#grid-archivo").lock("Cargando");
 	console.log(_sep);
 	tiposArchivos.value = await store.porTipoNombre("tipo_documento");
@@ -356,7 +361,7 @@ onMounted(async () => {
 		</div>
 
 		<div class="row" id="grid-archivo">
-			<div class="col-md-12 text-end pb-2">
+			<div class="col-md-12 text-end pb-2" v-if="!props.showAprove">
 				<a href="#" class="btn pe-0" @click.prevent="addStart()"><i class="fa-solid fa-square-plus me-1"></i>Asociar
 					archivo</a>
 			</div>
@@ -383,30 +388,32 @@ onMounted(async () => {
 						<span v-if="data.data.activo">SI</span>
 						<span v-else>NO</span>
 					</template>
-					<DxColumn :width="100" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
+					<DxColumn :width="80" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
 						fixed-position="right" />
 					<template #tpl="{ data }">
 						<span class="cmds">
 							<a title="Observar" class="cmd-item color-main-600 me-2" :href="getLink(data.data)" target="_blank">
 								<i class="fa-solid fa-arrow-up-right-from-square"></i>
 							</a>
-							<a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
+							<a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#"
+								v-if="!props.showAprove">
 								<i class="fa-solid fa-pen-to-square"></i>
 							</a>
-							<a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
+							<!-- <a v-if="data.data.activo" title="Desactivar" class="cmd-item color-main-600"
 								@click.prevent="active(data.data, false)" href="#">
 								<i class="fa-regular fa-square-minus"></i>
 							</a>
 							<a v-else title="Activar" class="cmd-item color-main-600" @click.prevent="active(data.data, true)" href="#">
 								<i class="fa-regular fa-square-check"></i>
-							</a>
+							</a> -->
 						</span>
 					</template>
 				</DxDataGrid>
 			</div>
 		</div>
 
-		<Cmds v-if="item" :item="item" :item-id="item.id" @on-cancel="callOnCancel" />
+		<Cmds :show-revision="showRevision" :show-aprove="showAprove" v-if="item" :item="item" :item-id="item.id"
+			@on-cancel="callOnCancel" />
 
 		<div class="card mt-4" v-if="$conf.debug">
 			<div class="card-body">
@@ -417,3 +424,4 @@ onMounted(async () => {
 		</div>
 	</div>
 </template>
+ 

@@ -35,6 +35,7 @@ import {
   DxSorting,
   DxSummary,
 } from "devextreme-vue/data-grid";
+const estados = window._config.estado_curso;
 const router = useRouter(),
   store = useClasificadorStore(),
   storeBancos = useBancoStore(),
@@ -70,9 +71,9 @@ let titulo = "Administración &raquo; Participantes",
     userData: JSON.stringify({
       esAdmin: auth.esAdmin,
       companyId: auth.user.companyId,
-      dependenceId: auth.user.dependenceId,
+      dependenceId: auth.user.dependenceId
     }),
-    endPoint: "curso/dx",
+    endPoint: "curso/activos-dx",
     onLoading: function (loadOptions) {
       $("#grid").lock("Cargando");
       console.log("loadOptions =>", loadOptions);
@@ -132,163 +133,55 @@ onMounted(async () => {
       <div class="card-body pt-3 pb-4">
         <div class="row">
           <div class="col-md-12">
-            <DxDataGrid
-              :column-auto-width="false"
-              :customize-columns="customizeColumns"
-              :data-source="dxStore"
-              :hover-state-enabled="true"
-              :remote-operations="false"
-              :repaint-changes-only="true"
-              :row-alternation-enabled="true"
-              :show-borders="false"
-              :word-wrap-enabled="true"
-              horizontal-alignment="Stretch"
-              @initialized="onInitialized"
-              id="gridContainer"
-              key-expr="id"
-            >
+            <DxDataGrid :column-auto-width="false" :customize-columns="customizeColumns" :data-source="dxStore"
+              :hover-state-enabled="true" :remote-operations="false" :repaint-changes-only="true"
+              :row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="true"
+              horizontal-alignment="Stretch" @initialized="onInitialized" id="gridContainer" key-expr="id">
               <DxColumnChooser :enabled="false" mode="dragAndDrop" />
               <DxColumnFixing :enabled="true" />
-              <DxEditing
-                :allow-updating="false"
-                :allow-deleting="false"
-                :allow-adding="false"
-                mode="cell"
-              />
+              <DxEditing :allow-updating="false" :allow-deleting="false" :allow-adding="false" mode="cell" />
               <DxExport :enabled="false" />
               <DxFilterRow :visible="true" />
               <DxGrouping :auto-expand-all="true" />
               <DxGroupPanel :visible="true" :allow-column-dragging="true" />
               <DxLoadPanel :enabled="false" />
               <DxScrolling row-rendering-mode="virtual" />
-              <DxSearchPanel
-                :visible="false"
-                :highlight-case-sensitive="false"
-              />
+              <DxSearchPanel :visible="false" :highlight-case-sensitive="false" />
               <DxSorting mode="single" /><!-- single, multiple, none" -->
               <DxSummary>
-                <DxGroupItem
-                  summary-type="count"
-                  column="group_type_name"
-                  display-format="{0} ítems"
-                />
+                <DxGroupItem summary-type="count" column="group_type_name" display-format="{0} ítems" />
               </DxSummary>
               <DxPaging :page-size="10" />
-              <DxPager
-                :visible="true"
-                :show-info="true"
-                :show-page-size-selector="false"
-                :show-navigation-buttons="true"
-                :allowed-page-sizes="[15, 50, 'Todos']"
-                info-text="{2} cursos (página {0} de {1})"
-              />
-              <DxColumn
-                data-field="id"
-                caption="Id"
-                :visible="false"
-                :width="80"
-                :allow-filtering="false"
-                :allow-sorting="true"
-                alignment="center"
-                sort-order="desc"
-              />
-              <DxColumn
-                :width="80"
-                data-field="codigoVerificacion"
-                caption="Código"
-                alignment="center"
-                :visible="false"
-              />
-              <DxColumn
-                data-field="nombre"
-                caption="Curso"
-                :visible="true"
-                :fixed="false"
-                fixed-position="left"
-              />
-              <DxColumn
-                data-field="descripcion"
-                caption="Descripción"
-                :visible="false"
-              />
-              <DxColumn
-                data-field="territorialNombre"
-                caption="Territorial"
-                :visible="true"
-                :width="250"
-              />
-              <DxColumn
-                data-field="porcentajeValidoAsistencia"
-                caption="Asistencia"
-                :visible="false"
-                :width="100"
-                alignment="center"
-                format="#'%'"
-              />
-              <!-- <DxColumn
-                data-field="objetivos"
-                caption="Objetivos"
-                :visible="false"
-              />
-              <DxColumn
-                data-field="actividadAprendizaje"
-                caption="Aprendizaje"
-                :visible="false"
-              />
-              <DxColumn
-                data-field="actividadEvaluacion"
-                caption="Evaluacion"
-                :visible="false"
-              /> -->
-              <DxColumn
-                :width="100"
-                data-field="estadoCursoNombre"
-                caption="Estado"
-                :visible="true"
-                alignment="center"
-              />
-              <DxColumn
-                :width="100"
-                data-field="activo"
-                caption="Activo"
-                alignment="center"
-                :visible="true"
-                cell-template="tpl1"
-              >
-                <DxLookup
-                  :data-source="$si_no"
-                  value-expr="value"
-                  display-expr="name"
-                />
+              <DxPager :visible="true" :show-info="true" :show-page-size-selector="false" :show-navigation-buttons="true"
+                :allowed-page-sizes="[15, 50, 'Todos']" info-text="{2} cursos (página {0} de {1})" />
+              <DxColumn data-field="id" caption="Id" :visible="false" :width="80" :allow-filtering="false"
+                :allow-sorting="true" alignment="center" sort-order="desc" />
+              <DxColumn :width="80" data-field="codigoVerificacion" caption="Código" alignment="center"
+                :visible="false" />
+              <DxColumn :width="110" data-field="codigo" caption="Código" alignment="center" :visible="true" />
+              <DxColumn data-field="nombre" caption="Curso" :visible="true" :fixed="false" fixed-position="left" />
+              <DxColumn data-field="descripcion" caption="Descripción" :visible="false" />
+              <DxColumn data-field="territorialNombre" caption="Territorial" :visible="true" :width="150" />
+              <DxColumn data-field="porcentajeValidoAsistencia" caption="Asistencia" :visible="false" :width="100"
+                alignment="center" format="#'%'" />
+              <DxColumn :width="100" data-field="estadoCursoNombre" caption="Estado" :visible="true" alignment="center" />
+              <DxColumn :width="100" data-field="activo" caption="Activo" alignment="center" :visible="true"
+                cell-template="tpl1">
+                <DxLookup :data-source="$si_no" value-expr="value" display-expr="name" />
               </DxColumn>
               <template #tpl1="{ data }">
                 <span v-if="data.data.activo">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn
-                data-field="participantes"
-                caption="Participantes"
-                :visible="true"
-                alignment="center"
-                :width="135"
-              />
-              <DxColumn
-                :width="50"
-                alignment="center"
-                cell-template="tpl"
-                caption=""
-                name="cmds"
-                :fixed="false"
-                fixed-position="right"
-              />
+              <DxColumn data-field="participantes" caption="Participantes" :visible="true" alignment="center"
+                :width="135" />
+              <DxColumn :width="50" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="false"
+                fixed-position="right" />
               <template #tpl="{ data }">
                 <span class="cmds">
-                  <a
-                    title="Gestionar asistencia..."
-                    class="cmd-item color-main-600 me-2"
-                    @click.prevent="edit(data.data)"
-                    href="#"
-                  >
+                  <a title="Observar participantes y asistencia..." :disabled="data.data.participantes == 0"
+                    :class="'cmd-item color-main-600 me-2 ' + (data.data.participantes > 0 ? '' : 'disabled')"
+                    @click.prevent="edit(data.data)" href="#">
                     <i class="fa-sharp fa-solid fa-screen-users fa-lg"></i>
                   </a>
                   <!-- <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="edit(data.data)" href="#">
@@ -313,9 +206,7 @@ onMounted(async () => {
     <div class="card mt-4" v-if="$conf.debug">
       <div class="card-body">
         <span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-          class="font-weight-semibold"
-          >item_copy:</span
-        >
+          class="font-weight-semibold">item_copy:</span>
         {{ item_copy }}
       </div>
     </div>

@@ -20,7 +20,13 @@
 		"borrador": 421,
 		"revision": 422,
 		"aprobado": 423,
-		"rechazado": 424
+		"rechazado": 424,
+		"iniciado": 441,
+		"finalizado": 442
+	},
+	"dependencia": {
+		"capacitacion": 13,
+		"alto_gobierno": 14
 	},
 	"roles": [
 		{ "id": 1, "name": "Administrador", "normalizedName": "ADMINISTRADOR", "concurrencyStamp": "C13D6F8AE8D54FAD8FDD3582CD1D64C4" },

@@ -1,11 +1,18 @@
 namespace ESAP.Sirecec.Data.Enum
 {
-	// 202402090657: Tipo de indicador
 	public enum EstadoCurso
 	{
 		Borrador = 421,
 		Revision = 422,
 		Aprobado = 423,
-		Rechazado = 424
+		Rechazado = 424,
+		Iniciado = 441,
+		Finalizado = 442
+	}
+
+	public enum Dependencia
+	{
+		Capacitacion = 13,
+		AltoGobierno = 14
 	}
 }

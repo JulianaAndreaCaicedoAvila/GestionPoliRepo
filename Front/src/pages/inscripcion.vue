@@ -12,7 +12,7 @@ let inscribirse = async () => {
     // title: "otro",
     textCancel: "CANCELAR",
     textOk: "INSCRIBIR",
-    text: `¿Realmente desea inscribirse al curso <span class="font-weight-semibold">"${curso.value.nombre}"</span>?`,
+    text: `¿<span class="font-weight-semibold">${authStore.user.firstName}</span>, realmente desea inscribirse al curso <span class="font-weight-semibold">"${curso.value.nombre}"</span>?`,
     onConfirm: async () => {
       pd.lock(`Realizando inscripción,<br>un momento por favor`);
       let res = await storeCurso.inscribir({ cursoId: curso.value.id, usuarioId: authStore.user.id });

@@ -40,6 +40,20 @@ export const useCursoStore = defineStore({
 					return this.cursosPublicados;
 				});
 		},
+		async codigos() {
+			return await api()
+				.post(`curso/codigos`)
+				.then(async (r) => {
+					return r.data;
+				});
+		},
+		async fechas(id) {
+			return await api()
+				.post(`curso/fechas`, id)
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async allCursosTemas() {
 			console.log("CursoTemas items =>", this.cursosTemas);
 			if (this.cursosTemas.length > 0) return this.cursosTemas;

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ESAP.Sirecec.Data.Api.Controllers
 {
@@ -27,6 +28,30 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		private readonly IEmailService _email;
 		private readonly IConfiguration _config;
 		private readonly IHttpContextAccessor _context;
+
+		private string Codigo(Curso item)
+		{
+			var code = "S4";
+			code += item.DependenciaId == (int)Dependencia.Capacitacion ? "CA" : "AG";
+			code = code + item.Id.ToString().PadLeft(6, '0');
+			return code;
+		}
+
+		private List<Curso> Codigos()
+		{
+			var items = _db.Curso.Where(o => string.IsNullOrEmpty(o.Codigo)).ToList();
+			foreach (Curso item in items) item.Codigo = Codigo(item);
+			_db.SaveChanges();
+			return items;
+		}
+
+		private List<Curso> CodigosTodos()
+		{
+			var items = _db.Curso.ToList();
+			foreach (Curso item in items) item.Codigo = Codigo(item);
+			_db.SaveChanges();
+			return items;
+		}
 
 		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor,
 			ILogger<CursoController> logger, IConfiguration config, IEmailService email)
@@ -51,6 +76,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				obj.CreadoEl = DateTime.Now;
 				_db.Curso.Add(obj);
 				_db.SaveChanges();
+				Codigos();
 				return Ok(obj);
 			}
 			else
@@ -68,6 +94,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 				return Ok(item);
 			}
+		}
+
+		[HttpPost("codigos")]
+		public ActionResult SetCodigos()
+		{
+			var res = CodigosTodos();
+			return Ok(res);
 		}
 
 		[HttpPost("by-curso-id")]
@@ -348,15 +381,47 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			return Ok(loadResult);
 		}
 
+		[HttpPost("activos-dx")] // /api/curso/dx => DevExtreme DataGrid Get
+		public ActionResult GetActivosDx()
+		{
+
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "Id" };
+			var items = _db.Cursos.Where(o => o.EstadoCursoId == (int)EstadoCurso.Aprobado
+				|| o.EstadoCursoId == (int)EstadoCurso.Finalizado).OrderBy(o => o.Nombre).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
+		}
+
 		[HttpPost("dx")] // /api/curso/dx => DevExtreme DataGrid Get
 		public ActionResult GetDx()
 		{
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
-			dynamic data = JsonConvert.DeserializeObject<dynamic>(opts.UserData);
 			opts.PrimaryKey = new[] { "Id" };
 			var items = _db.Cursos.OrderBy(o => o.Nombre).ToList();
+			var loadResult = DataSourceLoader.Load(items, opts);
+			return Ok(loadResult);
+		}
+
+		[HttpPost("dx-bk")] // /api/curso/dx => DevExtreme DataGrid Get
+		public ActionResult GetDxBk()
+		{
+			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+			var str = reader.ReadToEndAsync().Result;
+			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
+			opts.PrimaryKey = new[] { "Id" };
+			var items = _db.Cursos.OrderBy(o => o.Nombre).ToList();
+			// 202402091030: Filtra data
+			JObject data = JsonConvert.DeserializeObject<JObject>(opts.UserData);
+			if (data.ContainsKey("estadoId"))
+			{
+				var eId = (int)data["estadoId"];
+				items = items.Where(o => o.EstadoCursoId == eId).ToList();
+			}
 			var loadResult = DataSourceLoader.Load(items, opts);
 			return Ok(loadResult);
 		}

@@ -395,8 +395,9 @@ input {
 		background-color: $main-color !important;
 		color: #ffffff !important;
 		font-weight: 600;
-		font-size: 14px;
+		font-size: 14.5px;
 		.dx-datagrid-text-content {
+			// margin-top: 10%;
 			padding-right: 0.5rem;
 		}
 	}
@@ -1270,5 +1271,30 @@ a {
 		&::before {
 			top: -20px !important;
 		}
+	}
+}
+
+input[type="checkbox"].thumb {
+	$size: 1.4rem;
+	line-height: $size;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	// background-color: transparent;
+	margin: 0;
+	padding: 0;
+	&::before {
+		font-size: $size;
+		font-family: "FontAwesome";
+		content: "\4f";
+		color: $main-color-400;
+		background-color: transparent;
+	}
+	&:checked::before {
+		font-size: $size;
+		color: $main-color;
+		font-family: "FontAwesome";
+		content: "\f164";
+		background-color: transparent;
 	}
 }

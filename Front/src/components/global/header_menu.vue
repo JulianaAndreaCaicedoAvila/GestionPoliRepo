@@ -96,11 +96,11 @@ onMounted(() => {
                     <ul class="dropdown-menu">
                       <li>
                         <router-link :to="{ path: '/admin/pregunta' }" class="dropdown-item">Banco de
-                          Preguntas</router-link>
+                          preguntas</router-link>
                       </li>
                       <li>
                         <router-link :to="{ path: '/admin/encuesta' }" class="dropdown-item">Banco de
-                          Encuestas</router-link>
+                          encuestas</router-link>
                       </li>
                     </ul>
                   </li>
@@ -115,8 +115,8 @@ onMounted(() => {
                               class="dropdown-item">Dependencias</router-link>
                           </li>
                           <li>
-                            <router-link :to="{ path: '/admin/producto' }" class="dropdown-item">Productos =>
-                              Objetivos</router-link>
+                            <router-link :to="{ path: '/admin/producto' }" class="dropdown-item">Productos
+                              (objetivos)</router-link>
                           </li>
                           <li>
                             <router-link :to="{ path: '/admin/indicador' }"
@@ -124,14 +124,14 @@ onMounted(() => {
                           </li>
                           <li>
                             <router-link :to="{ path: '/admin/banco-programas' }" class="dropdown-item">Bancos de
-                              Programas</router-link>
+                              programas</router-link>
                           </li>
                           <li>
                             <router-link :to="{ path: '/admin/nucleos' }" class="dropdown-item">Núcleos</router-link>
                           </li>
                           <li>
                             <router-link :to="{ path: '/admin/programa-capacitacion' }" class="dropdown-item">Programas de
-                              Capacitación</router-link>
+                              capacitación</router-link>
                           </li>
                           <li>
                             <router-link :to="{ path: '/admin/temas' }" class="dropdown-item">Temas</router-link>

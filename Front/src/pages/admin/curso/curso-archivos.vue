@@ -156,7 +156,7 @@ let itemArchivoId = ref(null),
 		});
 	},
 	getLink = (data) => {
-		console.clear();
+		// console.clear();
 		console.log("data =>", data);
 		let nm = data.archivoNombre.toLowerCase();
 		return `/store/${nm.includes('.pdf') ? 'doc' : 'img'}/${nm}`;
@@ -293,8 +293,8 @@ onMounted(async () => {
 	$("#grid-archivo").lock("Cargando");
 	console.log(_sep);
 	tiposArchivos.value = await store.porTipoNombre("tipo_documento");
-	itemArchivoId.value = props.itemId;
-	itemArchivo.value = props.item;
+	// itemArchivoId.value = props.itemId;
+	// itemArchivo.value = props.item;
 	getData();
 });
 </script>

@@ -21,7 +21,7 @@ using Microsoft.OpenApi.Models;
 
 // 202206080343: Authenticating tokens from multiple sources (e.g Cognito and Azure) 
 // https://stackoverflow.com/a/66115586
-var appName = "PnsvApp";
+var appName = "AppSirecec4";
 
 // 202206030105: Authentication and authorization in Ocelot API Gateways -> https://t.ly/r12-
 // 202206030117: Web app that signs in users => https://t.ly/JUe4
@@ -41,22 +41,32 @@ configuration.SetBasePath(env.ContentRootPath)
 	.AddEnvironmentVariables().Build();
 var services = builder.Services;
 
+// Using the GetValue<type>(string key) method
+var configValue = builder.Configuration.GetValue<string>("Authentication:CookieAuthentication:LoginPath");
+
 // 202206030515: Access appsettings.json values in controller classes https://stackoverflow.com/a/38359523
 services.AddSingleton<IConfiguration>(configuration);
 
 // 202201282058: CORS
-services.AddCors(o => o.AddPolicy(appName, builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+// 202402141757: Origins
+// https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-6.0
+var origins = new List<string> { };
+var allowedCors = builder.Configuration["AllowedCors"];
+foreach (var item in allowedCors.Split(',')) {
+	origins.Add($"http://{item}");
+	origins.Add($"https://{item}");
+}
+services.AddCors(o => o.AddPolicy(appName, builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(origins.ToArray())));
+// services.AddCors(o => o.AddPolicy(appName, builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
 // Add services to the container.
 // 202307131122: Response caching in ASP.NET Core
 // https://learn.microsoft.com/en-us/aspnet/core/performance/caching/overview?view=aspnetcore-6.0
 // https://learn.microsoft.com/en-us/aspnet/core/performance/caching/response?view=aspnetcore-6.0#cache-profiles
 services.AddResponseCaching();
-services.AddControllers(options =>
-{
+services.AddControllers(options => {
 	options.CacheProfiles.Add("3m",
-		 new CacheProfile()
-		 {
+		 new CacheProfile() {
 			 Duration = 180,
 			 Location = ResponseCacheLocation.Any,
 		 });
@@ -67,7 +77,6 @@ services.AddControllers(options =>
 // https://code-maze.com/using-the-problemdetails-class-in-asp-net-core-web-api
 services.AddProblemDetails();
 
-
 // configure DI for application services
 services.AddScoped<IJwtUtils, JwtUtils>();
 // services.AddScoped<IUserService, UserService>();
@@ -76,12 +85,9 @@ services.AddScoped<IEmailService, EmailService>();
 // 202208170543: Azure
 services.AddScoped<IAzureAdService, AzureAdService>();
 
-
-
 // 202202071919: Identity
 // 202208170634: https://stackoverflow.com/a/39826998
-services.AddIdentityCore<AuthUser>(options =>
-{
+services.AddIdentityCore<AuthUser>(options => {
 	options.Password.RequireDigit = false;
 	options.Password.RequiredLength = 5;
 	options.Password.RequireNonAlphanumeric = false;
@@ -97,15 +103,12 @@ services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = Ti
 services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 services.AddTransient(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
 services.AddHttpContextAccessor()
-	.AddAuthorization(options =>
-	{
+	.AddAuthorization(options => {
 		options.DefaultPolicy = new AuthorizationPolicyBuilder(appName).AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
 	})
 	.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-	.AddJwtBearer(appName, options =>
-	{
-		options.TokenValidationParameters = new TokenValidationParameters
-		{
+	.AddJwtBearer(appName, options => {
+		options.TokenValidationParameters = new TokenValidationParameters {
 			ClockSkew = TimeSpan.Zero,
 			ValidateIssuer = true,
 			ValidateAudience = true,
@@ -167,11 +170,9 @@ services.AddEndpointsApiExplorer();
 
 
 // 202202072217: Config
-services.AddSwaggerGen(c =>
-{
+services.AddSwaggerGen(c => {
 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "ESAP SIRECEC API v1.0", Version = "v1" });
-	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-	{
+	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
 		Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
                       Enter 'Bearer' [space] and then your token in the text input below.
                       \r\n\r\nExample: 'Bearer 12345abcdef'",
@@ -204,12 +205,14 @@ var app = builder.Build();
 // await app.SeedData(configuration, environment);
 
 // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment()) {
-app.UseSwagger();
-app.UseSwaggerUI();
-// }
+// 202402141758: Dev or Prod
+if (app.Environment.IsDevelopment()) {
+	app.UseSwagger();
+	app.UseSwaggerUI();
+} else {
+	app.UseHttpsRedirection();
+}
 
-// app.UseHttpsRedirection();
 // 202202071932: Identity
 app.UseAuthentication();
 app.UseAuthorization();

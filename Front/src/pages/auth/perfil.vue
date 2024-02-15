@@ -205,7 +205,7 @@ let now = new Date(), titulo = "Temas",
     }
     let ids = [];
     let topics =
-      item.value.id == 0 ? [] : await temaStore.byCursoId(item.value.id);
+      item.value.id == 0 ? [] : await temaStore.porCursoId(item.value.id);
     topics.forEach((topics) => {
       ids.push(topics.temaId);
     });

@@ -420,10 +420,10 @@ onMounted(async () => {
 								fixed-position="right" />
 							<template #tpl="{ data }">
 								<span class="cmds">
-									<a title="Temas del módulo" class="cmd-item color-main-600 me-3" @click.prevent="temas(data.data)"
+									<!-- <a title="Temas del módulo" class="cmd-item color-main-600 me-3" @click.prevent="temas(data.data)"
 										href="#">
 										<i class="fa-solid fa-list fa-lg"></i>
-									</a>
+									</a> -->
 									<a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="start(data.data)" href="#">
 										<i class="fa-solid fa-pen-to-square fa-lg"></i>
 									</a>

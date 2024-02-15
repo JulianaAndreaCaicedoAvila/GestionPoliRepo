@@ -178,11 +178,16 @@ let onReady = (e) => {
   // // console.log(row.data);
 }
 
+function importar(params) {
+
+}
+
 defineExpose({ cancel });
 
 onMounted(async () => {
   // console.log(_sep);
   // console.log("tabs.vue MOUNTED!");
+  $("#data").lock("Cargando asistencia");
   const id = route.params.id;
   // console.log("id =>", id);
   // console.log("id != null", id != null);
@@ -191,10 +196,10 @@ onMounted(async () => {
     cursoId.value = 1;
     fechas.value = await storeCursos.fechas(id);
     if (storeCursos.item != null && storeCursos.item.id == parseInt(id)) curso.value = storeCursos.item;
-    else curso.value = await storeCursos.getById(id);
-    if (curso.value.jornadaManana) periods.push('Mañana');
-    if (curso.value.jornadaTarde) periods.push('Tarde');
-    if (curso.value.jornadaNoche) periods.push('Noche');
+    else curso.value = await storeCursos.porId(id);
+    if (curso.value.jornadaManana) periods.push(fechas.value.length > 2 ? 'M' : 'Mañana');
+    if (curso.value.jornadaTarde) periods.push(fechas.value.length > 2 ? 'T' : 'Tarde');
+    if (curso.value.jornadaNoche) periods.push(fechas.value.length > 2 ? 'N' : 'Noche');
     // width = periods.length == 3 ? 120 : periods.length == 2 ? 80 : periods.length == 1 ? 40 : 40;
     console.log("curso =>", toRaw(curso.value));
     // console.log("CARGAR CURSO!!");
@@ -212,15 +217,21 @@ onMounted(async () => {
       <div class="card-header main d-flex justify-content-between align-items-end">
         <span class="d-flex justify-content-between">
           <i class="fa-solid fa-gears"></i>
-          <span v-if="curso">Administración &raquo; Participantes y asistencia<br />"{{ curso.nombre }}"</span>
+          <span v-if="curso">Administración &raquo; Asistencia<br />"{{ curso.nombre }}"</span>
         </span>
         <span>
-          <router-link :to="{ path: '/admin/participantes' }" class="btn btn-trans">
+          <router-link :to="{ path: '/admin/inscritos' }" class="btn btn-trans" title="Volver">
             <i class="fa-solid fa-circle-arrow-left me-1"></i>VOLVER
           </router-link>
-          <a href="#" @click.prevent="storeCursos.codigos()" class="btn btn-trans ms-4">
-            ACTUALIZAR CÓDIGOS <i class="ms-1 fa-solid fa-circle-arrow-right"></i>
+          <a href="#" @click.prevent="importar()" class="btn btn-trans ms-4" title="Importar asistencia">
+            <i class="fa-solid fa-cloud-arrow-up me-1"></i> IMPORTAR
           </a>
+          <a href="#" @click.prevent="importar()" class="btn btn-trans ms-4" title="Guardar asistencia">
+            <i class="fa-solid fa-floppy-disk me-1"></i> GUARDAR
+          </a>
+          <!-- <a href="#" @click.prevent="storeCursos.codigos()" class="btn btn-trans ms-4">
+            ACTUALIZAR CÓDIGOS <i class="ms-1 fa-solid fa-circle-arrow-right"></i>
+          </a> -->
         </span>
       </div>
       <div class="card-body pt-4" v-if="curso">
@@ -250,7 +261,7 @@ onMounted(async () => {
               <DxLoadPanel :enabled="false" />
               <DxScrolling row-rendering-mode="virtual" />
               <DxSearchPanel :visible="false" :highlight-case-sensitive="false" />
-              <DxSorting mode="single" />
+              <DxSorting mode="none" />
               <DxSummary>
                 <DxGroupItem summary-type="count" column="group_type_name" display-format="{0} ítems" />
               </DxSummary>

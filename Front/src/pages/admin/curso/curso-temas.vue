@@ -48,21 +48,18 @@ const route = useRoute(),
   encuestaStore = useEncuestaStore(),
   authStore = useAuthStore();
 let titulo = "Temas",
+  gridData = [],
   list1 = null,
   list2 = null,
   itemId = ref(null),
+  muestraComandos = ref(true),
   valGroup = ref(null),
   dxStore = ref(null),
-  temasAll = ref([]),
   docentes = ref([]),
-  temas = ref([]),
-  temasFrom = ref([]),
-  temasTo = ref([]),
-  fromData = ref([]),
-  toData = ref([]),
-  selRightClass = ref(""),
-  selLeftClass = ref(""),
-  item = ref({
+  items = ref([]),
+  temasAll = ref([]),
+  temasIds = ref([]),
+  tema = ref({
     id: 0,
     cursoId: props.itemId,
     temaId: null,
@@ -76,7 +73,7 @@ let titulo = "Temas",
     editadoPor: null,
     orden: 0,
   }),
-  item_copy = Clone(item.value),
+  tema_copy = Clone(tema.value),
   panelData = null,
   panelGrid = null,
   customizeColumns = () => {
@@ -120,24 +117,35 @@ let titulo = "Temas",
     });
   },
   addStart = async (data) => {
-    console.clear();
+    // console.clear();
+    console.log(_sep);
     valGroup.value.instance.reset();
     console.log("data =>", data);
     panelData = $("#data-tema");
     panelGrid = $("#grid-tema");
     panelGrid.lock("Cargando");
-    // Editando
+    console.log("temasIds =>", temasIds);
+    console.log("temasAll.value =>", temasAll.value);
     if (typeof data !== "undefined") {
+      console.log("EDITANDO");
+      let temasIdsSinActual = temasIds.filter(id => id !== data.temaId);
+      let temasFiltered = toRaw(temasAll.value).filter(o => !temasIdsSinActual.includes(o.id));
+      items.value = temasFiltered;
+      console.log("temasFiltered =>", temasFiltered);
       $("#tit-action").text("Editar Tema");
-      item.value = Clone(data);
+      tema.value = Clone(data);
     } else {
-      // Creando
+      console.log("CREANDO");
+      // 202402142209: Filtra para obtener los temas que aun no se hayan relacionado
+      let temasFiltered = toRaw(temasAll.value).filter(o => !temasIds.includes(o.id));
+      console.log("temasFiltered =>", temasFiltered);
+      items.value = temasFiltered;
       $("#tit-action").text("Nuevo Tema");
-      item.value = Clone(item_copy);
+      tema.value = Clone(tema_copy);
     }
     let ids = [];
     let topics =
-      item.value.id == 0 ? [] : await temaStore.byCursoId(item.value.id);
+      tema.value.id == 0 ? [] : await temaStore.porCursoId(tema.value.id);
     topics.forEach((topics) => {
       ids.push(topics.temaId);
     });
@@ -145,24 +153,12 @@ let titulo = "Temas",
     console.log("ids =>", ids); // [2, 3, 5, 6]
     panelGrid.fadeOut("normal", async function () {
       console.log(typeof data);
-      // preguntasAll.value = await preguntaStore.all();
-      // preguntas.value = Object.assign([], preguntasAll.value).filter(
-      //   (o) => o.territorialId == null
-      // );
-      let q = Object.assign([], temasAll.value);
-      // preguntasFrom.value = q;
-      temasFrom.value = q.filter((o) => !ids.includes(o.id));
-      console.log("Temas =>", toRaw(temas.value));
-      // TODO: Asociar al store dptosTo.value = geoStore.dptosPorTerritorialId(data.id);
-      temasTo.value = q.filter((o) => ids.includes(o.id));
-      console.log("temasTo =>", toRaw(temasTo.value));
-      // updateButtons();
       panelData.fadeIn(function () {
         panelGrid.unlock();
       });
       panelData.fadeIn("normal", function () {
         console.log(_sep);
-        console.log("item =>", item.value);
+        console.log("item =>", tema.value);
         panelGrid.unlock();
       });
     });
@@ -175,8 +171,8 @@ let titulo = "Temas",
     panelData.fadeOut("normal", function () {
       panelData.clear();
       panelGrid.fadeIn("normal", function () {
-        item.value = Clone(item_copy);
-        console.log("item =>", item);
+        tema.value = Clone(tema_copy);
+        console.log("item =>", tema);
         valGroup.value.instance.reset();
         $(".nb.dx-numberbox").each(function () {
           var el = $(this);
@@ -201,9 +197,9 @@ let titulo = "Temas",
     } else {
       // CUandoes válido
       panelData.lock(
-        `${item.id == 0 ? "Adicionando" : "Actualizando"} temas`,
+        `${tema.id == 0 ? "Adicionando" : "Actualizando"} temas`,
         async function () {
-          let dto = toRaw(item.value);
+          let dto = toRaw(tema.value);
           console.log("dto =>", dto);
           await api()
             .post(`cursoTema/ed`, dto)
@@ -230,8 +226,11 @@ let titulo = "Temas",
         console.log("onLoading");
       },
       onLoaded: function (results) {
-        console.log("results", results);
-        console.log("onLoaded!");
+        gridData = toRaw(results.data);
+        temasIds = gridData.map(o => o.temaId);
+        console.log("onLoaded =>", results);
+        console.log("gridData =>", gridData);
+        console.log("temasIds =>", temasIds);
         $("#grid-tema").unlock();
         $("#data-tema").unlock();
       },
@@ -249,27 +248,32 @@ let props = defineProps({
   itemId: { type: Number, default: null, required: false },
   item: { type: Object, default: null, required: false },
   showRevision: { type: Boolean, default: false, required: false },
-  showAprove: { type: Boolean, default: false, required: false }
+  showAprove: { type: Boolean, default: false, required: false },
+  showSave: { type: Boolean, default: true, required: false }
 });
 
 onMounted(async () => {
   $("#grid-tema").lock("Cargando");
   console.log(_sep);
   console.log("curso-temas.vue MOUNTED!");
-  temasAll.value = await temaStore.all();
+  itemId.value = props.itemId;
+  tema.value = props.item;
+  temasAll.value = await temaStore.porDependenciaId(tema.value.dependenciaId);
+  items.value = toRaw(temasAll.value);
+  console.log("temas =>", items.value);
   docentes.value = await authStore.porRol("DOCENTE");
-  console.log("temasAll =>", temasAll.value);
   list1 = List.getInstance(document.getElementById("list1"));
   list2 = List.getInstance(document.getElementById("list2"));
   console.log("route.name =>", route.name);
-  itemId.value = props.itemId;
-  item.value = props.item;
+  if (props.showAprove) muestraComandos.value = false;
+  if (!props.showAprove && !props.showRevision) muestraComandos.value = false;
+  console.log("muestraComandos =>", muestraComandos.value);
   getData();
 });
 </script>
 <template>
   <div class="container content">
-    <div class="card data hidden" id="data-tema">
+    <div class="card data hidden mt-4" id="data-tema">
       <!-- {{ item }} -->
       <!-- <div class="card-header main d-flex justify-content-between">
         <span>
@@ -284,9 +288,9 @@ onMounted(async () => {
           <div class="row">
             <div class="col-md-12 mb-3">
               <label class="tit">Tema</label>
-              <DxSelectBox id="temaId" :data-source="temasAll" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Tema" value-expr="id" display-expr="nombre">
+              <DxSelectBox id="temaId" :data-source="items" :grouped="false" :min-search-length="2" :search-enabled="true"
+                v-model="tema.temaId" :show-clear-button="true" :show-data-before-search="true" class="form-control"
+                placeholder="Tema" value-expr="id" display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -295,31 +299,19 @@ onMounted(async () => {
             <div class="col-md-4 mb-3">
               <label class="tit">Docente</label>
               <DxSelectBox id="temaId" :data-source="docentes" :grouped="false" :min-search-length="2"
-                :search-enabled="true" v-model="item.docenteId" :show-clear-button="true" :show-data-before-search="true"
-                class="form-control" placeholder="Docente" value-expr="id" display-expr="name">
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxSelectBox>
+                :search-enabled="true" v-model="tema.docenteId" :show-clear-button="true" :show-data-before-search="true"
+                class="form-control" placeholder="Docente" value-expr="id" display-expr="name" />
             </div>
             <div class="col-md-4">
               <label class="tit">Dirección de realización</label>
               <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true"
-                v-model="item.direccionRealizacion" class="form-control" placeholder="Dirección"
-                @focus-out="$capitalizeAll">
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxTextBox>
+                v-model="tema.direccionRealizacion" class="form-control" placeholder="Dirección"
+                @focus-out="$capitalizeAll" />
             </div>
             <div class="col-md-4">
               <label class="tit">Lugar de realización</label>
-              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="item.lugarRealizacion"
-                class="form-control" placeholder="Lugar realización" @focus-out="$capitalizeAll">
-                <DxValidator>
-                  <DxRequiredRule />
-                </DxValidator>
-              </DxTextBox>
+              <DxTextBox id="nombre" value-change-event="keyup" :show-clear-button="true" v-model="tema.lugarRealizacion"
+                class="form-control" placeholder="Lugar realización" @focus-out="$capitalizeAll" />
             </div>
           </div>
         </div>
@@ -334,7 +326,7 @@ onMounted(async () => {
     </div>
 
     <div class="row" id="grid-tema">
-      <div class="col-md-12 text-end pb-2" v-if="!props.showAprove">
+      <div class="col-md-12 text-end pb-2" v-if="muestraComandos">
         <a href="#" class="btn pe-0" @click.prevent="addStart()"><i class="fa-solid fa-square-plus me-1"></i>Asociar
           tema</a>
       </div>
@@ -367,7 +359,7 @@ onMounted(async () => {
             <span v-else>NO</span>
           </template>
           <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
-            fixed-position="right" v-if="!props.showAprove" />
+            fixed-position="right" v-if="muestraComandos" />
           <template #tpl="{ data }">
             <span class="cmds">
               <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">
@@ -386,7 +378,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <Cmds :show-revision="showRevision" :show-aprove="showAprove" v-if="item" :item="item" :item-id="item.id"
+    <Cmds :show-revision="showRevision" :show-aprove="showAprove" v-if="tema" :item="tema" :item-id="tema.id"
       @on-cancel="callOnCancel" />
   </div>
 </template>

@@ -20,7 +20,7 @@ export const useNivelStore = defineStore({
 					return this.items;
 				});
 		},
-		async getById(id) {
+		async porId(id) {
 			if (this.items.length <= 0) await this.all();
 			return this.items.find((o) => o.id == id);
 		},

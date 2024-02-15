@@ -16,18 +16,22 @@ export const useTemaStore = defineStore({
 			return await api()
 				.get(`tema/all`)
 				.then(async (r) => {
-					this.items = r.data;
+					this.items = r.data.sortBy("nombre");
 					return this.items;
 				});
 		},
-		async byCursoId(eId) {
+		async porCursoId(cursoId) {
 			return await api()
-				.post(`curso/by-curso-id`, eId)
+				.post(`curso/by-curso-id`, cursoId)
 				.then(async (r) => {
 					return r.data;
 				});
 		},
-		async getById(id) {
+		async porDependenciaId(dependenciaId) {
+			let items = await this.all();
+			return items.filter((o) => o.dependenciaId == dependenciaId);
+		},
+		async porId(id) {
 			if (this.items.length <= 0) await this.all();
 			return this.items.find((o) => o.id == id);
 		},

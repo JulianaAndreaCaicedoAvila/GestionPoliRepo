@@ -5,10 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ESAP.Sirecec.Data.Core
-{
-	public partial class CursoFecha : BaseEntity
-	{
+namespace ESAP.Sirecec.Data.Core {
+	public partial class CursoFecha : BaseEntity {
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }

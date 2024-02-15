@@ -108,7 +108,7 @@ export const useCursoStore = defineStore({
 					return this.cursos;
 				});
 		},
-		async getById(id) {
+		async porId(id) {
 			return await api()
 				.get(`curso/${id}`)
 				.then(async (r) => {

@@ -1,0 +1,17 @@
+﻿root = true
+[*.cs]
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options
+csharp_new_line_before_catch = false
+csharp_new_line_before_else = false
+csharp_new_line_before_finally = false
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_before_members_in_object_initializers = true
+# csharp_new_line_before_open_brace = methods, properties, control_blocks, types
+csharp_new_line_before_open_brace = none
+csharp_new_line_between_query_expression_clauses = true
+dotnet_analyzer_diagnostic.severity = suggestion
+dotnet_separate_import_directive_groups = false
+dotnet_sort_system_directives_first = true
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = one_less_than_current

@@ -53,9 +53,11 @@ const router = useRouter(),
 const estados = window._config.estado_curso;
 let titulo = "Administración &raquo; Cursos",
   valGroup = ref(null),
-  entidades = ref([]),
+  cursoEstados = ref([]),
   dependencias = ref([]),
-  especificos = ref([]),
+  territoriales = ref([]),
+  tiposAsistencia = ref([]),
+  tiposCurso = ref([]),
   item = ref({
     id: 0,
     dependenciaId: null,
@@ -111,13 +113,16 @@ let titulo = "Administración &raquo; Cursos",
     // grid.value.instance.state(null);
     // dataGridRef.value!.instance!.clearGrouping();
   },
-  gridRedraw = (e) => {
-    console.clear();
-    console.log("e =>", e);
+  contentReady = (e) => {
+    console.log(_sep);
+    console.log("contentReady =>", e);
+    // Determina si la grilla está filtrada
+    var filtered = e.component.getCombinedFilter();
+    console.log("filtered =>", filtered);
     // Determina si la grilla está agrupada
     let cols = e.component.getVisibleColumns();
     let grp = cols.filter(o => o.groupIndex !== undefined).length;
-    if (grp > 0) {
+    if (grp > 0 || filtered) {
       $("#btn-clear").fadeIn();
     } else {
       $("#btn-clear").fadeOut();
@@ -155,6 +160,7 @@ let titulo = "Administración &raquo; Cursos",
   edit = async (data) => {
     let id = "";
     if (typeof (data) != "undefined") {
+      if (data.escuelaId == null) data.escuelaId = 0;
       storeCursos.item = data;
       id = data.id;
       console.log("storeCursos.item =>", toRaw(storeCursos.item));
@@ -163,7 +169,7 @@ let titulo = "Administración &raquo; Cursos",
   },
   getEstado = (rowData) => {
     if (rowData.estadoCursoId == estados.borrador) { // Borrador
-      console.log("rowData.estadoCursoId =>", rowData.estadoCursoId);
+      // console.log("rowData.estadoCursoId =>", rowData.estadoCursoId);
       let suffix = "Incompletos";
       if (rowData.temas > 0 && rowData.encuestas > 0 && rowData.fechas > 0 && (rowData.documentos + rowData.imagenes) > 0)
         suffix = "Completos";
@@ -192,17 +198,14 @@ let titulo = "Administración &raquo; Cursos",
     });
   };
 onMounted(async () => {
+  console.clear();
   console.log(_sep);
-  await store.cargar();
-  await storeBancos.all();
-  await storeEscuelas.all();
-  await storeGeo.dptoAll();
-  await storeGeo.munAll();
-  await storeIndicadores.all();
-  await storeNiveles.all();
-  await storeNucleos.all();
-  await storeProductos.all();
-  await storeProgramas.all();
+  cursoEstados.value = await store.porTipoNombre("estado_curso");
+  dependencias.value = await store.porTipoNombre("dependencia");
+  territoriales.value = await store.porTipoNombre("territorial");
+  tiposAsistencia.value = await store.porTipoNombre("tipo_asistencia");
+  tiposCurso.value = await store.porTipoNombre("tipo_curso");
+  console.log("cursoEstados =>", cursoEstados.value);
 });
 //----------------------------------------------------------------------------------------------------------------------------------------------
 </script>
@@ -228,7 +231,7 @@ onMounted(async () => {
             <DxDataGrid :column-auto-width="true" :customize-columns="customizeColumns" :data-source="dxStore"
               :hover-state-enabled="true" :remote-operations="false" :repaint-changes-only="true"
               :row-alternation-enabled="true" :show-borders="false" :word-wrap-enabled="false"
-              @editor-prepared="gridRedraw" :allow-column-reordering="true" :allow-column-resizing="true"
+              @content-ready="contentReady" :allow-column-reordering="true" :allow-column-resizing="true"
               horizontal-alignment="Stretch" @initialized="onInitialized" id="gridContainer" key-expr="id">
 
               <DxColumnFixing :enabled="true" />
@@ -256,7 +259,9 @@ onMounted(async () => {
               <DxColumn :width="130" data-field="codigo" caption="Código" alignment="center" :visible="false" />
               <DxColumn data-field="nombre" caption="Nombre" :visible="true" :allow-sorting="true" :fixed="true"
                 fixed-position="left" width="450" />
-              <DxColumn data-field="estadoCursoNombre" caption="Estado" :visible="true" :allow-sorting="true" />
+              <DxColumn data-field="estadoCursoId" caption="Estado" :visible="true" :allow-sorting="true" :width="120">
+                <DxLookup :data-source="cursoEstados" value-expr="id" display-expr="nombre" />
+              </DxColumn>
               <DxColumn caption="Datos" :visible="true" :calculate-cell-value="getEstado" :allow-sorting="true" />
               <DxColumn :width="90" data-field="publicado" caption="Publicado" alignment="center" :visible="true"
                 cell-template="tpl2" :allow-sorting="true">
@@ -266,13 +271,24 @@ onMounted(async () => {
                 <span v-if="data.data.publicado">SI</span>
                 <span v-else>NO</span>
               </template>
-              <DxColumn data-field="dependenciaNombre" caption="Dependencia" :visible="true" :allow-sorting="true" />
-              <DxColumn data-field="territorialNombre" caption="Territorial" :visible="true" :allow-sorting="true" />
+              <DxColumn data-field="dependenciaId" caption="Dependencia" :visible="true" :allow-sorting="true"
+                :width="120">
+                <DxLookup :data-source="dependencias" value-expr="id" display-expr="nombre" />
+              </DxColumn>
+              <DxColumn data-field="territorialId" caption="Territorial" :visible="true" :allow-sorting="true"
+                :width="220">
+                <DxLookup :data-source="territoriales" value-expr="id" display-expr="nombre" />
+              </DxColumn>
               <DxColumn data-field="departamentoNombre" caption="Departamento" :visible="true" :allow-sorting="true" />
               <DxColumn data-field="municipioNombre" caption="Municipio" :visible="true" :allow-sorting="true" />
               <DxColumn data-field="descripcion" caption="Descripción" :visible="false" />
-              <DxColumn data-field="tipoAsistenciaNombre" caption="Asistencia" :visible="true" :allow-sorting="true" />
-              <DxColumn data-field="tipoCursoNombre" caption="Tipo curso" :visible="true" :allow-sorting="true" />
+              <DxColumn data-field="tipoAsistenciaId" caption="Asistencia" :visible="true" :allow-sorting="true"
+                :width="120">
+                <DxLookup :data-source="tiposAsistencia" value-expr="id" display-expr="nombre" />
+              </DxColumn>
+              <DxColumn data-field="tipoCursoId" caption="Tipo curso" :visible="true" :allow-sorting="true" :width="120">
+                <DxLookup :data-source="tiposCurso" value-expr="id" display-expr="nombre" />
+              </DxColumn>
               <DxColumn data-field="escuelaNombre" caption="Escuela" :visible="false" :allow-sorting="true" />
               <DxColumn data-field="nivelEscuelaNombre" caption="Nivel de escuela" :visible="false"
                 :allow-sorting="true" />

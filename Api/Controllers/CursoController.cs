@@ -14,39 +14,34 @@ using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace ESAP.Sirecec.Data.Api.Controllers
-{
+namespace ESAP.Sirecec.Data.Api.Controllers {
 	[@Authorize]
 	[ApiController]
 	[Route("curso")]
 	// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	// CRUD => CREATE READ UPDATE DELETE
-	public class CursoController : BaseController
-	{
+	public class CursoController : BaseController {
 		private readonly DataContext _db;
 		private readonly ILogger _logger;
 		private readonly IEmailService _email;
 		private readonly IConfiguration _config;
 		private readonly IHttpContextAccessor _context;
 
-		private string Codigo(Curso item)
-		{
+		private string Codigo(Curso item) {
 			var code = "S4";
 			code += item.DependenciaId == (int)Dependencia.Capacitacion ? "CA" : "AG";
 			code = code + item.Id.ToString().PadLeft(6, '0');
 			return code;
 		}
 
-		private List<Curso> Codigos()
-		{
+		private List<Curso> Codigos() {
 			var items = _db.Curso.Where(o => string.IsNullOrEmpty(o.Codigo)).ToList();
 			foreach (Curso item in items) item.Codigo = Codigo(item);
 			_db.SaveChanges();
 			return items;
 		}
 
-		private List<Curso> CodigosTodos()
-		{
+		private List<Curso> CodigosTodos() {
 			var items = _db.Curso.ToList();
 			foreach (Curso item in items) item.Codigo = Codigo(item);
 			_db.SaveChanges();
@@ -54,8 +49,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		public CursoController(DataContext context, IHttpContextAccessor httpContextAccessor,
-			ILogger<CursoController> logger, IConfiguration config, IEmailService email)
-		{
+			ILogger<CursoController> logger, IConfiguration config, IEmailService email) {
 			_db = context;
 			_logger = logger;
 			_config = config;
@@ -64,65 +58,56 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("ed")] // /api/curso/ed => CREATE - UPDATE
-		public ActionResult Edit(Curso item)
-		{
-			var u = User;
-
+		public ActionResult Edit(Curso item) {
+			Curso? curso = null;
 			// Registro nuevo: CREATE
-			if (item.Id == 0)
-			{
+			if (item.Id == 0) {
 				var obj = (Curso)item.CopyTo(new Curso());
 				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.Curso.Add(obj);
 				_db.SaveChanges();
 				Codigos();
-				return Ok(obj);
-			}
-			else
-			{
+				// Establece las fechas iniciales
+				CursoFechaController.Fechas(obj, _db);
+			} else {
 				// Registro existente: EDIT
 				var current = _db.Curso.First(o => o.Id == item.Id);
-				if (current != null)
-				{
+				if (current != null) {
+					if (item.NumeroDias != current.NumeroDias)
+						CursoFechaController.Fechas(item, _db);
 					var final = (Curso)item.CopyTo(current);
 					final.EditadoPor = GetUserId();
 					final.EditadoEl = DateTime.Now;
 					_db.SaveChanges();
-					return Ok(final);
+					curso = final;
 				}
-
-				return Ok(item);
 			}
+			return Ok(_db.Cursos.First(o => o.Id == curso.Id));
 		}
 
 		[HttpPost("codigos")]
-		public ActionResult SetCodigos()
-		{
+		public ActionResult SetCodigos() {
 			var res = CodigosTodos();
 			return Ok(res);
 		}
 
 		[HttpPost("by-curso-id")]
-		public ActionResult ByCursoId([FromBody] int cursoId)
-		{
+		public ActionResult ByCursoId([FromBody] int cursoId) {
 			var items = _db.CursoTema?.Where(o => o.CursoId == cursoId).ToList();
 			return Ok(items);
 		}
 
 		[HttpPost("by-curso-id-participantes")]
-		public ActionResult ByCursoIdParticipantes([FromBody] int cursoId)
-		{
+		public ActionResult ByCursoIdParticipantes([FromBody] int cursoId) {
 			var items = _db.CursoUsuario?.Where(o => o.CursoId == cursoId).ToList();
 			return Ok(items);
 		}
 
 		[HttpPost("inscribir")] // /api/curso/inscribir
-		public ActionResult Inscribir(CursoInscripcionModel item)
-		{
+		public ActionResult Inscribir(CursoInscripcionModel item) {
 			// 202402090054: Crea el registro
-			var obj = new CursoUsuario
-			{
+			var obj = new CursoUsuario {
 				CursoId = item.CursoId,
 				UsuarioId = item.UsuarioId,
 				CreadoPor = GetUserId(),
@@ -133,11 +118,9 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 			// 202402090040: Envía el correo
 			var curso = _db.Cursos.FirstOrDefault(o => o.Id == item.CursoId);
-			if (curso != null)
-			{
+			if (curso != null) {
 				var usuario = _db.Usuarios.FirstOrDefault(o => o.Id == item.UsuarioId);
-				if (usuario != null)
-				{
+				if (usuario != null) {
 					string body = @$"Hola {usuario.FirstName}!<br/><br/>
 						Usted acaba de inscribirse al curso <b>{curso.Nombre}</b>.<br/><br/>
 						Esta es la información que debe tener en cuenta:<br /><br />
@@ -161,11 +144,9 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 		// En json: Front\public\data\config.json
 		[HttpGet("estado/{cursoId}/{estadoId}")] // /api/curso/estado/15/423
-		public ActionResult CursoEstado(int cursoId, int estadoId)
-		{
+		public ActionResult CursoEstado(int cursoId, int estadoId) {
 			var obj = _db.Curso.FirstOrDefault(o => o.Id == cursoId);
-			if (obj != null)
-			{
+			if (obj != null) {
 				obj.EstadoCursoId = estadoId;
 				obj.Publicado = estadoId == (int)EstadoCurso.Aprobado;
 				obj.EditadoPor = GetUserId();
@@ -177,12 +158,10 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpGet("cursos-por-usuario/{usuarioId}")] // /api/curso/por-usuario
-		public ActionResult CursosPorUsuarioId(int usuarioId)
-		{
+		public ActionResult CursosPorUsuarioId(int usuarioId) {
 			List<int> ids = new List<int>();
 			var items = _db.CursoUsuario.Where(o => o.UsuarioId == usuarioId).ToList();
-			if (items.Any())
-			{
+			if (items.Any()) {
 				foreach (CursoUsuario item in items) ids.Add(item.CursoId);
 				var res = _db.Cursos.Where(o => ids.Contains(o.Id)).ToList();
 				return Ok(res);
@@ -191,14 +170,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("ed-tema")] // /api/curso/ed => CREATE - UPDATE
-		public ActionResult EditTemas(CursoTemaModel curso)
-		{
+		public ActionResult EditTemas(CursoTemaModel curso) {
 			var tId = curso.CursoId;
 			var temasActuales = _db.CursoTema.Where(o => o.CursoId == tId).ToList();
 			_db.CursoTema.RemoveRange(temasActuales);
 			_db.SaveChanges();
-			foreach (var item in curso.Temas)
-			{
+			foreach (var item in curso.Temas) {
 				var obj = (CursoTema)item.CopyTo(new CursoTema());
 				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
@@ -209,14 +186,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("ed-encuesta")] // /api/curso/ed => CREATE - UPDATE
-		public ActionResult EditEncuestas(CursoEncuestaModel curso)
-		{
+		public ActionResult EditEncuestas(CursoEncuestaModel curso) {
 			var eId = curso.CursoId;
 			var encuestasActuales = _db.CursoEncuesta.Where(o => o.CursoId == eId).ToList();
 			_db.CursoEncuesta.RemoveRange(encuestasActuales);
 			_db.SaveChanges();
-			foreach (var item in curso.Encuestas)
-			{
+			foreach (var item in curso.Encuestas) {
 				var obj = (CursoEncuesta)item.CopyTo(new CursoEncuesta());
 				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
@@ -227,16 +202,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("ed-archivo")] // /api/curso/ed-archivo
-		public ActionResult EditArchivo()
-		{
+		public ActionResult EditArchivo() {
 			// Documento
 			var str = Request.Form["documento"];
 			var item = JsonConvert.DeserializeObject<CursoDocumento>(str);
 
 			// Archivo
 			var files = Request.Form.Files;
-			if (files.Count > 0)
-			{
+			if (files.Count > 0) {
 				var file = files[0];
 				var fileBase = _config["Path:FilesPath"];
 				// var uniqueFileName = file.FileName.GetUniqueFileName();
@@ -248,20 +221,16 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 				item.ArchivoNombre = uniqueFileName;
 			}
 
-			if (item.Id == 0)
-			{
+			if (item.Id == 0) {
 				var obj = (CursoDocumento)item.CopyTo(new CursoDocumento());
 				obj.CreadoPor = GetUserId();
 				obj.CreadoEl = DateTime.Now;
 				_db.CursoDocumento.Add(obj);
 				_db.SaveChanges();
 				return Ok(obj);
-			}
-			else
-			{
+			} else {
 				var current = _db.CursoDocumento.First(o => o.Id == item.Id);
-				if (current != null)
-				{
+				if (current != null) {
 					var final = (CursoDocumento)item.CopyTo(current);
 					final.EditadoPor = GetUserId();
 					final.EditadoEl = DateTime.Now;
@@ -274,40 +243,35 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 		[HttpGet("dep/{dependenciaId?}")] // /api/curso/dep/13 o 14
 		[Authorization.AllowAnonymous]
-		public ActionResult GetByDependenciaId(int? dependenciaId = null)
-		{
+		public ActionResult GetByDependenciaId(int? dependenciaId = null) {
 			var items = _db.Cursos.Where(o => o.DependenciaId == dependenciaId);
 			return Ok(items);
 		}
 
 		[HttpGet("all")] // /api/curso/all
 		[Authorization.AllowAnonymous]
-		public ActionResult GetAll()
-		{
+		public ActionResult GetAll() {
 			var items = _db.Cursos.ToList();
 			return Ok(items);
 		}
 
 		[HttpGet("published")] // /api/curso/published
 		[Authorization.AllowAnonymous]
-		public ActionResult GetPublished()
-		{
+		public ActionResult GetPublished() {
 			var items = _db.Cursos.Where(o => o.Publicado == true).ToList();
 			return Ok(items);
 		}
 
 		[HttpGet("cursos-temas")]// api/curso/temas
 		[Authorization.AllowAnonymous]
-		public ActionResult CursosTemas()
-		{
+		public ActionResult CursosTemas() {
 			var items = _db.CursosTemas?.ToList();
 			return Ok(items);
 		}
 
 		[HttpGet("cursos-documentos")]// api/curso/temas
 		[Authorization.AllowAnonymous]
-		public ActionResult CursosDocumentos()
-		{
+		public ActionResult CursosDocumentos() {
 			var items = _db.CursosDocumentos?.ToList();
 			return Ok(items);
 		}
@@ -315,23 +279,20 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 
 		[HttpGet("{itemId?}")] // /api/curso/5 => CREATE - 
 		[Authorization.AllowAnonymous]
-		public ActionResult Get(int? itemId = null)
-		{
+		public ActionResult Get(int? itemId = null) {
 			var item = _db.Cursos.FirstOrDefault(o => o.Id == itemId);
 			return Ok(item);
 		}
 
 		[HttpPost("fechas")] // /curso/fechas
 		[Authorization.AllowAnonymous]
-		public ActionResult TemasDx([FromBody] int cursoId)
-		{
-			var items = _db.CursoFecha?.Where(o => o.CursoId == cursoId).ToList();
+		public ActionResult FechasDx([FromBody] int cursoId) {
+			var items = _db.CursoFecha?.Where(o => o.CursoId == cursoId).OrderBy(o => o.Id).ToList();
 			return Ok(items);
 		}
 
 		[HttpPost("archivos-dx")] // /api/curso/archivos-dx
-		public ActionResult ArchivosDx()
-		{
+		public ActionResult ArchivosDx() {
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
@@ -343,8 +304,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("temas-dx")] // /api/curso/temas-dx
-		public ActionResult TemasDx()
-		{
+		public ActionResult TemasDx() {
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
@@ -356,8 +316,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("participantes-dx")] // /api/curso/temas-dx
-		public ActionResult ParticipantesDx()
-		{
+		public ActionResult ParticipantesDx() {
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
@@ -369,8 +328,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("encuestas-dx")] // /api/curso/dx => DevExtreme DataGrid Get
-		public ActionResult EncuestasDx()
-		{
+		public ActionResult EncuestasDx() {
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
@@ -382,8 +340,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("activos-dx")] // /api/curso/dx => DevExtreme DataGrid Get
-		public ActionResult GetActivosDx()
-		{
+		public ActionResult GetActivosDx() {
 
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
@@ -396,8 +353,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("dx")] // /api/curso/dx => DevExtreme DataGrid Get
-		public ActionResult GetDx()
-		{
+		public ActionResult GetDx() {
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
@@ -408,8 +364,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 		}
 
 		[HttpPost("dx-bk")] // /api/curso/dx => DevExtreme DataGrid Get
-		public ActionResult GetDxBk()
-		{
+		public ActionResult GetDxBk() {
 			StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
 			var str = reader.ReadToEndAsync().Result;
 			var opts = JsonConvert.DeserializeObject<LoadOptions>(str);
@@ -417,8 +372,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
 			var items = _db.Cursos.OrderBy(o => o.Nombre).ToList();
 			// 202402091030: Filtra data
 			JObject data = JsonConvert.DeserializeObject<JObject>(opts.UserData);
-			if (data.ContainsKey("estadoId"))
-			{
+			if (data.ContainsKey("estadoId")) {
 				var eId = (int)data["estadoId"];
 				items = items.Where(o => o.EstadoCursoId == eId).ToList();
 			}

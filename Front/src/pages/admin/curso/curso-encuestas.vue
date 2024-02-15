@@ -5,63 +5,36 @@ import List from "devextreme/ui/list";
 import { useRoute } from "vue-router";
 import NumberBox from "devextreme/ui/number_box";
 import Cmds from "@/pages/admin/curso/_comandos.vue";
-import { ref, toRaw, onMounted, getCurrentInstance } from "vue";
-import { useClasificadorStore, useEncuestaStore, useAuthStore } from "@/stores";
+import { ref, toRaw, onMounted } from "vue";
+import { useClasificadorStore, useEncuestaStore } from "@/stores";
 import DxValidator, {
   DxRequiredRule,
-  DxStringLengthRule,
 } from "devextreme-vue/validator";
 import {
   DxSelectBox,
-  DxHtmlEditor,
-  DxNumberBox,
-  DxTextBox,
-  DxTextArea,
-  DxCheckBox,
-  DxDateBox,
   DxValidationGroup,
-  DxToolbar,
-  DxMediaResizing,
-  DxImageUpload,
-  DxItem,
 } from "devextreme-vue";
 import {
   DxColumn,
-  DxColumnChooser,
-  DxExport,
-  DxScrolling,
   DxFilterRow,
   DxDataGrid,
-  DxGrouping,
   DxGroupItem,
   DxLookup,
-  DxGroupPanel,
   DxLoadPanel,
   DxPager,
   DxPaging,
-  DxSearchPanel,
   DxSorting,
   DxSummary,
 } from "devextreme-vue/data-grid";
 const route = useRoute(),
   store = useClasificadorStore(),
-  encuestaStore = useEncuestaStore(),
-  authStore = useAuthStore();
-let titulo = "Encuestas",
-  list1 = null,
-  list2 = null,
+  encuestaStore = useEncuestaStore();
+let muestraComandos = ref(true),
   itemId = ref(null),
   valGroup = ref(null),
   dxStore = ref(null),
   encuestas = ref([]),
   momentos = ref([]),
-  temas = ref([]),
-  temasFrom = ref([]),
-  temasTo = ref([]),
-  fromData = ref([]),
-  toData = ref([]),
-  selRightClass = ref(""),
-  selLeftClass = ref(""),
   item = ref({
     id: 0,
     cursoId: props.itemId,
@@ -220,7 +193,8 @@ let props = defineProps({
   itemId: { type: Number, default: null, required: false },
   item: { type: Object, default: null, required: false },
   showRevision: { type: Boolean, default: false, required: false },
-  showAprove: { type: Boolean, default: false, required: false }
+  showAprove: { type: Boolean, default: false, required: false },
+  showSave: { type: Boolean, default: true, required: false }
 });
 
 onMounted(async () => {
@@ -230,11 +204,11 @@ onMounted(async () => {
   encuestas.value = await encuestaStore.all();
   momentos.value = await store.porTipoNombre("momento_encuesta");
   console.log("temasAll =>", encuestas.value);
-  list1 = List.getInstance(document.getElementById("list1"));
-  list2 = List.getInstance(document.getElementById("list2"));
   console.log("route.name =>", route.name);
   itemId.value = props.itemId;
   item.value = props.item;
+  if (props.showAprove) muestraComandos.value = false;
+  if (muestraComandos && !props.showRevision) muestraComandos.value = false;
   getData();
 });
 </script>
@@ -286,7 +260,7 @@ onMounted(async () => {
     </div>
 
     <div class="row" id="grid-encuesta">
-      <div class="col-md-12 text-end pb-2" v-if="!props.showAprove">
+      <div class="col-md-12 text-end pb-2" v-if="muestraComandos">
         <a href="#" class="btn pe-0" @click.prevent="addStart()"><i class="fa-solid fa-square-plus me-1"></i>Asociar
           encuesta</a>
       </div>
@@ -317,7 +291,7 @@ onMounted(async () => {
             <span v-else>NO</span>
           </template>
           <DxColumn :width="70" alignment="center" cell-template="tpl" caption="" name="cmds" :fixed="true"
-            fixed-position="right" v-if="!props.showAprove" />
+            fixed-position="right" v-if="muestraComandos" />
           <template #tpl="{ data }">
             <span class="cmds">
               <a title="Editar" class="cmd-item color-main-600 me-2" @click.prevent="addStart(data.data)" href="#">

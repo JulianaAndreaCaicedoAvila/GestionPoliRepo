@@ -400,8 +400,9 @@ $().ready(function () { });
 										class="text-color-danger">*</span></label>
 								<div class="form-icon position-relative">
 									<i class="fa-solid fa-key text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-									<input required minlength="5" type="password" v-model="password" placeholder="Contraseña"
-										class="form-control form-control-lg text-4 has-icon" id="txt-password" name="txt-password" />
+									<input required minlength="5" autocomplete="off" type="password" v-model="password"
+										placeholder="Contraseña" class="form-control form-control-lg text-4 has-icon" id="txt-password"
+										name="txt-password" />
 								</div>
 							</div>
 						</div>
@@ -511,8 +512,9 @@ $().ready(function () { });
 											class="text-color-danger">*</span></label>
 									<div class="form-icon position-relative">
 										<i class="fa-solid fa-key text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-										<input required minlength="6" type="password" v-model="password" placeholder="Contraseña"
-											class="form-control form-control-lg text-4 has-icon" id="txt-password" name="txt-password" />
+										<input required minlength="6" autocomplete="off" type="password" v-model="password"
+											placeholder="Contraseña" class="form-control form-control-lg text-4 has-icon" id="txt-password"
+											name="txt-password" />
 									</div>
 								</div>
 							</div>
@@ -522,9 +524,9 @@ $().ready(function () { });
 											class="text-color-danger">*</span></label>
 									<div class="form-icon position-relative">
 										<i class="fa-solid fa-key text-4 color-main position-absolute left-15 top-50pct transform3dy-n50"></i>
-										<input required minlength="6" type="password" v-model="password1" equalsTo="txt-password"
-											placeholder="Contraseña" class="form-control form-control-lg text-4 has-icon" id="txt-password-1"
-											name="txt-password-1" />
+										<input required minlength="6" autocomplete="off" type="password" v-model="password1"
+											equalsTo="txt-password" placeholder="Contraseña"
+											class="form-control form-control-lg text-4 has-icon" id="txt-password-1" name="txt-password-1" />
 									</div>
 								</div>
 							</div>

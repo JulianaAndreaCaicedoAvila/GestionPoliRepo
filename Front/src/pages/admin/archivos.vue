@@ -44,7 +44,7 @@ let titulo = "Administración &raquo; Documentos",
   entidades = ref([]),
   dependencias = ref([]),
   especificos = ref([]),
-  item = ref({
+  archivo = ref({
     id: 0,
     nombre: null,
     descripcion: null,
@@ -54,7 +54,7 @@ let titulo = "Administración &raquo; Documentos",
     editadoEl: null,
     editadoPor: null,
   }),
-  item_copy = Clone(item.value),
+  item_copy = Clone(archivo.value),
   panelData = null,
   panelGrid = null,
   dxStore = DxStore({
@@ -128,16 +128,16 @@ let titulo = "Administración &raquo; Documentos",
     if (typeof data !== "undefined") {
       $("#tit-action").text("Editar escuela");
       panelGrid.lock("Cargando");
-      item.value = Clone(data);
+      archivo.value = Clone(data);
     } else {
       $("#tit-action").text("Nuevo escuela");
-      item.value = Clone(item_copy);
+      archivo.value = Clone(item_copy);
     }
     panelGrid.fadeOut("normal", async function () {
       console.log(typeof data);
       panelData.fadeIn("normal", function () {
         console.log(_sep);
-        console.log("item =>", item.value);
+        console.log("item =>", archivo.value);
         panelGrid.unlock();
       });
     });
@@ -150,8 +150,8 @@ let titulo = "Administración &raquo; Documentos",
     panelData.fadeOut("normal", function () {
       panelData.clear();
       panelGrid.fadeIn("normal", function () {
-        item.value = Clone(item_copy);
-        console.log("item =>", item);
+        archivo.value = Clone(item_copy);
+        console.log("item =>", archivo);
         valGroup.value.instance.reset();
         $(".nb.dx-numberbox").each(function () {
           var el = $(this);
@@ -173,9 +173,9 @@ let titulo = "Administración &raquo; Documentos",
       });
     } else {
       panelData.lock(
-        `${item.id == 0 ? "Creando" : "Actualizando"} escuelas`,
+        `${archivo.id == 0 ? "Creando" : "Actualizando"} escuelas`,
         async function () {
-          let dto = item.value;
+          let dto = archivo.value;
           console.log("dto =>", dto);
           await api({ hideErrors: true })
             .post("escuela/ed", dto)

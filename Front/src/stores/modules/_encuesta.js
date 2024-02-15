@@ -27,7 +27,7 @@ export const useEncuestaStore = defineStore({
 					return r.data;
 				});
 		},
-		async getById(id) {
+		async porId(id) {
 			if (this.items.length <= 0) await this.all();
 			return this.items.find((o) => o.id == id);
 		},

@@ -95,11 +95,9 @@ let titulo = "Temas",
       // title: "otro",
       textCancel: "CANCELAR",
       textOk: data.activo ? "DESACTIVAR" : "ACTIVAR",
-      text: `¿Realmente desea ${
-        data.activo ? "desactivar" : "activar"
-      } el tema "<span class="font-weight-semibold">${
-        data.temaNombre
-      }</span>"?`,
+      text: `¿Realmente desea ${data.activo ? "desactivar" : "activar"
+        } el tema "<span class="font-weight-semibold">${data.temaNombre
+        }</span>"?`,
       onConfirm: () => {
         panelGrid = $("#grid-tema");
         panelGrid.lock(
@@ -118,7 +116,7 @@ let titulo = "Temas",
           }
         );
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   },
   addStart = async (data) => {
@@ -139,7 +137,7 @@ let titulo = "Temas",
     }
     let ids = [];
     let topics =
-      item.value.id == 0 ? [] : await temaStore.byCursoId(item.value.id);
+      item.value.id == 0 ? [] : await temaStore.porCursoId(item.value.id);
     topics.forEach((topics) => {
       ids.push(topics.temaId);
     });
@@ -269,20 +267,10 @@ onMounted(async () => {
             </div>
             <div class="col-md-5 mb-3">
               <label class="tit">Tipo de participante</label>
-              <DxSelectBox
-                id="tipoParticipante"
-                :data-source="tipoParticipante"
-                :grouped="false"
-                :min-search-length="2"
-                :search-enabled="true"
-                v-model="item.tipoParticipante"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                placeholder="Tipo de participante"
-                value-expr="id"
-                display-expr="nombre"
-              >
+              <DxSelectBox id="tipoParticipante" :data-source="tipoParticipante" :grouped="false" :min-search-length="2"
+                :search-enabled="true" v-model="item.tipoParticipante" :show-clear-button="true"
+                :show-data-before-search="true" class="form-control" placeholder="Tipo de participante" value-expr="id"
+                display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -290,20 +278,10 @@ onMounted(async () => {
             </div>
             <div class="col-md-5 mb-3">
               <label class="tit">Tipo de servidor público</label>
-              <DxSelectBox
-                id="tipoServidorPublico"
-                :data-source="tipoServidorPublico"
-                :grouped="false"
-                :min-search-length="2"
-                :search-enabled="true"
-                v-model="item.tipoServidorPublico"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                placeholder="Tipo de servidor público"
-                value-expr="id"
-                display-expr="nombre"
-              >
+              <DxSelectBox id="tipoServidorPublico" :data-source="tipoServidorPublico" :grouped="false"
+                :min-search-length="2" :search-enabled="true" v-model="item.tipoServidorPublico" :show-clear-button="true"
+                :show-data-before-search="true" class="form-control" placeholder="Tipo de servidor público"
+                value-expr="id" display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -320,20 +298,10 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Se encuentra en</label>
-              <DxSelectBox
-                id="vulnerabilidad"
-                :data-source="situacionEconomica"
-                :grouped="false"
-                :min-search-length="2"
-                :search-enabled="true"
-                v-model="item.situacionEconomica"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                placeholder="Situación"
-                value-expr="id"
-                display-expr="nombre"
-              >
+              <DxSelectBox id="vulnerabilidad" :data-source="situacionEconomica" :grouped="false" :min-search-length="2"
+                :search-enabled="true" v-model="item.situacionEconomica" :show-clear-button="true"
+                :show-data-before-search="true" class="form-control" placeholder="Situación" value-expr="id"
+                display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -341,20 +309,10 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Tipo de discapacidad</label>
-              <DxSelectBox
-                id="discapacidad"
-                :data-source="tipoDiscapacidad"
-                :grouped="false"
-                :min-search-length="2"
-                :search-enabled="true"
-                v-model="item.tipoDiscapacidad"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                placeholder="Tipo de discapacidad"
-                value-expr="id"
-                display-expr="nombre"
-              >
+              <DxSelectBox id="discapacidad" :data-source="tipoDiscapacidad" :grouped="false" :min-search-length="2"
+                :search-enabled="true" v-model="item.tipoDiscapacidad" :show-clear-button="true"
+                :show-data-before-search="true" class="form-control" placeholder="Tipo de discapacidad" value-expr="id"
+                display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -362,20 +320,10 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Grupo étnico</label>
-              <DxSelectBox
-                id="grupoEtnico"
-                :data-source="grupoEtnico"
-                :grouped="false"
-                :min-search-length="2"
-                :search-enabled="true"
-                v-model="item.grupoEtnico"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                placeholder="Grupo étnico"
-                value-expr="id"
-                display-expr="nombre"
-              >
+              <DxSelectBox id="grupoEtnico" :data-source="grupoEtnico" :grouped="false" :min-search-length="2"
+                :search-enabled="true" v-model="item.grupoEtnico" :show-clear-button="true"
+                :show-data-before-search="true" class="form-control" placeholder="Grupo étnico" value-expr="id"
+                display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
@@ -383,31 +331,18 @@ onMounted(async () => {
             </div>
             <div class="col-md-3 mb-3">
               <label class="tit">Participantes</label>
-              <DxSelectBox
-                id="participantes"
-                :data-source="temasAll"
-                :grouped="false"
-                :min-search-length="2"
-                :search-enabled="true"
-                v-model="item.temaId"
-                :show-clear-button="true"
-                :show-data-before-search="true"
-                class="form-control"
-                placeholder="Participantes"
-                value-expr="id"
-                display-expr="nombre"
-              >
+              <DxSelectBox id="participantes" :data-source="temasAll" :grouped="false" :min-search-length="2"
+                :search-enabled="true" v-model="item.temaId" :show-clear-button="true" :show-data-before-search="true"
+                class="form-control" placeholder="Participantes" value-expr="id" display-expr="nombre">
                 <DxValidator>
                   <DxRequiredRule />
                 </DxValidator>
               </DxSelectBox>
             </div>
             <div class="col-md-12 mt-3 mb-3 text-center">
-              <label class="tit me-2" for="habeas"
-                >Al hacer clic en la "casilla", acepta nuestros Términos y
+              <label class="tit me-2" for="habeas">Al hacer clic en la "casilla", acepta nuestros Términos y
                 condiciones así como la ley 1581 de tratamiento de datos
-                personales Habeas data</label
-              >
+                personales Habeas data</label>
               <DxCheckBox id="habeas" />
             </div>
           </div>
@@ -416,16 +351,11 @@ onMounted(async () => {
       <div class="card-footer">
         <div class="d-flex justify-content-between align-items-center">
           <span>
-            <a class="btn btn-gray me-3" @click.prevent="next"
-              ><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a
-            >
-            <a class="btn btn-main" @click.prevent="next"
-              ><i class="me-1 fa-solid fa-circle-left"></i> ANTERIOR</a
-            >
+            <a class="btn btn-gray me-3" @click.prevent="next"><i class="me-1 fa-solid fa-circle-xmark"></i> CANCELAR</a>
+            <a class="btn btn-main" @click.prevent="next"><i class="me-1 fa-solid fa-circle-left"></i> ANTERIOR</a>
           </span>
-          <a class="btn btn-main" @click.prevent="next"
-            >FINALIZAR INCSCRIPCIÓN <i class="fa-solid fa-circle-check ms-1"></i
-          ></a>
+          <a class="btn btn-main" @click.prevent="next">FINALIZAR INCSCRIPCIÓN <i
+              class="fa-solid fa-circle-check ms-1"></i></a>
         </div>
       </div>
     </div>

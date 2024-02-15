@@ -262,6 +262,51 @@ var style = {
 /* --------------------------------------------------------------------------------------- */
 /* Object extensions */
 
+function IsObject(object) {
+	return object != null && typeof object === "object";
+}
+
+// 202402150224: Equality comparison
+// https://dmitripavlutin.com/how-to-compare-objects-in-javascript/#3-shallow-equality
+function IsEqual(originalObject, newObject) {
+	// console.log("object1 =>", object1);
+	// console.log("object2 =>", object2);
+	if (!IsObject(originalObject) || !IsObject(originalObject) || originalObject == null || newObject == null) return false;
+	const keys1 = Object.keys(originalObject);
+	const keys2 = Object.keys(newObject);
+	// if (keys1.length !== keys2.length) return false;
+	for (const key of keys1) {
+		if (newObject.hasOwnProperty(key)) {
+			const val1 = originalObject[key];
+			const val2 = newObject[key];
+			if (val1 !== val2) {
+				console.error(`IsEqual FALSE`, `${key} => ${val1} == ${val2}`);
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+// 202402150140: Depp equality comparison
+// https://dmitripavlutin.com/how-to-compare-objects-in-javascript/#4-deep-equality
+function IsDeepEqual(object1, object2) {
+	const keys1 = Object.keys(object1);
+	const keys2 = Object.keys(object2);
+	if (keys1.length !== keys2.length) return false;
+	for (const key of keys1) {
+		const val1 = object1[key];
+		const val2 = object2[key];
+		const areObjects = IsObject(val1) && IsObject(val2);
+		if ((areObjects && !IsDeepEqual(val1, val2)) || (!areObjects && val1 !== val2)) return false;
+	}
+	return true;
+}
+
+// Object.prototype.IsEqualTo = function (object) {
+// 	return IsDeepEqual(this, object);
+// };
+
 function Copy(from, to) {
 	if (type.of(from) !== "object") {
 		console.warn("Copy(from, to) -> El parámetro 'from' no es un objeto");
@@ -325,11 +370,13 @@ Array.prototype.remove = function () {
 	console.log("Array.prototype.remove: " + JSON.stringify(this));
 	return this;
 };
+
 Array.prototype.contains = function (val) {
 	var arr = this;
 	for (var x = 0; x < arr.length; x++) if (arr[x] === val) return true;
 	return false;
 };
+
 Array.prototype.sortBy = function (key) {
 	var array = this;
 	return array.sort(function (a, b) {
@@ -338,6 +385,7 @@ Array.prototype.sortBy = function (key) {
 		return x < y ? -1 : x > y ? 1 : 0;
 	});
 };
+
 Array.prototype.add = function (value) {
 	if (!this.contains(value)) this.push(value);
 	return value;
@@ -1784,7 +1832,7 @@ window.jQuery.fn.lock = function (msg, cb, spinner = true) {
 		el.attr("id", id);
 	}
 	if (typeof window._locks === "undefined") window._locks = [];
-	console.log(_sep + "lock() start: " + JSON.stringify(window._locks));
+	// console.log(_sep + "lock() start: " + JSON.stringify(window._locks));
 	if (msg === null) msg = "Procesando, un momento por favor...";
 	msg =
 		'<div class="font-weight-semibold block-ui">' +
@@ -1818,13 +1866,13 @@ window.jQuery.fn.lock = function (msg, cb, spinner = true) {
 	}
 	// 201804261828: Actualiza solo el mensaje si y esta bloqueado el elemento
 	if (window._locks.contains("#" + id)) {
-		console.log("lock(" + id + ") existe: " + JSON.stringify(window._locks));
+		// console.log("lock(" + id + ") existe: " + JSON.stringify(window._locks));
 		//		$("div.blockMsg span.msg:first").html(msg);
 		$("div.blockMsg").html(msg);
 		Call(cb);
 	} else {
 		window._locks.add("#" + id);
-		console.log("lock() end: " + JSON.stringify(window._locks));
+		// console.log("lock() end: " + JSON.stringify(window._locks));
 		el.block(opts);
 	}
 };

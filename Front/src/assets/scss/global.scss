@@ -247,6 +247,10 @@ div.form-control {
 	box-shadow: $shadow;
 	padding: 0 !important;
 
+	&.data {
+		min-height: 500px;
+	}
+
 	&.content {
 		min-height: 500px !important;
 	}
@@ -1246,6 +1250,12 @@ label {
 			content: "\f071";
 			margin-right: 0.5rem;
 		}
+	}
+}
+
+p {
+	&.error {
+		color: #c10000 !important;
 	}
 }
 

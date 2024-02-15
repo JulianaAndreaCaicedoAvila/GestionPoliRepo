@@ -80,7 +80,7 @@ let entidades = ref([]),
 	passwordComparison = () => {
 		return item.value.password;
 	},
-	ansvEmailRule = (e) => {
+	emailRule = (e) => {
 		if (item.value.companyId !== g.entidad_esap_id) return true;
 		return e.value.toLowerCase().contains("@esap.edu.co");
 	},
@@ -330,10 +330,9 @@ onMounted(async () => {
 								@focus-out="$lowerCase($event); itemSelected($event);">
 								<!-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/Validation/Overview/Vue/Light/ -->
 								<DxValidator>
-									<DxRequiredRule />
 									<DxEmailRule />
-									<DxCustomRule :validationCallback="ansvEmailRule"
-										message="El correo debe ser de la ESAP (@esap.edu.co)" />
+									<DxRequiredRule />
+									<DxCustomRule :validationCallback="emailRule" message="El correo debe ser de la ESAP (@esap.edu.co)" />
 								</DxValidator>
 							</DxTextBox>
 						</div>

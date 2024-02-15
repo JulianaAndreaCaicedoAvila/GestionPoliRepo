@@ -106,10 +106,22 @@ export const router = createRouter({
 			component: () => import("@/pages/admin/curso/tabs.vue"), // 202309071141: Lleva al Wizard
 		},
 		{
+			name: "inscritos",
+			path: "/admin/inscritos",
+			meta: { title: "Inscritos", requiresAuth: true, roles: [] },
+			component: () => import("@/pages/admin/inscrito.vue"),
+		},
+		{
+			name: "asistencia",
+			path: "/admin/asistencia/:id?",
+			meta: { title: "Asistencia", requiresAuth: true, roles: [] },
+			component: () => import("@/pages/admin/asistencia.vue"), // 202402021407: Lleva al listado de participantes
+		},
+		{
 			name: "participantes",
-			path: "/admin/participantes",
+			path: "/admin/participantes/:id?",
 			meta: { title: "Participantes", requiresAuth: true, roles: [] },
-			component: () => import("@/pages/admin/participante.vue"),
+			component: () => import("@/pages/admin/participante.vue"), // 202402021407: Lleva al listado de participantes
 		},
 		{
 			name: "asistencia",

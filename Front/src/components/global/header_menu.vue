@@ -134,10 +134,10 @@ onMounted(() => {
                               capacitación</router-link>
                           </li>
                           <li>
-                            <router-link :to="{ path: '/admin/temas' }" class="dropdown-item">Temas</router-link>
+                            <router-link :to="{ path: '/admin/modulos' }" class="dropdown-item">Módulos</router-link>
                           </li>
                           <li>
-                            <router-link :to="{ path: '/admin/modulos' }" class="dropdown-item">Módulos</router-link>
+                            <router-link :to="{ path: '/admin/temas' }" class="dropdown-item">Temas</router-link>
                           </li>
                           <li>
                             <router-link :to="{ path: '/admin/clasificador/14' }" class="dropdown-item">Tipos de
@@ -160,7 +160,7 @@ onMounted(() => {
                         <router-link :to="{ path: '/admin/cursos' }" class="dropdown-item">Gestión de cursos</router-link>
                       </li>
                       <li>
-                        <router-link :to="{ path: '/admin/participantes' }" class="dropdown-item">Gestión de
+                        <router-link :to="{ path: '/admin/inscritos' }" class="dropdown-item">Gestión de
                           participantes</router-link>
                       </li>
                     </ul>

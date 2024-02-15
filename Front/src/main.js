@@ -67,6 +67,7 @@ axios
 		console.log("authStore =>", authStore);
 		console.log("authStore.user =>", authStore.user);
 		window._config = data;
+		props.$componentKey = 0;
 		props.$conf = window._config;
 		props.$msal = {};
 		props.$si_no = [

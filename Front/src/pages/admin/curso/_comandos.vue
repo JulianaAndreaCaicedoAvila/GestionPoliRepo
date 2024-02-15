@@ -63,6 +63,7 @@ let props = defineProps({
 	itemId: { type: Number, default: null, required: false },
 	item: { type: Object, default: null, required: false },
 	showSave: { type: Boolean, default: false, required: false },
+	showMustSave: { type: Boolean, default: false, required: false },
 	showRevision: { type: Boolean, default: false, required: false },
 	showAprove: { type: Boolean, default: false, required: false }
 });
@@ -80,6 +81,11 @@ onMounted(async () => {
 				<i class="fa-solid fa-arrow-left me-2"></i>VOLVER
 			</a>
 			<span>
+				<p class="m-0 d-inline-block me-3 font-weight-semibold error" v-if="showSave && showMustSave">
+					<i class="fa-solid fa-circle-info me-1"></i>
+					Debe guardar los cambios realizados para continuar
+					<i class="fa-regular fa-hand-back-point-right fa-lg ms-1"></i>
+				</p>
 				<a class="btn btn-main" v-if="showSave" @click.prevent="callOnSave">GUARDAR<i
 						class="fa-solid fa-floppy-disk ms-2"></i></a>
 				<a class="btn btn-green ms-3" v-if="showRevision" @click.prevent="setEstado(estado.revision)">ENVIAR A REVISIÓN<i

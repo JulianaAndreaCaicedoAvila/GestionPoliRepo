@@ -20,14 +20,14 @@ export const useModuloStore = defineStore({
 					return this.items;
 				});
 		},
-		async byCursoId(eId) {
+		async porCursoId(eId) {
 			return await api()
 				.post(`curso/by-curso-id`, eId)
 				.then(async (r) => {
 					return r.data;
 				});
 		},
-		async getById(id) {
+		async porId(id) {
 			if (this.items.length <= 0) await this.all();
 			return this.items.find((o) => o.id == id);
 		},

@@ -31,12 +31,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers
         private readonly Data.DataContext _context;
         private readonly UserManager<Data.Identity.AuthUser> _userManager;
         private readonly RoleManager<AuthRole> _roleManager;
-        private async Task<bool> SendConfirmationAsync(AuthUser user)
+        private bool SendConfirmation(AuthUser user)
         {
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var code = user.SecurityStamp;
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var email = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(user.Email.Trim().ToLower()));
-            var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + email;
+            var em = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(user.Email.Trim().ToLower()));
+            var callbackUrl = _conf["Path:BasePath"] + "activar?c=" + code + "&e=" + em;
             string body = $"Hola {user.FirstName}!<br/><br/>Para activar su cuenta en SIRECEC 4.0 por favor haga clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.<br/><br/>Muchas gracias!";
             _email.Send(user.Email, "SIRECEC 4.0 - ACTIVAR CUENTA", body);
             return true;
@@ -252,13 +252,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                     // Envía el correo
                     if (modelUser.GenerateConfirmation)
                     {
-                        var code = newUser.SecurityStamp;
-                        // var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var em = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(newUser.Email.Trim().ToLower()));
-                        var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + em;
-                        string body = $"Hola {newUser.FirstName}!<br/><br/>Para activar su cuenta en SIRECEC 4.0 por favor haga clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.<br/><br/>Muchas gracias!";
-                        _email.Send(modelUser.Email, "SIRECEC 4.0 - ACTIVAR CUENTA", body);
+                        SendConfirmation(newUser);
                     }
 
                     return Ok(newUser);
@@ -266,42 +260,6 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                 return BadRequest(new { result, ur });
             }
             return Ok();
-        }
-
-        // [AllowAnonymous]
-        [HttpPost("registrar1")]
-        public async Task<ActionResult> Register(UserRequestModel user)
-        {
-            var email = user.Email;
-            var newUser = new AuthUser
-            {
-                UserName = email.Trim(),
-                Email = email.Trim(),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                NormalizedEmail = email.Trim().Normalize().ToUpperInvariant(), // Normalized
-                NormalizedUserName = email.Trim().Normalize().ToUpperInvariant(), // Normalized
-                EmailConfirmed = false,
-                LockoutEnabled = false,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            };
-            var result = await _userManager.CreateAsync(newUser, "Acceso*2023");
-            if (result.Succeeded)
-            {
-                var role = await _roleManager.FindByIdAsync(user.RoleId.ToString());
-                if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
-                // _logger.LogInformation(LoggerEventIds.UserCreated, "User created a new account with password.");
-                if (user.GenerateConfirmation)
-                {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = _conf["Path:BasePath"] + "/activar?c=" + code + "&e=" + email.Trim().ToLower();
-                    _email.Send(user.Email, "ACTIVAR CUENTA", $"Hola {user.FirstName}, por favor active su cuenta haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
-                }
-                return Ok(newUser);
-            }
-            return BadRequest(new { result, user });
         }
 
         [AllowAnonymous]
@@ -337,7 +295,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                     }
                     if (uReq.GenerateConfirmation)
                     {
-                        var res = await SendConfirmationAsync(user);
+                        SendConfirmation(user);
                     }
                     return Ok(user);
                 }
@@ -375,7 +333,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers
                     if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
                     if (uReq.GenerateConfirmation)
                     {
-                        var res = await SendConfirmationAsync(newUser);
+                        SendConfirmation(newUser);
                     }
                     return Ok(newUser);
                 }

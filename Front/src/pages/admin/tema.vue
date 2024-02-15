@@ -117,9 +117,11 @@ let titulo = "Administración &raquo; Cursos &raquo; Temas",
 		});
 	},
 	start = async (data) => {
-		// console.clear();
+		console.clear();
 		console.log(_sep);
 		console.log("data =>", data);
+		console.log("modulos =>", toRaw(modulos.value));
+		console.log("dependencias =>", toRaw(dependencias.value));
 		panelData = $("#data");
 		panelGrid = $("#grid");
 		// Editando
@@ -127,7 +129,7 @@ let titulo = "Administración &raquo; Cursos &raquo; Temas",
 			$("#tit-action").text("Editar tema");
 			panelGrid.lock("Cargando");
 			item.value = Clone(data);
-		} else {
+		} else { // Creando
 			$("#tit-action").text("Nuevo tema");
 			item.value = Clone(item_copy);
 		}
@@ -213,9 +215,10 @@ onMounted(async () => {
 	console.log(_sep);
 	console.log("tema.vue MOUNTED!");
 	$("#grid").lock("Cargando");
-	dependencias.value = await store.porTipoNombre("dependencia");
 	modulos.value = await storeModulo.all();
+	dependencias.value = await store.porTipoNombre("dependencia");
 	console.log("modulos =>", toRaw(modulos.value));
+	console.log("dependencias =>", toRaw(dependencias.value));
 	console.log("route.name =>", route.name);
 });
 </script>
@@ -245,9 +248,18 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-9 mb-3">
 							<label class="tit">Módulo</label>
-							<DxSelectBox id="moduloId" :data-source="modulos" :min-search-length="2" :search-enabled="false"
-								:show-clear-button="true" class="form-control" display-expr="nombre" v-model="item.moduloId"
-								placeholder="Módulo" value-expr="id" @value-changed="itemSelected">
+							<!-- <DxSelectBox id="moduloId" :data-source="modulos" v-model="item.moduloId" :show-clear-button="true"
+								class="form-control" @value-changed="itemSelected" placeholder="Módulo" value-expr="id"
+								display-expr="nombre" item-template="item">
+								<template #item="{ data }">
+									{{ data.nombre }}
+								</template>
+								<DxValidator>
+									<DxRequiredRule />
+								</DxValidator>
+							</DxSelectBox> -->
+							<DxSelectBox id="moduloId" :data-source="modulos" :show-clear-button="true" class="form-control"
+								v-model="item.moduloId" placeholder="Módulo" value-expr="id" display-expr="nombre">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -255,9 +267,8 @@ onMounted(async () => {
 						</div>
 						<div class="col-md-3 mb-3">
 							<label class="tit">Dependencia</label>
-							<DxSelectBox id="dependenciaId" :data-source="dependencias" :min-search-length="2" :search-enabled="false"
-								:show-clear-button="true" class="form-control" display-expr="nombre" v-model="item.dependenciaId"
-								placeholder="Indicador" value-expr="id" @value-changed="itemSelected">
+							<DxSelectBox id="dependenciaId" :data-source="dependencias" :show-clear-button="true" class="form-control"
+								v-model="item.dependenciaId" placeholder="Dependencia" value-expr="id" display-expr="nombre">
 								<DxValidator>
 									<DxRequiredRule />
 								</DxValidator>
@@ -314,7 +325,7 @@ onMounted(async () => {
 							<DxColumn data-field="id" caption="Id" :visible="true" :width="80" :allow-filtering="false"
 								:allow-sorting="true" alignment="center" />
 							<DxColumn data-field="nombre" caption="Tema" :visible="true" />
-							<DxColumn data-field="moduloId" caption="Módulo" :visible="true" width="300" alignment="center">
+							<DxColumn data-field="moduloId" caption="Módulo" :visible="true" width="300" alignment="left">
 								<DxLookup :data-source="modulos" value-expr="id" display-expr="nombre" />
 							</DxColumn>
 							<DxColumn data-field="dependenciaId" caption="Dependencia" :visible="true" width="150" alignment="center">
@@ -351,13 +362,9 @@ onMounted(async () => {
 			</div>
 		</div>
 
-		<div class="card mt-4" v-if="$conf.debug">
-			<div class="card-body">
-				<span class="font-weight-semibold">item:</span> {{ item }}<br /><span
-					class="font-weight-semibold">item_copy:</span>
-				{{ item_copy }}
-			</div>
-		</div>
+		<!-- {{ modulos }}
+		<hr>
+		{{ dependencias }} -->
 	</div>
 </template>
 

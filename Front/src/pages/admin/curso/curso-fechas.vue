@@ -121,7 +121,7 @@ let props = defineProps({
 // );
 
 onMounted(async () => {
-	$("#grid-dias").lock("Cargando");
+	$("#data-dias").lock("Cargando fechas");
 	console.log(_sep);
 	console.log("curso-fechas.vue MOUNTED!");
 	console.log("route.name =>", route.name);
@@ -146,13 +146,14 @@ onMounted(async () => {
 		console.log("r =>", toRaw(r));
 		items.value = r;
 	}
+	$("#data-dias").unlock();
 });
 </script>
 <template>
 	<div class="container content">
 		<div class="card data mt-3 mb-4" id="data-dias">
 			<DxValidationGroup ref="valGroup">
-				<div class="card-body pt-4 pb-2">
+				<div class="card-body pt-4 pb-2" style="min-height: 280px;">
 					<!-- {{ items }}<br><br> -->
 					<div class="row">
 						<div class="col text-center mb-4 bb d-flex justify-content-between align-items-end">

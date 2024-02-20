@@ -26,7 +26,7 @@ import {
 
 const app = getCurrentInstance(), router = useRouter(), route = useRoute(), storeCursos = useCursoStore();
 let periods = [], width = 120, data = [], cursoId = ref(null), dxStore = ref(null),
-  curso = ref(null), fechas = ref([]), grid = null, props = app.appContext.config.globalProperties;
+  curso = ref(null), fechas = ref([]), asistencias = ref([]), grid = null, props = app.appContext.config.globalProperties;
 
 let cancel = () => {
   console.clear();
@@ -35,6 +35,21 @@ let cancel = () => {
   // console.log("Cancel in tabs!");
   router.push("/admin/cursos");
 };
+
+let save = () => {
+  $("#data").lock("Guardando asistencia");
+  let rows = grid.getVisibleRows();
+  rows.forEach(row => {
+    var participante = row.data;
+    console.log("participante =>", participante);
+  });
+  setTimeout(function () {
+    $("#data").unlock();
+    msg.success("¡Asistencia guardada!", `<span class="d-inline-block mt-2">La asistencia para el curso "<span class="font-weight-semibold mt-3">${curso.value.nombre}"</span>, fue guardada de manera exitosa.</span>`, function () {
+      // router.back();
+    });
+  }, 1000);
+}
 
 let getData = () => {
   dxStore.value = DxStore({
@@ -70,6 +85,7 @@ let customizeColumns = (cols) => {
   } else {
     // console.log("col =>", col);
   }
+  console.log("customizeColumns");
 };
 
 let onInitialized = (e) => {
@@ -88,7 +104,7 @@ let onInitialized = (e) => {
         encodeHtml: false,
         customizeText: function (data) {
           // console.log("data =>", data);
-          return `<input type="checkbox" id="-f${item.id}" class="thumb" />`;
+          return `<input type="checkbox" id="-f${item.id}-${period.split()[0].toLowerCase()}" class="thumb" />`;
         },
       });
     });
@@ -118,24 +134,33 @@ let onInitialized = (e) => {
       return `<span id="m2-">&nbsp;</span>`;
     },
   });
+  console.log("onInitialized");
 };
 
-let calcular = (el) => {
+let calcular = async (el) => {
   console.clear();
   let data = el.data();
   let checked = el.is(":checked");
-  console.log("el =>", el);
-  console.log("data =>", data);
-  console.log("checked =>", checked);
+  data.asistencia.asistio = checked;
   let pId = data.participante.id;
   let els = $(`input[id*="${pId}"]`);
+  console.log("data.fecha.ponderacion =>", data.fecha.ponderacion);
   let prom = 0;
   els.each(function (index) {
     var el = $(this);
     if (el.is(":checked")) prom += el.data().fecha.ponderacion / periods.length;
   });
-  $("span#p-" + pId).html(parseInt(prom) + "%");
-  $("span#a-" + pId).html(prom < curso.value.porcentajeValidoAsistencia ? "NO" : "SI");
+  let p = parseInt(prom);
+  console.log("prom =>", prom);
+  data.participante.porcentaje = p;
+  $("span#p-" + pId).data("val", p).html(p + "%");
+  let a = prom < curso.value.porcentajeValidoAsistencia;
+  data.participante.aprueba = !a;
+  $("span#a-" + pId).data("val", a).html(a ? "NO" : "SI");
+  console.log("el =>", el);
+  console.log("data =>", data);
+  console.log("checked =>", checked);
+  let item = await storeCursos.asistenciaGuardar({ cursoUsuario: data.participante, asistencia: data.asistencia });
 }
 
 let onReady = (e) => {
@@ -143,33 +168,45 @@ let onReady = (e) => {
   let rows = grid.getVisibleRows();
   rows.forEach(row => {
     var participante = row.data;
-    // console.log("row =>", row);
     // console.log("data =>", row.data);
     row.cells.forEach(cell => {
       if (cell.text.contains("checkbox")) {
-        let el = $(cell.cellElement).find("input");
-        let id = el.attr("id");
-        let fId = parseInt(id.replace("-f", ""));
-        console.log("fId =>", fId);
-        let f = toRaw(fechas.value.find(o => o.id == fId));
-        console.log("f =>", f);
-        id = "p" + row.data.id + id;
-        el.data("id", id)
-        el.data("fecha", f);
-        el.data("participante", row.data);
-        el.attr("id", id);
-        el.click(function (ev) {
+        console.log(_sep);
+        console.log("participante =>", participante);
+        let chk = $(cell.cellElement).find("input");
+        console.log("el =>", chk);
+        let id = chk.attr("id");
+        console.log("id =>", id);
+        let segments = id.replace("-f", "").split("-");
+        let fechaId = parseInt(segments[0]);
+        console.log("fechaId =>", fechaId);
+        let fechaObj = toRaw(fechas.value.find(o => o.id == fechaId));
+        let jornada = segments[1];
+        console.log("jornada =>", jornada);
+        let asistencia = toRaw(asistencias.value.find(o => o.usuarioId == participante.usuarioId
+          && o.jornada == jornada && o.fecha == fechaObj.fechaClase));
+        console.log("asistencia =>", asistencia);
+        chk.attr("checked", asistencia.asistio);
+        console.log("f =>", fechaObj);
+        id = "p" + participante.id + id;
+        chk.data("id", id)
+        chk.data("fecha", fechaObj);
+        chk.data("participante", row.data);
+        chk.data("asistencia", asistencia);
+        chk.attr("id", id);
+        chk.click(function (ev) {
           let el = $(this);
           calcular(el);
         });
       }
       if (cell.text.contains("m1-")) { // Porcentaje
         let el = $(cell.cellElement);
-        el.html(`<span id="p-${row.data.id}">0%</span>`);
+        el.html(`<span id="p-${participante.id}">${participante.porcentaje}%</span>`);
       }
       if (cell.text.contains("m2-")) { // Aprueba
         let el = $(cell.cellElement);
-        el.html(`<span id="a-${row.data.id}">NO</span>`);
+        el.html(`<span id="a-${participante.id}">${participante.aprueba ? "SI" : "NO"}%</span>`);
+        // el.html(`<span id="a-${row.data.id}">NO</span>`);
       }
     });
   });
@@ -185,8 +222,9 @@ function importar(params) {
 defineExpose({ cancel });
 
 onMounted(async () => {
-  // console.log(_sep);
-  // console.log("tabs.vue MOUNTED!");
+  console.clear();
+  console.log(_sep);
+  console.log("asistecnia.vue mounted!");
   $("#data").lock("Cargando asistencia");
   const id = route.params.id;
   // console.log("id =>", id);
@@ -195,6 +233,7 @@ onMounted(async () => {
   if (id.length > 0) {
     cursoId.value = 1;
     fechas.value = await storeCursos.fechas(id);
+    asistencias.value = await storeCursos.asistencias(id);
     if (storeCursos.item != null && storeCursos.item.id == parseInt(id)) curso.value = storeCursos.item;
     else curso.value = await storeCursos.porId(id);
     if (curso.value.jornadaManana) periods.push(fechas.value.length > 2 ? 'M' : 'Mañana');
@@ -213,7 +252,7 @@ onMounted(async () => {
 </script>
 <template>
   <div class="container content">
-    <div class="card data" id="data">
+    <div class="card data mh" id="data">
       <div class="card-header main d-flex justify-content-between align-items-end">
         <span class="d-flex justify-content-between">
           <i class="fa-solid fa-gears"></i>
@@ -226,7 +265,7 @@ onMounted(async () => {
           <a href="#" @click.prevent="importar()" class="btn btn-trans ms-4" title="Importar asistencia">
             <i class="fa-solid fa-cloud-arrow-up me-1"></i> IMPORTAR
           </a>
-          <a href="#" @click.prevent="importar()" class="btn btn-trans ms-4" title="Guardar asistencia">
+          <a href="#" @click.prevent="save()" class="btn btn-trans ms-4" title="Guardar asistencia">
             <i class="fa-solid fa-floppy-disk me-1"></i> GUARDAR
           </a>
           <!-- <a href="#" @click.prevent="storeCursos.codigos()" class="btn btn-trans ms-4">

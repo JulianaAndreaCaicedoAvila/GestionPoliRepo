@@ -106,19 +106,43 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
 
 		[HttpPost("inscribir")] // /api/curso/inscribir
 		public ActionResult Inscribir(CursoInscripcionModel item) {
-			// 202402090054: Crea el registro
-			var obj = new CursoUsuario {
-				CursoId = item.CursoId,
-				UsuarioId = item.UsuarioId,
-				CreadoPor = GetUserId(),
-				CreadoEl = DateTime.Now,
-			};
-			_db.CursoUsuario.Add(obj);
-			_db.SaveChanges();
-
-			// 202402090040: Envía el correo
 			var curso = _db.Cursos.FirstOrDefault(o => o.Id == item.CursoId);
+
 			if (curso != null) {
+				// 202402090054: Crea el registro
+				var obj = new CursoUsuario {
+					CursoId = item.CursoId,
+					UsuarioId = item.UsuarioId,
+					CreadoPor = GetUserId(),
+					CreadoEl = DateTime.Now,
+				};
+				_db.CursoUsuario.Add(obj);
+				_db.SaveChanges();
+
+				// 202402151234: Crea las jornadas
+				var jornadas = new List<string> { };
+				if (curso.JornadaManana != null && (bool)curso.JornadaManana) jornadas.Add("m");
+				if (curso.JornadaTarde != null && (bool)curso.JornadaTarde) jornadas.Add("t");
+				if (curso.JornadaNoche != null && (bool)curso.JornadaNoche) jornadas.Add("n");
+
+				// 202402151229: Crea las asistencias
+				var lst = new List<CursoUsuarioAsistencia> { };
+				var fechas = _db.CursoFecha.Where(o => o.CursoId == obj.CursoId).ToList();
+				foreach (var fecha in fechas) {
+					foreach (var jornada in jornadas) {
+						var cua = new CursoUsuarioAsistencia {
+							CursoUsuarioId = obj.Id,
+							Fecha = fecha.FechaClase,
+							Jornada = jornada,
+							Asistio = false
+						};
+						lst.Add(cua);
+					}
+				}
+				_db.CursoUsuarioAsistencia.AddRange(lst);
+				_db.SaveChanges();
+
+				// 202402090040: Envía el correo
 				var usuario = _db.Usuarios.FirstOrDefault(o => o.Id == item.UsuarioId);
 				if (usuario != null) {
 					string body = @$"Hola {usuario.FirstName}!<br/><br/>
@@ -139,7 +163,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
 			}
 
 			// Finaliza
-			return Ok(obj);
+			return Ok(item);
 		}
 
 		// En json: Front\public\data\config.json
@@ -286,8 +310,62 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
 
 		[HttpPost("fechas")] // /curso/fechas
 		[Authorization.AllowAnonymous]
-		public ActionResult FechasDx([FromBody] int cursoId) {
+		public ActionResult Fechas([FromBody] int cursoId) {
 			var items = _db.CursoFecha?.Where(o => o.CursoId == cursoId).OrderBy(o => o.Id).ToList();
+			return Ok(items);
+		}
+
+		[HttpPost("asistencia-guardar")]
+		public ActionResult GuardarAsistencia(CursoAsistenciaModel item) {
+			var cu = _db.CursoUsuario.FirstOrDefault(o => o.Id == item.cursoUsuario.Id);
+			if (cu != null) {
+				cu.Porcentaje = item.cursoUsuario.Porcentaje;
+				cu.Aprueba = item.cursoUsuario.Aprueba;
+				cu.EditadoPor = GetUserId();
+				cu.EditadoEl = DateTime.Now;
+				_db.SaveChanges();
+			}
+			var ca = _db.CursoUsuarioAsistencia.FirstOrDefault(o => o.Id == item.asistencia.Id);
+			if (ca != null) {
+				ca.Asistio = item.asistencia.Asistio;
+				ca.EditadoPor = GetUserId();
+				ca.EditadoEl = DateTime.Now;
+				_db.SaveChanges();
+			}
+			return Ok();
+		}
+
+		[HttpPost("asistencias-guardar")]
+		public ActionResult GuardarAsistencias(List<CursoAsistenciasModel> items) {
+			if (items.Any()) {
+				var existentes = _db.CursosAsistencias.Where(o => o.CursoId == items.First().cursoUsuario.CursoId).ToList();
+				foreach (var item in items) {
+					var current = _db.CursoUsuario.FirstOrDefault(o => o.Id == item.cursoUsuario.Id);
+					if (current != null) {
+						var final = (CursoUsuario)item.CopyTo(current);
+						final.EditadoPor = GetUserId();
+						final.EditadoEl = DateTime.Now;
+						_db.SaveChanges();
+					}
+					// foreach (var asistencia in item.asistencias) {
+					// 	// forea
+					// }
+					// var cu = (CursoUsuario)item.CopyTo(current);
+					// final.EditadoPor = GetUserId();
+					// final.EditadoEl = DateTime.Now;
+					// item.cursoUsuario.EditadoPor = GetUserId();
+					// final.EditadoEl = DateTime.Now;
+					// _db.SaveChanges();
+				}
+			}
+			// var items = _db.CursosAsistencias?.Where(o => o.CursoId == cursoId).ToList();
+			return Ok();
+		}
+
+		[HttpPost("asistencia")]
+		[Authorization.AllowAnonymous]
+		public ActionResult Asistencia([FromBody] int cursoId) {
+			var items = _db.CursosAsistencias?.Where(o => o.CursoId == cursoId).ToList();
 			return Ok(items);
 		}
 

@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ESAP.Sirecec.Data.Core
-{
-	public partial class CursoUsuario : BaseEntity
-	{
+namespace ESAP.Sirecec.Data.Core {
+	public partial class CursoUsuario : BaseEntity {
 		[Key]
 		public int Id { get; set; }
 
@@ -13,5 +11,9 @@ namespace ESAP.Sirecec.Data.Core
 
 		[ForeignKey("AuthUsers")]
 		public int UsuarioId { get; set; }
+
+		public int? Porcentaje { get; set; }
+
+		public bool? Aprueba { get; set; }
 	}
 }

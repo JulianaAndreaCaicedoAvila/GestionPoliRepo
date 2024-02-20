@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ESAP.Sirecec.Data
-{
-	public partial class DataContext : IdentityDbContext<AuthUser, AuthRole, int>
-	{
+namespace ESAP.Sirecec.Data {
+	public partial class DataContext : IdentityDbContext<AuthUser, AuthRole, int> {
 
 		public DataContext() : base() { }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
@@ -23,6 +21,7 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<CursoEncuesta>? CursoEncuesta { get; set; } = null!;
 		public virtual DbSet<CursoFecha>? CursoFecha { get; set; } = null!;
 		public virtual DbSet<Cursos>? Cursos { get; set; } = null!;
+		public virtual DbSet<CursosAsistencias>? CursosAsistencias { get; set; } = null!;
 		public virtual DbSet<CursosDocumentos>? CursosDocumentos { get; set; } = null!;
 		public virtual DbSet<CursosEncuestas>? CursosEncuestas { get; set; } = null!;
 		public virtual DbSet<CursosTemas>? CursosTemas { get; set; } = null!;
@@ -60,8 +59,7 @@ namespace ESAP.Sirecec.Data
 		public virtual DbSet<TerritorialesDepartamentos>? TerritorialesDepartamentos { get; set; } = null!;
 		public virtual DbSet<Users> Usuarios { get; set; } = null!;
 		public virtual DbSet<ValorGeneral>? ValorGeneral { get; set; } = null!;
-		protected override void OnModelCreating(ModelBuilder builder)
-		{
+		protected override void OnModelCreating(ModelBuilder builder) {
 			base.OnModelCreating(builder);
 			builder.Model.SetMaxIdentifierLength(30);
 
@@ -78,6 +76,7 @@ namespace ESAP.Sirecec.Data
 			builder.Entity<BancoProgramasNucleos>(entity => { entity.ToView("BancoProgramasNucleos"); });
 			builder.Entity<Clasificadores>(entity => { entity.ToView("Clasificadores"); });
 			builder.Entity<Cursos>(entity => { entity.ToView("Cursos"); });
+			builder.Entity<CursosAsistencias>(entity => { entity.ToView("CursosAsistencias"); });
 			builder.Entity<CursosDocumentos>(entity => { entity.ToView("CursosDocumentos"); });
 			builder.Entity<CursosEncuestas>(entity => { entity.ToView("CursosEncuestas"); });
 			builder.Entity<CursosTemas>(entity => { entity.ToView("CursosTemas"); });

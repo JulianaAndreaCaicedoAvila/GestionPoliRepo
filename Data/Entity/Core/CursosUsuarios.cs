@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ESAP.Sirecec.Data.Core
-{
-	public partial class CursosUsuarios
-	{
+namespace ESAP.Sirecec.Data.Core {
+	public partial class CursosUsuarios {
 		[Key]
 		public int Id { get; set; }
 		public int CursoId { get; set; }
@@ -24,6 +22,8 @@ namespace ESAP.Sirecec.Data.Core
 		public bool IsActive { get; set; }
 		public int RoleId { get; set; }
 		public string? RoleName { get; set; }
+		public int? Porcentaje { get; set; }
+		public bool? Aprueba { get; set; }
 
 	}
 }

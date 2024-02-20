@@ -54,6 +54,27 @@ export const useCursoStore = defineStore({
 					return r.data;
 				});
 		},
+		async asistencias(id) {
+			return await api()
+				.post(`curso/asistencia`, id)
+				.then(async (r) => {
+					return r.data;
+				});
+		},
+		async asistenciaGuardar(data) {
+			return await api()
+				.post(`curso/asistencia-guardar`, data) // { cursoId:0, usuarioId:0 }
+				.then(async (r) => {
+					return r.data;
+				});
+		},
+		async asistenciasGuardar(data) {
+			return await api()
+				.post(`curso/asistencias-guardar`, data) // { cursoId:0, usuarioId:0 }
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async allCursosTemas() {
 			console.log("CursoTemas items =>", this.cursosTemas);
 			if (this.cursosTemas.length > 0) return this.cursosTemas;

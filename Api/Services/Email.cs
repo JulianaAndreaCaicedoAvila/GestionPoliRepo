@@ -4,23 +4,19 @@ using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
 
-public interface IEmailService
-{
+public interface IEmailService {
 	void Send(string to, string subject, string html);
 }
 
-public class EmailService : IEmailService
-{
+public class EmailService : IEmailService {
 
 	private readonly IConfiguration _conf;
 
-	public EmailService(IConfiguration configuration)
-	{
+	public EmailService(IConfiguration configuration) {
 		_conf = configuration;
 	}
 
-	public void Send(string to, string subject, string body)
-	{
+	public void Send(string to, string subject, string body) {
 		// 202402020448: Template
 		string html = File.ReadAllText(Path.Combine(_conf["Path:FilesPath"], "tpl/mail.min.html"));
 		var bp = _conf["Path:BasePath"];

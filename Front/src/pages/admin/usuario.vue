@@ -452,7 +452,7 @@ onMounted(async () => {
 							<DxGrouping :auto-expand-all="true" />
 							<DxGroupPanel :visible="true" :allow-column-dragging="true" />
 							<DxLoadPanel :enabled="false" />
-							<DxPaging :page-size="15" />
+							<DxPaging :page-size="10" />
 							<DxScrolling row-rendering-mode="virtual" />
 							<DxSearchPanel :visible="false" :highlight-case-sensitive="false" />
 							<DxSorting mode="single" /><!-- single, multiple, none" -->
@@ -460,7 +460,7 @@ onMounted(async () => {
 								<DxGroupItem summary-type="count" column="group_type_name" display-format="{0}" />
 							</DxSummary>
 							<DxPager :visible="true" :show-info="true" :show-page-size-selector="true" :show-navigation-buttons="true"
-								:allowed-page-sizes="[15, 30, 50, 'Todos']" info-text="{2} usuarios (página {0} de {1})" />
+								:allowed-page-sizes="[10, 30, 50, 'Todos']" info-text="{2} usuarios (página {0} de {1})" />
 							<DxColumn data-field="name" caption="Nombre" width="200" :sort-index="0" sort-order="asc" />
 							<DxColumn data-field="email" caption="Correo (usuario)" width="200" />
 							<DxColumn data-field="companyId" caption="Entidad" :visible="true">

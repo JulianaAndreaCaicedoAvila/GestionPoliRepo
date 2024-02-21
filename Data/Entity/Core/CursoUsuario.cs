@@ -11,9 +11,8 @@ namespace ESAP.Sirecec.Data.Core {
 
 		[ForeignKey("AuthUsers")]
 		public int UsuarioId { get; set; }
-
+		public int? Aula { get; set; }
 		public int? Porcentaje { get; set; }
-
 		public bool? Aprueba { get; set; }
 	}
 }

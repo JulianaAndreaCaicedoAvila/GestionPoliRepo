@@ -22,6 +22,7 @@ namespace ESAP.Sirecec.Data {
 		public virtual DbSet<CursoFecha>? CursoFecha { get; set; } = null!;
 		public virtual DbSet<Cursos>? Cursos { get; set; } = null!;
 		public virtual DbSet<CursosAsistencias>? CursosAsistencias { get; set; } = null!;
+		public virtual DbSet<CursosAulas>? CursosAulas { get; set; } = null!;
 		public virtual DbSet<CursosDocumentos>? CursosDocumentos { get; set; } = null!;
 		public virtual DbSet<CursosEncuestas>? CursosEncuestas { get; set; } = null!;
 		public virtual DbSet<CursosTemas>? CursosTemas { get; set; } = null!;
@@ -77,6 +78,7 @@ namespace ESAP.Sirecec.Data {
 			builder.Entity<Clasificadores>(entity => { entity.ToView("Clasificadores"); });
 			builder.Entity<Cursos>(entity => { entity.ToView("Cursos"); });
 			builder.Entity<CursosAsistencias>(entity => { entity.ToView("CursosAsistencias"); });
+			builder.Entity<CursosAulas>(entity => { entity.ToView("CursosAulas"); });
 			builder.Entity<CursosDocumentos>(entity => { entity.ToView("CursosDocumentos"); });
 			builder.Entity<CursosEncuestas>(entity => { entity.ToView("CursosEncuestas"); });
 			builder.Entity<CursosTemas>(entity => { entity.ToView("CursosTemas"); });

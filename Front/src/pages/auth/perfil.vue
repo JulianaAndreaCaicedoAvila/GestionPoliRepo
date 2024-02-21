@@ -112,7 +112,7 @@ let now = new Date(), titulo = "Temas",
     generateConfirmation: true
   },
   item1 = ref({ "id": 0, "usuarioId": 0, "tipoDocumentoId": 361, "municipioId": 149, "nivelEscolarId": 407, "estadoCivilId": 401, "entidadId": null, "generoId": 403, "vulnerabilidadId": 314, "discapacidadId": 308, "caracteristicaEsapId": null, "cargoId": null, "grupoEtnicoId": 354, "tipoServidorPublicoId": 347, "tipoParticipanteId": 340, "documentoNumero": 1007529842, "nombres": "Adriana María", "apellidos": "Pérez Gonzalez", "fechaNacimiento": "1998-09-24T05:00:00.000Z", "profesion": "Ingeniera en Informática", "telefono": "17185698", "celular": "3005263654", "correo": "aperez@nemedi.com", "direccion": "Cl. 121 # 35A-19", "contratista": true, "habeasData": true, "departamentoId": 6, "correo1": "aperez@nemedi.com", "entidad": "Panadería", "cargoActual": "Panadero" }),
-  item = ref({ // Entidad 'Participante' en DataContext
+  item = ref({
     id: 0,
     usuarioId: 0,
     tipoDocumentoId: null,
@@ -280,8 +280,10 @@ let save = async () => {
     });
   } else {
     // Cuando es válido
+    let tit = auth.user ? "Actualizando perfil" : "Registrando usuario";
+    let subtit = auth.user ? "¡Actualización exitosa!" : "¡Registro exitoso!";
     panelData.lock(
-      `Registrando usuario<br>un momento por favor`,
+      `${tit}<br>un momento por favor`,
       async function () {
         let p = toRaw(item.value);
         user.email = p.correo;
@@ -293,13 +295,17 @@ let save = async () => {
           participante: p
         };
         console.log("dto =>", dto);
+        let text = `<span class="font-weight-semibold d-inline-block mt-2">${p.nombres}</span>, acabamos de enviar un correo a la dirección <span class="font-weight-semibold">"${p.correo}</span>" para que realice la activación de su cuenta en el sistema.`;
+        if (auth.user) {
+          text = `<span class="font-weight-semibold d-inline-block mt-2">${p.nombres}</span>, la actualizaciòn de su perfil se realizó de manera exitosa.`;
+        }
         try {
           let res = await auth.registrarParticipante(dto);
           console.log("res =>", dto);
           setTimeout(function () {
             panelData.unlock();
-            msg.success("¡Registro exitoso!", `<span class="font-weight-semibold d-inline-block mt-2">${p.nombres}</span>, acabamos de enviar un correo a la dirección <span class="font-weight-semibold">"${p.correo}</span>" para que realice la activación de su cuenta en el sistema.`, function () {
-              router.back();
+            msg.success(subtit, text, function () {
+              if (auth.user == null) router.back();
             });
           }, 1000);
         } catch (error) {
@@ -317,7 +323,7 @@ let passwordComparison = () => {
 
 var emailTmp = null;
 let checkEmail = async (params) => {
-  // console.clear();
+  if (auth.user) return true;
   console.log(_sep);
   let e = params.value;
   console.log("e =>", e);
@@ -364,6 +370,11 @@ onMounted(async () => {
   console.log("nivel Escolar =>", nivelesEscolares.value);
   // console.log("tipo documentos =>", tipoDocumento.value);
   console.log("genero =>", generos.value);
+  if (auth.user) {
+    console.clear();
+    item.value = auth.user.participante;
+    console.log("item.value =>", item.value);
+  }
   // itemId.value = props.itemId;
   // item.value = props.item;
   // getData();
@@ -448,7 +459,7 @@ onMounted(async () => {
                 <div class="col-md-6 mb-3">
                   <label class="tit">Nombres</label>
                   <DxTextBox id="nombres" value-change-event="keyup" :show-clear-button="true" v-model="item.nombres"
-                    class="form-control" placeholder="Nombres" @focus-out="$capitalizeAll">
+                    class="form-control" placeholder="Nombres" @focus-out="$capitalizeAll" :read-only="auth.user != null">
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -457,7 +468,8 @@ onMounted(async () => {
                 <div class="col-md-6 mb-3">
                   <label class="tit">Apellidos</label>
                   <DxTextBox id="apellidos" value-change-event="keyup" :show-clear-button="true" v-model="item.apellidos"
-                    class="form-control" placeholder="Apellidos" @focus-out="$capitalizeAll">
+                    class="form-control" placeholder="Apellidos" @focus-out="$capitalizeAll"
+                    :read-only="auth.user != null">
                     <DxValidator>
                       <DxRequiredRule />
                     </DxValidator>
@@ -528,7 +540,7 @@ onMounted(async () => {
                 <div class="col-md-4 mb-3">
                   <label class="tit">Correo electrónico</label>
                   <DxTextBox id="correo" value-change-event="keyup" :show-clear-button="true" v-model="item.correo"
-                    class="form-control" placeholder="Correo" @focus-out="$lowerCase">
+                    class="form-control" placeholder="Correo" @focus-out="$lowerCase" :read-only="auth.user != null">
                     <DxValidator>
                       <DxEmailRule />
                       <DxRequiredRule />

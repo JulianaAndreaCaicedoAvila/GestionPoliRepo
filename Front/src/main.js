@@ -119,6 +119,8 @@ axios
 		props.$formatDate = (data, format = "DD/MM/YYYY") => {
 			return useDateFormat(data, format).value;
 		};
+		// 202402201304: Ambiente
+		props.$env = window._env;
 	})
 	.catch((err) => {
 		console.log("ERROR", err);

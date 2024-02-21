@@ -30,12 +30,13 @@ let inscribirse = async () => {
 }
 
 onMounted(async () => {
+  console.clear();
   console.log(_sep);
   console.log("inscripcion.vue mounted!");
   const id = route.params.id;
   if (id.length > 0) {
     cursoInscrito.value = await storeCurso.cursoInscrito(id);
-    curso.value = await storeCurso.cursoPorId(id);
+    curso.value = await storeCurso.porId(id); // Lo carga siempre del EP
     storeCurso.curso = toRaw(curso.value);
     temas.value = await storeCurso.temasPorCursoId(id);
     back.value = curso.value.dependenciaId == 14 ? "alto-gobierno" : "capacitacion";
@@ -175,9 +176,13 @@ onMounted(async () => {
               <p v-if="cursoInscrito" class="m-0 font-weight-semibold me-5"><i
                   class="fa-solid fa-circle-info me-1 color-main"></i>{{ authStore.user.firstName }}, usted ya se
                 hace parte de este curso.</p>
-              <a class="btn btn-main" @click.prevent="inscribirse()" v-else>
-                INSCRIBIRSE AL CURSO <i class="ms-1 fa-solid fa-circle-right"></i>
-              </a>
+              <span v-else>
+                <a class="btn btn-main" @click.prevent="inscribirse()" v-if="curso && curso.inscripcionesAbiertas">
+                  INSCRIBIRSE AL CURSO <i class="ms-1 fa-solid fa-circle-right"></i>
+                </a>
+                <p class="m-0 font-weight-semibold me-5" v-else><i class="fa-solid fa-circle-info me-1 color-main"></i>{{
+                  authStore.user.firstName }}, lo sentimos pero los cupos para curso están agotados.</p>
+              </span>
             </span>
             <span v-else>
               <router-link class="btn btn-main me-4" :to="{ name: 'registro' }">REGISTRARSE <i

@@ -106,46 +106,67 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
 
 		[HttpPost("inscribir")] // /api/curso/inscribir
 		public ActionResult Inscribir(CursoInscripcionModel item) {
+			// 202402201051: Verifica que el curso exista
 			var curso = _db.Cursos.FirstOrDefault(o => o.Id == item.CursoId);
-
 			if (curso != null) {
-				// 202402090054: Crea el registro
-				var obj = new CursoUsuario {
-					CursoId = item.CursoId,
-					UsuarioId = item.UsuarioId,
-					CreadoPor = GetUserId(),
-					CreadoEl = DateTime.Now,
-				};
-				_db.CursoUsuario.Add(obj);
-				_db.SaveChanges();
 
-				// 202402151234: Crea las jornadas
-				var jornadas = new List<string> { };
-				if (curso.JornadaManana != null && (bool)curso.JornadaManana) jornadas.Add("m");
-				if (curso.JornadaTarde != null && (bool)curso.JornadaTarde) jornadas.Add("t");
-				if (curso.JornadaNoche != null && (bool)curso.JornadaNoche) jornadas.Add("n");
+				// 202402201051: Verifica que el usuario NO esté inscrito en el curso
+				var inscrito = _db.CursoUsuario.Any(o => o.CursoId == item.CursoId && o.UsuarioId == item.UsuarioId);
+				if (!inscrito) {
 
-				// 202402151229: Crea las asistencias
-				var lst = new List<CursoUsuarioAsistencia> { };
-				var fechas = _db.CursoFecha.Where(o => o.CursoId == obj.CursoId).ToList();
-				foreach (var fecha in fechas) {
-					foreach (var jornada in jornadas) {
-						var cua = new CursoUsuarioAsistencia {
-							CursoUsuarioId = obj.Id,
-							Fecha = fecha.FechaClase,
-							Jornada = jornada,
-							Asistio = false
-						};
-						lst.Add(cua);
+					// 202402201037: Obtiene el aula actual ordenando por su numero descendentemente (vista 'CursosAulas')
+					var cupoPorAula = curso.CupoAula;
+					var aula = _db.CursosAulas.Where(o => o.CursoId == item.CursoId).OrderByDescending(o => o.Aula).FirstOrDefault();
+
+					// 202402201028: Lógica para el aula
+					var numeroAulaActual = aula != null ? aula.Aula : 1; // Si NO hay aula aún, es la primera
+					var inscritosEnAulaActual = aula != null ? aula.Inscritos : 0; // Si NO hay aula aún, no hay inscritos
+
+					// Obtiene el # de aula dependiendo el # de inscritos
+					var numeroDeAula = inscritosEnAulaActual <= cupoPorAula ? numeroAulaActual : (numeroAulaActual + 1);
+
+					// 202402090054: Crea el registro
+					// 202402201029: Se adiciona la propiedad 'Aula'
+					var integrante = new CursoUsuario {
+						CursoId = item.CursoId,
+						UsuarioId = item.UsuarioId,
+						Aula = numeroDeAula, // Suma nuevo integrante al aula
+						CreadoPor = GetUserId(),
+						CreadoEl = DateTime.Now,
+					};
+					_db.CursoUsuario.Add(integrante);
+					_db.SaveChanges();
+
+					// 202402201046: El cierre de inscripciones en el curso
+					// se implementó en la vista 'Cursos',  propiedad 'InscripcionesAbiertas'
+
+					// 202402151234: Crea las jornadas
+					var jornadas = new List<string> { };
+					if (curso.JornadaManana != null && (bool)curso.JornadaManana) jornadas.Add("m");
+					if (curso.JornadaTarde != null && (bool)curso.JornadaTarde) jornadas.Add("t");
+					if (curso.JornadaNoche != null && (bool)curso.JornadaNoche) jornadas.Add("n");
+
+					// 202402151229: Crea las asistencias
+					var lst = new List<CursoUsuarioAsistencia> { };
+					var fechas = _db.CursoFecha.Where(o => o.CursoId == integrante.CursoId).ToList();
+					foreach (var fecha in fechas) {
+						foreach (var jornada in jornadas) {
+							var cua = new CursoUsuarioAsistencia {
+								CursoUsuarioId = integrante.Id,
+								Fecha = fecha.FechaClase,
+								Jornada = jornada,
+								Asistio = false
+							};
+							lst.Add(cua);
+						}
 					}
-				}
-				_db.CursoUsuarioAsistencia.AddRange(lst);
-				_db.SaveChanges();
+					_db.CursoUsuarioAsistencia.AddRange(lst);
+					_db.SaveChanges();
 
-				// 202402090040: Envía el correo
-				var usuario = _db.Usuarios.FirstOrDefault(o => o.Id == item.UsuarioId);
-				if (usuario != null) {
-					string body = @$"Hola {usuario.FirstName}!<br/><br/>
+					// 202402090040: Envía el correo
+					var usuario = _db.Usuarios.FirstOrDefault(o => o.Id == item.UsuarioId);
+					if (usuario != null) {
+						string body = @$"Hola {usuario.FirstName}!<br/><br/>
 						Usted acaba de inscribirse al curso <b>{curso.Nombre}</b>.<br/><br/>
 						Esta es la información que debe tener en cuenta:<br /><br />
 						<b>Tipo de curso:</b> {curso.TipoCursoNombre.Capitalize()}<br />
@@ -158,7 +179,9 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
 						<b>Responsable:</b> {curso.Responsable}<br />
 						<b>Correo electrónico:</b> {curso.CorreoElectronico}<br />
 						<br/>Muchas gracias!";
-					_email.Send(usuario.Email, "SIRECEC 4.0 - INSCRIPCIÓN EXITOSA", body);
+						_email.Send(usuario.Email, "SIRECEC 4.0 - INSCRIPCIÓN EXITOSA", body);
+					}
+
 				}
 			}
 
@@ -265,6 +288,13 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
 			}
 		}
 
+		[HttpPost("mail-test")] // /api/curso/mail-test
+		[Authorization.AllowAnonymous]
+		public ActionResult MailTest([FromBody] string email) {
+			_email.Send(email, "SIRECEC 4.0 - PRUEBA", "Prueba de envío de correo.");
+			return Ok();
+		}
+
 		[HttpGet("dep/{dependenciaId?}")] // /api/curso/dep/13 o 14
 		[Authorization.AllowAnonymous]
 		public ActionResult GetByDependenciaId(int? dependenciaId = null) {
@@ -282,7 +312,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
 		[HttpGet("published")] // /api/curso/published
 		[Authorization.AllowAnonymous]
 		public ActionResult GetPublished() {
-			var items = _db.Cursos.Where(o => o.Publicado == true).ToList();
+			var items = _db.Cursos.Where(o => o.Publicado == true && o.InscripcionesAbiertas == true).ToList();
 			return Ok(items);
 		}
 

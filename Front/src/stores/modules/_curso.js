@@ -61,6 +61,13 @@ export const useCursoStore = defineStore({
 					return r.data;
 				});
 		},
+		async mailTest(email) {
+			return await api()
+				.post(`curso/mail-test`, email) // { cursoId:0, usuarioId:0 }
+				.then(async (r) => {
+					return r.data;
+				});
+		},
 		async asistenciaGuardar(data) {
 			return await api()
 				.post(`curso/asistencia-guardar`, data) // { cursoId:0, usuarioId:0 }
@@ -133,8 +140,7 @@ export const useCursoStore = defineStore({
 			return await api()
 				.get(`curso/${id}`)
 				.then(async (r) => {
-					this.cursos = r.data;
-					return this.cursos;
+					return r.data;
 				});
 		},
 		async cursoPorId(cursoId) {

@@ -5,11 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ESAP.Sirecec.Data.Core
-{
+namespace ESAP.Sirecec.Data.Core {
 	// [Keyless]
-	public partial class Cursos : BaseEntity
-	{
+	public partial class Cursos : BaseEntity {
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
@@ -49,8 +47,6 @@ namespace ESAP.Sirecec.Data.Core
 		public string? EstadoCursoNombre { get; set; }
 		public int? CertificadoEtiquetaId { get; set; }
 		public string? CertificadoEtiquetaNombre { get; set; }
-		public int? CupoTotal { get; set; }
-		public int? CupoAula { get; set; }
 		public string? Nombre { get; set; }
 		public string? Descripcion { get; set; }
 		public string? CodigoVerificacion { get; set; }
@@ -60,7 +56,6 @@ namespace ESAP.Sirecec.Data.Core
 		public int? HorasTotales { get; set; }
 		public int? NumeroDias { get; set; }
 		public int? PorcentajeValidoAsistencia { get; set; }
-		public int? CantidadAulas { get; set; }
 		public string? LugarRealizacion { get; set; }
 		public DateTime FechaInicioInscripcion { get; set; }
 		public DateTime ProgramaFechaInicio { get; set; }
@@ -86,7 +81,11 @@ namespace ESAP.Sirecec.Data.Core
 		public int Encuestas { get; set; }
 		public int Fechas { get; set; }
 		public int Temas { get; set; }
+		public int? CantidadAulas { get; set; }
+		public int? CupoAula { get; set; }
+		public int? CupoTotal { get; set; }
 		public int Participantes { get; set; }
+		public bool? InscripcionesAbiertas { get; set; }
 
 	}
 }

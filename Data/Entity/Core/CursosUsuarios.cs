@@ -22,6 +22,7 @@ namespace ESAP.Sirecec.Data.Core {
 		public bool IsActive { get; set; }
 		public int RoleId { get; set; }
 		public string? RoleName { get; set; }
+		public int? Aula { get; set; }
 		public int? Porcentaje { get; set; }
 		public bool? Aprueba { get; set; }
 

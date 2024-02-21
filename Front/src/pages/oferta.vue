@@ -76,6 +76,9 @@ let setBuscar = async () => {
     p.slideDown();
   }
 };
+let mailTest = async () => {
+  let res = await cursoStore.mailTest("diegovargasv@gmail.com");
+};
 let buscarEventos = async () => {
   $("#panel-buscar").lock(`Buscando eventos de capacitación`);
   setTimeout(function () {
@@ -117,9 +120,7 @@ onMounted(async () => {
   por.value = route.params.por;
   console.log("por =>", por.value);
   dependenciaId.value = por.value == "capacitacion" ? 13 : 14;
-  cursos.value = await cursoStore.PublicadosPorDependenciaId(
-    dependenciaId.value
-  );
+  cursos.value = await cursoStore.PublicadosPorDependenciaId(dependenciaId.value);
   escuelas.value = await storeEscuelas.all();
   asistencias.value = await store.porTipoNombre("tipo_asistencia");
   tipoCurso.value = await store.porTipoNombre("tipo_curso");
@@ -152,7 +153,7 @@ onMounted(async () => {
               Oferta Académica de Alto Gobierno
             </span>
             <span>
-              <button type="button" id="btn-buscar" class="btn btn-main me-2" title="Buscar eventos de capacitación"
+              <button type="button" id="btn-buscar" class="btn btn-main" title="Buscar eventos de capacitación"
                 @click.prevent="setBuscar()">
                 BUSCAR EVENTOS
                 <i class="fa-solid fa-magnifying-glass ms-1"></i>
@@ -160,6 +161,11 @@ onMounted(async () => {
               <router-link :to="{ path: '/' }" class="btn btn-main" title="Volver">
                 <i class="fa-solid fa-arrow-left"></i>VOLVER
               </router-link>
+              <button type="button" id="btn-buscar" class="btn btn-main" title="Buscar eventos de capacitación"
+                @click.prevent="mailTest()" v-if="$env == 'development'">
+                PROBAR CORREO
+                <i class="fa-regular fa-paper-plane ms-1"></i>
+              </button>
             </span>
           </div>
           <img class="card-img-top h-6vw" src="/assets/img/banner-03.jpg" alt="Card Image" v-if="por == 'capacitacion'" />

@@ -67,6 +67,7 @@ let login = async () => {
 			signin();
 			return false;
 		}
+		console.clear();
 		loginZone.find(".card").lock("Verificando credenciales,<br/>un momento por favor");
 		let res = await authStore.do(["autenticar", email.value, password.value]).catch((error) => {
 			// console.clear();

@@ -5,50 +5,31 @@ import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import { PublicClientApplication } from "@azure/msal-browser";
 
-const tokenVariableName = "user_token",
-	userVariableName = "user_info",
-	// window._apiUrl = win,
-	// window._apiUrl = `${import.meta.env.VITE_URL_APP_API}`,
-	decryptToken = (token) => {
-		var base64Url = token.split(".")[1];
-		var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-		var jsonPayload = decodeURIComponent(
-			atob(base64)
-				.split("")
-				.map(function (c) {
-					return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-				})
-				.join("")
-		);
-		let user = JSON.parse(jsonPayload);
-		user["token_value"] = token;
-		return user;
-	},
-	makeUser = (r, origin) => {
-		console.log(_sep);
-		console.log("makeUser");
-		console.log("r =>", r);
-		let usr = r.data.usuario;
-		usr["origin"] = origin;
-		usr["token"] = decryptToken(r.data.token);
-		localStorage.setItem(tokenVariableName, r.data.token);
-		localStorage.setItem(userVariableName, JSON.stringify(usr));
-		return usr;
-	};
+const decryptToken = (token) => {
+	var base64Url = token.split(".")[1];
+	var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+	var jsonPayload = decodeURIComponent(
+		atob(base64)
+			.split("")
+			.map(function (c) {
+				return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+			})
+			.join("")
+	);
+	let user = JSON.parse(jsonPayload);
+	user["token_value"] = token;
+	return user;
+};
 
 export const useAuthStore = defineStore("auth", {
 	id: "auth",
 	state: () => ({
 		msal: null,
 		returnUrl: null,
-		roles: useLocalStorage("authRoles", []),
-		token: localStorage.getItem(tokenVariableName),
 		tokenDecrypted: null,
-		user: localStorage.getItem(userVariableName),
-		userX: function () {
-			let u = localStorage.getItem(userVariableName);
-			return u != null ? JSON.parse(u) : null;
-		},
+		roles: useLocalStorage("authRoles", []),
+		token: useLocalStorage("userToken", null),
+		user: useLocalStorage("userInfo", null),
 	}),
 	// 202206171442: https://pinia.vuejs.org/core-concepts/getters.html
 	getters: {
@@ -57,13 +38,13 @@ export const useAuthStore = defineStore("auth", {
 			return state.user != null ? state.user.roleId == 1 : false;
 		},
 		isTokenExpired(state) {
-			console.log("state =>", state);
-			if (typeof state.user === "string") state.user = JSON.parse(state.user);
+			// console.log("state =>", state);
+			// if (typeof state.user === "string") state.user = JSON.parse(state.user);
 			console.log("state.user =>", state.user);
 			// 202205291105: https://stackoverflow.com/a/28742860
 			// https://devblogs.microsoft.com/azure-sdk/vue-js-user-authentication/
 			// user["token_expired"] = state.user.exp < Date.now() / 1000;
-			return state.user ? state.user.token.exp < Date.now() / 1000 : true;
+			return state.user != null ? state.user.token.exp < Date.now() / 1000 : true;
 		},
 	},
 	watch: {
@@ -133,12 +114,17 @@ export const useAuthStore = defineStore("auth", {
 				.post(endPoint, data)
 				.then((r) => {
 					if (ep == "autenticar") {
-						this.token = r.data.token;
-						let usr = makeUser(r, ep == "email" ? "azure" : "local");
+						console.log("autenticar =>", r.data);
+						let usr = r.data.usuario;
+						let token = r.data.token;
+						this.tokenDecrypted = decryptToken(token);
+						usr["token"] = this.tokenDecrypted;
+						usr["participante"] = r.data.participante;
+						usr["origin"] = ep == "email" ? "azure" : "local";
+						this.token = token;
 						this.user = usr;
 						return usr;
-					}
-					return r.data;
+					} else return r.data;
 				});
 		},
 		// 202402080138: Activar cuenta
@@ -159,8 +145,14 @@ export const useAuthStore = defineStore("auth", {
 			return await api({ hideErrors: import.meta.env.PROD })
 				.post(`${window._apiUrl}/usuario/email`, { name: name, email: email })
 				.then((r) => {
-					this.token = r.data.token;
-					let usr = makeUser(r, "azure");
+					console.log("autenticar =>", r.data);
+					let usr = r.data.usuario;
+					let token = r.data.token;
+					this.tokenDecrypted = decryptToken(token);
+					usr["token"] = this.tokenDecrypted;
+					usr["participante"] = r.data.participante;
+					usr["origin"] = "azure";
+					this.token = token;
 					this.user = usr;
 					return usr;
 				});

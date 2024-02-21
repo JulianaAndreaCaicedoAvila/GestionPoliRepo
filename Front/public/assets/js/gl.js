@@ -715,11 +715,12 @@ window.formatDate = (date, format) => {
 // Funciones
 Date.prototype.getHourAmPm = function (date) {
 	var date = this;
-	let suffix = "am";
+	let suffix = " am";
 	let hours = date.getHours();
 	let minutes = date.getMinutes();
-	if (hours > 12) {
-		suffix = "pm";
+	if (hours == 12) suffix = " pm";
+	else if (hours > 12) {
+		suffix = " pm";
 		hours = hours - 12;
 	}
 	minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;

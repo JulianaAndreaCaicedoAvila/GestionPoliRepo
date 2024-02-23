@@ -22,6 +22,8 @@ $tempDir = "$baseDir\deploy-dist"
 $finalDir = "$baseDir\deploy"
 $backupDir = "$baseDir\_bk\sirecec-4-$date"
 $configFile = "$baseDir\app\Front\public\data\config.json"
+$settingsFile = "$baseDir\app\Api\appsettings.json"
+$settingsTestFile = "$baseDir\app\Api\appsettings.Development.json"
 $viteFile = "$frontDir\vite.config.js"
 
 Write-Host "Ambiente: $env"
@@ -32,6 +34,7 @@ Write-Host "Front: $frontDir"
 Write-Host "Final: $tempDir"
 Write-Host "Backup: $backupDir"
 Write-Host "ViteJs: $viteFile"
+Write-Host "SettingsFile: $settingsFile"
 
 # 202308311655 -> Editar automáticamente el archivo '/Front/vite.config.js'
 # 202402200444 -> https://powershellone.wordpress.com/2021/02/24/using-powershell-and-regex-to-extract-text-between-delimiters/
@@ -53,22 +56,27 @@ Function SetEnv {
 if (Test-Path $baseDir) {
 	Try {
 		
-		# if (Test-Path $finalDir) {
-		# 	Write-Host "`nHace el backup del compilado actual en '$backupDir'`n" -ForegroundColor Yellow
-		# 	Copy-Item -Path $finalDir -Destination $backupDir -Recurse -Force
-		# 	Try {
-		# 		Write-Host "`nElimina el directorio '$backupDir\.git'`n" -ForegroundColor Yellow
-		# 		Remove-Item -LiteralPath "$backupDir\.git" -Force -Recurse
-		# 	}
-		# 	Catch {
-		# 		$ErrorMessage = $_.Exception.Message
-		# 		Write-Host "ERROR: $ErrorMessage" -ForegroundColor Red
-		# 	}
+		Write-Host "`nModifica el archivo '$settingsFile'" -ForegroundColor Yellow
+		$prod = Get-Content $settingsFile | ConvertFrom-Json -Depth 20
+		$test = Get-Content $settingsTestFile | ConvertFrom-Json -Depth 20
+		$path = $test.Path.BasePathProd
+		$conn = $test.ConnectionStrings.ConnStrProd
+		if ($env -eq "test") {
+			$path = $test.Path.BasePathTest
+			$conn = $test.ConnectionStrings.ConnStrTest
+		}
+		# foreach ($p in $json.ConnectionStrings.psobject.properties) {
+		# 	write-host "'$($p.Name)' = '$($p.Value)'"
 		# }
-		# if ($pause -eq 1) {
-		# 	Read-Host -Prompt $pauseMsg
-		# }
-
+		Write-Host $path
+		Write-Host $conn
+		$prod.Path.BasePath = $path
+		$prod.ConnectionStrings.ConnStr = $conn
+		$prod | ConvertTo-Json -Depth 20 | Out-File $settingsFile
+		if ($pause -eq 1) {
+			Read-Host -Prompt $pauseMsg
+		}
+		
 		Write-Host "`nDesde '$finalDir' cambia a rama '$env'`n" -ForegroundColor Yellow
 		Set-Location $finalDir
 		# git stash
@@ -122,15 +130,12 @@ if (Test-Path $baseDir) {
 		Write-Host "`nCompila Dotnet en '$finalDir\api'`n" -ForegroundColor Yellow
 		dotnet clean
 		dotnet publish -c Release -o "$finalDir\api"
+		Write-Host "`nElimina el archivo '$finalDir\api\appsettings.Development.json'`n" -ForegroundColor Yellow
+		Remove-Item -LiteralPath "$finalDir\api\appsettings.Development.json" -Force
+		dotnet clean
 		if ($pause -eq 1) {
 			Read-Host -Prompt $pauseMsg
 		}
-
-		# Mueve el compilado al directorio final manteniendo '.git'
-		# Get-ChildItem -Path "$tempDir" -Recurse | Move-Item -Destination "$finalDir"
-		# if ($pause -eq 1) {
-		# 	Read-Host -Prompt $pauseMsg
-		# }
 
 		Write-Host "`nRealiza el commit y el push '$env'`n" -ForegroundColor Yellow
 		Set-Location $finalDir

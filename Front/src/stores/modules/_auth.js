@@ -2,7 +2,7 @@ import { toRaw } from "vue";
 import api from "@/utils/api";
 import { router } from "@/utils";
 import { defineStore } from "pinia";
-import { useLocalStorage } from "@vueuse/core";
+import { useLocalStorage, StorageSerializers } from "@vueuse/core";
 import { PublicClientApplication } from "@azure/msal-browser";
 
 const decryptToken = (token) => {
@@ -26,10 +26,11 @@ export const useAuthStore = defineStore("auth", {
 	state: () => ({
 		msal: null,
 		returnUrl: null,
-		tokenDecrypted: null,
 		roles: useLocalStorage("authRoles", []),
 		token: useLocalStorage("userToken", null),
-		user: useLocalStorage("userInfo", null),
+		// 202402221848: https://github.com/vueuse/vueuse/pull/614 -> Resuelve ERROR: [object Object] after storing object
+		user: useLocalStorage("userInfo", null, { serializer: StorageSerializers.object }),
+		tokenDecrypted: useLocalStorage("userTokenDecrypted", null, { serializer: StorageSerializers.object }),
 	}),
 	// 202206171442: https://pinia.vuejs.org/core-concepts/getters.html
 	getters: {
@@ -53,6 +54,20 @@ export const useAuthStore = defineStore("auth", {
 		},
 	},
 	actions: {
+		setUser(data, origin) {
+			let t = data.token;
+			let td = decryptToken(t);
+			let user = data.usuario;
+			user["token"] = t;
+			user["origin"] = origin;
+			user["tokenDecrypted"] = td;
+			user["participante"] = data.participante;
+			this.token = t;
+			this.tokenDecrypted = td;
+			console.log("user =>", user);
+			this.user = user;
+			return user;
+		},
 		async init() {
 			// 202206080106: MSAL, en propiedad global -> http://t.ly/bu6L
 			// 202310030307: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/errors.md#uninitialized_public_client_application
@@ -115,15 +130,8 @@ export const useAuthStore = defineStore("auth", {
 				.then((r) => {
 					if (ep == "autenticar") {
 						console.log("autenticar =>", r.data);
-						let usr = r.data.usuario;
-						let token = r.data.token;
-						this.tokenDecrypted = decryptToken(token);
-						usr["token"] = this.tokenDecrypted;
-						usr["participante"] = r.data.participante;
-						usr["origin"] = ep == "email" ? "azure" : "local";
-						this.token = token;
-						this.user = usr;
-						return usr;
+						let u = this.setUser(r.data, ep == "email" ? "azure" : "local");
+						return u;
 					} else return r.data;
 				});
 		},
@@ -146,15 +154,8 @@ export const useAuthStore = defineStore("auth", {
 				.post(`${window._apiUrl}/usuario/email`, { name: name, email: email })
 				.then((r) => {
 					console.log("autenticar =>", r.data);
-					let usr = r.data.usuario;
-					let token = r.data.token;
-					this.tokenDecrypted = decryptToken(token);
-					usr["token"] = this.tokenDecrypted;
-					usr["participante"] = r.data.participante;
-					usr["origin"] = "azure";
-					this.token = token;
-					this.user = usr;
-					return usr;
+					let u = this.setUser(r.data, "azure");
+					return u;
 				});
 		},
 		async logout() {
@@ -185,7 +186,7 @@ export const useAuthStore = defineStore("auth", {
 			this.returnUrl = null;
 			this.user = null;
 			this.token = null;
-			localStorage.clear();
+			// localStorage.clear();
 			cb();
 		},
 		// checkExpired() {

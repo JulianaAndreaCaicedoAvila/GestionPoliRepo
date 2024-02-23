@@ -26,8 +26,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
         private readonly IConfiguration _conf;
         private readonly IEmailService _email;
         private readonly IAzureAdService _ad;
-        private readonly Data.DataContext _context;
-        private readonly UserManager<Data.Identity.AuthUser> _userManager;
+        private readonly UserManager<AuthUser> _userManager;
         private readonly RoleManager<AuthRole> _roleManager;
         private bool SendConfirmation(AuthUser user) {
             var code = user.SecurityStamp;
@@ -38,13 +37,54 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
             _email.Send(user.Email, "SIRECEC 4.0 - ACTIVAR CUENTA", body);
             return true;
         }
+        private async Task<ActionResult> GetUserResult(AuthUser user) {
+            var roleName = (await _userManager.GetRolesAsync(user)).First();
+            // var role = await _roleManager.FindByNameAsync(roleName);
+            var usuario = _db.Usuarios.FirstOrDefault(o => o.Email.Trim().ToLower() == user.Email.Trim().ToLower());
+            if (usuario != null) {
+                var participante = _db.Participante.FirstOrDefault(o => o.UsuarioId == usuario.Id);
+                if (participante != null) {
+                    // 202402221911: Obtiene 'DepartamentoId'
+                    var m = _db.Municipio.FirstOrDefault(o => o.Id == participante.MunicipioId);
+                    participante.DepartamentoId = m != null ? m.DepartamentoId : 0;
+                } else {
+                    participante = new Participante();
+                }
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+                var claims = new List<Claim> {
+                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}"),
+                    new Claim(ClaimTypes.Role, roleName)
+                };
+                var tokenDescriptor = new JwtSecurityToken(
+                    issuer: _conf["Jwt:Issuer"],
+                    audience: _conf["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(int.Parse(_conf["Jwt:Expires"])),
+                    signingCredentials: credentials);
+                var jwt = new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+                return Ok(new {
+                    user,
+                    usuario,
+                    participante,
+                    token = jwt
+                });
+            } else {
+                return BadRequest(new {
+                    user,
+                    usuario
+                });
+            }
+        }
 
         public UsuarioController(IConfiguration configuration, IAzureAdService ad, UserManager<AuthUser> userManager,
             RoleManager<AuthRole> roleManager, IEmailService email, DataContext context) {
             _ad = ad;
             _db = context;
             _conf = configuration;
-            _context = context;
+            _db = context;
             _email = email;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -327,7 +367,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
         public ActionResult Users() {
             var opts = Data.Utils.GetFromRequest(Request);
             opts.PrimaryKey = new[] { "Id" };
-            var items = _context.Usuarios.ToList();
+            var items = _db.Usuarios.Where(o => o.Id > 1).ToList();
             var loadResult = DataSourceLoader.Load(items, opts);
             return Ok(loadResult);
         }
@@ -342,36 +382,8 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
         [HttpPost("porRol")]
         public async Task<ActionResult> AllUsersAsync([FromBody] string roleName) {
             var role = await _roleManager.FindByNameAsync(roleName);
-            var items = _context.Usuarios.Where(o => o.RoleId == role.Id).ToList();
+            var items = _db.Usuarios.Where(o => o.RoleId == role.Id).ToList();
             return Ok(items);
-        }
-
-        private async Task<ActionResult> GetUserResult(AuthUser user) {
-            var roleName = (await _userManager.GetRolesAsync(user)).First();
-            // var role = await _roleManager.FindByNameAsync(roleName);
-            var usuario = _context.Usuarios.FirstOrDefault(o => o.Email.Trim().ToLower() == user.Email.Trim().ToLower());
-            var participante = _context.Participante.FirstOrDefault(o => o.UsuarioId == usuario.Id);
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-            var claims = new List<Claim> {
-                new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Role, roleName)
-            };
-            var tokenDescriptor = new JwtSecurityToken(
-                    issuer: _conf["Jwt:Issuer"],
-                    audience: _conf["Jwt:Audience"],
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(int.Parse(_conf["Jwt:Expires"])),
-                    signingCredentials: credentials);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
-            return Ok(new {
-                user,
-                usuario,
-                participante,
-                token = jwt
-            });
         }
 
         [AllowAnonymous]

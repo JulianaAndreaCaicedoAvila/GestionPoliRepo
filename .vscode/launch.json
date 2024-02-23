@@ -2,6 +2,24 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"port": 9222,
+			"name": "Front",
+			"type": "chrome",
+			"request": "attach",
+			"preLaunchTask": "run-front",
+			// "url": "http://localhost:3000",
+			// "browserLaunchLocation": "ui",
+			"webRoot": "${workspaceFolder}/Front/src",
+			"skipFiles": ["${workspaceFolder}/Front/node_modules/**/*.js"],
+			"sourceMapPathOverrides": {
+				"webpack:/*": "${webRoot}/*",
+				"/./*": "${webRoot}/*",
+				"/src/*": "${webRoot}/*",
+				"/*": "*",
+				"/./~/*": "${webRoot}/node_modules/*"
+			}
+		},
+		{
 			"name": "Api",
 			"type": "coreclr",
 			"request": "launch",

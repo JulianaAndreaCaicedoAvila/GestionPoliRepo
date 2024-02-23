@@ -5,17 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ESAP.Sirecec.Data.Core
-{
-	public partial class Participante : BaseEntity
-	{
+namespace ESAP.Sirecec.Data.Core {
+	public partial class Participante : BaseEntity {
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-
 		[ForeignKey("AuthUsers")]
 		public int UsuarioId { get; set; }
 		public int? TipoDocumentoId { get; set; }
+		[NotMapped]
+		public decimal DepartamentoId { get; set; }
 		public int? MunicipioId { get; set; }
 		public int? NivelEscolarId { get; set; }
 		public int? EstadoCivilId { get; set; }
@@ -39,6 +38,11 @@ namespace ESAP.Sirecec.Data.Core
 		public string? Direccion { get; set; }
 		public bool? Contratista { get; set; }
 		public bool? HabeasData { get; set; }
+
+		// TODO: 202402221929: Temporales
+		public string? CargoActual { get; set; }
+		public string? Entidad { get; set; }
+
 
 	}
 }

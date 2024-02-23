@@ -120,6 +120,7 @@ let now = new Date(), titulo = "Temas",
     nivelEscolarId: null,
     estadoCivilId: null,
     entidadId: null,
+    entidad: null,
     generoId: null,
     vulnerabilidadId: null,
     discapacidadId: null,
@@ -141,8 +142,8 @@ let now = new Date(), titulo = "Temas",
     habeasData: false,
     correo1: null, // Local
     departamentoId: null, // Local
-    entidad: null, // Local
-    cargoActual: null // Local
+    entidad: null, // TODO: Temporal
+    cargoActual: null // TODO: Temporal
   }),
   item_copy = Clone(item.value),
   panelData = null,
@@ -297,7 +298,7 @@ let save = async () => {
         console.log("dto =>", dto);
         let text = `<span class="font-weight-semibold d-inline-block mt-2">${p.nombres}</span>, acabamos de enviar un correo a la dirección <span class="font-weight-semibold">"${p.correo}</span>" para que realice la activación de su cuenta en el sistema.`;
         if (auth.user) {
-          text = `<span class="font-weight-semibold d-inline-block mt-2">${p.nombres}</span>, la actualizaciòn de su perfil se realizó de manera exitosa.`;
+          text = `<span class="font-weight-semibold d-inline-block mt-2">${p.nombres}</span>, la actualización de su perfil se realizó de manera exitosa.`;
         }
         try {
           let res = await auth.registrarParticipante(dto);

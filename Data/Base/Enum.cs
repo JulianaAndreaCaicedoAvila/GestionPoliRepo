@@ -1,4 +1,4 @@
-namespace ESAP.Sirecec.Data.Enum {
+namespace Poli.Repositorio.Data.Enum {
 	public enum EstadoCurso {
 		Borrador = 421,
 		Revision = 422,

@@ -1,4 +1,4 @@
-namespace ESAP.Sirecec.Data.Api.Authorization;
+namespace Poli.Repositorio.Data.Api.Authorization;
 
 // using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Protocols;

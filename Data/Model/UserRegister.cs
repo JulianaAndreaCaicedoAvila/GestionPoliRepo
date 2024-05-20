@@ -1,17 +1,14 @@
-using ESAP.Sirecec.Data.Core;
-using ESAP.Sirecec.Data.Identity;
+using Poli.Repositorio.Data.Core;
+using Poli.Repositorio.Data.Identity;
 
-namespace ESAP.Sirecec.Data.Model
-{
-	interface IUserRegister
-	{
+namespace Poli.Repositorio.Data.Model {
+	interface IUserRegister {
 		UserRequestModel usuario { get; set; }
-		Participante participante { get; set; }
+		// Participante participante { get; set; }
 	}
 
-	public partial class UserRegisterModel : IUserRegister
-	{
+	public partial class UserRegisterModel : IUserRegister {
 		public UserRequestModel? usuario { get; set; }
-		public Participante? participante { get; set; }
+		// public Participante? participante { get; set; }
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ESAP.Sirecec.Data.Core {
+namespace Poli.Repositorio.Data.Core {
 
 	public partial class CursosAulas {
 		[Key]

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace ESAP.Sirecec.Data
+namespace Poli.Repositorio.Data
 {
 	public interface IGenericRepository<T> where T : class
 	{

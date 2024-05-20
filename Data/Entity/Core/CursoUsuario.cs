@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ESAP.Sirecec.Data.Core {
+namespace Poli.Repositorio.Data.Core {
 	public partial class CursoUsuario : BaseEntity {
 		[Key]
 		public int Id { get; set; }

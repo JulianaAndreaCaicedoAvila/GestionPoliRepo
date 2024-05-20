@@ -1,9 +1,9 @@
-using ESAP.Sirecec.Data.Identity;
+using Poli.Repositorio.Data.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ESAP.Sirecec.Data;
+namespace Poli.Repositorio.Data;
 
 public class Seed
 {

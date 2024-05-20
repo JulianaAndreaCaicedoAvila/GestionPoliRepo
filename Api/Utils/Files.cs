@@ -11,13 +11,13 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using ESAP.Sirecec.Data.Model;
+using Poli.Repositorio.Data.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace ESAP.Sirecec.Data.Api.Utils
+namespace Poli.Repositorio.Data.Api.Utils
 {
 	public class Files
 	{

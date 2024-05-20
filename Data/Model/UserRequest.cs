@@ -1,6 +1,6 @@
-using ESAP.Sirecec.Data.Identity;
+using Poli.Repositorio.Data.Identity;
 
-namespace ESAP.Sirecec.Data.Model
+namespace Poli.Repositorio.Data.Model
 {
 
 	public partial class UserRequestModel : AuthUser

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Newtonsoft.Json;
 
-namespace ESAP.Sirecec.Data
+namespace Poli.Repositorio.Data
 {
 	public static class Utils
 	{

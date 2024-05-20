@@ -1,7 +1,7 @@
-using ESAP.Sirecec.Data.Core;
+using Poli.Repositorio.Data.Core;
 using Microsoft.AspNetCore.Http;
 
-namespace ESAP.Sirecec.Data.Model
+namespace Poli.Repositorio.Data.Model
 {
 
 	public partial class CursoArchivoModel

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
-namespace ESAP.Sirecec.Data
+namespace Poli.Repositorio.Data
 {
 	// 202305271656: DevExtreme.AspNet.Data.dll
 	[ModelBinder(typeof(DataSourceLoadOptionsBinder))]

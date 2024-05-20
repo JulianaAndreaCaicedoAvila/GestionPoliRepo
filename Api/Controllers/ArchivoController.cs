@@ -1,16 +1,16 @@
 using System.Text;
 using DevExtreme.AspNet.Data;
-using ESAP.Sirecec.Data;
-using ESAP.Sirecec.Data.Api.Authorization;
-using ESAP.Sirecec.Data.Api.Utils;
-using ESAP.Sirecec.Data.Core;
+using Poli.Repositorio.Data;
+using Poli.Repositorio.Data.Api.Authorization;
+using Poli.Repositorio.Data.Api.Utils;
+using Poli.Repositorio.Data.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
 
-namespace ESAP.Sirecec.Data.Api.Controllers
+namespace Poli.Repositorio.Data.Api.Controllers
 {
 	[@Authorize]
 	[ApiController]

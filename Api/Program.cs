@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using ESAP.Sirecec.Api.Authorization;
-using ESAP.Sirecec.Data;
-using ESAP.Sirecec.Data.Api.Authorization;
-using ESAP.Sirecec.Data.Api.Middleware;
-using ESAP.Sirecec.Data.Api.Services;
-using ESAP.Sirecec.Data.Identity;
+using Poli.Repositorio.Api.Authorization;
+using Poli.Repositorio.Data;
+using Poli.Repositorio.Data.Api.Authorization;
+using Poli.Repositorio.Data.Api.Middleware;
+using Poli.Repositorio.Data.Api.Services;
+using Poli.Repositorio.Data.Identity;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;

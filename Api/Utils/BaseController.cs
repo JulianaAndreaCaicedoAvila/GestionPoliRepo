@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using DevExtreme.AspNet.Data;
-using ESAP.Sirecec.Data;
-using ESAP.Sirecec.Data.Api.Authorization;
-using ESAP.Sirecec.Data.Api.Utils;
-using ESAP.Sirecec.Data.Core;
+using Poli.Repositorio.Data;
+using Poli.Repositorio.Data.Api.Authorization;
+using Poli.Repositorio.Data.Api.Utils;
+using Poli.Repositorio.Data.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +15,7 @@ using Microsoft.Identity.Web.Resource;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace ESAP.Sirecec.Data.Api.Controllers
+namespace Poli.Repositorio.Data.Api.Controllers
 {
 
 	public class BaseController : ControllerBase

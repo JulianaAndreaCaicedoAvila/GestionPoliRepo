@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ESAP.Sirecec.Data.Api.Controllers
+namespace Poli.Repositorio.Data.Api.Controllers
 {
 	[Route("")]
 	[ApiController]

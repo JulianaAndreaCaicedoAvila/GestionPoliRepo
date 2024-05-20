@@ -1,6 +1,6 @@
-using ESAP.Sirecec.Data.Core;
+using Poli.Repositorio.Data.Core;
 
-namespace ESAP.Sirecec.Data.Model {
+namespace Poli.Repositorio.Data.Model {
 
 	public partial class CursoAsistenciaModel {
 		public CursoUsuario cursoUsuario { get; set; }

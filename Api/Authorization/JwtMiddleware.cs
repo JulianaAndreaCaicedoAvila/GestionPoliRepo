@@ -1,8 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using ESAP.Sirecec.Api.Authorization;
+using Poli.Repositorio.Api.Authorization;
 using Microsoft.IdentityModel.Tokens;
-namespace ESAP.Sirecec.Data.Api.Authorization;
+namespace Poli.Repositorio.Data.Api.Authorization;
 public class JwtMiddleware
 {
 	private readonly RequestDelegate _next;

@@ -4,7 +4,7 @@ using Azure.Identity;
 using Microsoft.Graph;
 
 
-namespace ESAP.Sirecec.Data.Api.Services;
+namespace Poli.Repositorio.Data.Api.Services;
 
 public interface IAzureAdService
 {

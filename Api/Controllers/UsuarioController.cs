@@ -3,12 +3,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using DevExtreme.AspNet.Data;
-using ESAP.Sirecec.Data.Api.Authorization;
-using ESAP.Sirecec.Data.Api.Services;
-using ESAP.Sirecec.Data.Api.Utils;
-using ESAP.Sirecec.Data.Core;
-using ESAP.Sirecec.Data.Identity;
-using ESAP.Sirecec.Data.Model;
+using Poli.Repositorio.Data.Api.Authorization;
+using Poli.Repositorio.Data.Api.Services;
+using Poli.Repositorio.Data.Api.Utils;
+using Poli.Repositorio.Data.Core;
+using Poli.Repositorio.Data.Identity;
+using Poli.Repositorio.Data.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 // 202402020231: Account confirmation and password recovery in ASP.NET Core
 // https://learn.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-6.0&tabs=visual-studio
-namespace ESAP.Sirecec.Data.Api.Controllers {
+namespace Poli.Repositorio.Data.Api.Controllers {
     [@Authorize]
     [ApiController]
     [Route("usuario")]
@@ -42,14 +42,14 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
             // var role = await _roleManager.FindByNameAsync(roleName);
             var usuario = _db.Usuarios.FirstOrDefault(o => o.Email.Trim().ToLower() == user.Email.Trim().ToLower());
             if (usuario != null) {
-                var participante = _db.Participante.FirstOrDefault(o => o.UsuarioId == usuario.Id);
-                if (participante != null) {
-                    // 202402221911: Obtiene 'DepartamentoId'
-                    var m = _db.Municipio.FirstOrDefault(o => o.Id == participante.MunicipioId);
-                    participante.DepartamentoId = m != null ? m.DepartamentoId : 0;
-                } else {
-                    participante = new Participante();
-                }
+                // var participante = _db.Participante.FirstOrDefault(o => o.UsuarioId == usuario.Id);
+                // if (participante != null) {
+                //     // 202402221911: Obtiene 'DepartamentoId'
+                //     var m = _db.Municipio.FirstOrDefault(o => o.Id == participante.MunicipioId);
+                //     participante.DepartamentoId = m != null ? m.DepartamentoId : 0;
+                // } else {
+                //     participante = new Participante();
+                // }
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf["Jwt:Key"]));
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
                 var claims = new List<Claim> {
@@ -68,7 +68,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
                 return Ok(new {
                     user,
                     usuario,
-                    participante,
+                    // participante,
                     token = jwt
                 });
             } else {
@@ -183,12 +183,12 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
                         user.IsActive = true;
                         user.EmailConfirmed = true;
                         var identityResult = await _userManager.UpdateAsync(user);
-                        if (identityResult.Succeeded) {
-                            var usr = _db.Participante.FirstOrDefault(o => o.Correo == email.ToLower());
-                            usr.Activo = true;
-                            _db.SaveChanges();
-                            return Ok(new { result, user });
-                        }
+                        // if (identityResult.Succeeded) {
+                        //     var usr = _db.Participante.FirstOrDefault(o => o.Correo == email.ToLower());
+                        //     usr.Activo = true;
+                        //     _db.SaveChanges();
+                        //     return Ok(new { result, user });
+                        // }
                     } else return BadRequest(new { result, user });
                 } else return BadRequest(new { result, user });
             }
@@ -213,77 +213,73 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
             return BadRequest();
         }
 
-        [AllowAnonymous]
-        [HttpPost("registrar")]
-        public async Task<ActionResult> Register() {
-            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            var str = reader.ReadToEndAsync().Result;
-            var ur = JsonConvert.DeserializeObject<UserRegisterModel>(str);
-            var modelUser = ur.usuario;
-            var modelParticipant = ur.participante;
-            var email = modelParticipant.Correo;
-            if (!string.IsNullOrEmpty(email) && modelParticipant.UsuarioId == 0) {
-                // Crea el usuario
-                var emailNorm = email.Trim().Normalize().ToUpperInvariant(); // Normalizado
-                var newUser = new AuthUser {
-                    UserName = email.Trim(),
-                    Email = email.Trim(),
-                    FirstName = modelParticipant.Nombres,
-                    LastName = modelParticipant.Apellidos,
-                    NormalizedEmail = emailNorm,
-                    NormalizedUserName = emailNorm,
-                    EmailConfirmed = false, // 202402071752: Debe confirmarse el correo!
-                    LockoutEnabled = false,
-                    PhoneNumber = modelParticipant.Celular,
-                    PhoneNumberConfirmed = false,
-                    CompanyId = 357,
-                    DependenceId = 13,
-                    TerritorialId = 15,
-                    ProjectId = 5,
-                    SecurityStamp = Guid.NewGuid().ToString(),
-                    ConcurrencyStamp = Guid.NewGuid().ToString(),
-                    IsActive = false
-                };
-                var result = await _userManager.CreateAsync(newUser, "Acceso*" + DateTime.Now.Year);
+        // [AllowAnonymous]
+        // [HttpPost("registrar")]
+        // public async Task<ActionResult> Register() {
+        //     StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+        //     var str = reader.ReadToEndAsync().Result;
+        //     var ur = JsonConvert.DeserializeObject<UserRegisterModel>(str);
+        //     var modelUser = ur.usuario;
+        //     var modelParticipant = ur.participante;
+        //     var email = modelParticipant.Correo;
+        //     if (!string.IsNullOrEmpty(email) && modelParticipant.UsuarioId == 0) {
+        //         // Crea el usuario
+        //         var emailNorm = email.Trim().Normalize().ToUpperInvariant(); // Normalizado
+        //         var newUser = new AuthUser {
+        //             UserName = email.Trim(),
+        //             Email = email.Trim(),
+        //             FirstName = modelParticipant.Nombres,
+        //             LastName = modelParticipant.Apellidos,
+        //             NormalizedEmail = emailNorm,
+        //             NormalizedUserName = emailNorm,
+        //             EmailConfirmed = false, // 202402071752: Debe confirmarse el correo!
+        //             LockoutEnabled = false,
+        //             PhoneNumber = modelParticipant.Celular,
+        //             PhoneNumberConfirmed = false,
+        //             SecurityStamp = Guid.NewGuid().ToString(),
+        //             ConcurrencyStamp = Guid.NewGuid().ToString(),
+        //             IsActive = false
+        //         };
+        //         var result = await _userManager.CreateAsync(newUser, "Acceso*" + DateTime.Now.Year);
 
-                // Si se creó el usuario
-                if (result.Succeeded) {
-                    // Lo agrega al rol
-                    var role = await _roleManager.FindByIdAsync(modelUser.RoleId.ToString());
-                    if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+        //         // Si se creó el usuario
+        //         if (result.Succeeded) {
+        //             // Lo agrega al rol
+        //             var role = await _roleManager.FindByIdAsync(modelUser.RoleId.ToString());
+        //             if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
 
-                    // Crea el participante
-                    var newPart = new Participante();
-                    newPart = (Participante)modelParticipant.CopyTo(newPart);
-                    newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
-                    newPart.CreadoPor = 1;
-                    newPart.CreadoEl = DateTime.Now;
-                    newPart.Activo = false;
-                    _db.Participante.Add(newPart);
-                    _db.SaveChanges();
+        //             // Crea el participante
+        //             // var newPart = new Participante();
+        //             // newPart = (Participante)modelParticipant.CopyTo(newPart);
+        //             // newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
+        //             // newPart.CreadoPor = 1;
+        //             // newPart.CreadoEl = DateTime.Now;
+        //             // newPart.Activo = false;
+        //             // _db.Participante.Add(newPart);
+        //             // _db.SaveChanges();
 
-                    // Envía el correo
-                    if (modelUser.GenerateConfirmation) {
-                        SendConfirmation(newUser);
-                    }
+        //             // Envía el correo
+        //             if (modelUser.GenerateConfirmation) {
+        //                 SendConfirmation(newUser);
+        //             }
 
-                    return Ok(newUser);
-                }
-                return BadRequest(new { result, ur });
-            }
-            // Registro existente: EDIT
-            if (modelParticipant.UsuarioId != 0) {
-                var current = _db.Participante.FirstOrDefault(o => o.UsuarioId == modelParticipant.UsuarioId);
-                if (current != null) {
-                    var final = (Participante)modelParticipant.CopyTo(current);
-                    final.EditadoPor = 1;
-                    final.EditadoEl = DateTime.Now;
-                    _db.SaveChanges();
-                    return Ok(final);
-                }
-            }
-            return Ok();
-        }
+        //             return Ok(newUser);
+        //         }
+        //         return BadRequest(new { result, ur });
+        //     }
+        //     // Registro existente: EDIT
+        //     // if (modelParticipant.UsuarioId != 0) {
+        //     //     var current = _db.Participante.FirstOrDefault(o => o.UsuarioId == modelParticipant.UsuarioId);
+        //     //     if (current != null) {
+        //     //         var final = (Participante)modelParticipant.CopyTo(current);
+        //     //         final.EditadoPor = 1;
+        //     //         final.EditadoEl = DateTime.Now;
+        //     //         _db.SaveChanges();
+        //     //         return Ok(final);
+        //     //     }
+        //     // }
+        //     return Ok();
+        // }
 
         [AllowAnonymous]
         [HttpPost("ed")]
@@ -349,7 +345,7 @@ namespace ESAP.Sirecec.Data.Api.Controllers {
                             newPart.CreadoPor = 1;
                             newPart.CreadoEl = DateTime.Now;
                             newPart.Activo = true;
-                            _db.Participante.Add(newPart);
+                            // _db.Participante.Add(newPart);
                             _db.SaveChanges();
                         }
                     }

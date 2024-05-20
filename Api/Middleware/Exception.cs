@@ -3,7 +3,7 @@ using System.Net;
 using System.Text.Json;
 
 // 202306031459: https://jasonwatmore.com/post/2022/01/17/net-6-global-error-handler-tutorial-with-example
-namespace ESAP.Sirecec.Data.Api.Middleware
+namespace Poli.Repositorio.Data.Api.Middleware
 {
 	// custom exception class for throwing application specific exceptions (e.g. for validation) 
 	// that can be caught and handled within the application

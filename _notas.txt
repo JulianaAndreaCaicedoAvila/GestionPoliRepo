@@ -1,3 +1,11 @@
+Microsoft.EntityFrameworkCore.Relational de 6.0.28
+
+202404031508:
+https://www.learnentityframeworkcore.com/database-providers#ef-core-sql-server-provider
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 7
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 7
+dotnet tool install --global dotnet-ef
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 202402060144:
@@ -33,7 +41,7 @@ dotnet ef database update
 
 -- Devolverse a una migracion
 dotnet ef database update 20231006002935_Inicial
-dotnet ef migrations add Inicial; dotnet ef migrations add Sql_Inicial
+dotnet ef migrations add Inicial; dotnet ef migrations add MySql_Inicial
 dotnet ef migrations add CursoEntidades
 dotnet ef migrations add Actualizacion
 
@@ -142,6 +150,7 @@ dotnet add package Microsoft.Extensions.Options.ConfigurationExtensions
 dotnet add package DevExtreme.AspNet.Data;
 dotnet add package Microsoft.Extensions.Configuration
 dotnet add package Microsoft.Extensions.Configuration.Json
+
 
 Api:
 dotnet add package System.IdentityModel.Tokens.Jwt

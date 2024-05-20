@@ -1,4 +1,4 @@
-namespace ESAP.Sirecec.Data.Model
+namespace Poli.Repositorio.Data.Model
 {
 	public partial class AuthenticateRequest
 	{

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Extensions.Logging;
 
-namespace ESAP.Sirecec.Data.Core
+namespace Poli.Repositorio.Data.Core
 {
 	public partial class BancoProgramaNucleo : BaseEntity
 	{

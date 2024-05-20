@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace ESAP.Sirecec.Data.Api.Utils
+namespace Poli.Repositorio.Data.Api.Utils
 {
 
 	public class JsonDynamicWrapper

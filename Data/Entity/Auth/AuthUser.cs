@@ -7,7 +7,7 @@ namespace Poli.Repositorio.Data.Identity {
 	public partial class AuthUser : IdentityUser<int> {
 		public string FirstName { get; set; } = default!;
 		public string LastName { get; set; } = default!;
-		public string Adress { get; set; } = default!;
+		public string Address { get; set; } = default!;
 		public bool IsActive { get; set; } = true;
 	}
 }

@@ -11,7 +11,7 @@ using Poli.Repositorio.Data;
 namespace Poli.Repositorio.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240515061956_Inicial")]
+    [Migration("20240521231052_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -265,6 +265,8 @@ namespace Poli.Repositorio.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NivelId");
 
                     b.ToTable("Curso");
                 });
@@ -523,6 +525,119 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToView("Cursos");
                 });
 
+            modelBuilder.Entity("Poli.Repositorio.Data.Core.Envio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Envio");
+                });
+
+            modelBuilder.Entity("Poli.Repositorio.Data.Core.Escuela", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Escuela");
+                });
+
+            modelBuilder.Entity("Poli.Repositorio.Data.Core.Nivel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("CreadoEl")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("CreadoPor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EditadoEl")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("EditadoPor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EscuelaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("Orden")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EscuelaId");
+
+                    b.ToTable("Nivel");
+                });
+
             modelBuilder.Entity("Poli.Repositorio.Data.Identity.AuthRole", b =>
                 {
                     b.Property<int>("Id")
@@ -559,15 +674,13 @@ namespace Poli.Repositorio.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
-
-                    b.Property<int?>("DependenceId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -610,14 +723,8 @@ namespace Poli.Repositorio.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
-
-                    b.Property<int?>("TerritorialId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
@@ -636,6 +743,77 @@ namespace Poli.Repositorio.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AuthUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Poli.Repositorio.Data.Identity.Users", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -687,6 +865,32 @@ namespace Poli.Repositorio.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Poli.Repositorio.Data.Core.Curso", b =>
+                {
+                    b.HasOne("Poli.Repositorio.Data.Core.Nivel", null)
+                        .WithMany("Cursos")
+                        .HasForeignKey("NivelId");
+                });
+
+            modelBuilder.Entity("Poli.Repositorio.Data.Core.Nivel", b =>
+                {
+                    b.HasOne("Poli.Repositorio.Data.Core.Escuela", null)
+                        .WithMany("Niveles")
+                        .HasForeignKey("EscuelaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Poli.Repositorio.Data.Core.Escuela", b =>
+                {
+                    b.Navigation("Niveles");
+                });
+
+            modelBuilder.Entity("Poli.Repositorio.Data.Core.Nivel", b =>
+                {
+                    b.Navigation("Cursos");
                 });
 #pragma warning restore 612, 618
         }

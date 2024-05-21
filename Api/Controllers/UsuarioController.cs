@@ -213,73 +213,72 @@ namespace Poli.Repositorio.Data.Api.Controllers {
             return BadRequest();
         }
 
-        // [AllowAnonymous]
-        // [HttpPost("registrar")]
-        // public async Task<ActionResult> Register() {
-        //     StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-        //     var str = reader.ReadToEndAsync().Result;
-        //     var ur = JsonConvert.DeserializeObject<UserRegisterModel>(str);
-        //     var modelUser = ur.usuario;
-        //     var modelParticipant = ur.participante;
-        //     var email = modelParticipant.Correo;
-        //     if (!string.IsNullOrEmpty(email) && modelParticipant.UsuarioId == 0) {
-        //         // Crea el usuario
-        //         var emailNorm = email.Trim().Normalize().ToUpperInvariant(); // Normalizado
-        //         var newUser = new AuthUser {
-        //             UserName = email.Trim(),
-        //             Email = email.Trim(),
-        //             FirstName = modelParticipant.Nombres,
-        //             LastName = modelParticipant.Apellidos,
-        //             NormalizedEmail = emailNorm,
-        //             NormalizedUserName = emailNorm,
-        //             EmailConfirmed = false, // 202402071752: Debe confirmarse el correo!
-        //             LockoutEnabled = false,
-        //             PhoneNumber = modelParticipant.Celular,
-        //             PhoneNumberConfirmed = false,
-        //             SecurityStamp = Guid.NewGuid().ToString(),
-        //             ConcurrencyStamp = Guid.NewGuid().ToString(),
-        //             IsActive = false
-        //         };
-        //         var result = await _userManager.CreateAsync(newUser, "Acceso*" + DateTime.Now.Year);
+        [AllowAnonymous]
+        [HttpPost("registrar")]
+        public async Task<ActionResult> Register(UserRequestModel usuario) {
+            // StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            // var str = reader.ReadToEndAsync().Result;
+            // var ur = JsonConvert.DeserializeObject<UserRegisterModel>(str);
+            // var modelUser = ur;
+            // var modelParticipant = ur.participante;
+            var email = usuario.Email;
+            if (!string.IsNullOrEmpty(email)) {
+                // Crea el usuario
+                if (usuario.Id == 0) {
+                    var emailNorm = email.Trim().Normalize().ToUpperInvariant(); // Normalizado
+                    var newUser = new AuthUser {
+                        UserName = email.Trim(),
+                        Email = email.Trim(),
+                        FirstName = usuario.FirstName,
+                        LastName = usuario.LastName,
+                        NormalizedEmail = emailNorm,
+                        NormalizedUserName = emailNorm,
+                        EmailConfirmed = false, // 202402071752: Debe confirmarse el correo!
+                        LockoutEnabled = false,
+                        PhoneNumber = usuario.PhoneNumber,
+                        PhoneNumberConfirmed = false,
+                        SecurityStamp = Guid.NewGuid().ToString(),
+                        ConcurrencyStamp = Guid.NewGuid().ToString(),
+                        IsActive = false
+                    };
+                    var result = await _userManager.CreateAsync(newUser, "Acceso*" + DateTime.Now.Year);
+                    // Si se creó el usuario
+                    if (result.Succeeded) {
+                        // Lo agrega al rol
+                        var role = await _roleManager.FindByIdAsync(usuario.RoleId.ToString());
+                        if (role != null) result = await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+                        if (result.Succeeded) {// Envía el correo
+                            if (usuario.GenerateConfirmation) {
+                                SendConfirmation(newUser);
+                            }
+                        }
+                        return Ok(newUser);
+                    }
+                } else { // Edita el usuario
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user != null) {
+                        user = (AuthUser)usuario.CopyTo(user, true);
+                        var result = await _userManager.UpdateAsync(user);
+                        var role = await _roleManager.FindByIdAsync(usuario.RoleId.ToString());
+                        if (role != null) {
+                            var roles = await _userManager.GetRolesAsync(user);
+                            await _userManager.RemoveFromRolesAsync(user, roles.ToArray());
+                            await _userManager.AddToRoleAsync(user, role.NormalizedName);
+                        }
+                        if (usuario.Password != null) {
+                            await _userManager.RemovePasswordAsync(user);
+                            await _userManager.AddPasswordAsync(user, usuario.Password);
+                        }
+                        if (usuario.GenerateConfirmation) {
+                            SendConfirmation(user);
+                        }
+                        return Ok(user);
+                    }
+                }
 
-        //         // Si se creó el usuario
-        //         if (result.Succeeded) {
-        //             // Lo agrega al rol
-        //             var role = await _roleManager.FindByIdAsync(modelUser.RoleId.ToString());
-        //             if (role != null) await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
-
-        //             // Crea el participante
-        //             // var newPart = new Participante();
-        //             // newPart = (Participante)modelParticipant.CopyTo(newPart);
-        //             // newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
-        //             // newPart.CreadoPor = 1;
-        //             // newPart.CreadoEl = DateTime.Now;
-        //             // newPart.Activo = false;
-        //             // _db.Participante.Add(newPart);
-        //             // _db.SaveChanges();
-
-        //             // Envía el correo
-        //             if (modelUser.GenerateConfirmation) {
-        //                 SendConfirmation(newUser);
-        //             }
-
-        //             return Ok(newUser);
-        //         }
-        //         return BadRequest(new { result, ur });
-        //     }
-        //     // Registro existente: EDIT
-        //     // if (modelParticipant.UsuarioId != 0) {
-        //     //     var current = _db.Participante.FirstOrDefault(o => o.UsuarioId == modelParticipant.UsuarioId);
-        //     //     if (current != null) {
-        //     //         var final = (Participante)modelParticipant.CopyTo(current);
-        //     //         final.EditadoPor = 1;
-        //     //         final.EditadoEl = DateTime.Now;
-        //     //         _db.SaveChanges();
-        //     //         return Ok(final);
-        //     //     }
-        //     // }
-        //     return Ok();
-        // }
+            }
+            return Ok();
+        }
 
         [AllowAnonymous]
         [HttpPost("ed")]

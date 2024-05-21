@@ -13,7 +13,8 @@ namespace Poli.Repositorio.Data {
 				// var cmdTo = configuration.GetValue<int>("Oracle:CommandTimeout");
 				// var sqlComp = configuration.GetValue<string>("Oracle:SQLCompatibility");
 				// o.ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning));
-				o.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
+				// o.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
+				o.UseMySQL(connStr);
 				// o.UseOracle(conn, o => {
 				// 	o.CommandTimeout(cmdTo);
 				// 	o.UseOracleSQLCompatibility(sqlComp ?? "11");

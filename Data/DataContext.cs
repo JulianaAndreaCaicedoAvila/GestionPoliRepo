@@ -6,13 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Poli.Repositorio.Data {
 	public partial class DataContext : IdentityDbContext<AuthUser, AuthRole, int> {
+
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-			var conn2 = @"Server=.\localhost;Database=polirepo;User Id=JUAND;Password=20Bolivar20*";
-			var conn = @"Server=localhost;Port=3307;Database=songstock_bd;Uid=JUAND;Pwd=20Bolivar20*;SslMode=Preferred;";
-			var conn1 = @"data source=.\JUANDIEGO;initial catalog=PoliRepositorio;persist security info=True;Integrated Security=SSPI;";
-			var conn3 = @"server=localhost:3307;uid=JUAND;pwd=20Bolivar20*;database=songstock_bd";
-			// optionsBuilder.UseSqlServer(conn);
-			optionsBuilder.UseMySql(conn, ServerVersion.AutoDetect(conn));
+			var conn = @"Server=localhost;Port=3307;Database=songstock_bd;Uid=JUAND;Pwd=20Bolivar20*;SslMode=Preferred";
+			optionsBuilder.UseMySQL(conn);
 		}
 
 		public DataContext() : base() { }

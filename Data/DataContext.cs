@@ -14,11 +14,9 @@ namespace SongStock.Data {
 
 		public DataContext() : base() { }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-		public virtual DbSet<Curso>? Curso { get; set; } = null!;
-		public virtual DbSet<Cursos>? Cursos { get; set; } = null!;
-		public virtual DbSet<Users> Usuarios { get; set; } = null!;
-		public virtual DbSet<Escuela>? Escuela { get; set; } = null!;
+		public virtual DbSet<Usuarios> Usuarios { get; set; } = null!;
 		public virtual DbSet<Envio>? Envio { get; set; } = null!;
+		public virtual DbSet<Album>? Album { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder builder) {
 			base.OnModelCreating(builder);
@@ -34,7 +32,7 @@ namespace SongStock.Data {
 			builder.Entity<IdentityUserToken<int>>().ToTable("AuthUserTokens");
 
 			// Vistas
-			builder.Entity<Cursos>(entity => { entity.ToView("Cursos"); });
+			builder.Entity<Usuarios>(entity => { entity.ToView("usuarios"); });
 		}
 
 	}

@@ -2,29 +2,20 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SongStock.Data.Identity {
-	public class Users {
-
-		[Key]
-		public int Id { get; set; }
+	public class Usuarios {
 		public int RoleId { get; set; }
 		public string? RoleName { get; set; }
+		public int Id { get; set; }
 		public string? Name { get; set; }
-		public string? FirstName { get; set; }
-		public string? LastName { get; set; }
-		public virtual string? Email { get; set; }
-		public virtual string? UserName { get; set; }
-		public virtual bool EmailConfirmed { get; set; }
-		public virtual string? PasswordHash { get; set; }
-		public virtual string? SecurityStamp { get; set; }
-		public virtual string? PhoneNumber { get; set; }
-		public virtual bool PhoneNumberConfirmed { get; set; }
-		public virtual bool TwoFactorEnabled { get; set; }
-		public virtual DateTime? LockoutEnd { get; set; }
-		public virtual bool LockoutEnabled { get; set; }
-		public virtual int AccessFailedCount { get; set; }
-		public virtual string? ConcurrencyStamp { get; set; }
-		public virtual string? NormalizedEmail { get; set; }
-		public virtual string? NormalizedUserName { get; set; }
-		public bool IsActive { get; set; }
+		public string? FirstName { get; set; } = default!;
+		public string? LastName { get; set; } = default!;
+		public string? Address { get; set; } = default!;
+		public string? Email { get; set; } = default!;
+		public string? PhoneNumber { get; set; } = default!;
+		public bool IsActive { get; set; } = true;
+		public bool EmailConfirmed { get; set; } = true;
+		public string? PasswordHash { get; set; } = default!;
+		public string? SecurityStamp { get; set; } = default!;
+		public string? ConcurrencyStamp { get; set; } = default!;
 	}
 }

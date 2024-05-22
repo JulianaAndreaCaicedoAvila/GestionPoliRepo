@@ -14,3 +14,35 @@ VALUES
 
 SELECT * FROM authroles;
 
+SELECT * FROM authusers;
+
+SELECT * FROM authuserroles;
+
+SELECT * FROM users;
+
+SELECT VERSION()
+
+
+DROP VIEW IF EXISTS usuarios CASCADE;
+CREATE VIEW usuarios AS
+SELECT
+  `ur`.`RoleId` AS `RoleId`,
+  `r`.`Name` AS `RoleName`,
+  `u`.`Id` AS `Id`,
+  CONCAT(`u`.`FirstName`, ' ', `u`.`LastName`) AS `Name`,
+  `u`.`FirstName` AS `FirstName`,
+  `u`.`LastName` AS `LastName`,
+  `u`.`Address` AS `Address`,
+  `u`.`IsActive` AS `IsActive`,
+  `u`.`Email` AS `Email`,
+  `u`.`PhoneNumber` AS `PhoneNumber`,
+  `u`.`EmailConfirmed` AS `EmailConfirmed`,
+  `u`.`PasswordHash` AS `PasswordHash`,
+  `u`.`SecurityStamp` AS `SecurityStamp`,
+  `u`.`ConcurrencyStamp` AS `ConcurrencyStamp`
+FROM ((`authusers` `u`
+  LEFT JOIN `authuserroles` `ur`
+    ON ((`ur`.`UserId` = `u`.`Id`)))
+  LEFT JOIN `authroles` `r`
+    ON ((`ur`.`RoleId` = `r`.`Id`)));
+SELECT * FROM usuarios;

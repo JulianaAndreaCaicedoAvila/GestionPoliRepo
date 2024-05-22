@@ -8,6 +8,6 @@ namespace SongStock.Data.Identity {
 		public string? FirstName { get; set; } = default!;
 		public string? LastName { get; set; } = default!;
 		public string? Address { get; set; } = default!;
-		public bool? IsActive { get; set; } = true;
+		public bool IsActive { get; set; } = true;
 	}
 }

@@ -13,26 +13,41 @@
 
 {
     "id": 0,
-    "userName": "string",
-    "normalizedUserName": "string",
-    "email": "string",
-    "normalizedEmail": "string",
-    "emailConfirmed": true,
-    "passwordHash": "string",
-    "securityStamp": "string",
-    "concurrencyStamp": "string",
-    "phoneNumber": "string",
-    "phoneNumberConfirmed": true,
-    "twoFactorEnabled": true,
-    "lockoutEnd": "2024-05-21T22:48:18.221Z",
-    "lockoutEnabled": true,
-    "accessFailedCount": 0,
-    "firstName": "string",
-    "lastName": "string",
-    "address": "string",
+    "email": "dvargas@outlook.com",
+    "phoneNumber": "3115711667",
+    "firstName": "Diego Alfonso",
+    "lastName": "Vargas Villegas",
+    "address": "",
     "isActive": true,
-    "roleId": 0,
-    "password": "string",
-    "code": "string",
-    "generateConfirmation": true
-  }
+    "roleId": 2,
+    "password": "Acceso*2024",
+    "generateConfirmation": false
+}
+
+{
+    "id": 2,
+    "username": "dvargas@outlook.com",
+    "email": "dvargas@outlook.com",
+    "phoneNumber": "3115711667",
+    "firstName": "Sandra María",
+    "lastName": "Vargas Villegas",
+    "securityStamp": "7C27VQTG3WXS3K5BW4AFCIE7R5D6IIEB",
+    "address": "",
+    "isActive": true,
+    "roleId": 2,
+    "password": "Acceso*2024",
+    "generateConfirmation": false
+}
+
+{
+    "id": 0,
+    "email": "viviam.reina@outlook.com",
+    "phoneNumber": "3015816822",
+    "firstName": "Viviam Soraya",
+    "lastName": "Reina Velasquez",
+    "address": "",
+    "isActive": true,
+    "roleId": 3,
+    "password": "Acceso*2024",
+    "generateConfirmation": false
+}

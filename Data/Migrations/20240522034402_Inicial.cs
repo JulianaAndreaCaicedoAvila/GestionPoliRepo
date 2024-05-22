@@ -4,10 +4,12 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace Poli.Repositorio.Data.Migrations
+namespace SongStock.Data.Migrations
 {
+    /// <inheritdoc />
     public partial class Inicial : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
@@ -35,9 +37,9 @@ namespace Poli.Repositorio.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(type: "longtext", nullable: false),
-                    LastName = table.Column<string>(type: "longtext", nullable: false),
-                    Address = table.Column<string>(type: "longtext", nullable: false),
+                    FirstName = table.Column<string>(type: "longtext", nullable: true),
+                    LastName = table.Column<string>(type: "longtext", nullable: true),
+                    Address = table.Column<string>(type: "longtext", nullable: true),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -79,60 +81,6 @@ namespace Poli.Repositorio.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Envio", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Escuela",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Nombre = table.Column<string>(type: "longtext", nullable: true),
-                    Descripcion = table.Column<string>(type: "longtext", nullable: true),
-                    CreadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    EditadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "int", nullable: true),
-                    EditadoPor = table.Column<int>(type: "int", nullable: true),
-                    Orden = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Escuela", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Usuarios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    RoleName = table.Column<string>(type: "longtext", nullable: true),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    FirstName = table.Column<string>(type: "longtext", nullable: true),
-                    LastName = table.Column<string>(type: "longtext", nullable: true),
-                    Email = table.Column<string>(type: "longtext", nullable: true),
-                    UserName = table.Column<string>(type: "longtext", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "longtext", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    LockoutEnd = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "longtext", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "longtext", nullable: true),
-                    IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -247,98 +195,6 @@ namespace Poli.Repositorio.Data.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "Nivel",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    EscuelaId = table.Column<int>(type: "int", nullable: false),
-                    Nombre = table.Column<string>(type: "longtext", nullable: true),
-                    Descripcion = table.Column<string>(type: "longtext", nullable: true),
-                    CreadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    EditadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "int", nullable: true),
-                    EditadoPor = table.Column<int>(type: "int", nullable: true),
-                    Orden = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Nivel", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Nivel_Escuela_EscuelaId",
-                        column: x => x.EscuelaId,
-                        principalTable: "Escuela",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Curso",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Codigo = table.Column<string>(type: "longtext", nullable: true),
-                    DependenciaId = table.Column<int>(type: "int", nullable: true),
-                    TipoCursoId = table.Column<int>(type: "int", nullable: true),
-                    NivelId = table.Column<int>(type: "int", nullable: true),
-                    TipoAsistenciaId = table.Column<int>(type: "int", nullable: true),
-                    IndicadorId = table.Column<int>(type: "int", nullable: true),
-                    MunicipioId = table.Column<int>(type: "int", nullable: true),
-                    ProgramaId = table.Column<int>(type: "int", nullable: true),
-                    EstadoCursoId = table.Column<int>(type: "int", nullable: true),
-                    ElaboradoPorId = table.Column<int>(type: "int", nullable: true),
-                    CertificadoEtiquetaId = table.Column<int>(type: "int", nullable: true),
-                    CupoTotal = table.Column<int>(type: "int", nullable: true),
-                    CupoAula = table.Column<int>(type: "int", nullable: true),
-                    Nombre = table.Column<string>(type: "longtext", nullable: true),
-                    Descripcion = table.Column<string>(type: "longtext", nullable: true),
-                    CodigoVerificacion = table.Column<string>(type: "longtext", nullable: true),
-                    Responsable = table.Column<string>(type: "longtext", nullable: true),
-                    CorreoElectronico = table.Column<string>(type: "longtext", nullable: true),
-                    TelefonoContacto = table.Column<string>(type: "longtext", nullable: true),
-                    HorasTotales = table.Column<int>(type: "int", nullable: true),
-                    NumeroDias = table.Column<int>(type: "int", nullable: true),
-                    PorcentajeValidoAsistencia = table.Column<int>(type: "int", nullable: true),
-                    CantidadAulas = table.Column<int>(type: "int", nullable: true),
-                    LugarRealizacion = table.Column<string>(type: "longtext", nullable: true),
-                    FechaInicioInscripcion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    FechaFinInscripcion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    FechaInicio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    FechaFin = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    HoraInicio = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Publicado = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    JornadaManana = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    JornadaTarde = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    JornadaNoche = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    Objetivos = table.Column<string>(type: "longtext", nullable: true),
-                    Contenidos = table.Column<string>(type: "longtext", nullable: true),
-                    ImagenCertificado = table.Column<string>(type: "longtext", nullable: true),
-                    ImagenCurso = table.Column<string>(type: "longtext", nullable: true),
-                    CertificadoCiudad = table.Column<string>(type: "longtext", nullable: true),
-                    CertificadoVerCiudad = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    CertificadoFechaExpedicion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    EditadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "int", nullable: true),
-                    EditadoPor = table.Column<int>(type: "int", nullable: true),
-                    Orden = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Curso", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Curso_Nivel_NivelId",
-                        column: x => x.NivelId,
-                        principalTable: "Nivel",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
             migrationBuilder.CreateIndex(
                 name: "IX_AuthRoleClaims_RoleId",
                 table: "AuthRoleClaims",
@@ -375,18 +231,9 @@ namespace Poli.Repositorio.Data.Migrations
                 table: "AuthUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Curso_NivelId",
-                table: "Curso",
-                column: "NivelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Nivel_EscuelaId",
-                table: "Nivel",
-                column: "EscuelaId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -405,25 +252,13 @@ namespace Poli.Repositorio.Data.Migrations
                 name: "AuthUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Curso");
-
-            migrationBuilder.DropTable(
                 name: "Envio");
-
-            migrationBuilder.DropTable(
-                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "AuthRoles");
 
             migrationBuilder.DropTable(
                 name: "AuthUsers");
-
-            migrationBuilder.DropTable(
-                name: "Nivel");
-
-            migrationBuilder.DropTable(
-                name: "Escuela");
         }
     }
 }

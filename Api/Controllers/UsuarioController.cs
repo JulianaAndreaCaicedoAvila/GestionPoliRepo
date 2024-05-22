@@ -359,8 +359,16 @@ namespace SongStock.Api.Controllers {
             }
         }
 
-        [HttpPost("todos/dx")]
+        [AllowAnonymous]
+        [HttpGet("todos")]
         public ActionResult Users() {
+            var items = _db.Usuarios.ToList();
+            return Ok(items);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("todos/dx")]
+        public ActionResult UsersDx() {
             var opts = Data.Utils.GetFromRequest(Request);
             opts.PrimaryKey = new[] { "Id" };
             var items = _db.Usuarios.Where(o => o.Id > 1).ToList();

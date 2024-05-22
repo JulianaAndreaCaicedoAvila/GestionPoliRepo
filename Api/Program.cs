@@ -1,11 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Poli.Repositorio.Api.Authorization;
-using Poli.Repositorio.Data;
-using Poli.Repositorio.Data.Api.Authorization;
-using Poli.Repositorio.Data.Api.Middleware;
-using Poli.Repositorio.Data.Api.Services;
-using Poli.Repositorio.Data.Identity;
+using SongStock.Api.Authorization;
+using SongStock.Data;
+using SongStock.Api.Middleware;
+using SongStock.Api.Services;
+using SongStock.Data.Identity;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -21,7 +20,7 @@ using Microsoft.OpenApi.Models;
 
 // 202206080343: Authenticating tokens from multiple sources (e.g Cognito and Azure) 
 // https://stackoverflow.com/a/66115586
-var appName = "AppSirecec4";
+var appName = "SongStock";
 
 // 202206030105: Authentication and authorization in Ocelot API Gateways -> https://t.ly/r12-
 // 202206030117: Web app that signs in users => https://t.ly/JUe4
@@ -171,7 +170,7 @@ services.AddEndpointsApiExplorer();
 
 // 202202072217: Config
 services.AddSwaggerGen(c => {
-	c.SwaggerDoc("v1", new OpenApiInfo { Title = "ESAP SIRECEC API v1.0", Version = "v1" });
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "SongStock API v1.0", Version = "v1" });
 	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
 		Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
                       Enter 'Bearer' [space] and then your token in the text input below.

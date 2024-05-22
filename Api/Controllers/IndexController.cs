@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Poli.Repositorio.Data.Api.Controllers
+namespace SongStock.Api.Controllers
 {
 	[Route("")]
 	[ApiController]

@@ -1,39 +1,33 @@
-namespace Poli.Repositorio.Api.Authorization;
+namespace SongStock.Api.Authorization;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Poli.Repositorio.Data.Identity;
+using SongStock.Data.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-public class AppSettings
-{
+public class AppSettings {
 	public string? Secret { get; set; }
 }
 
-public interface IJwtUtils
-{
+public interface IJwtUtils {
 	public string GenerateToken(AuthUser user);
 	public int? ValidateToken(string token);
 }
 
-public class JwtUtils : IJwtUtils
-{
+public class JwtUtils : IJwtUtils {
 	private readonly AppSettings _appSettings;
 
-	public JwtUtils(IOptions<AppSettings> appSettings)
-	{
+	public JwtUtils(IOptions<AppSettings> appSettings) {
 		_appSettings = appSettings.Value;
 	}
 
-	public string GenerateToken(AuthUser user)
-	{
+	public string GenerateToken(AuthUser user) {
 		// generate token that is valid for 7 days
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-		var tokenDescriptor = new SecurityTokenDescriptor
-		{
+		var tokenDescriptor = new SecurityTokenDescriptor {
 			Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
 			Expires = DateTime.UtcNow.AddDays(7),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -42,15 +36,12 @@ public class JwtUtils : IJwtUtils
 		return tokenHandler.WriteToken(token);
 	}
 
-	public int? ValidateToken(string token)
-	{
+	public int? ValidateToken(string token) {
 		if (token == null) return null;
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-		try
-		{
-			tokenHandler.ValidateToken(token, new TokenValidationParameters
-			{
+		try {
+			tokenHandler.ValidateToken(token, new TokenValidationParameters {
 				ValidateIssuerSigningKey = true,
 				IssuerSigningKey = new SymmetricSecurityKey(key),
 				ValidateIssuer = false,
@@ -62,9 +53,7 @@ public class JwtUtils : IJwtUtils
 			var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 			// return user id from JWT token if validation successful
 			return userId;
-		}
-		catch
-		{
+		} catch {
 			// return null if validation fails
 			return null;
 		}

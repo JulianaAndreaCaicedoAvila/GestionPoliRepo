@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Newtonsoft.Json;
 
-namespace Poli.Repositorio.Data
+namespace SongStock.Data
 {
 	public static class Utils
 	{

@@ -4,7 +4,7 @@ using Azure.Identity;
 using Microsoft.Graph;
 
 
-namespace Poli.Repositorio.Data.Api.Services;
+namespace SongStock.Api.Services;
 
 public interface IAzureAdService
 {

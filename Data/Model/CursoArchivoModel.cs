@@ -1,7 +1,7 @@
-using Poli.Repositorio.Data.Core;
+using SongStock.Data.Core;
 using Microsoft.AspNetCore.Http;
 
-namespace Poli.Repositorio.Data.Model
+namespace SongStock.Data.Model
 {
 
 	public partial class CursoArchivoModel

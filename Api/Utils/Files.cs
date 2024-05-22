@@ -11,13 +11,13 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using Poli.Repositorio.Data.Model;
+using SongStock.Data.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Poli.Repositorio.Data.Api.Utils
+namespace SongStock.Api.Utils
 {
 	public class Files
 	{

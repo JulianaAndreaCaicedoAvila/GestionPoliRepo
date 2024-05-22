@@ -1,9 +1,9 @@
-using Poli.Repositorio.Data.Identity;
+using SongStock.Data.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Poli.Repositorio.Data;
+namespace SongStock.Data;
 
 public class Seed
 {

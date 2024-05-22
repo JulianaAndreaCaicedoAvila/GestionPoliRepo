@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Poli.Repositorio.Data.Api.Authorization;
+namespace SongStock.Api.Authorization;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class Authorize : Attribute, IAuthorizationFilter
 {

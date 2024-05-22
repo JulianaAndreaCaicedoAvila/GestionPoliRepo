@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Extensions.Logging;
 
-namespace Poli.Repositorio.Data.Core
+namespace SongStock.Data.Core
 {
 	public partial class NucleoPrograma : BaseEntity
 	{

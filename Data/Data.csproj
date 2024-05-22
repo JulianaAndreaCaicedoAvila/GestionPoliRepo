@@ -3,8 +3,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Poli.Repositorio.Data</RootNamespace>
-    <AssemblyName>Poli.Repositorio.Data</AssemblyName>
+    <RootNamespace>SongStock.Data</RootNamespace>
+    <AssemblyName>SongStock.Data</AssemblyName>
   </PropertyGroup>
   <!-- https://github.com/dotnet/sdk/issues/16975#issuecomment-1142163586 -->
   <PropertyGroup Condition="'$(Configuration)'=='Release'">

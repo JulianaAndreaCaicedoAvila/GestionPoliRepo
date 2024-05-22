@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Poli.Repositorio.Data.System {
+namespace SongStock.Data.System {
     [Keyless]
     public partial class Logs : BaseEntity {
         [Column("ID")]

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-namespace Poli.Repositorio.Data.Identity
+namespace SongStock.Data.Identity
 {
 	public partial class AuthRole : IdentityRole<int>
 	{

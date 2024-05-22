@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Poli.Repositorio.Data {
+namespace SongStock.Data {
 	public static class ServiceRegistration {
 		public static IServiceCollection ConfigureDataServices(this IServiceCollection services, IConfiguration configuration) {
 			// 202202071041: Using a Separate Migrations Project http://t.ly/m3af

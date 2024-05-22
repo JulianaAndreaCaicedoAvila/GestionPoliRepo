@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
-namespace Poli.Repositorio.Data
+namespace SongStock.Data
 {
 	// 202305271656: DevExtreme.AspNet.Data.dll
 	[ModelBinder(typeof(DataSourceLoadOptionsBinder))]

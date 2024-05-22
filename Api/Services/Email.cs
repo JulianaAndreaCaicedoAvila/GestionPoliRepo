@@ -1,4 +1,4 @@
-namespace Poli.Repositorio.Data.Api.Services;
+namespace SongStock.Api.Services;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;

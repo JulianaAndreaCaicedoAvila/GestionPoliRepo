@@ -1,7 +1,7 @@
-using Poli.Repositorio.Data.Core;
-using Poli.Repositorio.Data.Identity;
+using SongStock.Data.Core;
+using SongStock.Data.Identity;
 
-namespace Poli.Repositorio.Data.Model {
+namespace SongStock.Data.Model {
 	interface IUserRegister {
 		UserRequestModel usuario { get; set; }
 		// Participante participante { get; set; }

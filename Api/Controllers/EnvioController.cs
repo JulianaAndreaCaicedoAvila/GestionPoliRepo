@@ -1,17 +1,17 @@
 using System.Text;
 using DevExtreme.AspNet.Data;
-using Poli.Repositorio.Data;
-using Poli.Repositorio.Data.Api.Authorization;
-using Poli.Repositorio.Data.Api.Utils;
-using Poli.Repositorio.Data.Core;
+using SongStock.Data;
+using SongStock.Api.Authorization;
+using SongStock.Api.Utils;
+using SongStock.Data.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
-using Poli.Repositorio.Data.Api.Controllers;
+using SongStock.Api.Controllers;
 using Microsoft.EntityFrameworkCore;
-namespace ESAP.Sirecec.Data.Api.Controllers {
+namespace SongStock.Api.Controllers {
   [@Authorize]
   [ApiController]
   [Route("envio")]

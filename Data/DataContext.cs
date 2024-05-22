@@ -1,10 +1,10 @@
-﻿using Poli.Repositorio.Data.Core;
-using Poli.Repositorio.Data.Identity;
+﻿using SongStock.Data.Core;
+using SongStock.Data.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Poli.Repositorio.Data {
+namespace SongStock.Data {
 	public partial class DataContext : IdentityDbContext<AuthUser, AuthRole, int> {
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Poli.Repositorio.Data.Core {
+namespace SongStock.Data.Core {
 	public partial class CursosUsuarios {
 		[Key]
 		public int Id { get; set; }

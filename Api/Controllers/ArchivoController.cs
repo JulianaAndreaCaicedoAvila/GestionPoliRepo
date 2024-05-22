@@ -1,16 +1,16 @@
 using System.Text;
 using DevExtreme.AspNet.Data;
-using Poli.Repositorio.Data;
-using Poli.Repositorio.Data.Api.Authorization;
-using Poli.Repositorio.Data.Api.Utils;
-using Poli.Repositorio.Data.Core;
+using SongStock.Data;
+using SongStock.Api.Authorization;
+using SongStock.Api.Utils;
+using SongStock.Data.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using Newtonsoft.Json;
 
-namespace Poli.Repositorio.Data.Api.Controllers
+namespace SongStock.Api.Controllers
 {
 	[@Authorize]
 	[ApiController]

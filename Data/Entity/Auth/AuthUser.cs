@@ -1,9 +1,9 @@
 ﻿
 using System.ComponentModel.DataAnnotations.Schema;
-using Poli.Repositorio.Data.Model;
+using SongStock.Data.Model;
 using Microsoft.AspNetCore.Identity;
 
-namespace Poli.Repositorio.Data.Identity {
+namespace SongStock.Data.Identity {
 	public partial class AuthUser : IdentityUser<int> {
 		public string FirstName { get; set; } = default!;
 		public string LastName { get; set; } = default!;

@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Poli.Repositorio.Data.Api.Utils
+namespace SongStock.Api.Utils
 {
 
 	public class JsonDynamicWrapper

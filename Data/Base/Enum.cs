@@ -1,4 +1,4 @@
-namespace Poli.Repositorio.Data.Enum {
+namespace SongStock.Data.Enum {
 	public enum EstadoCurso {
 		Borrador = 421,
 		Revision = 422,

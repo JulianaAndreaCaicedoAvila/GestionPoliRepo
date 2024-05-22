@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 // 202202071328: https://enlear.academy/repository-pattern-and-unit-of-work-with-asp-net-core-web-api-6802e1aa4f78
 
-namespace Poli.Repositorio.Data {
+namespace SongStock.Data {
 	public class GenericRepository<T> : IGenericRepository<T> where T : class {
 		private readonly DataContext _db;
 		internal DbSet<T> _dbSet;

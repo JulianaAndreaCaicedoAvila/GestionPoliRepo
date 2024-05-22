@@ -1,8 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Poli.Repositorio.Api.Authorization;
+using SongStock.Api.Authorization;
 using Microsoft.IdentityModel.Tokens;
-namespace Poli.Repositorio.Data.Api.Authorization;
+namespace SongStock.Api.Authorization;
 public class JwtMiddleware
 {
 	private readonly RequestDelegate _next;

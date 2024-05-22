@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Poli.Repositorio.Data;
+using SongStock.Data;
 
 #nullable disable
 
@@ -118,7 +118,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToTable("AuthUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Curso", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Curso", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -269,7 +269,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToTable("Curso");
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Cursos", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Cursos", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -523,7 +523,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToView("Cursos");
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Envio", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Envio", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -561,7 +561,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToTable("Envio");
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Escuela", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Escuela", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -596,7 +596,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToTable("Escuela");
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Nivel", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Nivel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -636,7 +636,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToTable("Nivel");
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Identity.AuthRole", b =>
+            modelBuilder.Entity("SongStock.Data.Identity.AuthRole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -663,7 +663,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToTable("AuthRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Identity.AuthUser", b =>
+            modelBuilder.Entity("SongStock.Data.Identity.AuthUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -743,7 +743,7 @@ namespace Poli.Repositorio.Data.Migrations
                     b.ToTable("AuthUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Identity.Users", b =>
+            modelBuilder.Entity("SongStock.Data.Identity.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -816,7 +816,7 @@ namespace Poli.Repositorio.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Poli.Repositorio.Data.Identity.AuthRole", null)
+                    b.HasOne("SongStock.Data.Identity.AuthRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -825,7 +825,7 @@ namespace Poli.Repositorio.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("Poli.Repositorio.Data.Identity.AuthUser", null)
+                    b.HasOne("SongStock.Data.Identity.AuthUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -834,7 +834,7 @@ namespace Poli.Repositorio.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("Poli.Repositorio.Data.Identity.AuthUser", null)
+                    b.HasOne("SongStock.Data.Identity.AuthUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -843,13 +843,13 @@ namespace Poli.Repositorio.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Poli.Repositorio.Data.Identity.AuthRole", null)
+                    b.HasOne("SongStock.Data.Identity.AuthRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Poli.Repositorio.Data.Identity.AuthUser", null)
+                    b.HasOne("SongStock.Data.Identity.AuthUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -858,35 +858,35 @@ namespace Poli.Repositorio.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("Poli.Repositorio.Data.Identity.AuthUser", null)
+                    b.HasOne("SongStock.Data.Identity.AuthUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Curso", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Curso", b =>
                 {
-                    b.HasOne("Poli.Repositorio.Data.Core.Nivel", null)
+                    b.HasOne("SongStock.Data.Core.Nivel", null)
                         .WithMany("Cursos")
                         .HasForeignKey("NivelId");
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Nivel", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Nivel", b =>
                 {
-                    b.HasOne("Poli.Repositorio.Data.Core.Escuela", null)
+                    b.HasOne("SongStock.Data.Core.Escuela", null)
                         .WithMany("Niveles")
                         .HasForeignKey("EscuelaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Escuela", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Escuela", b =>
                 {
                     b.Navigation("Niveles");
                 });
 
-            modelBuilder.Entity("Poli.Repositorio.Data.Core.Nivel", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Nivel", b =>
                 {
                     b.Navigation("Cursos");
                 });

@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using DevExtreme.AspNet.Data;
-using Poli.Repositorio.Data;
-using Poli.Repositorio.Data.Api.Authorization;
-using Poli.Repositorio.Data.Api.Utils;
-using Poli.Repositorio.Data.Core;
+using SongStock.Data;
+using SongStock.Api.Authorization;
+using SongStock.Api.Utils;
+using SongStock.Data.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +15,7 @@ using Microsoft.Identity.Web.Resource;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace Poli.Repositorio.Data.Api.Controllers
+namespace SongStock.Api.Controllers
 {
 
 	public class BaseController : ControllerBase

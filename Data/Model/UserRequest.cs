@@ -1,6 +1,6 @@
-using Poli.Repositorio.Data.Identity;
+using SongStock.Data.Identity;
 
-namespace Poli.Repositorio.Data.Model
+namespace SongStock.Data.Model
 {
 
 	public partial class UserRequestModel : AuthUser

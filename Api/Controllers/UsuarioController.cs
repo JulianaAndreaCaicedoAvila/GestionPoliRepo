@@ -3,21 +3,22 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using DevExtreme.AspNet.Data;
-using Poli.Repositorio.Data.Api.Authorization;
-using Poli.Repositorio.Data.Api.Services;
-using Poli.Repositorio.Data.Api.Utils;
-using Poli.Repositorio.Data.Core;
-using Poli.Repositorio.Data.Identity;
-using Poli.Repositorio.Data.Model;
+using SongStock.Api.Authorization;
+using SongStock.Api.Services;
+using SongStock.Api.Utils;
+using SongStock.Data.Core;
+using SongStock.Data.Identity;
+using SongStock.Data.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using SongStock.Data;
 
 // 202402020231: Account confirmation and password recovery in ASP.NET Core
 // https://learn.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-6.0&tabs=visual-studio
-namespace Poli.Repositorio.Data.Api.Controllers {
+namespace SongStock.Api.Controllers {
     [@Authorize]
     [ApiController]
     [Route("usuario")]
@@ -331,23 +332,23 @@ namespace Poli.Repositorio.Data.Api.Controllers {
                 var identityResult = await _userManager.CreateAsync(newUser, uReq.Password);
                 if (identityResult.Succeeded) {
                     var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
-                    if (role != null) {
-                        await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
-                        if (uReq.RoleId == (int)Enum.Rol.Participante) {
-                            // Crea el participante
-                            var newPart = new Participante();
-                            newPart = (Participante)newUser.CopyTo(newPart);
-                            newPart.Nombres = newUser.FirstName;
-                            newPart.Apellidos = newUser.LastName;
-                            newPart.Correo = newUser.Email.Trim().ToLower();
-                            newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
-                            newPart.CreadoPor = 1;
-                            newPart.CreadoEl = DateTime.Now;
-                            newPart.Activo = true;
-                            // _db.Participante.Add(newPart);
-                            _db.SaveChanges();
-                        }
-                    }
+                    // if (role != null) {
+                    //     await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+                    //     if (uReq.RoleId == (int)Enum.Rol.Participante) {
+                    //         // Crea el participante
+                    //         var newPart = new Participante();
+                    //         newPart = (Participante)newUser.CopyTo(newPart);
+                    //         newPart.Nombres = newUser.FirstName;
+                    //         newPart.Apellidos = newUser.LastName;
+                    //         newPart.Correo = newUser.Email.Trim().ToLower();
+                    //         newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
+                    //         newPart.CreadoPor = 1;
+                    //         newPart.CreadoEl = DateTime.Now;
+                    //         newPart.Activo = true;
+                    //         // _db.Participante.Add(newPart);
+                    //         _db.SaveChanges();
+                    //     }
+                    // }
                     if (uReq.GenerateConfirmation) {
                         SendConfirmation(newUser);
                     }

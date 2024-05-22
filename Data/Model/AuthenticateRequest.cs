@@ -1,4 +1,4 @@
-namespace Poli.Repositorio.Data.Model
+namespace SongStock.Data.Model
 {
 	public partial class AuthenticateRequest
 	{

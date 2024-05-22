@@ -1,6 +1,6 @@
-using Poli.Repositorio.Data.Core;
+using SongStock.Data.Core;
 
-namespace Poli.Repositorio.Data.Model {
+namespace SongStock.Data.Model {
 
 	public partial class CursoAsistenciaModel {
 		public CursoUsuario cursoUsuario { get; set; }

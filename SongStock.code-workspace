@@ -5,6 +5,6 @@
 		}
 	],
 	"settings": {
-		"dotnet.defaultSolution": "ESAP-Sirecec-v4.sln"
+		"dotnet.defaultSolution": "SongStock.sln"
 	}
 }

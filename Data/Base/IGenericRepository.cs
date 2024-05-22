@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Poli.Repositorio.Data
+namespace SongStock.Data
 {
 	public interface IGenericRepository<T> where T : class
 	{

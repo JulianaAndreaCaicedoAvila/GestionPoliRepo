@@ -98,121 +98,121 @@ namespace SongStock.Api.Controllers {
             return Ok(roles);
         }
 
-        [AllowAnonymous]
-        [HttpPost("autenticar")]
-        public async Task<ActionResult> Authenticate() {
-            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            var str = reader.ReadToEndAsync().Result;
-            var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is null || !user.EmailConfirmed || !user.IsActive || !await _userManager.CheckPasswordAsync(user, request.Password))
-                return Forbid();
-            // var res = await SendConfirmationAsync(user); // Prueba
-            return await GetUserResult(user);
-        }
+        // [AllowAnonymous]
+        // [HttpPost("autenticar")]
+        // public async Task<ActionResult> Authenticate() {
+        //     StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+        //     var str = reader.ReadToEndAsync().Result;
+        //     var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
+        //     var user = await _userManager.FindByEmailAsync(request.Email);
+        //     if (user is null || !user.EmailConfirmed || !user.IsActive || !await _userManager.CheckPasswordAsync(user, request.Password))
+        //         return Forbid();
+        //     // var res = await SendConfirmationAsync(user); // Prueba
+        //     return await GetUserResult(user);
+        // }
 
-        [AllowAnonymous]
-        [HttpPost("email")]
-        public async Task<ActionResult> ByEmail(AuthenticateRequest request) {
-            // StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            // var email = reader.ReadToEndAsync().Result;
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null) return BadRequest($"El usuario con el correo {user.Email} no existe");
-            if (request.Email.Trim().ToLower().Contains("esap.edu.co") && user.FirstName + " " + user.LastName != request.Name) {
-                var ns = request.Name.Trim().Split(" "); // Divide el nombre 'Sandra Reyes García'
-                var l = ns.Length;
-                user.FirstName = ns[0] + (l <= 3 ? "" : " " + ns[1]); // Nombres 'Sandra'
-                user.LastName = ns[l - 2] + " " + ns[l - 1]; // Apellidos 'Reyes García'
-                var identityResult = await _userManager.UpdateAsync(user);
-            }
-            return await GetUserResult(user);
-        }
+        // [AllowAnonymous]
+        // [HttpPost("email")]
+        // public async Task<ActionResult> ByEmail(AuthenticateRequest request) {
+        //     // StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+        //     // var email = reader.ReadToEndAsync().Result;
+        //     var user = await _userManager.FindByEmailAsync(request.Email);
+        //     if (user == null) return BadRequest($"El usuario con el correo {user.Email} no existe");
+        //     if (request.Email.Trim().ToLower().Contains("esap.edu.co") && user.FirstName + " " + user.LastName != request.Name) {
+        //         var ns = request.Name.Trim().Split(" "); // Divide el nombre 'Sandra Reyes García'
+        //         var l = ns.Length;
+        //         user.FirstName = ns[0] + (l <= 3 ? "" : " " + ns[1]); // Nombres 'Sandra'
+        //         user.LastName = ns[l - 2] + " " + ns[l - 1]; // Apellidos 'Reyes García'
+        //         var identityResult = await _userManager.UpdateAsync(user);
+        //     }
+        //     return await GetUserResult(user);
+        // }
 
-        [AllowAnonymous]
-        [HttpPost("recuperar")]
-        public async Task<ActionResult> Recover(AuthenticateRequest request) {
-            var email = request.Email.Trim().ToUpper();
-            var user = await _userManager.FindByEmailAsync(email);
-            // https://github.com/dotnet/aspnetcore/blob/1dcf7acfacf0fe154adcc23270cb0da11ff44ace/src/Identity/UI/src/Areas/Identity/Pages/V5/Account/ForgotPassword.cshtml.cs
-            if (user != null) {
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = _conf["Path:BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
-                _email.Send(user.Email, "RECUPERAR CONTRASEÑA", $"Hola {user.FirstName}, puede recuperar su contraseña haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
-                return Ok(user);
-            }
-            return Ok();
-        }
+        // [AllowAnonymous]
+        // [HttpPost("recuperar")]
+        // public async Task<ActionResult> Recover(AuthenticateRequest request) {
+        //     var email = request.Email.Trim().ToUpper();
+        //     var user = await _userManager.FindByEmailAsync(email);
+        //     // https://github.com/dotnet/aspnetcore/blob/1dcf7acfacf0fe154adcc23270cb0da11ff44ace/src/Identity/UI/src/Areas/Identity/Pages/V5/Account/ForgotPassword.cshtml.cs
+        //     if (user != null) {
+        //         // For more information on how to enable account confirmation and password reset please
+        //         // visit https://go.microsoft.com/fwlink/?LinkID=532713
+        //         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+        //         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        //         var callbackUrl = _conf["Path:BasePath"] + "/recuperar?c=" + code + "&e=" + request.Email.Trim().ToLower();
+        //         _email.Send(user.Email, "RECUPERAR CONTRASEÑA", $"Hola {user.FirstName}, puede recuperar su contraseña haciendo clic <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>AQUÍ</a>.");
+        //         return Ok(user);
+        //     }
+        //     return Ok();
+        // }
 
-        [AllowAnonymous]
-        [HttpPost("resetear")]
-        public async Task<ActionResult> Reset() {
-            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            var str = reader.ReadToEndAsync().Result;
-            var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
-            var email = request.Email.Trim().ToUpper();
-            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null) {
-                var result = await _userManager.ResetPasswordAsync(user, code, request.Password);
-                if (result.Succeeded) return Ok(new { result, user });
-                return BadRequest(new { result, user });
-            }
-            return BadRequest($"El usuario con el correo {request.Email} no existe");
-        }
+        // [AllowAnonymous]
+        // [HttpPost("resetear")]
+        // public async Task<ActionResult> Reset() {
+        //     StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+        //     var str = reader.ReadToEndAsync().Result;
+        //     var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
+        //     var email = request.Email.Trim().ToUpper();
+        //     var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+        //     var user = await _userManager.FindByEmailAsync(email);
+        //     if (user != null) {
+        //         var result = await _userManager.ResetPasswordAsync(user, code, request.Password);
+        //         if (result.Succeeded) return Ok(new { result, user });
+        //         return BadRequest(new { result, user });
+        //     }
+        //     return BadRequest($"El usuario con el correo {request.Email} no existe");
+        // }
 
-        [AllowAnonymous]
-        [HttpPost("activar")]
-        public async Task<ActionResult> Activate() {
-            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            var str = reader.ReadToEndAsync().Result.Replace("\u0000", "");
-            var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
-            var email = request.Email.Trim().ToUpper().Replace("\0", "");
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null) {
-                var c = request.Code.Replace("\0", "");
-                // var bc = WebEncoders.Base64UrlDecode(c);
-                // var code = Encoding.UTF8.GetString(bc);
-                // var result = await _userManager.ConfirmEmailAsync(user, c);
-                var result = string.Equals(user.SecurityStamp, c);
-                if (result) {
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var result1 = await _userManager.ResetPasswordAsync(user, token, request.Password);
-                    if (result1.Succeeded) {
-                        user.IsActive = true;
-                        user.EmailConfirmed = true;
-                        var identityResult = await _userManager.UpdateAsync(user);
-                        // if (identityResult.Succeeded) {
-                        //     var usr = _db.Participante.FirstOrDefault(o => o.Correo == email.ToLower());
-                        //     usr.Activo = true;
-                        //     _db.SaveChanges();
-                        //     return Ok(new { result, user });
-                        // }
-                    } else return BadRequest(new { result, user });
-                } else return BadRequest(new { result, user });
-            }
-            return BadRequest();
-        }
+        // [AllowAnonymous]
+        // [HttpPost("activar")]
+        // public async Task<ActionResult> Activate() {
+        //     StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+        //     var str = reader.ReadToEndAsync().Result.Replace("\u0000", "");
+        //     var request = JsonConvert.DeserializeObject<UserRequestModel>(str);
+        //     var email = request.Email.Trim().ToUpper().Replace("\0", "");
+        //     var user = await _userManager.FindByEmailAsync(email);
+        //     if (user != null) {
+        //         var c = request.Code.Replace("\0", "");
+        //         // var bc = WebEncoders.Base64UrlDecode(c);
+        //         // var code = Encoding.UTF8.GetString(bc);
+        //         // var result = await _userManager.ConfirmEmailAsync(user, c);
+        //         var result = string.Equals(user.SecurityStamp, c);
+        //         if (result) {
+        //             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        //             var result1 = await _userManager.ResetPasswordAsync(user, token, request.Password);
+        //             if (result1.Succeeded) {
+        //                 user.IsActive = true;
+        //                 user.EmailConfirmed = true;
+        //                 var identityResult = await _userManager.UpdateAsync(user);
+        //                 // if (identityResult.Succeeded) {
+        //                 //     var usr = _db.Participante.FirstOrDefault(o => o.Correo == email.ToLower());
+        //                 //     usr.Activo = true;
+        //                 //     _db.SaveChanges();
+        //                 //     return Ok(new { result, user });
+        //                 // }
+        //             } else return BadRequest(new { result, user });
+        //         } else return BadRequest(new { result, user });
+        //     }
+        //     return BadRequest();
+        // }
 
-        [AllowAnonymous]
-        [HttpPost("confirmar1")]
-        public async Task<ActionResult> Confirm1(UserRequestModel request) {
-            var email = request.Email.Trim().ToUpper();
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null) {
-                var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
-                var result = await _userManager.ConfirmEmailAsync(user, code);
-                if (result.Succeeded) {
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    result = await _userManager.ResetPasswordAsync(user, token, request.Password);
-                    if (result.Succeeded) return Ok(new { result, user });
-                    else return BadRequest(new { result, user });
-                } else return BadRequest(new { result, user });
-            }
-            return BadRequest();
-        }
+        // [AllowAnonymous]
+        // [HttpPost("confirmar1")]
+        // public async Task<ActionResult> Confirm1(UserRequestModel request) {
+        //     var email = request.Email.Trim().ToUpper();
+        //     var user = await _userManager.FindByEmailAsync(email);
+        //     if (user != null) {
+        //         var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+        //         var result = await _userManager.ConfirmEmailAsync(user, code);
+        //         if (result.Succeeded) {
+        //             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        //             result = await _userManager.ResetPasswordAsync(user, token, request.Password);
+        //             if (result.Succeeded) return Ok(new { result, user });
+        //             else return BadRequest(new { result, user });
+        //         } else return BadRequest(new { result, user });
+        //     }
+        //     return BadRequest();
+        // }
 
         [AllowAnonymous]
         [HttpPost("registrar")]
@@ -281,120 +281,120 @@ namespace SongStock.Api.Controllers {
             return Ok();
         }
 
-        [AllowAnonymous]
-        [HttpPost("ed")]
-        public async Task<ActionResult?> Procesar() {
-            StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
-            var str = reader.ReadToEndAsync().Result;
-            var uReq = JsonConvert.DeserializeObject<UserRequestModel>(str);
-            if (uReq.Id != 0) {
-                // 202208170339: Actualizando usuario
-                var user = await _userManager.FindByEmailAsync(uReq.Email);
-                if (user != null) {
-                    user = (AuthUser)uReq.CopyTo(user, true);
-                    await _userManager.UpdateAsync(user);
-                    var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
-                    if (role != null) {
-                        var roles = await _userManager.GetRolesAsync(user);
-                        await _userManager.RemoveFromRolesAsync(user, roles.ToArray());
-                        await _userManager.AddToRoleAsync(user, role.NormalizedName);
-                    }
-                    if (uReq.Password != null) {
-                        await _userManager.RemovePasswordAsync(user);
-                        await _userManager.AddPasswordAsync(user, uReq.Password);
-                    }
-                    if (uReq.GenerateConfirmation) {
-                        SendConfirmation(user);
-                    }
-                    return Ok(user);
-                }
-                return null;
-            } else {
-                var user = await _userManager.FindByEmailAsync(uReq.Email);
-                if (user != null) return BadRequest($"El usuario con el correo {user.Email} ya existe");
-                if (uReq.Email.ToLower().Contains("@esap.edu.co")) {
-                    uReq.Password = "Acceso*" + DateTime.Now.Year;
-                    var parts = uReq.Email.ToLower().Replace("@esap.edu.co", "").Split(".");
-                    // var adUser = await _ad.GetByEmailAsync(uReq.Email.ToLower());
-                    if (parts.Length > 1) {
-                        uReq.FirstName = parts[0].FirstLetterToUpper();
-                        uReq.LastName = parts[1].FirstLetterToUpper();
-                    } else {
-                        uReq.FirstName = "Usuario";
-                        uReq.LastName = "ESAP";
-                    }
-                }
-                var newUser = new AuthUser();
-                newUser = (AuthUser)uReq.CopyTo(newUser);
-                newUser.UserName = newUser.Email.ToLower();
-                newUser.NormalizedEmail = newUser.Email.ToUpper();
-                newUser.NormalizedUserName = newUser.Email.ToUpper();
-                var identityResult = await _userManager.CreateAsync(newUser, uReq.Password);
-                if (identityResult.Succeeded) {
-                    var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
-                    // if (role != null) {
-                    //     await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
-                    //     if (uReq.RoleId == (int)Enum.Rol.Participante) {
-                    //         // Crea el participante
-                    //         var newPart = new Participante();
-                    //         newPart = (Participante)newUser.CopyTo(newPart);
-                    //         newPart.Nombres = newUser.FirstName;
-                    //         newPart.Apellidos = newUser.LastName;
-                    //         newPart.Correo = newUser.Email.Trim().ToLower();
-                    //         newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
-                    //         newPart.CreadoPor = 1;
-                    //         newPart.CreadoEl = DateTime.Now;
-                    //         newPart.Activo = true;
-                    //         // _db.Participante.Add(newPart);
-                    //         _db.SaveChanges();
-                    //     }
-                    // }
-                    if (uReq.GenerateConfirmation) {
-                        SendConfirmation(newUser);
-                    }
-                    return Ok(newUser);
-                } else {
-                    return BadRequest(identityResult.Errors.First());
-                }
-            }
-        }
+        // [AllowAnonymous]
+        // [HttpPost("ed")]
+        // public async Task<ActionResult?> Procesar() {
+        //     StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+        //     var str = reader.ReadToEndAsync().Result;
+        //     var uReq = JsonConvert.DeserializeObject<UserRequestModel>(str);
+        //     if (uReq.Id != 0) {
+        //         // 202208170339: Actualizando usuario
+        //         var user = await _userManager.FindByEmailAsync(uReq.Email);
+        //         if (user != null) {
+        //             user = (AuthUser)uReq.CopyTo(user, true);
+        //             await _userManager.UpdateAsync(user);
+        //             var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
+        //             if (role != null) {
+        //                 var roles = await _userManager.GetRolesAsync(user);
+        //                 await _userManager.RemoveFromRolesAsync(user, roles.ToArray());
+        //                 await _userManager.AddToRoleAsync(user, role.NormalizedName);
+        //             }
+        //             if (uReq.Password != null) {
+        //                 await _userManager.RemovePasswordAsync(user);
+        //                 await _userManager.AddPasswordAsync(user, uReq.Password);
+        //             }
+        //             if (uReq.GenerateConfirmation) {
+        //                 SendConfirmation(user);
+        //             }
+        //             return Ok(user);
+        //         }
+        //         return null;
+        //     } else {
+        //         var user = await _userManager.FindByEmailAsync(uReq.Email);
+        //         if (user != null) return BadRequest($"El usuario con el correo {user.Email} ya existe");
+        //         if (uReq.Email.ToLower().Contains("@esap.edu.co")) {
+        //             uReq.Password = "Acceso*" + DateTime.Now.Year;
+        //             var parts = uReq.Email.ToLower().Replace("@esap.edu.co", "").Split(".");
+        //             // var adUser = await _ad.GetByEmailAsync(uReq.Email.ToLower());
+        //             if (parts.Length > 1) {
+        //                 uReq.FirstName = parts[0].FirstLetterToUpper();
+        //                 uReq.LastName = parts[1].FirstLetterToUpper();
+        //             } else {
+        //                 uReq.FirstName = "Usuario";
+        //                 uReq.LastName = "ESAP";
+        //             }
+        //         }
+        //         var newUser = new AuthUser();
+        //         newUser = (AuthUser)uReq.CopyTo(newUser);
+        //         newUser.UserName = newUser.Email.ToLower();
+        //         newUser.NormalizedEmail = newUser.Email.ToUpper();
+        //         newUser.NormalizedUserName = newUser.Email.ToUpper();
+        //         var identityResult = await _userManager.CreateAsync(newUser, uReq.Password);
+        //         if (identityResult.Succeeded) {
+        //             var role = await _roleManager.FindByIdAsync(uReq.RoleId.ToString());
+        //             // if (role != null) {
+        //             //     await _userManager.AddToRoleAsync(newUser, role.NormalizedName);
+        //             //     if (uReq.RoleId == (int)Enum.Rol.Participante) {
+        //             //         // Crea el participante
+        //             //         var newPart = new Participante();
+        //             //         newPart = (Participante)newUser.CopyTo(newPart);
+        //             //         newPart.Nombres = newUser.FirstName;
+        //             //         newPart.Apellidos = newUser.LastName;
+        //             //         newPart.Correo = newUser.Email.Trim().ToLower();
+        //             //         newPart.UsuarioId = newUser.Id; // 'AuthUser' al que esta relacionado
+        //             //         newPart.CreadoPor = 1;
+        //             //         newPart.CreadoEl = DateTime.Now;
+        //             //         newPart.Activo = true;
+        //             //         // _db.Participante.Add(newPart);
+        //             //         _db.SaveChanges();
+        //             //     }
+        //             // }
+        //             if (uReq.GenerateConfirmation) {
+        //                 SendConfirmation(newUser);
+        //             }
+        //             return Ok(newUser);
+        //         } else {
+        //             return BadRequest(identityResult.Errors.First());
+        //         }
+        //     }
+        // }
 
-        [AllowAnonymous]
-        [HttpGet("todos")]
-        public ActionResult Users() {
-            var items = _db.Usuarios.ToList();
-            return Ok(items);
-        }
+        // [AllowAnonymous]
+        // [HttpGet("todos")]
+        // public ActionResult Users() {
+        //     var items = _db.Usuarios.ToList();
+        //     return Ok(items);
+        // }
 
-        [AllowAnonymous]
-        [HttpPost("todos/dx")]
-        public ActionResult UsersDx() {
-            var opts = Data.Utils.GetFromRequest(Request);
-            opts.PrimaryKey = new[] { "Id" };
-            var items = _db.Usuarios.Where(o => o.Id > 1).ToList();
-            var loadResult = DataSourceLoader.Load(items, opts);
-            return Ok(loadResult);
-        }
+        // [AllowAnonymous]
+        // [HttpPost("todos/dx")]
+        // public ActionResult UsersDx() {
+        //     var opts = Data.Utils.GetFromRequest(Request);
+        //     opts.PrimaryKey = new[] { "Id" };
+        //     var items = _db.Usuarios.Where(o => o.Id > 1).ToList();
+        //     var loadResult = DataSourceLoader.Load(items, opts);
+        //     return Ok(loadResult);
+        // }
 
-        [AllowAnonymous]
-        [HttpPost("porEmail")]
-        public async Task<ActionResult> ByEmail([FromBody] string email) {
-            var usr = await _userManager.FindByEmailAsync(email);
-            return Ok(usr);
-        }
+        // [AllowAnonymous]
+        // [HttpPost("porEmail")]
+        // public async Task<ActionResult> ByEmail([FromBody] string email) {
+        //     var usr = await _userManager.FindByEmailAsync(email);
+        //     return Ok(usr);
+        // }
 
-        [HttpPost("porRol")]
-        public async Task<ActionResult> AllUsersAsync([FromBody] string roleName) {
-            var role = await _roleManager.FindByNameAsync(roleName);
-            var items = _db.Usuarios.Where(o => o.RoleId == role.Id).ToList();
-            return Ok(items);
-        }
+        // [HttpPost("porRol")]
+        // public async Task<ActionResult> AllUsersAsync([FromBody] string roleName) {
+        //     var role = await _roleManager.FindByNameAsync(roleName);
+        //     var items = _db.Usuarios.Where(o => o.RoleId == role.Id).ToList();
+        //     return Ok(items);
+        // }
 
-        [AllowAnonymous]
-        [HttpGet("ping")]
-        public ActionResult Ping() {
-            return Content("OK!", "text/plain;charset=utf-8");
-        }
+        // [AllowAnonymous]
+        // [HttpGet("ping")]
+        // public ActionResult Ping() {
+        //     return Content("OK!", "text/plain;charset=utf-8");
+        // }
     }
 
 }

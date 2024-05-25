@@ -2,14 +2,13 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Extensions.Logging;
 
-namespace SongStock.Data.Core
-{
-	public partial class TerritorialDepartamento : BaseEntity
-	{
+namespace SongStock.Data.Core {
+	public partial class Etiqueta {
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
-		public int TerritorialId { get; set; }
-		public int DepartamentoId { get; set; }
+		public string? Nombre { get; set; }
+
+		// public virtual List<EncuestaPregunta>? Preguntas { get; set; } = new List<EncuestaPregunta>();
 	}
 }

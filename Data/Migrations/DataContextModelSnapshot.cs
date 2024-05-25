@@ -118,19 +118,27 @@ namespace SongStock.Data.Migrations
                     b.ToTable("AuthUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SongStock.Data.Core.Envio", b =>
+            modelBuilder.Entity("SongStock.Data.Core.Album", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Activo")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("CreadoEl")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("Nombre")
+                        .HasColumnType("longtext");
 
-                    b.Property<int?>("CreadoPor")
+                    b.HasKey("Id");
+
+                    b.ToTable("Album");
+                });
+
+            modelBuilder.Entity("SongStock.Data.Core.Cancion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
@@ -139,14 +147,31 @@ namespace SongStock.Data.Migrations
                     b.Property<string>("Direccion")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("EditadoEl")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("Nombre")
+                        .HasColumnType("longtext");
 
-                    b.Property<int?>("EditadoPor")
+                    b.Property<string>("Titulo")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cancion");
+                });
+
+            modelBuilder.Entity("SongStock.Data.Core.Envio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Orden")
-                        .HasColumnType("int");
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Direccion")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Titulo")
                         .HasColumnType("longtext");
@@ -262,10 +287,49 @@ namespace SongStock.Data.Migrations
 
             modelBuilder.Entity("SongStock.Data.Identity.Usuarios", b =>
                 {
-                    b.HasBaseType("SongStock.Data.Identity.AuthUser");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
 
                     b.ToTable((string)null);
 

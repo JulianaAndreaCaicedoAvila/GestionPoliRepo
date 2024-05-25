@@ -7,12 +7,27 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace SongStock.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Album",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Nombre = table.Column<string>(type: "longtext", nullable: true),
+                    Descripcion = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Album", x => x.Id);
+                })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -63,20 +78,32 @@ namespace SongStock.Data.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Cancion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Titulo = table.Column<string>(type: "longtext", nullable: true),
+                    Nombre = table.Column<string>(type: "longtext", nullable: true),
+                    Descripcion = table.Column<string>(type: "longtext", nullable: true),
+                    Direccion = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cancion", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Envio",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Titulo = table.Column<string>(type: "longtext", nullable: true),
+                    Nombre = table.Column<string>(type: "longtext", nullable: true),
                     Descripcion = table.Column<string>(type: "longtext", nullable: true),
-                    Direccion = table.Column<string>(type: "longtext", nullable: true),
-                    CreadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    EditadoEl = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Activo = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    CreadoPor = table.Column<int>(type: "int", nullable: true),
-                    EditadoPor = table.Column<int>(type: "int", nullable: true),
-                    Orden = table.Column<int>(type: "int", nullable: true)
+                    Direccion = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -237,6 +264,9 @@ namespace SongStock.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Album");
+
+            migrationBuilder.DropTable(
                 name: "AuthRoleClaims");
 
             migrationBuilder.DropTable(
@@ -250,6 +280,9 @@ namespace SongStock.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AuthUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Cancion");
 
             migrationBuilder.DropTable(
                 name: "Envio");

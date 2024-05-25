@@ -15,8 +15,10 @@ namespace SongStock.Data {
 		public DataContext() : base() { }
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 		public virtual DbSet<Usuarios> Usuarios { get; set; } = null!;
-		public virtual DbSet<Envio>? Envio { get; set; } = null!;
-		public virtual DbSet<Album>? Album { get; set; } = null!;
+		public virtual DbSet<CodigoPlanDocente>? CodigoPlanDocente { get; set; } = null!;
+		public virtual DbSet<Entregable>? Entregable { get; set; } = null!;
+		public virtual DbSet<Etiqueta>? Etiqueta { get; set; } = null!;
+		public virtual DbSet<PlanDocente>? PlanDocente { get; set; } = null!;
 
 		protected override void OnModelCreating(ModelBuilder builder) {
 			base.OnModelCreating(builder);

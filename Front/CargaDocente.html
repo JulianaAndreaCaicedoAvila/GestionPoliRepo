@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Estilos.css">
+    <title>Crear y actualizar plan</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+<!-- Logo del poli -->
+    <div>
+        <img src="image.png" id="logo" alt="logo Poli" />
+      </div>
+<!-- Contenedor acciones -->
+<div id="CargaDocente">
+<!-- Menú tipo miga de pan-->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#" onclick="InicioMensaje()">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="#">Crear y actualizar Plan docente</a></li>
+    </ol>
+  </nav>
+<!-- Espacio para contenedores de txt -->
+  <span class="text">Cédula o código institucional</span>
+  <div class="input-group mb-3 ">
+    <input id="EntradaCedula" type="number" class="form-control" placeholder="Digita: cédula/código" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <div class="input-group-append botonBuscarCedula">
+      <button type="button" onclick="buscarDocente()" class="btn btn-outline-secondary">Buscar</button>
+    </div>
+  </div>
+<!-- Espacio para contenedores de txt -->
+  <span class="text">Nombre</span>
+  <div class="input-group mb-3">
+    <input id="SalidaNombre" type="text" class="form-control" placeholder="Nombre del docente" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+  </div>
+<!-- Espacio para contenedores de txt -->
+  <span class="text">Cargo</span>
+  <div class="input-group mb-3">
+    <input id="Cargo" type="text" class="form-control" placeholder="Cargo" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+  </div>
+<!-- Espacio para contenedores de txt -->
+  <span class="text">Horas directas</span>
+  <div class="input-group mb-3 ">
+    <input id="HorasDirectas" type="number" class="form-control" placeholder="Digita: Horas directas" aria-label="Recipient's username" aria-describedby="basic-addon2">
+  </div>
+<!-- Espacio para contenedores de txt -->
+  <span class="text">Horas preparación</span>
+  <div class="input-group mb-3 ">
+    <input id="HorasPreparacion" type="number" class="form-control" placeholder="Digita: Horas preparación" aria-label="Recipient's username" aria-describedby="basic-addon2">
+  </div>
+<!-- Espacio para contenedores de txt -->
+  <span class="text">Horas labor</span>
+  <div class="input-group mb-3 ">
+    <input id="HorasLabor" type="number" class="form-control" placeholder="Digita: Horas labor" aria-label="Recipient's username" aria-describedby="basic-addon2">
+  </div>
+<!-- Espacio para contenedores de txt -->
+  <div class="text">
+    <span class="textD">Digita el número del código:</span>
+  </div>
+  <div class="input-group mb-3 ">
+    <input id="CodigoDigitado" type="text" class="form-control" placeholder="Digitar código" aria-label="Recipient's username" aria-describedby="basic-addon2">
+  </div>
+<!-- Espacio para boton de enviar, agrega una fila a la tabla -->
+  <div class="input-group-append ">
+    <button onclick="agregarFila()" type="button" class="BT_ BT_-x" >Enviar</button>
+  </div>
+<!-- Se crea la tabla con los encabezados -->
+  <div class="tabla-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Código:</th>
+          <th>Función:</th>
+          <th>Acción principal:</th>
+          <th>Entregable:</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-body">
+      </tbody>
+    </table>
+  </div>
+<!-- Es para ver el enlace de el plan docente -->
+  <nav aria-label="breadcrumb">
+    <ol class="listadoCodigos">
+      <li class="breadcrumb-item">
+        <span class="text">Ver tabla de códigos plan docente 2023-2:</span>
+        <a href="https://docs.google.com/spreadsheets/d/1_pnJ8_-bi2E2MkkaHTXBaMVT-Bg4GJuV3YSqhMhxbhc/edit?usp=sharing" target="_blank" rel="noopener">Ver listado de código</a>
+      </li>
+    </ol>
+  </nav>
+<!-- Botón de confirmación para enviar el formulario-->
+  <nav id="botonConfirmacion">
+    <button onclick="confirmar()"type="button" class="BT_ BT_-x" style="position: relative;left:86%;">Confirmar</button>
+  </nav>
+</div>
+
+
+
+
+<!-- Funcionalida del código -->
+
+
+
+<script>
+/*Se crean variable para trabajar con la tabla*/
+  let nombreDocente = '';
+  let Cargo = ''; 
+  let HorasDirectas = 0;
+  let HorasPreparacion = 0;
+  let HorasLabor = 0;
+  let filas = [];
+/*Función con ventana emergente para confirmación de acciones*/
+  function confirmar() {
+    const confirmacion = window.confirm('Vas a confirmar el plan docente creado ¿Estás seguro de guardarlo?');
+    if (confirmacion) {
+        event.preventDefault();        
+        window.location.href = "Home_DirEscuela.html";
+    }
+}
+/*Función con ventana emergente para confirmación de acciones*/
+  function InicioMensaje() {
+    const confirmacion = window.confirm('¿Estás seguro de que quieres volver al inicio de la página?');
+    if (confirmacion) {
+        event.preventDefault();        
+        window.location.href = "Home_DirEscuela.html";
+    }
+  }
+/*Función para consultar en la BD*/
+  function buscarDocente() {
+  }
+/*Función agregar filas*/
+function agregarFila() {
+ /*Tiene el valor ingresado*/   
+  const codigo = document.getElementById('CodigoDigitado').value.trim();
+/*Valida las condiciones: Existe y vacio*/
+  if (codigo) {
+    if (filas.some(fila => fila.espacioCodigo === codigo)) {
+      alert('Este código ya ha sido ingresado.');
+    } else {
+      filas.push({
+        espacioCodigo: codigo,
+        espacioFuncion: '',
+        espacioAccionPrincipal: '',
+        espacioEntregable: ''
+      });
+/*Limpia las colummnas para agregar nuevas*/   
+      document.getElementById('CodigoDigitado').value = '';
+/*Se actualiza la vista*/    
+ActulizarFilas();
+    }
+  } else {
+    alert('Por favor, ingresa un código válido.');
+  }
+}
+/*Elimina el lugar/indice que se escogio por el botón*/
+function eliminarFila(index) {
+ /*Splice es para eliminar el elmenento que se eligio del arreglo*/
+  filas.splice(index, 1);
+/*Se actualiza la vista*/    
+ActulizarFilas();
+}
+/*Actualiza la vista de la tabla*/
+function ActulizarFilas() {
+    /*Es para la referencia de la tabla, para hacer cosas sobre ella*/
+  const tbody = document.getElementById('tabla-body');
+  /*Limpia la tabla si hay contenidp*/
+  tbody.innerHTML = '';
+/*Con un for recorre las filas y crea los espacio de la tabla*/
+  filas.forEach((fila, index) => {
+    /*Crea las filas (tr)*/
+    const tr = document.createElement('tr');
+    /*Es para el contenido de las filas, se usan los encabezados*/
+    tr.innerHTML = `
+      <td><input value="${fila.espacioCodigo}" readonly></td>
+      <td><input value="${fila.espacioFuncion}" readonly></td>
+      <td><input value="${fila.espacioAccionPrincipal}" readonly></td>
+      <td><input value="${fila.espacioEntregable}" readonly></td>
+      <td><button type="button" class="BT_ BT_-x" onclick="eliminarFila(${index})">Eliminar</button></td>
+    `;
+/*Se agregan los datos a la tabla*/
+    tbody.appendChild(tr);
+  });
+}
+</script>
+</body>
+</html>

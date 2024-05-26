@@ -1,0 +1,160 @@
+<!--Se relaciona directamente con el navegador-->
+<!DOCTYPE html>
+<!--Lenguaje de la pagina en este caso seria en español-->
+<html lang="en">
+<!--Se define lo que va a ir en la pagina web-->    
+<head>
+    <!--Incluye varias etiquetas-->
+    <meta charset="UTF-8">
+    <!--Se utiliza para introdiciar a internet edge-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--Mide las dimenciones en las que se debe presentar en cada dispositivo la escala 
+        inicial es de 1.0-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Enlaza la lista de estilos.css-->
+<link rel="stylesheet" href="Estilos.css">
+<!--Es el titulo de la pagina principal-->
+    <title>Home</title>
+</head>
+<body>
+    <!--Comienza aplicar estilos del css-->
+    <header class="header">
+       <!--Contenedor del menu en donde tambien se aplican el css--> 
+       <div class="menu  container">
+        <!--Se muestra el logo de la app--> 
+        <img src="image.png" class="menu-icono" alt="Logo">,
+        <!--Un checkbox para activa y desactivar el despliegue del menu--> 
+        <input type = "checkbox"  id="menu"/>
+        <label for="menu">
+            <!--se inserta de fondo la imagen del campus del Politecnico Grancolombiano--> 
+            <img src="FondoPoliNocturno.jpg" class="menu-icono" alt="">,
+        </label>
+        <!--Barra de navegacion--> 
+    <nav class="navbar">
+        <!--Lista del menu--> 
+            <!--Se despliega las opciones del menu--> 
+            <div class="menu" style="left: 100%;">
+                <!--Boton que aplica lo de ocualtar--> 
+                <button class="menu-btn" onclick="toggleMenu()">Menú</button>
+                <!--Lista desordenada del menu--> 
+                <ul class="menu-list" id="menuList">
+                    <!--Encabezado--> 
+                    <li><a  onclick="VistaPlan()" >Plan docente 2023/2</a></li>
+                    <li><a onclick="ListaDocentes()">Ver docentes</a></li>
+                    <li><a onclick="CargaDocente()">Crear y actualizar plan docente</a></li>
+                    <li><a onclick="AprobacionPlan()">Aprobar plan docente</a></li>
+                    <li><a onclick="VistaDocente()">Vista docente</a></li>
+                  </ul>
+                </div>
+    </nav>
+    </div>
+    <div class="header-content  container">
+        <!--Encabezado principal--> 
+        <h1> Repositorio Digital Poli</h1>
+        <!--Describe el repositorio--> 
+        <p>
+            Proyecto de práctica aplicada
+        </p>
+        <!--Enlace que redirige a las consultas--> 
+        <a href="Consultas.html"  class="btn-1">Consultar documentos</a>
+    </div>
+</header>
+    <!---la etiqueta el main es lo principal de la pagina  -->
+                    <main class="services">   
+                        <!--Contenido de la pagina principal-->
+                    <div class="services-content container">
+                        <!--Parte del contenido que se encuentra en la parte de abajo-->
+                        <h2>Añadido recientemente</h2>
+                        <!--Agregar elementos-->
+                        <div class="services-group">
+                            <div class="services-1">
+                                <!--logo de la universidad que redirecciona a la vista docente-->
+                                <img  onclick="VistaPlan()"src="image.png" alt="logo">
+
+                                <h3 onclick="VistaPlan()">Archivo plan docente 2023/2</h3>
+                            </div>
+                            <!--Servicios individuales-->
+                            <div class="services-1">
+                                <!--Parte del contenido que se encuentra en la parte de abajo-->
+                                <img src="image.png" alt="">
+                                <h3>Maratones de programación</h3>
+                            </div>
+                            <!--Parte del contenido que se encuentra en la parte de abajo-->
+                            <div class="services-1">
+                                <img src="image.png" alt="">
+                                <h3>Video tutorial Funcionamiento plataforma</h3>
+                            </div> 
+                        </div>
+    </div>
+    </main>
+    <!--Comienza el pie de pagina-->
+    <footer class="footer">
+        <div class="footer-content container">
+        
+            <div class="link">
+<!--Creditos a los estudiantes que crearon el repositorio-->
+                <h3>Créditos</h3>
+                <ul>
+                    <li><a href="">Juliana caicedo</a></li>
+                    <li><a href="">Carolina Cifuentes</a></li>
+                    <li><a href="">Andrea Martin</a></li>
+                    <li><a href="">Diego Vargas</a></li>
+                </ul>
+            </div>
+           
+        </div>
+    </footer>
+</body>
+</html>
+
+
+<!-- insertar el codigo de javascript a en html -->
+<script>
+    
+    /**la funcion toggle es para hacer un despliegue como lo es en este caso el menu
+    al principio se demuestra oculto, pero al desplegarlo apareceran las diferentes opciones
+    **/
+    function toggleMenu() {
+        /**Se llama al elemento que se encuentra en el html que en este caso es menuList y esta se guardara
+         * en la nueva variante menuList
+         **/
+        var menuList = document.getElementById("menuList");
+        // si el menu se muestra visible, lo que se hara es que se oculte 
+        menuList.style.display = menuList.style.display === "block" ? "none" : "block";
+    }
+    // la funcion de cargadocente 
+    function CargaDocente() {
+        //cancela el un evento sin pausar el funcionamiento de la aplicacion 
+        event.preventDefault();   
+        // al cancelar el event lo que hace es redirige a la pagina de carga docente      
+        window.location.href = "CargaDocente.html";
+    }
+    //funcion de vista docente
+    function VistaDocente() {
+        //cancela el un evento sin pausar el funcionamiento de la aplicacion 
+        event.preventDefault();  
+        // al cancelar el event lo que hace es redirige a la pagina de vistadocente
+        window.location.href = "VistaDocente.html";
+    }
+    //funcion de ListaDocentes
+    function ListaDocentes() {
+         //cancela el un evento sin pausar el funcionamiento de la aplicacion 
+        event.preventDefault();        
+        // al cancelar el event lo que hace es redirige a la pagina de ListaDocentes
+        window.location.href = "ListaDocentes.html";
+    }
+    //funcion de AprobacionPlan
+    function AprobacionPlan() {
+         //cancela el un evento sin pausar el funcionamiento de la aplicacion
+        event.preventDefault();        
+        // al cancelar el event lo que hace es redirige a la pagina de RetroalimentacionPlanDocente
+        window.location.href = "RetroalimentacionPlanDocente.html";
+    }
+    //funcion de VistaPlan
+    function VistaPlan() {
+         //cancela el un evento sin pausar el funcionamiento de la aplicacion
+        event.preventDefault();        
+        // al cancelar el event lo que hace es redirige a la pagina de las actividades docente
+        window.location.href = "https://docs.google.com/spreadsheets/d/1_pnJ8_-bi2E2MkkaHTXBaMVT-Bg4GJuV3YSqhMhxbhc/edit?usp=sharing" 
+    }
+</script>

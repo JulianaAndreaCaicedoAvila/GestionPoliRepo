@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprobar Planes</title>
+    <link rel="stylesheet" href="Estilos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+    <!-- Logo del poli -->
+    <div>
+        <img src="image.png" id="logo" alt="logo Poli" />
+    </div>
+    <!-- Contenedor acciones -->
+    <div id="CargaDocente">
+        <!-- Menú tipo miga de pan-->
+        <span class="text">Plan pendientes por aprobar:</span>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#" onclick="InicioMensaje()">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="./RetroalimentacionPlanDocente.html" >Lista de planes docente pendientes</a></li>
+                <li class="breadcrumb-item"><a>Aprobar planes docente</a></li>
+            </ol>
+        </nav>
+        <!-- Espacio para contenedores de txt -->
+        <span class="text">Código/Cédula</span>
+        <div class="input-group mb-3">
+            <input id="SalidaCodigo" type="text" class="form-control" placeholder="Cédula o código del docente" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+        </div>
+        <!-- Espacio para contenedores de txt -->
+        <span class="text">Nombre</span>
+        <div class="input-group mb-3">
+            <input id="SalidaNombre" type="text" class="form-control" placeholder="Nombre del docente" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+        </div>
+        <!-- Espacio para contenedores de txt -->
+        <span class="text">Cargo</span>
+        <div class="input-group mb-3">
+            <input id="Cargo" type="text" class="form-control" placeholder="Cargo" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+        </div>
+        <!-- Espacio para contenedores de txt -->
+        <span class="text">Horas directas</span>
+        <div class="input-group mb-3 ">
+            <input id="HorasDirectas" type="number" class="form-control" placeholder="Horas directas" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+        </div>
+        <!-- Espacio para contenedores de txt -->
+        <span class="text">Horas preparación</span>
+        <div class="input-group mb-3 ">
+            <input id="HorasPreparacion" type="number" class="form-control" placeholder="Horas preparación" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+        </div>
+        <!-- Espacio para contenedores de txt -->
+        <span class="text">Horas labor</span>
+        <div class="input-group mb-3 ">
+            <input id="HorasLabor" type="number" class="form-control" placeholder="Horas labor" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+        </div>
+        <!-- Se crea la tabla con los encabezados -->
+        <span style="left: 40%;position: relative;" class="text">Plan docente asignado:</span>
+        <div class="tabla-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código:</th>
+                        <th>Función:</th>
+                        <th>Acción principal:</th>
+                        <th>Entregable:</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <tr>
+                <td>
+                    <div style="text-align: center;">
+                        <input id="codigoTabla" type="text" class="form-control" placeholder="Código" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+                    </div>
+                </td>
+
+                <td>
+                    <div style="text-align: center;">
+                        <input id="funcionTabla" type="text" class="form-control" placeholder="Función " aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+                    </div>
+                </td>
+
+                <td>
+                    <div style="text-align: center;">
+                        <input id="AccionTabla" type="text" class="form-control" placeholder="Acción" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+                    </div>
+                </td>
+
+                <td>
+                    <div style="text-align: center;">
+                        <input id="EntregableTabla" type="text" class="form-control" placeholder="Entregable" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly>
+                    </div>
+                </td>
+
+              
+            </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Es para ver el enlace de el plan docente -->
+        <nav aria-label="breadcrumb">
+            <ol class="listadoCodigos">
+                <li class="breadcrumb-item">
+                    <span class="text">Ver tabla de códigos plan docente 2023-2:</span>
+                    <a href="https://docs.google.com/spreadsheets/d/1_pnJ8_-bi2E2MkkaHTXBaMVT-Bg4GJuV3YSqhMhxbhc/edit?usp=sharing" target="_blank" rel="noopener">Ver listado de código</a>
+                </li>
+            </ol>
+        </nav>
+        <!-- Botón de confirmación para enviar el formulario-->
+        <nav>
+            <button id="botonConfirmacion" onclick="confirmar()" type="button" class="BT_ BT_-x" style="position: relative;left:86%;">Aprobar </button>
+            <button id="Restroalimentacion" onclick="Devolucion()" type="button" class="BT_ BT_-x" style="position: relative;left:58%;background-color: red;">Devolver  </button>
+
+        </nav>
+     
+    </div>
+
+
+    <div id="CargaDocente" style="margin-top: 1%;">
+            <p>Comentarios sobre el plan docente actual: </p>
+            <div class="comentarios"><textarea placeholder="Escribe tu comentario aquí"></textarea></div>
+            <button type="button" onclick="InicioMensaje()"class="BT_ BT_-x"  style="width:150px;right: 130px;">Enviar</button>
+    
+     
+    </div>
+</body>
+</html>
+
+<script>
+       function Devolucion() {
+        const confirmacion = window.confirm('Vas a devolver este plan docente, ¿Estás seguro?');
+        if (confirmacion) {
+            event.preventDefault();        
+            window.location.href = "Home_DirEscuela.html";
+        }
+    }
+    /*Función con ventana emergente para confirmación de acciones*/
+    function confirmar() {
+        const confirmacion = window.confirm('Vas a aprobar el plan docente creado ¿Estás seguro ?');
+        if (confirmacion) {
+            event.preventDefault();        
+            window.location.href = "Home_DirEscuela.html";
+        }
+    }
+    /*Función con ventana emergente para confirmación de acciones*/
+    function InicioMensaje() {
+        const confirmacion = window.confirm('¿Estás seguro de que quieres volver al inicio de la página?');
+        if (confirmacion) {
+            event.preventDefault();        
+            window.location.href = "Home_DirEscuela.html";
+        }
+    }
+    /*Funcionalidad para subir documento*/
+    function subirDocumento() {
+        const confirmacion = window.confirm('Vas a ir a la opción de subir documentos¿Estás seguro ?');
+        if (confirmacion) {
+            event.preventDefault();        
+            window.location.href = "CargaDocenteArchivoEtiquetas.html";
+        }
+    }
+</script>

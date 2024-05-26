@@ -1,0 +1,33 @@
+<script>
+    function toggleMenu() {
+        var menuList = document.getElementById("menuList");
+        menuList.style.display = menuList.style.display === "block" ? "none" : "block";
+    }
+</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="Estilos.css">
+    <title>Home</title>
+</head>
+<body>
+            <div class="menu" style="left: 100%;">
+                <button class="menu-btn" onclick="toggleMenu()">Menú</button>
+                <ul class="menu-list" id="menuList">
+                    <li><a onclick="">Plan docente 2023/2</a></li>
+                    <li><a onclick="">Ver docentes escuelas</a></li>
+                    <li><a onclick="">Crear Plan docente</a></li>
+                    <li><a onclick="">Actualizar plan docentes</a></li>
+                    <li><a onclick="">Aprobar plan docentes</a></li>
+                  </ul>
+                </div>
+       
+  
+    
+</body>
+</html>
